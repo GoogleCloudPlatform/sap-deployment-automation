@@ -1,0 +1,1 @@
+## SAP HANA configured using Ansible
