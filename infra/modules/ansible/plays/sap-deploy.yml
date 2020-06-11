@@ -1,10 +1,7 @@
 ---
-- hosts: sap_hosts
+- hosts: hana
   roles:
     - { role: storage }
     - { role: redhat_sap.sap_hostagent }
     - { role: sap-preconfigure }
-
-- hosts: hana
-  roles:
     - { role: redhat_sap.sap_hana_deployment }
