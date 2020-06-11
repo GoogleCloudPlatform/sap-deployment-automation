@@ -1,0 +1,5 @@
+[hana]
+<hostname>
+
+[sap_hosts:children]
+hana

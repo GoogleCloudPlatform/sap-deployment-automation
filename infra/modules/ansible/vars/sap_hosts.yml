@@ -1,0 +1,50 @@
+## Variables required for `sap_hostagent` role
+sap_hostagent_installation_type: "rpm"
+sap_hostagent_rpm_remote_path: "/software/SAPHOSTAGENT"
+sap_hostagent_rpm_file_name: "saphostagentrpm_44-20009394.rpm"
+ansible_user: <host username>
+ansible_ssh_private_key_file: <host user private key>
+Ansible_become: true
+
+## Variables reqiured for `sap_preconfigure` role
+sap_preconfigure_modify_etc_hosts: true
+sap_domain: "automation.local"
+
+storage_pools:
+  - name: sap
+    disks:
+      - sdc
+    volumes:
+      - name: data
+        size: "100 GiB"
+        mount_point: "/hana/data"
+        state: present
+      - name: log
+        size: "100 GiB"
+        mount_point: "/hana/log"
+        state: present
+      - name: shared
+        size: "256 GiB"
+        mount_point: "/hana/shared"
+        state: present
+      - name: sap
+        size: "30 GiB"
+        mount_point: "/usr/sap"
+        state: present
+
+## Variables required for 'sap_hana_deployment' role
+sap_hana_deployment_bundle_path: /software/HANA_installation
+sap_hana_deployment_bundle_sar_file_name: IMDB_SERVER20_047_0-80002031.SAR
+sap_hana_deployment_sapcar_path: /software/SAPCAR
+sap_hana_deployment_sapcar_file_name: SAPCAR_1320-80000935.EXE
+sap_hana_deployment_root_password: "Mysecretpassword1"
+sap_hana_deployment_sapadm_password: "Mysecretpassword1"
+sap_hana_deployment_hana_sid: RH1
+sap_hana_deployment_hana_instance_number: "00"
+sap_hana_deployment_hana_env_type: development
+sap_hana_deployment_hana_mem_restrict: "n"
+sap_hana_deployment_common_master_password: "Mysecretpassword1"
+sap_hana_deployment_sidadm_password: "Mysecretpassword1"
+sap_hana_deployment_hana_db_system_password: "Mysecretpassword1"
+sap_hana_deployment_ase_user_password: "Mysecretpassword1"
+sap_hana_deployment_apply_license: false
