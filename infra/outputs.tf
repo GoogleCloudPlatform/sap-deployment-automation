@@ -26,7 +26,7 @@ output "public_ip" {
 }
 
 resource "local_file" "AnsibleInventory" {
-  content = templatefile("inventory.tmpl",
+  content = templatefile("modules/ansible/templates/inventory.tmpl",
     {
       private-dns = module.gcp_sap_hana.instance_name,
       private-ip  = module.gcp_sap_hana.address,
