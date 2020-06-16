@@ -65,7 +65,7 @@ variable "service_account_email" {
 
 variable "subnetwork" {
   description = "The name or self_link of the subnetwork where the isntance will be deployed. The subnetwork must exist in the same region this instance will be created in."
-  default     = "default"
+  default     = "app2"
 }
 
 variable "network_tags" {
@@ -91,7 +91,7 @@ variable "post_deployment_script" {
 
 variable "startup_script" {
   description = "Startup script to install SAP HANA."
-  default     = "./modules/sap_hana/files/startup.sh"
+  default     = "./modules/files/startup.sh"
 }
 
 variable "sap_hana_sid" {

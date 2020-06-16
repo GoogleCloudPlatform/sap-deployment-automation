@@ -2,8 +2,6 @@
 sap_hostagent_installation_type: "rpm"
 sap_hostagent_rpm_remote_path: "/software/SAPHOSTAGENT"
 sap_hostagent_rpm_file_name: "saphostagentrpm_44-20009394.rpm"
-ansible_user: <host username>
-ansible_ssh_private_key_file: <host user private key>
 Ansible_become: true
 
 ## Variables reqiured for `sap_preconfigure` role
@@ -39,8 +37,8 @@ sap_hana_deployment_sapcar_path: /software/SAPCAR
 sap_hana_deployment_sapcar_file_name: SAPCAR_1320-80000935.EXE
 sap_hana_deployment_root_password: "Mysecretpassword1"
 sap_hana_deployment_sapadm_password: "Mysecretpassword1"
-sap_hana_deployment_hana_sid: RH1
-sap_hana_deployment_hana_instance_number: "00"
+sap_hana_deployment_hana_sid: RH2
+sap_hana_deployment_hana_instance_number: "01"
 sap_hana_deployment_hana_env_type: development
 sap_hana_deployment_hana_mem_restrict: "n"
 sap_hana_deployment_common_master_password: "Mysecretpassword1"

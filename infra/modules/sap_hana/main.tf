@@ -93,9 +93,8 @@ resource "google_compute_instance" "gcp_sap_hana" {
     sap_hana_system_password   = var.sap_hana_system_password
     sap_hana_sidadm_uid        = var.sap_hana_sidadm_uid
     sap_hana_sapsys_gid        = var.sap_hana_sapsys_gid
-
-    startup-script = var.startup_script
   }
+  metadata_startup_script = var.startup_script
 
   lifecycle {
     # Ignore changes in the instance metadata, since it is modified by the SAP startup script.

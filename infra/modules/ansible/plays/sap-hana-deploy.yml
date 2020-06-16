@@ -1,0 +1,9 @@
+---
+- hosts: sap_hana
+  roles:
+    - { role: storage }
+    - { role: sap-hostagent }
+    - { role: sap-preconfigure }
+    - { role: sap-hana-deployment }
+  become: yes
+  become_user: root
