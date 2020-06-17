@@ -20,6 +20,6 @@ sleep 2m
 
 ansible-playbook -i inventory sap-hana-deploy.yml --extra-vars "@../vars/sap_hosts.yml"
 
-echo "Success!"
+echo "SAP Hana Deployment Success!"
 
-terraform output
+cd ../../../ && terraform output
