@@ -44,7 +44,7 @@ resource "local_file" "ansible_variables" {
       hana_data_size   = local.hana_data_size,
       hana_shared_size = local.hana_shared_size,
       hana_usr_size    = local.hana_usr_size,
-      hana_backup_size = local.hana_backup_size
+      hana_backup_size = local.hana_backup_size - 1
     }
   )
   filename = "modules/ansible/vars/sap_hosts.yml"

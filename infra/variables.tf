@@ -15,7 +15,7 @@ variable "region" {
 
 variable "instance_name" {
   description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
-  default     = "sap-hana-single-node"
+  default     = "gcpsaphana1"
 }
 
 variable "instance_type" {
