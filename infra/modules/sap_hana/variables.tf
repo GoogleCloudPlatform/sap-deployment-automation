@@ -33,12 +33,12 @@ variable "autodelete_disk" {
 
 variable "disk_name_0" {
   description = "Name of first disk."
-  default     = "sap-hana-pd-sd-0"
+  default     = "hana0"
 }
 
 variable "disk_name_1" {
   description = "Name of second disk."
-  default     = "sap-hana-pd-sd-1"
+  default     = "hana1"
 }
 
 variable "disk_type_0" {
@@ -57,6 +57,7 @@ variable "boot_disk_size" {
 
 variable "boot_disk_type" {
   description = "The GCE boot disk type. May be set to pd-standard (for PD HDD) or pd-ssd."
+  default     = "pd-standard"
 }
 
 variable "pd_ssd_size" {
@@ -71,7 +72,7 @@ variable "pd_hdd_size" {
 
 variable "device_name_pd_ssd" {
   description = "device name for ssd persistant disk"
-  default     = "pdssd"
+  default     = "data"
 }
 
 variable "device_name_pd_hdd" {
@@ -90,6 +91,11 @@ variable "service_account_email" {
 
 variable "subnetwork" {
   description = "The name or self_link of the subnetwork where the isntance will be deployed. The subnetwork must exist in the same region this instance will be created in."
+}
+
+variable "subnetwork_project" {
+  description = "The name or self_link of the subnetwork project where the isntance will be deployed. The subnetwork must exist in the same region this instance will be created in."
+  default     = "albatross-duncanl-sandbox-2"
 }
 
 variable "network_tags" {

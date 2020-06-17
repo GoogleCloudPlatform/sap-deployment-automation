@@ -9,26 +9,35 @@ sap_preconfigure_modify_etc_hosts: true
 sap_domain: "automation.local"
 
 storage_pools:
-  - name: sap
+  - name: hana-data
+    disks:
+      - sdb
+    volumes:
+      - name: data
+        size: "40 GiB"
+        mount_point: "/hana/data"
+        state: present
+      - name: shared
+        size: "40 GiB"
+        mount_point: "/hana/shared"
+        state: present
+      - name: log
+        size: "30 GiB"
+        mount_point: "/hana/log"
+        state: present
+      - name: sap
+        size: "40 GiB"
+        mount_point: "/usr/sap"
+        state: present
+  - name: hana-backup
     disks:
       - sdc
     volumes:
-      - name: data
-        size: "100 GiB"
-        mount_point: "/hana/data"
-        state: present
       - name: log
-        size: "100 GiB"
+        size: "400 GiB"
         mount_point: "/hana/log"
         state: present
-      - name: shared
-        size: "256 GiB"
-        mount_point: "/hana/shared"
-        state: present
-      - name: sap
-        size: "30 GiB"
-        mount_point: "/usr/sap"
-        state: present
+  
 
 ## Variables required for 'sap_hana_deployment' role
 sap_hana_deployment_bundle_path: /software/HANA_installation

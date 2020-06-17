@@ -20,7 +20,7 @@ variable "instance_name" {
 
 variable "instance_type" {
   description = "The GCE instance/machine type."
-  default     = "n1-highmem-16"
+  default     = "n1-highmem-32"
 }
 
 variable "linux_image_family" {
@@ -50,12 +50,12 @@ variable "boot_disk_type" {
 
 variable "pd_ssd_size" {
   description = "Persistent disk size in GB"
-  default     = 256
+  default     = 100
 }
 
 variable "pd_hdd_size" {
   description = "Persistent disk size in GB."
-  default     = 512
+  default     = 100
 }
 
 variable "service_account_email" {
@@ -66,6 +66,11 @@ variable "service_account_email" {
 variable "subnetwork" {
   description = "The name or self_link of the subnetwork where the isntance will be deployed. The subnetwork must exist in the same region this instance will be created in."
   default     = "app2"
+}
+
+variable "subnetwork_project" {
+  description = "The name or self_link of the subnetwork project where the isntance will be deployed. The subnetwork must exist in the same region this instance will be created in."
+  default     = "albatross-duncanl-sandbox-2"
 }
 
 variable "network_tags" {

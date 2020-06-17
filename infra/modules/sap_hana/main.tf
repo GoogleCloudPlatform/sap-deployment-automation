@@ -1,6 +1,6 @@
 resource "google_compute_disk" "gcp_sap_hana_sd_0" {
   project = var.project_id
-  name    = "${var.disk_name_0}-${var.device_name_pd_ssd}"
+  name    = "${var.instance_name}-${var.disk_name_0}-${var.device_name_pd_ssd}"
   type    = var.disk_type_0
   zone    = var.zone
   size    = var.pd_ssd_size
@@ -16,7 +16,7 @@ resource "google_compute_disk" "gcp_sap_hana_sd_0" {
 
 resource "google_compute_disk" "gcp_sap_hana_sd_1" {
   project = var.project_id
-  name    = "${var.disk_name_1}-${var.device_name_pd_hdd}"
+  name    = "${var.instance_name}-${var.disk_name_1}-${var.device_name_pd_hdd}"
   type    = var.disk_type_1
   zone    = var.zone
   size    = var.pd_hdd_size
@@ -72,7 +72,7 @@ resource "google_compute_instance" "gcp_sap_hana" {
 
   network_interface {
     subnetwork         = var.subnetwork
-    subnetwork_project = var.project_id
+    subnetwork_project = var.subnetwork_project
 
     dynamic "access_config" {
       for_each = var.public_ip ? google_compute_address.gcp_sap_hana_ip : []
