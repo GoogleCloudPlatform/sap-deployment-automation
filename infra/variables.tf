@@ -40,7 +40,7 @@ variable "autodelete_disk" {
 
 variable "boot_disk_size" {
   description = "Root disk size in GB"
-  default     = 64
+  default     = 30
 }
 
 variable "boot_disk_type" {

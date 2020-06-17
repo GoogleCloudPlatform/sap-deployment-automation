@@ -25,7 +25,7 @@ output "public_ip" {
   value = module.gcp_sap_hana.public_ip
 }
 
-resource "local_file" "AnsibleInventory" {
+resource "local_file" "ansible_inventory" {
   content = templatefile("modules/ansible/templates/inventory.tmpl",
     {
       private-dns = module.gcp_sap_hana.instance_name,
@@ -34,4 +34,18 @@ resource "local_file" "AnsibleInventory" {
     }
   )
   filename = "modules/ansible/plays/inventory"
+}
+
+
+resource "local_file" "ansible_variables" {
+  content = templatefile("modules/ansible/templates/sap_hosts.tmpl",
+    {
+      hana_log_size    = local.hana_log_size,
+      hana_data_size   = local.hana_data_size,
+      hana_shared_size = local.hana_shared_size,
+      hana_usr_size    = local.hana_usr_size,
+      hana_backup_size = local.hana_backup_size
+    }
+  )
+  filename = "modules/ansible/vars/sap_hosts.yml"
 }

@@ -14,28 +14,28 @@ storage_pools:
       - sdb
     volumes:
       - name: data
-        size: "40 GiB"
+        size: "${hana_data_size} GiB"
         mount_point: "/hana/data"
         state: present
       - name: shared
-        size: "40 GiB"
+        size: "${hana_shared_size} GiB"
         mount_point: "/hana/shared"
         state: present
       - name: log
-        size: "30 GiB"
+        size: "${hana_log_size} GiB"
         mount_point: "/hana/log"
         state: present
       - name: sap
-        size: "40 GiB"
+        size: "${hana_usr_size} GiB"
         mount_point: "/usr/sap"
         state: present
   - name: hana-backup
     disks:
       - sdc
     volumes:
-      - name: log
-        size: "400 GiB"
-        mount_point: "/hana/log"
+      - name: backup
+        size: "${hana_backup_size} GiB"
+        mount_point: "/hana/backup"
         state: present
   
 

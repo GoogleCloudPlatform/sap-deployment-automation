@@ -35,6 +35,28 @@ locals {
     "m2-ultramem-208" = 11808
     "m2-ultramem-416" = 23564
   }
+
+  instance_mem_map = {
+    "n1-highmem-32"   = 208
+    "n1-highmem-64"   = 416
+    "n1-highmem-96"   = 624
+    "n2-highmem-32"   = 256
+    "n2-highmem-48"   = 384
+    "n2-highmem-64"   = 512
+    "n2-highmem-80"   = 640
+    "m1-megamem-96"   = 1433
+    "m1-ultramem-40"  = 961
+    "m1-ultramem-80"  = 1922
+    "m1-ultramem-160" = 3844
+    "m2-ultramem-208" = 5888
+    "m2-ultramem-416" = 11766
+  }
+
+  hana_log_size    = min(512, max(64, lookup(local.instance_mem_map, var.instance_type) / 2))
+  hana_data_size   = lookup(local.instance_mem_map, var.instance_type) * 15 / 10
+  hana_shared_size = min(1024, lookup(local.instance_mem_map, var.instance_type))
+  hana_usr_size    = 32
+  hana_backup_size = lookup(local.instance_mem_map, var.instance_type) * 2
 }
 
 module "gcp_sap_hana" {
@@ -52,8 +74,8 @@ module "gcp_sap_hana" {
   boot_disk_type             = var.boot_disk_type
   boot_disk_size             = var.boot_disk_size
   autodelete_disk            = "true"
-  pd_ssd_size                = local.pd_ssd_size
-  pd_hdd_size                = local.pd_hdd_size
+  pd_ssd_size                = max(834, (local.hana_log_size + local.hana_data_size + local.hana_shared_size + local.hana_usr_size))
+  pd_hdd_size                = local.hana_backup_size
   sap_hana_deployment_bucket = var.sap_hana_deployment_bucket
   sap_deployment_debug       = "false"
   post_deployment_script     = var.post_deployment_script
