@@ -1,0 +1,38 @@
+---
+
+- debug:
+    msg: "imported RedHat/generic/turn-off-auto-numa-balancing.yml"
+
+# can be configured by tuned profile sap-hana, entry "kernel.numa_balancing = 0"
+- block:
+    - name: Check if numad is installed
+      package:
+        name: numad
+        state: present
+      check_mode: true
+      register: numad_check
+      ignore_errors: yes
+    - debug:
+        var: numad_check
+
+    - name: Disable numad if installed, and get status of numad
+      block:
+        - name: Disable numad if installed
+          systemd:
+            name: numad
+            state: stopped
+            enabled: no
+          when: not numad_check.changed
+
+        - name: Get status of numad
+          command: bash -lc "systemctl status numad"
+          register: command_result
+          ignore_errors: true
+        - debug:
+            var: command_result.stdout_lines, command_result.stderr_lines
+      when: not numad_check.changed
+
+  when:
+    - not sap_hana_preconfigure_use_tuned_where_possible
+
+...

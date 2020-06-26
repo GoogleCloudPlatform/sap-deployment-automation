@@ -1,0 +1,12 @@
+---
+
+- debug:
+    msg: "imported RedHat/generic/disable-kdump.yml"
+
+- name: Stop and disable service kdump
+  systemd:
+    name: kdump
+    state: stopped
+    enabled: no
+
+...

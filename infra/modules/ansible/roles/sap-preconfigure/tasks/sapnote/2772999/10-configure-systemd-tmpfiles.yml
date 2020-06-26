@@ -1,0 +1,10 @@
+---
+# tasks file for sap-preconfigure: configuration
+
+# 10-configure-systemd-tmpfiles.yml
+- debug:
+    msg: "SAP note 2772999 Step 10: Configure systemd-tmpfiles"
+
+- import_tasks: ../../RedHat/generic/configure-systemd-tmpfiles.yml
+
+...

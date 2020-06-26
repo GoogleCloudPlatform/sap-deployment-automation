@@ -1,7 +1,4 @@
 locals {
-  pd_ssd_size = lookup(local.pd_ssd_map, var.instance_type)
-  pd_hdd_size = lookup(local.pd_hdd_map, var.instance_type)
-
   pd_ssd_map = {
     "n1-highmem-32"   = 834
     "n1-highmem-64"   = 1280
@@ -55,4 +52,6 @@ locals {
   hana_shared_size = min(1024, lookup(local.instance_mem_map, var.instance_type))
   hana_usr_size    = 32
   hana_backup_size = lookup(local.instance_mem_map, var.instance_type) * 2
+  pd_ssd_size      = max(lookup(local.pd_ssd_map, var.instance_type), (local.hana_log_size + local.hana_data_size + local.hana_shared_size + local.hana_usr_size))
+  pd_hdd_size      = local.hana_backup_size
 }

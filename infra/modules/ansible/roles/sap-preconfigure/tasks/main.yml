@@ -1,0 +1,25 @@
+---
+# tasks file for sap-preconfigure
+
+- name: include os specific vars
+  include_vars: '{{ item }}'
+  with_first_found:
+    - '{{ ansible_distribution }}_{{ ansible_distribution_version }}.yml'
+    - '{{ ansible_distribution }}_{{ ansible_distribution_major_version }}.yml'
+    - '{{ ansible_os_family }}.yml'
+  tags:
+    - 'role::sap-preconfigure'
+    - 'role::sap-preconfigure:install'
+    - 'role::sap-preconfigure:config'
+
+- import_tasks: installation.yml
+  tags:
+    - 'role::sap-preconfigure'
+    - 'role::sap-preconfigure:install'
+
+- import_tasks: configuration.yml
+  tags:
+    - 'role::sap-preconfigure'
+    - 'role::sap-preconfigure:config'
+
+...

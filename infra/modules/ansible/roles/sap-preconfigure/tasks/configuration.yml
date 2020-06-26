@@ -1,0 +1,18 @@
+---
+# tasks file for sap-preconfigure configuration
+
+- name: list of required SAP Notes
+  debug:
+    var: __sap_preconfigure_sapnotes | difference([''])
+
+# SAP note 2772999 disables firewalld, we want to check if it is installed
+- name: Gather facts about installed packages
+  package_facts:
+    manager: auto
+
+- name: include configuration actions for required sapnotes
+  include_tasks: "sapnote/{{ item }}.yml"
+  with_items: "{{ __sap_preconfigure_sapnotes | difference(['']) }}"
+#- include: "{{ './' + ansible_distribution + ansible_distribution_major_version + '/recommendations.yml' }}"
+
+...

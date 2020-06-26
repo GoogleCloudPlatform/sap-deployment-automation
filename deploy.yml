@@ -1,0 +1,10 @@
+---
+- name: SAP HANA deploy
+  hosts: 127.0.0.1
+  connection: local
+  tasks:
+  - name: Deploy SAP HANA infrastructure
+    terraform:
+      project_path: ./infra
+      force_init: true
+      state: present

@@ -1,0 +1,188 @@
+---
+- name: get a list of rpm packages installed on host machine
+  package_facts:
+    manager: "auto"
+  when: false
+
+- name: make sure blivet is available
+  package:
+    name: "{{ blivet_package_list }}"
+    state: present
+
+##
+## This is all to fill in missing defaults in the list of pools (and their volumes).
+##
+## The pools are easy, as are the standalone volumes. The pool volumes are trickier,
+## perhaps because I am new to ansible/yaml/jinja.
+##
+- name: initialize internal facts
+  set_fact:
+    _storage_pools: []  # list of pools w/ defaults applied as necessary
+    _storage_volumes: []  # list of standalone volumes w/ defaults applied as necessary
+    _storage_vol_defaults: []  # list w/ volume default dict for each pool volume
+    _storage_vols_no_defaults: []  # combined list of pool volumes w/o defaults applied
+    _storage_vols_w_defaults: []  # combined list of volumes w/ defaults applied
+    _storage_vol_pools: []  # combined list of pool name for each volume
+    _storage_vols_no_defaults_by_pool: {}  # dict w/ pool name keys and pool volume list values
+
+- name: Apply defaults to pools and volumes [1/6]
+  set_fact:
+    _storage_pools: "{{ _storage_pools|default([]) }} + [ {{ storage_pool_defaults|combine(pool) }} ]"
+  loop: "{{ storage_pools|default([]) }}"
+  loop_control:
+    loop_var: pool
+  when: storage_pools is defined
+
+- name: Apply defaults to pools and volumes [2/6]
+  set_fact:
+    _storage_vols_no_defaults: "{{ _storage_vols_no_defaults|default([]) }} + [{{ item.1 }}]"
+    _storage_vol_defaults: "{{ _storage_vol_defaults|default([]) }} + [{{ storage_volume_defaults }}]"
+    _storage_vol_pools: "{{ _storage_vol_pools|default([]) }} + ['{{ item.0.name }}']"
+  loop: "{{ _storage_pools|subelements('volumes', skip_missing=true) }}"
+  when: storage_pools is defined
+
+- name: Apply defaults to pools and volumes [3/6]
+  set_fact:
+    _storage_vols_w_defaults: "{{ _storage_vols_w_defaults|default([]) }} + [ {{ item.1|combine(item.0, {'pool': _storage_vol_pools[idx]}) }} ]"
+  loop: "{{ _storage_vols_no_defaults|zip(_storage_vol_defaults)|list }}"
+  loop_control:
+    index_var: idx
+  when: storage_pools is defined
+
+- name: Apply defaults to pools and volumes [4/6]
+  set_fact:
+    # json_query(...) used instead of "|selectattr('pool', 'equalto', item.name)|list"
+    # as that expression wouldn't work with Jinja versions <2.8
+    _storage_vols_no_defaults_by_pool: "{{ _storage_vols_no_defaults_by_pool|default({})|
+                                        combine({item.name: _storage_vols_w_defaults|json_query('[?pool==`\"{}\"`]'.format(item.name))}) }}"
+  loop: "{{ _storage_pools }}"
+  when: storage_pools is defined
+
+- name: Apply defaults to pools and volumes [5/6]
+  set_fact:
+    _storage_pools: "{{ _storage_pools[:idx] }} +
+                     [ {{ pool|combine({'volumes': _storage_vols_no_defaults_by_pool[pool.name]}) }} ] +
+                     {{ _storage_pools[idx+1:] }}"
+  loop: "{{ _storage_pools }}"
+  loop_control:
+    loop_var: pool
+    index_var: idx
+  when: storage_pools is defined
+
+- name: Apply defaults to pools and volumes [6/6]
+  set_fact:
+    _storage_volumes: "{{ _storage_volumes|default([]) }} + [ {{ storage_volume_defaults|combine(volume) }} ]"
+  loop: "{{ storage_volumes|default([]) }}"
+  loop_control:
+    loop_var: volume
+  when: storage_volumes is defined
+
+##
+## End of absurdly long process to inject defaults into user-specified pools and volumes lists.
+##
+
+- debug:
+    var: _storage_pools
+
+- debug:
+    var: _storage_volumes
+
+- name: get required packages
+  blivet:
+    pools: "{{ _storage_pools }}"
+    volumes: "{{ _storage_volumes }}"
+    use_partitions: "{{ storage_use_partitions }}"
+    disklabel_type: "{{ storage_disklabel_type }}"
+    packages_only: true
+  register: package_info
+
+- name: make sure required packages are installed
+  package:
+    name: "{{ package_info.packages }}"
+    state: present
+
+- name: manage the pools and volumes to match the specified state
+  blivet:
+    pools: "{{ _storage_pools }}"
+    volumes: "{{ _storage_volumes }}"
+    use_partitions: "{{ storage_use_partitions }}"
+    disklabel_type: "{{ storage_disklabel_type }}"
+    safe_mode: "{{ storage_safe_mode }}"
+  register: blivet_output
+
+- debug:
+    var: blivet_output
+
+- name: set the list of pools for test verification
+  set_fact:
+    _storage_pools_list: "{{ blivet_output.pools }}"
+
+- name: set the list of volumes for test verification
+  set_fact:
+    _storage_volumes_list: "{{ blivet_output.volumes }}"
+
+# Mount Management
+#
+# remove obsolete mounts
+#  removed
+#  reformatted (just add w/ new settings?)
+#  changed options? (just add w/ new settings?)
+# add new mounts
+#
+# XXX Apparently we have to do the removals, then tell systemd to
+#     update its view, then set up the new mounts. Otherwise,
+#     systemd will forcibly prevent mounting a new volume to an
+#     existing mount point.
+- name: remove obsolete mounts
+  mount:
+    src: "{{ mount_info['src']|default(omit) }}"
+    path: "{{ mount_info['path'] }}"
+    fstype: "{{ mount_info['fstype']|default(omit) }}"
+    opts: "{{ mount_info['opts']|default(omit) }}"
+    state: "{{ mount_info['state'] }}"
+  loop: "{{ blivet_output.mounts|json_query('[?state==`absent`]') }}"
+  loop_control:
+    loop_var: mount_info
+
+- name: tell systemd to refresh its view of /etc/fstab
+  systemd:
+    daemon_reload: yes
+  when: blivet_output['mounts']
+
+- name: set up new/current mounts
+  mount:
+    src: "{{ mount_info['src']|default(omit) }}"
+    path: "{{ mount_info['path'] }}"
+    fstype: "{{ mount_info['fstype']|default(omit) }}"
+    opts: "{{ mount_info['opts']|default(omit) }}"
+    state: "{{ mount_info['state'] }}"
+  loop: "{{ blivet_output.mounts|json_query('[?state!=`absent`]') }}"
+  loop_control:
+    loop_var: mount_info
+
+- name: tell systemd to refresh its view of /etc/fstab
+  systemd:
+    daemon_reload: yes
+  when: blivet_output['mounts']
+
+#
+# Manage /etc/crypttab
+#
+- name: Manage /etc/crypttab to account for changes we just made
+  crypttab:
+    name: "{{ entry.name }}"
+    backing_device: "{{ entry.backing_device }}"
+    password: "{{ entry.password }}"
+    state: "{{ entry.state }}"
+  loop: "{{ blivet_output.crypts }}"
+  loop_control:
+    loop_var: entry
+
+#
+# Update facts since we may have changed system state.
+#
+# Should this be in a handler instead?
+#
+- name: Update facts
+  setup:
+  when: not ansible_check_mode

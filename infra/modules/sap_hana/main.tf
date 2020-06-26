@@ -38,6 +38,11 @@ resource "google_compute_address" "gcp_sap_hana_ip" {
   region  = var.region
 }
 
+data "google_compute_image" "image" {
+  family  = var.linux_image_family
+  project = var.linux_image_project
+}
+
 resource "google_compute_instance" "gcp_sap_hana" {
   project        = var.project_id
   name           = var.instance_name
@@ -56,7 +61,7 @@ resource "google_compute_instance" "gcp_sap_hana" {
     kms_key_self_link = var.pd_kms_key
 
     initialize_params {
-      image = "projects/${var.linux_image_project}/global/images/family/${var.linux_image_family}"
+      image = data.google_compute_image.image.self_link
       size  = var.boot_disk_size
       type  = var.boot_disk_type
     }
@@ -98,7 +103,7 @@ resource "google_compute_instance" "gcp_sap_hana" {
 
   lifecycle {
     # Ignore changes in the instance metadata, since it is modified by the SAP startup script.
-    ignore_changes = [metadata]
+    ignore_changes = [metadata, attached_disk]
   }
 
   service_account {

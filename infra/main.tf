@@ -15,8 +15,8 @@ module "gcp_sap_hana" {
   boot_disk_type             = var.boot_disk_type
   boot_disk_size             = var.boot_disk_size
   autodelete_disk            = "true"
-  pd_ssd_size                = max(834, (local.hana_log_size + local.hana_data_size + local.hana_shared_size + local.hana_usr_size))
-  pd_hdd_size                = local.hana_backup_size
+  pd_ssd_size                = local.pd_ssd_size
+  pd_hdd_size                = local.pd_hdd_size
   sap_hana_deployment_bucket = var.sap_hana_deployment_bucket
   sap_deployment_debug       = "false"
   post_deployment_script     = var.post_deployment_script
@@ -31,3 +31,51 @@ module "gcp_sap_hana" {
   public_ip                  = var.public_ip
   address_name               = "${var.instance_name}-reservedip"
 }
+
+resource "local_file" "ansible_inventory" {
+  content = templatefile("modules/ansible/templates/inventory.tmpl",
+    {
+      private-dns = module.gcp_sap_hana.instance_name,
+      private-ip  = module.gcp_sap_hana.address,
+      private-id  = module.gcp_sap_hana.instance_id
+    }
+  )
+  filename = "modules/ansible/inventory"
+}
+
+
+resource "local_file" "ansible_variables" {
+  content = templatefile("modules/ansible/templates/sap_hosts.tmpl",
+    {
+      hana_log_size    = local.hana_log_size,
+      hana_data_size   = local.hana_data_size,
+      hana_shared_size = local.hana_shared_size,
+      hana_usr_size    = local.hana_usr_size,
+      hana_backup_size = local.hana_backup_size - 1
+    }
+  )
+  filename = "modules/ansible/vars/sap_hosts.yml"
+}
+
+resource "null_resource" "sap_config" {
+  triggers = {
+    build_number = timestamp()
+  }
+
+  #provisioner "local-exec" {
+  #  command = "ansible-galaxy install --roles-path ./modules/ansible/roles -r ./modules/ansible/requirements.yml --force"
+  #}
+
+  # Add wait period before the hana node becomes available
+  #TODO: Replace this with instance healthcheck
+  provisioner "local-exec" {
+    command = "sleep 2m"
+  }
+
+  provisioner "local-exec" {
+    command = "ansible-playbook -i ./modules/ansible/inventory ./modules/ansible/sap-hana-deploy.yml --extra-vars '@./modules/ansible/vars/sap_hosts.yml'"
+  }
+
+  depends_on = [local_file.ansible_inventory, local_file.ansible_variables, module.gcp_sap_hana]
+}
+ 

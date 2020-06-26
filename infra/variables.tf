@@ -15,7 +15,7 @@ variable "region" {
 
 variable "instance_name" {
   description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
-  default     = "gcpsaphana1"
+  default     = "saphanarh-bg"
 }
 
 variable "instance_type" {

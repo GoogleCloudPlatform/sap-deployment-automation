@@ -1,0 +1,14 @@
+---
+
+- name: Apply HANA license to the new deployed instance
+  shell: |
+      /usr/sap/{{ sap_hana_deployment_hana_sid | upper }}/HDB{{ sap_hana_deployment_hana_instance_number }}/exe/hdbsql \
+      -i {{ sap_hana_deployment_hana_instance_number }} -u SYSTEM -p {{ sap_hana_deployment_hana_db_system_password }} -m <<EOF
+      SET SYSTEM LICENSE '$(cat {{ sap_hana_deployment_license_path }}/{{ sap_hana_deployment_license_file_name }})';
+      EOF
+  args:
+     executable: /bin/bash
+  become: yes
+  become_user: "{{ sap_hana_deployment_hana_sid | lower }}adm"
+  register: addlicense
+  changed_when: "'0 rows affected' in addlicense.stdout"

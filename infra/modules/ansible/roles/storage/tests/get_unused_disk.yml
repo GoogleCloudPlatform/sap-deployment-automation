@@ -1,0 +1,19 @@
+---
+- name: Find unused disks in the system
+  find_unused_disk:
+    min_size: "{{ min_size | default(omit) }}"
+    max_return: "{{ max_return|default(omit) }}"
+  register: unused_disks_return
+
+- set_fact:
+    unused_disks: "{{ unused_disks_return.disks }}"
+  when: "'Unable to find unused disk' not in unused_disks_return.disks"
+
+- name: Exit playbook when there's not enough unused disks in the system
+  fail:
+    msg: "Unable to find enough unused disks. Exiting playbook."
+  when: unused_disks is undefined or unused_disks|length < disks_needed|default(1)
+
+- name: Print unused disks
+  debug:
+    var: unused_disks
