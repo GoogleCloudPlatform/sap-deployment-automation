@@ -155,3 +155,13 @@ variable "sap_hana_sidadm_uid" {
 variable "sap_hana_sapsys_gid" {
   description = "SAP HANA SAP System GID"
 }
+
+variable "gce_ssh_user" {
+  description = "GCE ssh user"
+  default     = "balaguduru"
+}
+
+variable "gce_ssh_pub_key_file" {
+  description = "GCE ssh user pub key file name"
+  default     = "~/.ssh/id_rsa.pub"
+}

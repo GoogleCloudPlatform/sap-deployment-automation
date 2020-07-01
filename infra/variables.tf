@@ -25,12 +25,12 @@ variable "instance_type" {
 
 variable "linux_image_family" {
   description = "GCE linux image family."
-  default     = "rhel-7-7-mc"
+  default     = "rhel-7-7-sap-ha"
 }
 
 variable "linux_image_project" {
   description = "Project name containing the linux image."
-  default     = "albatross-duncanl-sandbox-2"
+  default     = "rhel-sap-cloud"
 }
 
 variable "autodelete_disk" {

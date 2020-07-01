@@ -93,34 +93,36 @@
   - debug:
       var: reqpkgs
 
-  - set_fact:
-      sap_hana_preconfigure_fact_minpkglist: |-
-        {% set ns = namespace() %}
-        {% set ns.pkgs = [] %}
-        {% for reqpkg in reqpkgs %}
-        {%   if not reqpkg[0] in ansible_facts.packages %}
-        {%     set _ = ns.pkgs.append(reqpkg | join('-')) %}
-        {%   else %}
-        {%     set pkg = ansible_facts.packages[reqpkg[0]][-1] %}
-        {%     set verrel = pkg.version ~ '-' ~ pkg.release %}
-        {%     if reqpkg[1].replace (".el", ".0.0.") is version(verrel.replace (".el", ".0.0."), '>', strict=false) %}
-        {%       set _ = ns.pkgs.append(reqpkg | join('-')) %}
-        {%     else %}
-        {%       set _ = "pkg already installed with same or later version" %}
-        {%     endif %}
-        {%   endif %}
-        {% endfor %}
-        {{ ns.pkgs }}
+  # uncomment the below if needed
 
-  - debug: var=sap_hana_preconfigure_fact_minpkglist
+  # - set_fact:
+  #     sap_hana_preconfigure_fact_minpkglist: |-
+  #       {% set ns = namespace() %}
+  #       {% set ns.pkgs = [] %}
+  #       {% for reqpkg in reqpkgs %}
+  #       {%   if not reqpkg[0] in ansible_facts.packages %}
+  #       {%     set _ = ns.pkgs.append(reqpkg | join('-')) %}
+  #       {%   else %}
+  #       {%     set pkg = ansible_facts.packages[reqpkg[0]][-1] %}
+  #       {%     set verrel = pkg.version ~ '-' ~ pkg.release %}
+  #       {%     if reqpkg[1].replace (".el", ".0.0.") is version(verrel.replace (".el", ".0.0."), '>', strict=false) %}
+  #       {%       set _ = ns.pkgs.append(reqpkg | join('-')) %}
+  #       {%     else %}
+  #       {%       set _ = "pkg already installed with same or later version" %}
+  #       {%     endif %}
+  #       {%   endif %}
+  #       {% endfor %}
+  #       {{ ns.pkgs }}
+
+  # - debug: var=sap_hana_preconfigure_fact_minpkglist
 
 #    yum:
-  - name: Install minimum packages if required
-    package:
-      name: "{{ sap_hana_preconfigure_fact_minpkglist }}"
-      state: present
-    when: sap_hana_preconfigure_fact_minpkglist | d([])
-#    when: not ( sap_hana_preconfigure_fact_minpkglist == [ "" ] )
+#   - name: Install minimum packages if required
+#     package:
+#       name: "{{ sap_hana_preconfigure_fact_minpkglist }}"
+#       state: present
+#     when: sap_hana_preconfigure_fact_minpkglist | d([])
+# #    when: not ( sap_hana_preconfigure_fact_minpkglist == [ "" ] )
 
   when: 
     - sap_hana_preconfigure_min_package_check|bool

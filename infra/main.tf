@@ -62,10 +62,6 @@ resource "null_resource" "sap_config" {
     build_number = timestamp()
   }
 
-  #provisioner "local-exec" {
-  #  command = "ansible-galaxy install --roles-path ./modules/ansible/roles -r ./modules/ansible/requirements.yml --force"
-  #}
-
   # Add wait period before the hana node becomes available
   #TODO: Replace this with instance healthcheck
   provisioner "local-exec" {

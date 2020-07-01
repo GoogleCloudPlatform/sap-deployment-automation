@@ -25,10 +25,11 @@
       unarchive:
         src: "{{ sap_hana_deployment_zip_path }}/{{ sap_hana_deployment_zip_file_name }}"
         dest: "{{ sap_hana_deployment_zip_path }}"
+        #remote_src: yes
       register: sap_hana_deployment_register_extractzip
       args:
-        creates: "{{ sap_hana_deployment_zip_path }}"
-        chdir: "{{ sap_hana_deployment_zip_path }}"
+        creates: "{{ sap_hana_deployment_zip_path }}/DATA_UNITS/HDB_SERVER_LINUX_X86_64/hdblcm"
+        #chdir: "{{ sap_hana_deployment_zip_path }}"
       #changed_when: "'extracting' in sap_hana_deployment_register_extractzip.stdout"
 
     - name: Setting fact for HANA installer path
