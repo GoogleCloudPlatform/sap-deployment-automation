@@ -25,7 +25,7 @@
       unarchive:
         src: "{{ sap_hana_deployment_zip_path }}/{{ sap_hana_deployment_zip_file_name }}"
         dest: "{{ sap_hana_deployment_zip_path }}"
-        #remote_src: yes
+        remote_src: yes
       register: sap_hana_deployment_register_extractzip
       args:
         creates: "{{ sap_hana_deployment_zip_path }}/DATA_UNITS/HDB_SERVER_LINUX_X86_64/hdblcm"
@@ -57,9 +57,18 @@
     dest: "{{ tmpdir.path }}/configfile.cfg"
   register: cftemplate
 
+- name: Check if another instance of HANA DB is running
+  stat:
+    path: "/hana/shared/{{ sap_hana_deployment_hana_sid }}"
+  register: hana_db_running
+
 - name: Install SAP HANA
-  command: "./hdblcm {{ sap_hana_deployment_hdblcm_extraargs }} --configfile={{ tmpdir.path }}/configfile.cfg -b"
-  register: installhana
-  args:
-    chdir: "{{ sap_hana_installdir }}"
-  changed_when: "'SAP HANA Lifecycle Management' in installhana.stdout"
+  block:
+    - name: Install SAP HANA started
+      command: "./hdblcm {{ sap_hana_deployment_hdblcm_extraargs }} --configfile={{ tmpdir.path }}/configfile.cfg -b"
+      register: installhana
+      args:
+        chdir: "{{ sap_hana_installdir }}"
+      changed_when: "'SAP HANA Lifecycle Management' in installhana.stdout"
+  when:
+    - not hana_db_running.stat.exists
