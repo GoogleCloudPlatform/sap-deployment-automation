@@ -30,6 +30,8 @@ module "gcp_sap_hana" {
   sap_hana_sapsys_gid        = 900
   public_ip                  = var.public_ip
   address_name               = "${var.instance_name}-reservedip"
+  gce_ssh_user               = var.gce_ssh_user
+  gce_ssh_pub_key_file       = var.gce_ssh_pub_key_file
 }
 
 resource "local_file" "ansible_inventory" {
@@ -38,6 +40,8 @@ resource "local_file" "ansible_inventory" {
       private-dns = module.gcp_sap_hana.instance_name,
       private-ip  = module.gcp_sap_hana.address,
       private-id  = module.gcp_sap_hana.instance_id
+      private-key = var.gce_ssh_priv_key_file
+      user        = var.gce_ssh_user
     }
   )
   filename = "modules/ansible/inventory"
