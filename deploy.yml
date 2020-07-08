@@ -3,8 +3,28 @@
   hosts: 127.0.0.1
   connection: local
   tasks:
+  - name: Copy ssh public key
+    copy:
+      dest: '{{ playbook_dir }}/ssh-key.pub'
+      content: '{{ sap_hana_gce_ssh_pub_key }}'
+  - name: Copy ssh private key
+    copy:
+      dest: '{{ playbook_dir }}/ssh-key'
+      content: '{{ sap_hana_gce_ssh_priv_key }}'
+      mode: '0600'
   - name: Deploy SAP HANA infrastructure
     terraform:
       project_path: ./infra
       force_init: true
       state: present
+      variables:
+        instance_name: '{{ sap_hana_instance_name }}'
+        linux_image_family: '{{ sap_hana_linux_image_family }}'
+        linux_image_project: '{{ sap_hana_linux_image_project }}'
+        region: '{{ sap_hana_region }}'
+        zone: '{{ sap_hana_zone }}'
+        subnetwork: '{{ sap_hana_subnetwork }}'
+        boot_disk_size: '{{ sap_hana_boot_disk_size }}'
+        gce_ssh_user: '{{ sap_hana_gce_ssh_user }}'
+        gce_ssh_pub_key_file: '{{ playbook_dir }}/ssh-key.pub'
+        gce_ssh_priv_key_file: '{{ playbook_dir }}/ssh-key'
