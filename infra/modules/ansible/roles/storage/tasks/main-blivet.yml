@@ -8,6 +8,10 @@
   package:
     name: "{{ blivet_package_list }}"
     state: present
+  retries: 5
+  delay: 5
+  register: blivet_is_installed
+  until: blivet_is_installed is success
 
 ##
 ## This is all to fill in missing defaults in the list of pools (and their volumes).

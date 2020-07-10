@@ -153,3 +153,9 @@ variable "gce_ssh_priv_key_file" {
   description = "GCE ssh user private key file name"
   default     = "~/.ssh/id_rsa"
 }
+
+variable "run_provisioner" {
+  type        = bool
+  description = "Whether or not to run the Ansible provisioner"
+  default     = true
+}

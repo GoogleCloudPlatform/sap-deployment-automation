@@ -35,6 +35,7 @@ module "gcp_sap_hana" {
 }
 
 resource "local_file" "ansible_inventory" {
+  count = var.run_provisioner ? 1 : 0
   content = templatefile("modules/ansible/templates/inventory.tmpl",
     {
       private-dns = module.gcp_sap_hana.instance_name,
@@ -49,6 +50,7 @@ resource "local_file" "ansible_inventory" {
 
 
 resource "local_file" "ansible_variables" {
+  count = var.run_provisioner ? 1 : 0
   content = templatefile("modules/ansible/templates/sap_hosts.tmpl",
     {
       hana_log_size    = local.hana_log_size,
@@ -62,6 +64,7 @@ resource "local_file" "ansible_variables" {
 }
 
 resource "null_resource" "sap_config" {
+  count = var.run_provisioner ? 1 : 0
   triggers = {
     build_number = timestamp()
   }
@@ -78,4 +81,3 @@ resource "null_resource" "sap_config" {
 
   depends_on = [local_file.ansible_inventory, local_file.ansible_variables, module.gcp_sap_hana]
 }
- 
