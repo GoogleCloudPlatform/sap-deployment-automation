@@ -1,0 +1,43 @@
+#!/bin/sh
+set -e
+
+uses_ssl=${uses_ssl}
+
+apt update
+apt install -y --no-install-recommends docker.io || \
+  # Workaround for docker failing to start during install as
+  # docker.socket is not active yet.
+  systemctl restart docker.service
+apt install -y --no-install-recommends \
+  docker-compose \
+  git \
+  python3-venv
+
+python3 -m venv /opt/ansible --system-site-packages
+echo "${python_requirements}" > /opt/ansible/requirements.txt
+/opt/ansible/bin/pip install -r /opt/ansible/requirements.txt
+
+git clone --depth 1 --branch ${awx_version} ${awx_repository} /opt/awx-src
+
+if [ "$${uses_ssl}" = "true" ]; then
+    ssl_dir=/etc/ssl/awx
+    mkdir -p $${ssl_dir}
+
+    curl -H 'Metadata-flavor: Google' \
+      -o $${ssl_dir}/cert.pem \
+      169.254.169.254/computeMetadata/v1/instance/attributes/ssl-certificate
+
+    curl -H 'Metadata-flavor: Google' \
+      -o $${ssl_dir}/key.pem \
+      169.254.169.254/computeMetadata/v1/instance/attributes/ssl-key
+    chmod 600 $${ssl_dir}/key.pem
+
+    sed -i "s|#ssl_certificate=|ssl_certificate=$${ssl_dir}/cert.pem|g" /opt/awx-src/installer/inventory
+    sed -i "s|#ssl_certificate_key=|ssl_certificate_key=$${ssl_dir}/key.pem|g" /opt/awx-src/installer/inventory
+fi
+
+sed -i "s|#project_data_dir=|project_data_dir=|g" /opt/awx-src/installer/inventory
+
+/opt/ansible/bin/ansible-playbook \
+  -i /opt/awx-src/installer/inventory \
+  /opt/awx-src/installer/install.yml
