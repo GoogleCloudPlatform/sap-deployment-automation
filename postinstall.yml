@@ -1,0 +1,10 @@
+- hosts: all
+  gather_facts: false
+  tasks:
+  - name: wait for tower to initialize
+    shell: |
+      docker logs awx_task 2>&1 | grep 'Successfully registered instance awx'
+    register: tower_initialized
+    retries: 60
+    delay: 15
+    until: tower_initialized is succeeded

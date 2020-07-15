@@ -1,0 +1,19 @@
+- hosts: localhost
+  connection: local
+  tasks:
+  - name: expand awx installer inventory variables
+    template:
+      src: inventory/host_vars/default.j2
+      dest: '{{ playbook_dir }}/inventory/host_vars/default'
+
+- hosts: all
+  gather_facts: false
+  tasks:
+  - name: install packages
+    apt:
+      name:
+      - docker.io
+      - docker-compose
+      - git
+      - python3-docker
+      - python3-venv
