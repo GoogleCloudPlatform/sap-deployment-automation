@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        GOOGLE_APPLICATION_CREDENTIALS = credentials('albatross-duncanl-sandbox-2')
+        GOOGLE_APPLICATION_CREDENTIALS = credentials('terraform-managed-sa')
     }
     stages {
         stage('Build image') {
