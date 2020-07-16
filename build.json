@@ -18,6 +18,7 @@
     "subnetwork": "{{ user `subnetwork` }}",
     "ssh_username": "packer",
     "tags": ["ssh"],
+    "use_internal_ip": true,
     "zone": "{{ user `zone` }}"
   }],
   "provisioners": [
