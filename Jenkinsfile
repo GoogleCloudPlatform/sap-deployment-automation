@@ -18,8 +18,11 @@ pipeline {
                 #  curl \
                 #  unzip
 
-                curl -LO https://releases.hashicorp.com/packer/${packer_version}/${packer_archive}
-                unzip ${packer_archive}
+
+                if [ ! -x packer ]; then
+                    curl -LO https://releases.hashicorp.com/packer/${packer_version}/${packer_archive}
+                    unzip ${packer_archive}
+                fi
 
                 ./packer build \
                   -var project-id=${project_id} \
