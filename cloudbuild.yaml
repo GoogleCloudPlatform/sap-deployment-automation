@@ -19,7 +19,7 @@ steps:
 
     ./packer build \
       -var project-id=${PROJECT_ID} \
-      -var subnetwork=default \
+      -var subnetwork=app2 \
       -var image-version=v5 \
       -var awx-version=13.0.0 \
       build.json
