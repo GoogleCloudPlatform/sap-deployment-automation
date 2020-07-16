@@ -10,10 +10,10 @@ pipeline {
                 project_id=albatross-duncanl-sandbox-2
                 subnetwork=app2
 
-                apt-get update
-                apt-get install -y --no-install-recommends \
-                  curl \
-                  unzip
+                # apt-get update
+                # apt-get install -y --no-install-recommends \
+                #  curl \
+                #  unzip
 
                 curl -LO https://releases.hashicorp.com/packer/${packer_version}/${packer_archive}
                 unzip ${packer_archive}
