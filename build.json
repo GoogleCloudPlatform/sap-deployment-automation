@@ -32,6 +32,7 @@
       "type": "ansible",
       "command": "./ansible-wrapper",
       "playbook_file": "./preinstall.yml",
+      "skip_version_check": true,
       "use_proxy": false,
       "user": "packer",
       "extra_arguments": [
@@ -44,6 +45,7 @@
       "command": "./ansible-wrapper",
       "inventory_directory": "./inventory",
       "playbook_file": "./awx/installer/install.yml",
+      "skip_version_check": true,
       "use_proxy": false,
       "user": "packer",
       "extra_arguments": [
@@ -55,6 +57,7 @@
       "type": "ansible",
       "command": "./ansible-wrapper",
       "playbook_file": "./postinstall.yml",
+      "skip_version_check": true,
       "use_proxy": false,
       "user": "packer",
       "extra_arguments": [
