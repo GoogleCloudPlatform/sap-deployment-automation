@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        HOME = '/opt/bitnami/jenkins/jenkins_home'
         GOOGLE_APPLICATION_CREDENTIALS = credentials('terraform-managed-sa')
     }
     stages {
