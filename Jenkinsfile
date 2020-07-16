@@ -13,11 +13,11 @@ pipeline {
                 project_id=albatross-duncanl-sandbox-2
                 subnetwork=app2
 
-                # apt-get update
-                # apt-get install -y --no-install-recommends \
-                #  curl \
-                #  unzip
-
+                export PACKER_TMP_DIR=`mktemp -d`
+                export PACKER_CACHE_DIR=`mktemp -d`
+                export CHECKPOINT_DISABLE=1
+                export PACKER_CONFIG=${PACKER_TMP_DIR}/.packerconfig
+                trap "rm -rf ${PACKER_TMP_DIR} ${PACKER_CACHE_DIR}" 0
 
                 if [ ! -x packer ]; then
                     curl -LO https://releases.hashicorp.com/packer/${packer_version}/${packer_archive}
