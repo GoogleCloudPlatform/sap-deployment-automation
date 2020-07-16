@@ -1,6 +1,9 @@
 pipeline {
     agent any
 
+    environment {
+        GOOGLE_APPLICATION_CREDENTIALS = credentials('albatross-duncanl-sandbox-2')
+    }
     stages {
         stage('Build image') {
             steps {
