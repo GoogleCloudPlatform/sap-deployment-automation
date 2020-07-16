@@ -4,7 +4,20 @@ steps:
   - /bin/sh
   - -c
   - |
-    packer build \
+    set -e
+
+    packer_version=1.6.0
+    packer_archive=packer_${packer_version}_linux_amd64.zip
+
+    apt update
+    apt install -y --no-install-recommends \
+      curl \
+      unzip
+
+    curl -LO https://releases.hashicorp.com/packer/${packer_version}/${packer_archive}
+    unzip ${packer_archive}
+
+    ./packer build \
       -var project-id=albatross-duncanl-sandbox-2 \
       -var subnetwork=app2 \
       -var image-version=v5 \
