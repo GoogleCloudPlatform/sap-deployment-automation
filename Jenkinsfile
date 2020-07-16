@@ -24,7 +24,7 @@ pipeline {
                     unzip ${packer_archive}
                 fi
 
-                ./packer build \
+                PACKER_LOG=1 ./packer build \
                   -var project-id=${project_id} \
                   -var subnetwork=${subnetwork} \
                   -var image-version=v5 \
