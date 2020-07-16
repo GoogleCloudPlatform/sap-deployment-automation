@@ -37,7 +37,6 @@
       "use_proxy": false,
       "user": "packer",
       "extra_arguments": [
-        "-b",
         "-e", "ansible_python_interpreter=/usr/bin/python3"
       ]
     },
@@ -62,7 +61,6 @@
       "use_proxy": false,
       "user": "packer",
       "extra_arguments": [
-        "-b",
         "-e", "ansible_python_interpreter=/usr/bin/python3"
       ]
     },

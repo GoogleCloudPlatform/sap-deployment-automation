@@ -1,5 +1,7 @@
 - hosts: localhost
   connection: local
+  gather_facts: false
+  become: false
   tasks:
   - name: expand awx installer inventory variables
     template:
@@ -8,6 +10,7 @@
 
 - hosts: all
   gather_facts: false
+  become: true
   tasks:
   - name: install packages
     apt:
