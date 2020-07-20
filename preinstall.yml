@@ -7,16 +7,33 @@
     template:
       src: inventory/host_vars/default.j2
       dest: '{{ playbook_dir }}/inventory/host_vars/default'
+  - name: modify docker-compose.yml to add terraform volume
+    lineinfile:
+      path: '{{ playbook_dir }}/awx/installer/roles/local_docker/templates/docker-compose.yml.j2'
+      # Line gets inserted after last match, which in this case is in the volumes of the task container.
+      insertafter: '^      - rsyslog-config:/var/lib/awx/rsyslog/$'
+      line: '      - "/usr/local/bin/terraform:/usr/local/bin/terraform"'
 
 - hosts: all
   gather_facts: false
   become: true
+  vars:
+    terraform_url: https://releases.hashicorp.com/terraform/{{ terraform_version }}/terraform_{{ terraform_version }}_linux_amd64.zip
   tasks:
   - name: install packages
     apt:
       name:
+      - ansible-tower-cli
       - docker.io
       - docker-compose
       - git
       - python3-docker
       - python3-venv
+      - unzip
+  # This installs Terraform in /usr/local/bin on the host, which is mounted as a volume
+  # in the AWX task container.
+  - name: download terraform
+    unarchive:
+      src: '{{ terraform_url }}'
+      dest: /usr/local/bin
+      remote_src: true

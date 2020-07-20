@@ -1,11 +1,117 @@
 - hosts: all
-  gather_facts: false
+  gather_facts: true
   become: true
   tasks:
+  - block:
+    - name: copy git repo ssh key file
+      copy:
+        src: '{{ playbook_dir }}/id_rsa'
+        dest: /tmp/id_rsa
+        mode: '0600'
+    - name: clone git repository
+      git:
+        accept_hostkey: true
+        depth: 1
+        dest: '/var/lib/awx/projects/{{ item.name }}'
+        repo: '{{ item.url }}'
+        ssh_opts: -i /tmp/id_rsa -o StrictHostKeyChecking=no
+      loop: '{{ git_repos }}'
+    always:
+    - name: remove git repo ssh key file
+      file:
+        path: /tmp/id_rsa
+        state: absent
   - name: wait for tower to initialize
     shell: |
-      docker logs awx_task 2>&1 | grep 'Successfully registered instance awx'
+      docker logs awx_task 2>&1 | grep 'Demo Credential, Inventory, and Job Template added'
     register: tower_initialized
     retries: 60
     delay: 15
     until: tower_initialized is succeeded
+    changed_when: false
+  - name: delete demo tower job template
+    tower_job_template:
+      job_type: run
+      name: Demo Job Template
+      playbook: playbook.yml
+      project: Demo Project
+      state: absent
+      tower_host: 'http://{{ ansible_default_ipv4.address }}'
+      tower_username: admin
+      tower_password: password
+      validate_certs: false
+    failed_when: false
+  - name: delete demo tower project
+    tower_project:
+      name: Demo Project
+      organization: Default
+      state: absent
+      tower_host: 'http://{{ ansible_default_ipv4.address }}'
+      tower_username: admin
+      tower_password: password
+      validate_certs: false
+    failed_when: false
+  - name: delete host from tower localhost inventory
+    tower_host:
+      inventory: localhost
+      name: localhost
+      state: absent
+      tower_host: 'http://{{ ansible_default_ipv4.address }}'
+      tower_username: admin
+      tower_password: password
+      validate_certs: false
+    failed_when: false
+  - name: delete demo tower inventory
+    tower_inventory:
+      name: Demo Inventory
+      organization: Default
+      state: absent
+      tower_host: 'http://{{ ansible_default_ipv4.address }}'
+      tower_username: admin
+      tower_password: password
+      validate_certs: false
+    failed_when: false
+  - name: add tower projects
+    tower_project:
+      name: '{{ item.name }}'
+      local_path: '{{ item.name }}'
+      organization: Default
+      scm_type: manual
+      tower_host: 'http://{{ ansible_default_ipv4.address }}'
+      tower_username: admin
+      tower_password: password
+      validate_certs: false
+    loop: '{{ git_repos }}'
+  - name: add tower localhost inventory
+    tower_inventory:
+      name: localhost
+      organization: Default
+      tower_host: 'http://{{ ansible_default_ipv4.address }}'
+      tower_username: admin
+      tower_password: password
+      validate_certs: false
+  - name: add host to tower localhost inventory
+    tower_host:
+      inventory: localhost
+      name: localhost
+      tower_host: 'http://{{ ansible_default_ipv4.address }}'
+      tower_username: admin
+      tower_password: password
+      validate_certs: false
+  - name: add tower job templates
+    tower_job_template:
+      name: '{{ item.name }}-deploy'
+      concurrent_jobs_enabled: true
+      inventory: localhost
+      job_type: run
+      playbook: deploy.yml
+      project: '{{ item.name }}'
+      survey_enabled: true
+      survey_spec: '{{ lookup("file", playbook_dir + "/survey_spec.json") }}'
+      tower_host: 'http://{{ ansible_default_ipv4.address }}'
+      tower_username: admin
+      tower_password: password
+      validate_certs: false
+    loop: '{{ git_repos }}'
+  # - name: abort
+  #   command: /bin/false
