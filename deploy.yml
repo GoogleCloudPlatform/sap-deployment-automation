@@ -94,4 +94,6 @@
       sap_hana_deployment_hana_db_system_password: Google123
       sap_hana_deployment_system_restart: "y"
   
-  #- role: sap-hana-start
+  - role: sap-hana-start
+    vars:
+      sap_hana_deployment_hana_sid: RH1
