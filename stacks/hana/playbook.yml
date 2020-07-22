@@ -14,7 +14,7 @@
       mode: '0600'
   - name: Deploy SAP HANA infrastructure
     terraform:
-      project_path: ./infra
+      project_path: ./tf
       force_init: true
       state: present
       variables:
@@ -28,7 +28,6 @@
         gce_ssh_user: '{{ sap_hana_gce_ssh_user }}'
         gce_ssh_pub_key_file: '{{ playbook_dir }}/ssh-key.pub'
         gce_ssh_priv_key_file: '{{ playbook_dir }}/ssh-key'
-        run_provisioner: 'false'
     register: terraform
   - name: Build inventory
     add_host:

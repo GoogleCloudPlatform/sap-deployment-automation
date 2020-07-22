@@ -94,11 +94,6 @@ variable "post_deployment_script" {
   default     = ""
 }
 
-variable "startup_script" {
-  description = "Startup script to install SAP HANA."
-  default     = "./modules/files/startup.sh"
-}
-
 variable "sap_hana_sid" {
   description = "SAP HANA System Identifier"
   default     = "D10"
@@ -152,10 +147,4 @@ variable "gce_ssh_pub_key_file" {
 variable "gce_ssh_priv_key_file" {
   description = "GCE ssh user private key file name"
   default     = "~/.ssh/id_rsa"
-}
-
-variable "run_provisioner" {
-  type        = bool
-  description = "Whether or not to run the Ansible provisioner"
-  default     = true
 }

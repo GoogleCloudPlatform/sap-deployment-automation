@@ -128,10 +128,6 @@ variable "post_deployment_script" {
   default     = ""
 }
 
-variable "startup_script" {
-  description = "Startup script to install SAP HANA."
-}
-
 variable "sap_hana_sid" {
   description = "SAP HANA System Identifier. When using the SID to enter a user session, like this for example, `su - [SID]adm`, make sure that [SID] is in lower case."
 }

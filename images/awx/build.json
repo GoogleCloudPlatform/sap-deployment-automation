@@ -1,7 +1,7 @@
 {
   "variables": {
     "awx-version": "",
-    "git-repos": "",
+    "git-repo": "",
     "image-version": "",
     "project-id": "",
     "source-image-family": "debian-10",
@@ -59,14 +59,13 @@
     {
       "type": "ansible",
       "command": "./ansible-wrapper",
-      "keep_inventory_file": true,
       "playbook_file": "./postinstall.yml",
       "skip_version_check": true,
       "use_proxy": false,
       "user": "packer",
       "extra_arguments": [
         "-e", "ansible_python_interpreter=/usr/bin/python3",
-        "-e", "git_repos={{ user `git-repos` }}"
+        "-e", "git_repo={{ user `git-repo` }}"
       ]
     },
     {

@@ -12,9 +12,22 @@ GCP credentials must be in scope, by running on a machine with a service account
 
 ```
 packer build \
+  -var git-repo=ssh://user@source.developers.google.com:2022/p/albatross-duncanl-sandbox-2/r/sap-iac \
   -var project-id=project-xyz \
   -var subnetwork=subnet-01 \
   -var image-version=v4 \
   -var awx-version=13.0.0 \
   build.json
 ```
+
+The following variables are required. See `build.json` for optional variables.
+
+`awx-version`: The version of AWX to be installed.
+
+`git-repo`: The URL of the `sap-iac` git repository.
+
+`image-version`: The version number that will be appended to the image name.
+
+`project-id`: The ID of the project in which the temporary instance will be created.
+
+`subnetwork`: The subnet in which the temporary instance will be created.

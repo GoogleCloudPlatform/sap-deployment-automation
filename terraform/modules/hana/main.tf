@@ -101,7 +101,7 @@ resource "google_compute_instance" "gcp_sap_hana" {
     ssh-keys                   = "${var.gce_ssh_user}:${file("${var.gce_ssh_pub_key_file}")}"
   }
   
-  metadata_startup_script = var.startup_script
+  metadata_startup_script = file("${path.module}/startup.sh")
 
   lifecycle {
     # Ignore changes in the instance metadata, since it is modified by the SAP startup script.

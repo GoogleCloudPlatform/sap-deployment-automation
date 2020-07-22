@@ -1,6 +1,10 @@
 - hosts: all
-  gather_facts: true
   become: true
+  vars:
+    awx_project_name: SAP
+    awx_projects_dir: /var/lib/awx/projects
+    awx_project_subdir: sap-iac
+    awx_project_path: '{{ awx_projects_dir }}/{{ awx_project_subdir }}'
   tasks:
   - block:
     - name: copy git repo ssh key file
@@ -12,15 +16,17 @@
       git:
         accept_hostkey: true
         depth: 1
-        dest: '/var/lib/awx/projects/{{ item.name }}'
-        repo: '{{ item.url }}'
-        ssh_opts: -i /tmp/id_rsa -o StrictHostKeyChecking=no
-      loop: '{{ git_repos }}'
+        dest: '{{ awx_project_path }}'
+        repo: '{{ git_repo }}'
+        ssh_opts: -i /tmp/id_rsa
     always:
     - name: remove git repo ssh key file
       file:
         path: /tmp/id_rsa
         state: absent
+  - name: define job directories
+    command: 'ls {{ awx_project_path }}/stacks'
+    register: job_directories
   - name: wait for tower to initialize
     shell: |
       docker logs awx_task 2>&1 | grep 'Demo Credential, Inventory, and Job Template added'
@@ -36,7 +42,7 @@
       playbook: playbook.yml
       project: Demo Project
       state: absent
-      tower_host: 'http://{{ ansible_default_ipv4.address }}'
+      tower_host: http://localhost
       tower_username: admin
       tower_password: password
       validate_certs: false
@@ -46,17 +52,7 @@
       name: Demo Project
       organization: Default
       state: absent
-      tower_host: 'http://{{ ansible_default_ipv4.address }}'
-      tower_username: admin
-      tower_password: password
-      validate_certs: false
-    failed_when: false
-  - name: delete host from tower localhost inventory
-    tower_host:
-      inventory: localhost
-      name: localhost
-      state: absent
-      tower_host: 'http://{{ ansible_default_ipv4.address }}'
+      tower_host: http://localhost
       tower_username: admin
       tower_password: password
       validate_certs: false
@@ -66,27 +62,26 @@
       name: Demo Inventory
       organization: Default
       state: absent
-      tower_host: 'http://{{ ansible_default_ipv4.address }}'
+      tower_host: http://localhost
       tower_username: admin
       tower_password: password
       validate_certs: false
     failed_when: false
-  - name: add tower projects
+  - name: add tower project
     tower_project:
-      name: '{{ item.name }}'
-      local_path: '{{ item.name }}'
+      name: '{{ awx_project_name }}'
+      local_path: '{{ awx_project_subdir }}'
       organization: Default
       scm_type: manual
-      tower_host: 'http://{{ ansible_default_ipv4.address }}'
+      tower_host: http://localhost
       tower_username: admin
       tower_password: password
       validate_certs: false
-    loop: '{{ git_repos }}'
   - name: add tower localhost inventory
     tower_inventory:
       name: localhost
       organization: Default
-      tower_host: 'http://{{ ansible_default_ipv4.address }}'
+      tower_host: http://localhost
       tower_username: admin
       tower_password: password
       validate_certs: false
@@ -94,24 +89,27 @@
     tower_host:
       inventory: localhost
       name: localhost
-      tower_host: 'http://{{ ansible_default_ipv4.address }}'
+      tower_host: http://localhost
       tower_username: admin
       tower_password: password
       validate_certs: false
+  - name: read tower survey specs
+    slurp:
+      src: '{{ awx_project_path }}/stacks/{{ item }}/awx_survey_spec.json'
+    register: job_survey_specs
+    loop: '{{ job_directories.stdout_lines }}'
   - name: add tower job templates
     tower_job_template:
-      name: '{{ item.name }}-deploy'
+      name: '{{ item.0 }}'
       concurrent_jobs_enabled: true
       inventory: localhost
       job_type: run
-      playbook: deploy.yml
-      project: '{{ item.name }}'
+      playbook: 'stacks/{{ item.0 }}/playbook.yml'
+      project: '{{ awx_project_name }}'
       survey_enabled: true
-      survey_spec: '{{ lookup("file", playbook_dir + "/survey_spec.json") }}'
-      tower_host: 'http://{{ ansible_default_ipv4.address }}'
+      survey_spec: '{{ item.1 }}'
+      tower_host: http://localhost
       tower_username: admin
       tower_password: password
       validate_certs: false
-    loop: '{{ git_repos }}'
-  # - name: abort
-  #   command: /bin/false
+    loop: '{{ job_directories.stdout_lines | zip(job_survey_specs.results | map(attribute="content") | map("b64decode")) | list }}'
