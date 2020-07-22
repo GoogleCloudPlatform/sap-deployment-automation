@@ -100,8 +100,22 @@ resource "google_compute_instance" "gcp_sap_hana" {
     sap_hana_sapsys_gid        = var.sap_hana_sapsys_gid
     ssh-keys                   = "${var.gce_ssh_user}:${file("${var.gce_ssh_pub_key_file}")}"
   }
-  
-  metadata_startup_script = var.startup_script
+
+  metadata_startup_script = contains([element(split("-", var.linux_image_family), 0)], "rhel") ? templatefile("${path.module}/files/redhat.sh",
+    {
+      sap_install_files_bucket  = var.sap_install_files_bucket
+      sap_hostagent_file_name   = var.sap_hostagent_file_name
+      sap_hana_bundle_file_name = var.sap_hana_bundle_file_name
+      sap_hana_sapcar_file_name = var.sap_hana_sapcar_file_name
+    }
+    ) : templatefile("${path.module}/files/sles.sh",
+    {
+      sap_install_files_bucket  = var.sap_install_files_bucket
+      sap_hostagent_file_name   = var.sap_hostagent_file_name
+      sap_hana_bundle_file_name = var.sap_hana_bundle_file_name
+      sap_hana_sapcar_file_name = var.sap_hana_sapcar_file_name
+    }
+  )
 
   lifecycle {
     # Ignore changes in the instance metadata, since it is modified by the SAP startup script.

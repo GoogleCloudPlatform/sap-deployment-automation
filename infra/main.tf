@@ -20,7 +20,10 @@ module "gcp_sap_hana" {
   sap_hana_deployment_bucket = var.sap_hana_deployment_bucket
   sap_deployment_debug       = "false"
   post_deployment_script     = var.post_deployment_script
-  startup_script             = file(var.startup_script)
+  sap_install_files_bucket   = var.sap_install_files_bucket
+  sap_hostagent_file_name    = var.sap_hostagent_file_name
+  sap_hana_bundle_file_name  = var.sap_hana_bundle_file_name
+  sap_hana_sapcar_file_name  = var.sap_hana_sapcar_file_name
   sap_hana_sid               = var.sap_hana_sid
   sap_hana_instance_number   = var.sap_hana_instance_number
   sap_hana_sidadm_password   = var.sap_hana_sidadm_password
@@ -32,52 +35,4 @@ module "gcp_sap_hana" {
   address_name               = "${var.instance_name}-reservedip"
   gce_ssh_user               = var.gce_ssh_user
   gce_ssh_pub_key_file       = var.gce_ssh_pub_key_file
-}
-
-resource "local_file" "ansible_inventory" {
-  count = var.run_provisioner ? 1 : 0
-  content = templatefile("modules/ansible/templates/inventory.tmpl",
-    {
-      private-dns = module.gcp_sap_hana.instance_name,
-      private-ip  = module.gcp_sap_hana.address,
-      private-id  = module.gcp_sap_hana.instance_id
-      private-key = var.gce_ssh_priv_key_file
-      user        = var.gce_ssh_user
-    }
-  )
-  filename = "modules/ansible/inventory"
-}
-
-
-resource "local_file" "ansible_variables" {
-  count = var.run_provisioner ? 1 : 0
-  content = templatefile("modules/ansible/templates/sap_hosts.tmpl",
-    {
-      hana_log_size    = local.hana_log_size,
-      hana_data_size   = local.hana_data_size,
-      hana_shared_size = local.hana_shared_size,
-      hana_usr_size    = local.hana_usr_size,
-      hana_backup_size = local.hana_backup_size - 1
-    }
-  )
-  filename = "modules/ansible/vars/sap_hosts.yml"
-}
-
-resource "null_resource" "sap_config" {
-  count = var.run_provisioner ? 1 : 0
-  triggers = {
-    build_number = timestamp()
-  }
-
-  # Add wait period before the hana node becomes available
-  #TODO: Replace this with instance healthcheck
-  provisioner "local-exec" {
-    command = "sleep 2m"
-  }
-
-  provisioner "local-exec" {
-    command = "ansible-playbook -i ./modules/ansible/inventory ./modules/ansible/sap-hana-deploy.yml --extra-vars '@./modules/ansible/vars/sap_hosts.yml'"
-  }
-
-  depends_on = [local_file.ansible_inventory, local_file.ansible_variables, module.gcp_sap_hana]
 }

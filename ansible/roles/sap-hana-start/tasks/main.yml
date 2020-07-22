@@ -1,0 +1,9 @@
+---
+
+- name: Force all notified handlers to run at this point, not waiting for normal sync points
+  meta: flush_handlers
+
+- name: Hana DB start
+  command: HDB start
+  become: true
+  become_user: sl1adm

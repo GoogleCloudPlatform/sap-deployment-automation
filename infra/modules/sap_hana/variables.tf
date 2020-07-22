@@ -26,6 +26,22 @@ variable "linux_image_project" {
   description = "Project name containing the linux image."
 }
 
+variable "sap_install_files_bucket" {
+  description = "SAP install files GCE bucket name"
+}
+
+variable "sap_hostagent_file_name" {
+  description = "SAP Host agent filename"
+}
+
+variable "sap_hana_bundle_file_name" {
+  description = "SAP Hana deployment bundle filename"
+}
+
+variable "sap_hana_sapcar_file_name" {
+  description = "SAPCAR filename"
+}
+
 variable "autodelete_disk" {
   description = "Whether the disk will be auto-deleted when the instance is deleted."
   default     = "false"
@@ -126,10 +142,6 @@ variable "sap_deployment_debug" {
 variable "post_deployment_script" {
   description = "SAP HANA post deployment script. Must be a gs:// or https:// link to the script."
   default     = ""
-}
-
-variable "startup_script" {
-  description = "Startup script to install SAP HANA."
 }
 
 variable "sap_hana_sid" {
