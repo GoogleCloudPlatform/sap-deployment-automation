@@ -1,0 +1,7 @@
+---
+
+- debug:
+    msg: "SAP note 2777782 Step 1: Disable SELinux"
+- import_tasks: ../../RedHat/generic/disable-selinux.yml
+
+...

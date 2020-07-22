@@ -1,0 +1,61 @@
+- name: Print out pool information
+  debug:
+    var: _storage_pools_list
+  when: _storage_pools_list | length > 0
+
+- name: Print out volume information
+  debug:
+    var: _storage_volumes_list
+  when: _storage_volumes_list | length > 0
+
+#
+# Collect some information about the current state of the system.
+#
+- name: Collect info about the volumes.
+  blockdev_info:
+  register: storage_test_blkinfo
+  changed_when: false
+
+- name: Read the /etc/fstab file for volume existence
+  command: cat /etc/fstab
+  register: storage_test_fstab
+  changed_when: false
+
+- name: Read the /etc/crypttab file
+  command: cat /etc/crypttab
+  register: storage_test_crypttab
+  changed_when: false
+
+#
+# Verify pools and the volumes they contain.
+#
+- name: Verify the volumes listed in storage_pools were correctly managed
+  include_tasks: "test-verify-pool.yml"
+  loop: "{{ _storage_pools_list }}"
+  loop_control:
+    loop_var: storage_test_pool
+  when: _storage_pools_list is defined and _storage_pools_list | length > 0
+
+- name: Clean up variable namespace
+  set_fact:
+    storage_test_pool: null
+
+#
+# Verify standalone volumes.
+#
+- name: Verify the volumes with no pool were correctly managed
+  include_tasks: "test-verify-volume.yml"
+  loop: "{{ _storage_volumes_list }}"
+  loop_control:
+    loop_var: storage_test_volume
+  when: _storage_volumes_list is defined and _storage_volumes_list | length > 0
+
+#
+# Clean up.
+#
+- name: Clean up variable namespace
+  set_fact:
+    storage_test_fstab: null
+    storage_test_crypttab: null
+    storage_test_blkinfo: null
+    storage_test_volume: null

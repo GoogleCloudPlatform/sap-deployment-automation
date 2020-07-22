@@ -1,0 +1,6 @@
+# From upstream 'RHEL System Roles'
+- src: https://github.com/linux-system-roles/sap-preconfigure.git
+- src: https://github.com/linux-system-roles/sap-hana-preconfigure.git
+- src: https://github.com/linux-system-roles/storage.git
+- src: https://github.com/redhat-sap/sap-hostagent.git
+- src: https://github.com/redhat-sap/sap-hana-deployment.git

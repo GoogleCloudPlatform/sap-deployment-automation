@@ -1,0 +1,67 @@
+# Global Default variables
+# Adapt to your default settings
+
+# Target host path and file name for the bundle installation file
+sap_hana_deployment_bundle_path:
+sap_hana_deployment_bundle_sar_file_name:
+
+# Target host path and file name for the zip installation file
+sap_hana_deployment_zip_path:
+sap_hana_deployment_zip_file_name:
+
+# Target host path and file name for the sapcar installation file
+sap_hana_deployment_sapcar_path:
+sap_hana_deployment_sapcar_file_name:
+
+# if the previous variables are undefined because you do not want to provide a bundle
+# you can define sap_hana_installdir variable, which points to the directory containing hdblcm
+# the role sap-hana-mediacheck can be used to define this variable
+sap_hana_installdir:
+
+# Target host path and file name for the license file
+sap_hana_deployment_license_path:
+sap_hana_deployment_license_file_name:
+
+# Pass some extra arguments to the hdblcm cli, e.g.  --ignore=<check1>[,<check2>]...
+# Specifies failing preequisite checks that the SAP HANA platform lifecycle management tools should ignore.
+sap_hana_deployment_hdblcm_extraargs:
+
+# Response variables for unattended installation config file
+
+sap_hana_deployment_deploy_hostagent: 'n'
+sap_hana_deployment_apply_license: false
+sap_hana_deployment_hana_install_path: '/hana/shared'
+sap_hana_deployment_use_master_password: 'n'
+sap_hana_deployment_root_password:
+sap_hana_deployment_sapadm_password:
+sap_hana_deployment_hana_sid:
+sap_hana_deployment_hana_instance_number:
+sap_hana_deployment_hana_env_type: 'production'
+sap_hana_deployment_hana_mem_restrict: 'y'
+sap_hana_deployment_hana_max_mem:
+sap_hana_deployment_certificates_hostmap:
+sap_hana_deployment_common_master_password:
+sap_hana_deployment_sidadm_password:
+sap_hana_deployment_hana_userid:
+sap_hana_deployment_hana_groupid:
+sap_hana_deployment_hana_db_system_password:
+sap_hana_deployment_system_restart: 'n'
+sap_hana_deployment_create_initial_tenant:
+sap_hana_deployment_hostname:
+sap_hana_deployment_xs_install: 'n'
+sap_hana_deployment_xs_path:
+sap_hana_deployment_xs_orgname: 'orgname'
+sap_hana_deployment_xs_org_user: 'XSA_ADMIN'
+sap_hana_deployment_xs_org_password:
+sap_hana_deployment_xs_prod_space: 'PROD'
+sap_hana_deployment_xs_routing_mode: 'ports'
+sap_hana_deployment_xs_domain_name:
+sap_hana_deployment_xs_sap_space_user:
+sap_hana_deployment_xs_customer_space_user:
+sap_hana_deployment_xs_components:
+sap_hana_deployment_xs_components_nostart: 'none'
+sap_hana_deployment_lss_user:
+sap_hana_deployment_lss_group:
+sap_hana_deployment_lss_user_password:
+sap_hana_deployment_lss_backup_password:
+sap_hana_deployment_ase_user_password:

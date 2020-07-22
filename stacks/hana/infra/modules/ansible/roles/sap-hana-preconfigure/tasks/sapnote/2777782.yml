@@ -1,0 +1,34 @@
+---
+# tasks file for sap-hana-preconfigure configuration
+
+# We can skip the following task, as it is already part of role sap-preconfigure:
+#- import_tasks: 2777782/01-disable-selinux.yml
+#  when: sap_hana_preconfigure_config_all|d(true) or sap_hana_preconfigure_2777782_01|d(false)
+
+- import_tasks: 2777782/02-configure-tuned.yml
+  when: sap_hana_preconfigure_config_all|d(true) or sap_hana_preconfigure_2777782_02|d(false)
+
+- import_tasks: 2777782/03-disable-abrt-coredumps-kdump.yml
+  when: sap_hana_preconfigure_config_all|d(true) or sap_hana_preconfigure_2777782_03|d(false)
+
+- import_tasks: 2777782/04-turn-off-auto-numa-balancing.yml
+  when: sap_hana_preconfigure_config_all|d(true) or sap_hana_preconfigure_2777782_04|d(false)
+
+- import_tasks: 2777782/05-disable-thp.yml
+  when: sap_hana_preconfigure_config_all|d(true) or sap_hana_preconfigure_2777782_05|d(false)
+
+- import_tasks: 2777782/06-configure-c-states-for-lower-latency.yml
+  when: sap_hana_preconfigure_config_all|d(true) or sap_hana_preconfigure_2777782_06|d(false)
+
+- import_tasks: 2777782/07-configure-cpu-governor.yml
+  when: sap_hana_preconfigure_config_all|d(true) or sap_hana_preconfigure_2777782_07|d(false)
+
+- import_tasks: 2777782/08-configure-epb.yml
+  when: sap_hana_preconfigure_config_all|d(true) or sap_hana_preconfigure_2777782_08|d(false)
+
+- import_tasks: 2777782/09-disable-ksm.yml
+  when: sap_hana_preconfigure_config_all|d(true) or sap_hana_preconfigure_2777782_09|d(false)
+
+- import_tasks: 2777782/10-increase-pidmax.yml
+  when: sap_hana_preconfigure_config_all|d(true) or sap_hana_preconfigure_2777782_10|d(false)
+

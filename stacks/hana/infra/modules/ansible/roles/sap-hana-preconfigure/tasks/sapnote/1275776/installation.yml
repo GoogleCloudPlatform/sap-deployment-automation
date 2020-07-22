@@ -1,0 +1,10 @@
+---
+
+- name: 1275776 - Installation sapconf
+  package:
+    name: "sapconf"
+
+- name: 1275776 - Installation saptune
+  package:
+    name: "saptune"
+...

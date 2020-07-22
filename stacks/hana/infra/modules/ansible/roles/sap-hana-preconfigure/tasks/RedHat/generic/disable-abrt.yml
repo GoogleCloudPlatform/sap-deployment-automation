@@ -1,0 +1,33 @@
+---
+
+- debug:
+    msg: "imported RedHat/generic/disable-abrt.yml"
+
+- name: Check if abrt is installed
+  package:
+    name: abrt
+    state: present
+  check_mode: true
+  register: abrt_check
+  ignore_errors: yes
+- debug:
+    var: abrt_check
+
+- name: Disable abrtd if installed, and get status of abrtd
+  block:
+    - name: Disable abrtd if installed
+      systemd:
+        name: abrtd
+        state: stopped
+        enabled: no
+      when: not abrt_check.changed
+
+    - name: Get status of abrt
+      command: bash -lc "systemctl status abrtd"
+      register: command_result
+      ignore_errors: true
+    - debug:
+        var: command_result.stdout_lines, command_result.stderr_lines
+  when: not abrt_check.changed
+
+...

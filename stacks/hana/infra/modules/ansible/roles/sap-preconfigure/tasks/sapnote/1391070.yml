@@ -1,0 +1,12 @@
+---
+# tasks file for sap-preconfigure: configuration
+
+# Linux-UUID-solutions
+- block:
+  - debug:
+      msg: "SAP note 1391070: Configure uuidd"
+
+  - import_tasks: ../RedHat/generic/configure-uuidd.yml
+  when: sap_preconfigure_config_all|d(true) or sap_preconfigure_1391070|d(false)
+
+...

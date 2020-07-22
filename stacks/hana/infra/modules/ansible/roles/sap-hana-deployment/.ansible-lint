@@ -1,0 +1,3 @@
+# Ignoring the rule until this is solved -- https://github.com/ansible/ansible-lint/issues/457
+skip_list:
+  - '602'

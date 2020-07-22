@@ -1,0 +1,10 @@
+---
+
+# define variables here that will not change
+# Those are valid for all OS
+#
+
+# Default parameter file for SYSCTL settings according to SAP NOTE 2382421
+__sap_hana_preconfigure_etc_sysctl_saphana_conf: /etc/sysctl.d/sap_hana.conf
+
+...

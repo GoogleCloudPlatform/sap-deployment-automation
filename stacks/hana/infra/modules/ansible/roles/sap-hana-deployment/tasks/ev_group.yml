@@ -1,0 +1,24 @@
+---
+
+- name: Evaluate if 'sapsys' group already exists
+  shell: >
+    set -o pipefail && grep sapsys /etc/group | cut -d ":" -f 3
+  register: checkgroup
+  changed_when: false
+  failed_when: checkgroup.rc != 0
+
+- name: Get next available group ID in the 1000-1100 range
+  shell: >
+    awk -F: '{ uid[$3]=1 }END{ for(x=1000; x<=1100; x++) { if(uid[x] != ""){}else{print x; exit; }}}' /etc/group
+  register: nextgroupid
+  when: checkgroup.stdout | length = 0
+
+- name: Set fact for Group ID when 'sapsys' group does not exist
+  set_fact:
+    sap_hana_deployment_hana_groupid: "{{ nextgroupid.stdout }}"
+  when: checkgroup.stdout | length = 0
+
+- name: Set fact for Group ID when 'sapsys' group does exist
+  set_fact:
+    sap_hana_deployment_hana_groupid: "{{ checkgroup.stdout }}"
+  when: checkgroup.stdout | length > 0

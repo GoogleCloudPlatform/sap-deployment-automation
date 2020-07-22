@@ -1,0 +1,48 @@
+---
+# defaults file for template
+storage_provider: "blivet"
+storage_use_partitions: null
+storage_disklabel_type: null  # leave unset to allow the role to select an appropriate label type
+storage_safe_mode: true  # fail instead of implicitly/automatically removing devices or formatting
+
+storage_pool_defaults:
+  state: "present"
+  type: lvm
+
+  encryption: false
+  encryption_passphrase: null
+  encryption_key_file: null
+  encryption_cipher: null
+  encryption_key_size: null
+  encryption_luks_version: null
+
+  raid_level: null
+
+storage_volume_defaults:
+  state: "present"
+  type: lvm
+  size: 0
+
+  fs_type: "xfs"
+  fs_label: ""
+  fs_create_options: ""
+  fs_overwrite_existing: true
+
+  mount_point: ""
+  mount_options: "defaults"
+  mount_check: 0
+  mount_passno: 0
+  mount_device_identifier: "uuid"  # uuid|label|path
+
+  raid_level: null
+  raid_device_count: null
+  raid_spare_count: null
+  raid_chunk_size: null
+  raid_metadata_version: null
+
+  encryption: false
+  encryption_passphrase: null
+  encryption_key_file: null
+  encryption_cipher: null
+  encryption_key_size: null
+  encryption_luks_version: null
