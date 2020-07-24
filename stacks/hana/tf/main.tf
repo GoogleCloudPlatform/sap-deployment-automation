@@ -1,7 +1,5 @@
-provider "google" {}
-
 module "gcp_sap_hana" {
-  source                     = "./modules/sap_hana"
+  source                     = "../../../terraform/modules/hana"
   subnetwork                 = var.subnetwork
   linux_image_family         = var.linux_image_family
   linux_image_project        = var.linux_image_project
