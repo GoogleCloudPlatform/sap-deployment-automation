@@ -1,0 +1,82 @@
+{
+  "variables": {
+    "awx-version": "",
+    "git-repos": "",
+    "image-version": "",
+    "project-id": "",
+    "source-image-family": "debian-10",
+    "source-image-project-id": "debian-cloud",
+    "subnetwork": "",
+    "terraform-version": "0.12.28",
+    "zone": "us-central1-a"
+  },
+  "builders": [{
+    "type": "googlecompute",
+    "image_name": "sap-awx-{{ user `image-version` }}",
+    "image_family": "sap-awx",
+    "project_id": "{{ user `project-id` }}",
+    "source_image_family": "{{ user `source-image-family` }}",
+    "source_image_project_id": "{{ user `source-image-project-id` }}",
+    "subnetwork": "{{ user `subnetwork` }}",
+    "ssh_username": "packer",
+    "tags": ["ssh"],
+    "use_internal_ip": true,
+    "zone": "{{ user `zone` }}"
+  }],
+  "provisioners": [
+    {
+      "type": "shell-local",
+      "inline": [
+        "[ -d _awx ] || mv awx _awx",
+        "[ -f awx/INSTALL.md ] || git clone --depth 1 --branch {{ user `awx-version` }} https://github.com/ansible/awx.git"
+      ]
+    },
+    {
+      "type": "ansible",
+      "command": "./ansible-wrapper",
+      "playbook_file": "./preinstall.yml",
+      "skip_version_check": true,
+      "use_proxy": false,
+      "user": "packer",
+      "extra_arguments": [
+        "-e", "ansible_python_interpreter=/usr/bin/python3",
+        "-e", "terraform_version={{ user `terraform-version` }}"
+      ]
+    },
+    {
+      "type": "ansible",
+      "command": "./ansible-wrapper",
+      "inventory_directory": "./inventory",
+      "playbook_file": "./awx/installer/install.yml",
+      "skip_version_check": true,
+      "use_proxy": false,
+      "user": "packer",
+      "extra_arguments": [
+        "-b",
+        "-e", "ansible_python_interpreter=/usr/bin/python3"
+      ]
+    },
+    {
+      "type": "ansible",
+      "command": "./ansible-wrapper",
+      "keep_inventory_file": true,
+      "playbook_file": "./postinstall.yml",
+      "skip_version_check": true,
+      "use_proxy": false,
+      "user": "packer",
+      "extra_arguments": [
+        "-e", "ansible_python_interpreter=/usr/bin/python3",
+        "-e", "git_repos={{ user `git-repos` }}"
+      ]
+    },
+    {
+      "type": "shell-local",
+      "inline": [
+        "[ -f ./awx/INSTALL.md ] && rm -rf ./awx",
+        "[ -d _awx -a ! -d awx ] && mv _awx awx",
+        "rm -f ./inventory/host_vars/default",
+        "rm -rf ./venv"
+      ]
+    }
+  ]
+}
