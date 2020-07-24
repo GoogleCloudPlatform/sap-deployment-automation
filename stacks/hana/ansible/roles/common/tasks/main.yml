@@ -1,0 +1,33 @@
+---
+
+# Create software directory to store HANA install files
+- name: Create /hana/shared/software dir
+  file:
+    path: /hana/shared/software
+    state: directory
+
+- name: Wait for HANA files to download
+  wait_for: 
+    path: "{{ item }}"
+    state: present
+  with_items:
+    - "/software/{{ sap_hostagent_file_name }}"
+    - "/software/{{ sap_hana_bundle_file_name }}"
+    - "/software/{{ sap_hana_sapcar_file_name }}"
+
+- name: Copy HANA install files to "/hana/shared/software"
+  copy:
+    src: "{{ item }}"
+    dest: /hana/shared/software
+    mode: 0775
+    force: no
+    remote_src: yes
+  with_items:
+    - "/software/{{ sap_hostagent_file_name }}"
+    - "/software/{{ sap_hana_bundle_file_name }}"
+    - "/software/{{ sap_hana_sapcar_file_name }}"
+
+#- name: Remove old HANA install files under /software
+#  file: 
+#    path: /software/
+#    state: absent

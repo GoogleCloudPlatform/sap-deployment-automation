@@ -1,0 +1,17 @@
+---
+# tasks file for sap-preconfigure: configuration
+
+# 08-configure-linux-kernel-parameters.yml
+- debug:
+    msg: "SAP note 2772999 Step 8: Configure Linux Kernel Parameters"
+
+- name: Set kernel parameter vm.max_map_count
+  sysctl:
+    sysctl_file: /etc/sysctl.d/sap.conf
+    name: vm.max_map_count
+    value: '2147483647'
+    state: present
+    sysctl_set: yes
+    reload: yes
+
+...

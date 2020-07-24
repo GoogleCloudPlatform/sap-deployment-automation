@@ -1,0 +1,26 @@
+---
+# tasks file for sap-preconfigure: installation
+
+# This is all done in tasks/installation.yml so this yml file will not be called from 2002167.yml.
+# 01-install-additional-software-packages-sap.yml
+  - debug:
+      msg: "SAP note 2002167 Step 1: Installing Red Hat Enterprise Linux 7"
+
+  - name: "Install package group Infrastructure Server"
+    dnf:
+      name: "@Server"
+      state: present
+    when:
+      - ansible_facts['distribution'] == "RedHat"
+      - ansible_facts['distribution_major_version'] == "7"
+
+  - name: "Install packages for SAP"
+    package:
+      name: "{{ item }}"
+      state: present
+    with_items: "{{ __sap_preconfigure_packages }}"
+    when:
+      - ansible_facts['distribution'] == "RedHat"
+      - ansible_facts['distribution_major_version'] == "7"
+
+...

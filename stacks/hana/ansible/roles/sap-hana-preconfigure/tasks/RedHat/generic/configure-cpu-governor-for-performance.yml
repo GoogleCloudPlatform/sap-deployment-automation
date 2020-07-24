@@ -1,0 +1,53 @@
+---
+
+- debug:
+    msg: "imported RedHat/generic/configure-cpu-governor-for-performance.yml"
+
+# can be configured by tuned profile sap-hana, entry "governor=performance"
+#   in included tuned profile throughput-performance
+- block:
+    - name: Check if system is able to set CPU Governor for performance
+      command: bash -lc "LC_ALL=C cpupower frequency-info -g | awk '/available cpufreq governors/{print $(NF-1), $NF}'"
+      check_mode: no
+      register: command_check_result
+      ignore_errors: true
+      changed_when: false
+    - debug:
+        var: command_check_result.stdout_lines, command_check_result.stderr_lines
+
+    - name: Configure CPU Governor for performance if possible
+      block:
+        - name: Create file /etc/rc.d/rc.local if it does not exist
+          file:
+            path: /etc/rc.d/rc.local
+            state: touch
+            mode: 0644
+
+        - name: Configure CPU Governor for performance at boot time (x86_64 platform only)
+          lineinfile:
+            dest: /etc/rc.d/rc.local
+            line: "cpupower frequency-set -g performance"
+
+        - name: Configure CPU Governor for performance on the running system (x86_64 platform only)
+          command: bash -lc "cpupower frequency-set -g performance"
+          register: command_result
+        - debug:
+            var: command_result.stdout_lines, command_result.stderr_lines
+
+        - name: Get status of CPU Governor
+          command: bash -lc "cpupower frequency-info -g"
+          register: command_result
+          ignore_errors: true
+          changed_when: false
+        - debug:
+            var: command_result.stdout_lines, command_result.stderr_lines
+
+      when:
+       - command_check_result.stdout != 'Not Available'
+
+  when:
+    - ansible_architecture == 'x86_64'
+    - ansible_os_family == 'RedHat'
+    - not sap_hana_preconfigure_use_tuned_where_possible
+
+...

@@ -1,0 +1,19 @@
+---
+# tasks file for sap-preconfigure configuration
+
+- import_tasks: 2002167/02-configuration-changes.yml
+  when: sap_preconfigure_config_all|d(true) or sap_preconfigure_2002167_02|d(false)
+
+- import_tasks: 2002167/03-setting-the-hostname.yml
+  when: sap_preconfigure_config_all|d(true) or sap_preconfigure_2002167_03|d(false)
+
+- import_tasks: 2002167/04-linux-kernel-parameters.yml
+  when: sap_preconfigure_config_all|d(true) or sap_preconfigure_2002167_04|d(false)
+
+- import_tasks: 2002167/05-process-resource-limits.yml
+  when: sap_preconfigure_config_all|d(true) or sap_preconfigure_2002167_05|d(false)
+
+- import_tasks: 2002167/06-additional-notes-for-installing-sap-systems.yml
+  when: sap_preconfigure_config_all|d(true) or sap_preconfigure_2002167_06|d(false)
+
+...

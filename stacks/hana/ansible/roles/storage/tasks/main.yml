@@ -1,0 +1,55 @@
+---
+
+- name: Create disk partitions
+  parted:
+    device: "{{ item.path }}"
+    number: 1
+    state: present
+  with_items: "{{ disks }}"
+  tags:
+  - disk_setup
+
+- name: Create logical volume groups
+  lvg:
+    vg: "{{ item.name }}"
+    pvs: "{{ item.path }}1"
+    state: present
+  with_items: "{{ disks }}"
+  tags:
+  - disk_setup
+
+- name: Create logical volumes
+  lvol:
+    state: present
+    vg: "{{ item.value.vol }}"
+    lv: "{{ item.key }}"
+    size: "{{ item.value.size }}"
+    pvs: "{{ item.value.pvs | default(omit) }}"
+  with_dict: "{{ logvols }}"
+  tags:
+    - disk_setup
+  when: ( logvols is defined )
+
+- name: Create filesystems
+  filesystem:
+    dev:  /dev/{{ item.value.vol}}/{{ item.key }}
+    fstype: "{{ item.value.fstype | default('xfs')}}"
+    force: no
+    opts: "{{ item.value.opts | default(omit) }}"
+  with_dict: "{{ logvols }}"
+  ignore_errors: True
+  tags:
+    - disk_setup
+  when: logvols is defined
+
+- name: Mount and make fstab entries
+  mount:
+    name: "{{ item.value.mountpoint }}"
+    fstype: "{{ item.value.fstype | default('xfs')}}"
+    opts: defaults
+    src: "/dev/{{ item.value.vol }}/{{ item.key }}"
+    state: mounted
+  with_dict: "{{ logvols }}"
+  tags:
+    - disk_setup
+  when: logvols is defined

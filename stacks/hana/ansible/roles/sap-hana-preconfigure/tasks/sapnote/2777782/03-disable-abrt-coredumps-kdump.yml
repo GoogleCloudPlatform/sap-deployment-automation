@@ -1,0 +1,10 @@
+---
+
+- debug:
+    msg: "SAP note 2777782 Step 3: Disable ABRT, core dumps, and kdump"
+- import_tasks: ../../RedHat/generic/disable-abrt.yml
+- import_tasks: ../../RedHat/generic/disable-abrt-ccpp.yml
+- import_tasks: ../../RedHat/generic/disable-coredumps.yml
+- import_tasks: ../../RedHat/generic/disable-kdump.yml
+
+...

@@ -1,0 +1,33 @@
+---
+
+- debug:
+    msg: "imported RedHat/generic/disable-abrt-ccpp.yml"
+
+- name: Check if package abrt-addon-ccpp is installed
+  package:
+    name: abrt-addon-ccpp
+    state: present
+  check_mode: true
+  register: abrt_ccpp_check
+  ignore_errors: yes
+- debug:
+    var: abrt_ccpp_check
+
+- name: Disable abrt-ccpp if installed, and get status of abrtd
+  block:
+    - name: Disable abrt-ccpp if installed
+      systemd:
+        name: abrt-ccpp
+        state: stopped
+        enabled: no
+      when: not abrt_ccpp_check.changed
+
+    - name: Get status of abrt-ccpp
+      command: bash -lc "systemctl status abrt-ccpp"
+      register: command_result
+      ignore_errors: true
+    - debug:
+        var: command_result.stdout_lines, command_result.stderr_lines
+  when: not abrt_ccpp_check.changed
+
+...

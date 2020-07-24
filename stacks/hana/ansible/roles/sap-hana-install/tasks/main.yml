@@ -1,0 +1,76 @@
+---
+
+# SAP Note 2593824 - Linux Running SAP applications compiled with GCC 7.x
+- name: Install GCC 7.x for RedHat
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - compat-sap-c++-7
+    - libatomic
+  when:  ansible_os_family == "RedHat"
+  
+- name: Install GCC 7.x for Suse
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - libgcc_s1
+    - libstdc++6
+    - libatomic1
+  when: ansible_os_family == "Suse"
+
+- name: Create temporary directory to store the processed template
+  tempfile:
+    state: directory
+    suffix: hanaconfig
+  register: tmpdir
+
+- name: Deploy HANA Configfile Template
+  template:
+    src: "{{ role_path }}/templates/configfile.j2"
+    dest: "{{ tmpdir.path }}/configfile.cfg"
+  register: cftemplat
+
+- name: Extract HANA Archive
+  block:
+    - name: Extract SAR Archive
+      command: "./{{ sap_hana_deployment_sapcar_file_name }} -manifest SIGNATURE.SMF -xvf  {{ sap_hana_deployment_bundle_sar_file_name }}"
+      args:
+        chdir: /hana/shared/software
+        creates: /hana/shared/software/SAP_HANA_DATABASE/hdblcm
+      register: sap_hana_deployment_register_extractbundle
+      when:
+        - not(( sap_hana_deployment_bundle_sar_file_name is none ) or (sap_hana_deployment_bundle_sar_file_name | trim == ''))
+    - name: Extract ZIP Archive
+      unarchive:
+        src: 51053787.ZIP
+        dest: /hana/shared/software
+        remote_src: yes
+      register: sap_hana_deployment_register_extractzip
+      args:
+        creates: /hana/shared/software/DATA_UNITS/HDB_SERVER_LINUX_X86_64/hdblcm
+      when:
+        - not(( sap_hana_deployment_zip_file_name is none ) or (sap_hana_deployment_zip_file_name | trim == ''))
+
+- name: Check availability of "/hana/shared/software/SAP_HANA_DATABASE/hdblcm"
+  stat:
+    path: "/hana/shared/software/SAP_HANA_DATABASE/hdblcm"
+  register: sap_hana_deployment_register_hdblcm_stat
+  failed_when: not sap_hana_deployment_register_hdblcm_stat.stat.exists
+
+- name: Check if another instance of HANA DB is running with sid "{{ sap_hana_deployment_hana_sid }}"
+  stat:
+    path: "/hana/shared/{{ sap_hana_deployment_hana_sid }}"
+  register: hana_db_running
+
+- name: Install SAP HANA
+  block:
+    - name: Install SAP HANA started
+      command: "./hdblcm {{ sap_hana_deployment_hdblcm_extraargs }} --configfile={{ tmpdir.path }}/configfile.cfg -b"
+      register: installhana
+      args:
+        chdir: "/hana/shared/software/SAP_HANA_DATABASE/"
+      changed_when: "'SAP HANA Lifecycle Management' in installhana.stdout"
+  when:
+    - not hana_db_running.stat.exists

@@ -1,0 +1,16 @@
+---
+
+#sap_hana_gce_ssh_pub_key: ~/.ssh/id_rsa.pub
+#sap_hana_gce_ssh_priv_key: ~/.ssh/id_rsa
+sap_hana_instance_name: saphanasles-bg
+sap_hana_linux_image_family: rhel-7-7-sap-ha
+sap_hana_linux_image_project: rhel-sap-cloud
+sap_hana_region: us-central1
+sap_hana_zone: us-central1-a
+sap_hana_subnetwork: app2
+sap_hana_boot_disk_size: 30
+sap_hana_gce_ssh_user: balaguduru
+sap_install_files_bucket: nw-ansible
+sap_hostagent_file_name: saphostagentrpm_44-20009394.rpm
+sap_hana_bundle_file_name: IMDB_SERVER20_047_0-80002031.SAR
+sap_hana_sapcar_file_name: SAPCAR_1320-80000935.EXE
