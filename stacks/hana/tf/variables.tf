@@ -15,7 +15,7 @@ variable "region" {
 
 variable "instance_name" {
   description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
-  default     = "saphanarh-bg"
+  default     = "saphanasles-bg"
 }
 
 variable "instance_type" {
@@ -31,6 +31,26 @@ variable "linux_image_family" {
 variable "linux_image_project" {
   description = "Project name containing the linux image."
   default     = "rhel-sap-cloud"
+}
+
+variable "sap_install_files_bucket" {
+  description = "SAP install files GCE bucket name"
+  default     = "nw-ansible"
+}
+
+variable "sap_hostagent_file_name" {
+  description = "SAP Host agent filename"
+  default     = "saphostagentrpm_44-20009394.rpm"
+}
+
+variable "sap_hana_bundle_file_name" {
+  description = "SAP Hana deployment bundle filename"
+  default     = "IMDB_SERVER20_047_0-80002031.SAR"
+}
+
+variable "sap_hana_sapcar_file_name" {
+  description = "SAPCAR filename"
+  default     = "SAPCAR_1320-80000935.EXE"
 }
 
 variable "autodelete_disk" {
@@ -142,9 +162,4 @@ variable "gce_ssh_user" {
 variable "gce_ssh_pub_key_file" {
   description = "GCE ssh user pub key file name"
   default     = "~/.ssh/id_rsa.pub"
-}
-
-variable "gce_ssh_priv_key_file" {
-  description = "GCE ssh user private key file name"
-  default     = "~/.ssh/id_rsa"
 }

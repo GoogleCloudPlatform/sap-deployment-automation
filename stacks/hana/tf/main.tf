@@ -18,6 +18,10 @@ module "gcp_sap_hana" {
   sap_hana_deployment_bucket = var.sap_hana_deployment_bucket
   sap_deployment_debug       = "false"
   post_deployment_script     = var.post_deployment_script
+  sap_install_files_bucket   = var.sap_install_files_bucket
+  sap_hostagent_file_name    = var.sap_hostagent_file_name
+  sap_hana_bundle_file_name  = var.sap_hana_bundle_file_name
+  sap_hana_sapcar_file_name  = var.sap_hana_sapcar_file_name
   sap_hana_sid               = var.sap_hana_sid
   sap_hana_instance_number   = var.sap_hana_instance_number
   sap_hana_sidadm_password   = var.sap_hana_sidadm_password

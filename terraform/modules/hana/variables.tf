@@ -26,6 +26,22 @@ variable "linux_image_project" {
   description = "Project name containing the linux image."
 }
 
+variable "sap_install_files_bucket" {
+  description = "SAP install files GCE bucket name"
+}
+
+variable "sap_hostagent_file_name" {
+  description = "SAP Host agent filename"
+}
+
+variable "sap_hana_bundle_file_name" {
+  description = "SAP Hana deployment bundle filename"
+}
+
+variable "sap_hana_sapcar_file_name" {
+  description = "SAPCAR filename"
+}
+
 variable "autodelete_disk" {
   description = "Whether the disk will be auto-deleted when the instance is deleted."
   default     = "false"

@@ -1,1 +1,1 @@
-## SAP HANA configured using Ansible 
+## SAP HANA installation and configuration using Ansible for SUSE

@@ -5,7 +5,8 @@
   when: sap_hana_preconfigure_run_grub2_mkconfig|d(true)
 
 - name: "Reboot handler"
-  fail:
-    msg: Reboot is required!
+  #fail:
+  #  msg: Reboot is required!
+  reboot:
   when: sap_hana_preconfigure_fail_if_reboot_required|d(true)
 

@@ -1,0 +1,9 @@
+---
+
+- name: Force all notified handlers to run at this point, not waiting for normal sync points
+  meta: flush_handlers
+
+- name: HANA DB start
+  command: /usr/sap/SL1/HDB00/HDB start
+  become: true
+  become_user: "{{ sap_hana_deployment_hana_sid|lower }}adm"

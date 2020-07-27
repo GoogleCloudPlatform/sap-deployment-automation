@@ -3,6 +3,30 @@
   "name": "parameters",
   "spec": [
     {
+      "question_name": "Terraform state bucket",
+      "question_description": "",
+      "required": true,
+      "type": "text",
+      "variable": "sap_hana_state_bucket",
+      "min": 1,
+      "max": 1024,
+      "default": "",
+      "choices": "",
+      "new_question": true
+    },
+    {
+      "question_name": "Installation files bucket",
+      "question_description": "",
+      "required": true,
+      "type": "text",
+      "variable": "sap_install_files_bucket",
+      "min": 1,
+      "max": 1024,
+      "default": "",
+      "choices": "",
+      "new_question": true
+    },
+    {
       "question_name": "HANA instance name",
       "question_description": "",
       "required": true,

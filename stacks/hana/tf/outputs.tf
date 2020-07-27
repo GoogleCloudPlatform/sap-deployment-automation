@@ -44,3 +44,23 @@ output "hana_usr_size" {
 output "hana_backup_size" {
   value = local.hana_backup_size
 }
+
+output "sap_image_family" {
+  value = contains([element(split("-", var.linux_image_family), 0)], "rhel") ? "RedHat" : "Suse"
+}
+
+output "sap_install_files_bucket" {
+  value = var.sap_install_files_bucket
+}
+
+output "sap_hostagent_file_name" {
+  value = var.sap_hostagent_file_name
+}
+
+output "sap_hana_bundle_file_name" {
+  value = var.sap_hana_bundle_file_name
+}
+
+output "sap_hana_sapcar_file_name" {
+  value = var.sap_hana_sapcar_file_name
+}

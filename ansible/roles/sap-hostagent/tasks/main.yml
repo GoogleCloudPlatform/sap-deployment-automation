@@ -15,6 +15,10 @@
 - import_tasks: deploy_bundle.yml
   when: sap_hostagent_installation_type == "bundle"
 
+# Deploy SAPHOSTAGENT using SAP Installation Zypper
+- import_tasks: deploy_zypper.yml
+  when: sap_hostagent_installation_type == "Zypper"
+
 # Configuring SSL for SAP Host Agent
 - import_tasks: config_ssl.yml
   when: sap_hostagent_config_ssl
