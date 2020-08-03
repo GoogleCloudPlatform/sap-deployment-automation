@@ -1,0 +1,48 @@
+totem {
+  version: 2
+  secauth: off
+  crypto_hash: sha1
+  crypto_cipher: aes256
+  cluster_name:	hacluster
+  clear_node_high_bit: yes
+  token: 20000
+  token_retransmits_before_loss_const: 10
+  join: 60
+  consensus: 24000
+  max_messages:	20
+  transport: udpu
+  interface {
+    ringnumber:	0
+    bindnetaddr: {{ ansible_default_ipv4.address }}
+    mcastport: 5405
+    ttl: 1
+  }
+}
+logging {
+  fileline: off
+  to_stderr: no
+  to_logfile: no
+  logfile: /var/log/cluster/corosync.log
+  to_syslog: yes
+  debug: off
+  timestamp: on
+  logger_subsys {
+    subsys: QUORUM
+    debug: off
+  }
+}
+nodelist {
+  node {
+    ring0_addr: {{ sap_primary_instance_ip }}
+    nodeid: 1
+  }
+  node {
+    ring0_addr: {{ sap_secondary_instance_ip }}
+    nodeid: 2
+  }
+}
+quorum {
+  provider: corosync_votequorum
+  expected_votes: 2
+  two_node: 1
+}

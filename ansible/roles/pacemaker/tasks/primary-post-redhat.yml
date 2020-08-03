@@ -1,0 +1,38 @@
+---
+- name: wait for cluster to be up
+  command: crm_mon -s
+  register: cluster_status
+  retries: 30
+  delay: 10
+  until: |
+    '2 nodes online' in cluster_status.stdout
+  changed_when: false
+
+- name: set pcs cluster authentication
+  command: >-
+    pcs cluster auth {{ sap_primary_instance }} {{ sap_secondary_instance }}
+    -u {{ sap_cluster_user }} -p {{ sap_cluster_user_password }}
+  no_log: true
+
+- name: check maintenance mode
+  command: pcs property show maintenance-mode
+  register: maintenance_mode_status
+  changed_when: false
+
+- name: enable maintenance mode
+  command: pcs property set maintenance-mode=true
+  when: |
+    'maintenance-mode: false' in maintenance_mode_status.stdout
+
+# TODO: include application-specific tasks based on sap_application variable (e.g. hana, netweaver).
+# - include_tasks: 'resource-{{ sap_application }}-{{ ansible_os_family | lower }}.yml'
+
+- name: check maintenance mode
+  command: pcs property show maintenance-mode
+  register: maintenance_mode_status
+  changed_when: false
+
+- name: disable maintenance mode
+  command: pcs property set maintenance-mode=false
+  when: |
+    'maintenance-mode: true' in maintenance_mode_status.stdout
