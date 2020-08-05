@@ -1,0 +1,51 @@
+---
+- name: Copy binaries to mount folder
+  copy:
+    src: /opt/Software
+    dest: /sapmnt/
+    remote_src: yes
+
+- name: changing user home permissions
+  command: bash -c "umask -S 0000"
+
+- name: permissions to home 
+  file:
+    path: /home/sushma
+    state: directory
+    mode: 0775
+    recurse: true
+
+- name: permissions to home 
+  file:
+    path: /tmp/sapinst_instdir
+    state: directory
+    mode: 0775
+    recurse: true
+
+- name: changing permissions
+  file:
+    path: /sapmnt/Software
+    state: directory
+    mode: 0775
+    recurse: true
+
+- name: Setting fact for nw installer path
+  set_fact:
+    sapinst_path: /sapmnt/Software/SWPM1.0
+
+- name: inifile.params config file 
+  template:
+    src: inifile.params.j2
+    dest: /usr/sap/inifile.params
+    
+- name: installing s4-hana 
+  command: >- 
+     ./sapinst SAPINST_INPUT_PARAMETERS_URL=/usr/sap/inifile.params \
+     SAPINST_EXECUTE_PRODUCT_ID=NW_ABAP_OneHost:NW750.HDB.ABAP \
+     SAPINST_SKIP_DIALOGS=true SAPINST_START_GUISERVER=false
+  register: installnw
+  args:
+   chdir: "{{ sapinst_path }}"
+  when: true
+- debug:
+   var: installs4hana

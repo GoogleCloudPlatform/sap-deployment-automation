@@ -1,0 +1,52 @@
+---
+- name: install packages
+  package:
+    name: "{{ package_list }}"
+    state: present
+
+- name: Disable SELinux
+  selinux:
+    state: disabled
+  register: result
+  failed_when: result.msg | default('ok', True) is not search('(^ok$|libselinux-python|(SELinux state changed))')
+
+- sysctl:
+    name: "{{ item }}"
+    value: '0'
+    sysctl_set: yes
+    state: present
+    reload: yes
+  loop:
+    - vm.pagecache_limit_mb
+    - vm.pagecache_limit_ignore_dirty
+    - net.ipv4.tcp_slow_start_after_idle
+    - kernel.numa_balancing
+  when: ansible_facts['distribution'] == "SLES_SAP"
+    
+- name: uninstalling package python 3.4
+  package:
+    name: "python3"
+    state: absent
+  when: ansible_facts['distribution'] == "SLES_SAP"
+
+- name: removing cached python libraries
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /usr/lib64/python3.4
+    - /etc/profile.d/python.sh
+    - /etc/profile.d/python.csh
+  when: ansible_facts['distribution'] == "SLES_SAP"
+
+- name: ssh config
+  replace:
+    path: /etc/ssh/sshd_config
+    regexp: 'PermitRootLogin no'
+    replace: "PermitRootLogin yes"
+
+- name: Restart ssh
+  service:
+    name: sshd
+    state: restarted
+...

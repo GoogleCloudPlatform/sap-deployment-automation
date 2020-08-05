@@ -1,0 +1,2 @@
+gsutil_opts: "-m -o GSUtil:parallel_composite_upload_threshold=150M"
+nw_bucket: "nw-code-ansible"

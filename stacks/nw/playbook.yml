@@ -1,0 +1,108 @@
+---
+- name: SAP NW deploy
+  hosts: 127.0.0.1
+  connection: local
+  vars:
+    sap_nw_project_id: albatross-duncanl-sandbox-2
+    sap_nw_gce_ssh_pub_key: ~/.ssh/id_rsa.pub
+    sap_nw_gce_ssh_priv_key: ~/.ssh/id_rsa
+    sap_nw_state_bucket: nw-code-ansible
+    sap_nw_instance_name: sap-nw
+    sap_nw_instance_type: n1-standard-8
+    sap_nw_linux_image_family: sles-12-sp3-sap
+    sap_nw_linux_image_project: suse-sap-cloud
+    sap_nw_region: us-central1
+    sap_nw_zone: us-central1-a
+    sap_nw_subnetwork: app2
+    sap_nw_subnetwork_project: albatross-duncanl-sandbox-2
+    sap_nw_boot_disk_size: 30
+    sap_nw_gce_ssh_user: sushma
+
+  tasks:
+  - name: Copy ssh public key
+    copy:
+      dest: '{{ playbook_dir }}/ssh-key.pub'
+      src: '{{ sap_nw_gce_ssh_pub_key }}'
+  - name: Copy ssh private key
+    copy:
+      dest: '{{ playbook_dir }}/ssh-key'
+      src: '{{ sap_nw_gce_ssh_priv_key }}'
+      mode: '0600'
+  - name: Deploy SAP NW infrastructure
+    terraform:
+      backend_config:
+        bucket: '{{ sap_nw_state_bucket }}'
+        prefix: '{{ sap_nw_state_bucket_prefix | default(sap_nw_instance_name) }}'
+      force_init: true
+      project_path: ./tf
+      state: present
+      variables:
+        project_id: '{{ sap_nw_project_id }}'
+        instance_name: '{{ sap_nw_instance_name }}'
+        instance_type: '{{ sap_nw_instance_type }}'
+        linux_image_family: '{{ sap_nw_linux_image_family }}'
+        linux_image_project: '{{ sap_nw_linux_image_project }}'
+        region: '{{ sap_nw_region }}'
+        zone: '{{ sap_nw_zone }}'
+        subnetwork: '{{ sap_nw_subnetwork }}'
+        subnetwork_project: '{{ sap_nw_subnetwork_project }}'
+        boot_disk_size: '{{ sap_nw_boot_disk_size }}'
+        ssh_user: '{{ sap_nw_gce_ssh_user }}'
+        public_key_path: '{{ playbook_dir }}/ssh-key.pub'
+    register: terraform
+  - name: Build inventory
+    add_host:
+      name: '{{ terraform.outputs.address.value }}'
+      ansible_user: '{{ sap_nw_gce_ssh_user }}'
+      ansible_ssh_private_key_file: '{{ playbook_dir }}/ssh-key'
+      terraform: '{{ terraform }}'
+      groups: nw
+    changed_when: false
+  - name: Wait for host
+    shell: |-
+      ssh -i {{ playbook_dir }}/ssh-key \
+        -o StrictHostKeyChecking=no \
+        {{ sap_nw_gce_ssh_user }}@{{ terraform.outputs.address.value }} \
+        exit
+    register: can_ssh
+    retries: 12
+    delay: 10
+    until: can_ssh is succeeded
+
+- name: SAP NW configure
+  hosts: nw
+  become: yes
+  become_user: root
+  vars:
+    sap_image_family: '{{ terraform.outputs.sap_image_family.value }}'
+  roles:
+  - role: base
+  - role: nw-pre
+  - role: storage
+    vars:
+      usr_sap_size: 140G
+      sap_mnt_size: 140G
+      swap_size: 29G
+      swapon: True
+      disks:
+        - { name: '{{ terraform.outputs.device_name_sapmnt.value }}', partition_path : 'sapmnt'}
+        - { name: '{{ terraform.outputs.device_name_usr_sap.value }}', partition_path : 'usrsap'}
+        - { name: '{{ terraform.outputs.device_name_swap.value }}', partition_path : 'swap'}     
+      logvols:
+        sapmnt:
+          size: "{{ sap_mnt_size }}"
+          vol: "sapmnt"
+          mountpoint: /sapmnt
+#          fstype: xfs
+        usrsap:
+          size: "{{ usr_sap_size }}"
+          vol: usrsap
+          mountpoint: /usr/sap
+#         fstype: xfs
+      swapvols:
+        swap:
+          size: "{{ swap_size }}"
+          vol: swap 
+          mountpoint: /swap
+ #           fstype: xfs
+  - role: nw
