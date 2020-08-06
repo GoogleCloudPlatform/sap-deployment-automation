@@ -82,6 +82,41 @@
   when: |
     ansible_os_family == 'Suse'
 
+- block:
+  - name: create gcp-vpc-move-vip resource
+    command: >-
+      pcs resource create rsc_vip_gcp-primary gcp-vpc-move-vip
+      alias_ip={{ sap_vip }}/32 hostlist="{{ sap_primary_instance }} {{ sap_secondary_instance }}"
+
+  - name: create ipaddr2 resource
+    command: >-
+      pcs resource create rsc_vip_int-primary IPaddr2 nic=eth0 ip={{ sap_vip }} cidr_netmask=32
+
+  - name: create vip resource group
+    command: >-
+      pcs resource group add g-primary rsc_vip_int-primary rsc_vip_gcp-primary
+  when:
+    ansible_os_family == 'RedHat'
+
+- block:
+  - name: create gcp alias resource
+    command: >-
+      crm configure primitive rsc_vip_gcp-primary ocf:gcp:alias op monitor interval=60s timeout=60s
+      op start interval=0 timeout=180s op stop interval=0 timeout=180s params
+      alias_ip={{ sap_vip }}/32 hostlist="{{ sap_primary_instance }} {{ sap_secondary_instance }}"
+      gcloud_path={{ sap_gcloud_path }} logging=yes meta priority=10
+
+  - name: create ipaddr2 resource
+    command: >-
+      crm configure primitive rsc_vip_int-primary IPaddr2 params ip={{ sap_vip }}
+      cidr_netmask=32 nic=eth0 op monitor interval=10s
+
+  - name: create vip resource group
+    command: >-
+      crm configure group g-primary rsc_vip_int-primary rsc_vip_gcp-primary
+  when:
+    ansible_os_family == 'Suse'
+
 - name: set resource defaults
   command: |
     pcs resource defaults {{ item }}
