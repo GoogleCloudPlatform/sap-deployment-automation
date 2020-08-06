@@ -1,89 +1,98 @@
 ---
-- name: ensure password authentication is enabled for sshd
-  lineinfile:
-    path: /etc/ssh/sshd_config
-    regex: '^PasswordAuthentication no'
-    line: '#PasswordAuthentication no'
-  register: modify_sshd_config
+- block:
+  - command: |
+      awk -F : '/^{{ sap_cluster_user }}:/{print $2}' /etc/shadow
+    register: cluster_password_field
+    changed_when: false
+    no_log: true
+
+  - name: set cluster user password
+    shell: |
+      echo -n '{{ sap_cluster_user_password }}' | passwd --stdin {{ sap_cluster_user }}
+    when: cluster_password_field.stdout in ('!!', '*')
+    no_log: true
+
+  - name: ensure password authentication is enabled for sshd
+    lineinfile:
+      path: /etc/ssh/sshd_config
+      regex: '^PasswordAuthentication no'
+      line: '#PasswordAuthentication no'
+    register: modify_sshd_config
   when: |
     ansible_os_family == 'RedHat'
+
+- block:
+  - name: stat shared ssh private key
+    stat:
+      path: /root/.ssh/id_rsa
+    register: stat_ssh_priv_key
+    run_once: true
+
+  - name: stat shared ssh public key
+    stat:
+      path: /root/.ssh/id_rsa.pub
+    register: stat_ssh_pub_key
+    run_once: true
+
+  - name: create shared ssh key
+    shell: yes | ssh-keygen -t rsa -N '' -f /root/.ssh/id_rsa
+    when: false in (stat_ssh_priv_key.stat.exists, stat_ssh_pub_key.stat.exists)
+    run_once: true
+
+  - name: read shared ssh private key
+    slurp:
+      src: /root/.ssh/id_rsa
+    register: shared_ssh_priv_key
+    run_once: true
+    no_log: true
+
+  - name: read shared ssh public key
+    slurp:
+      src: /root/.ssh/id_rsa.pub
+    register: shared_ssh_pub_key
+    run_once: true
+    no_log: true
+
+  - name: copy shared ssh private key
+    copy:
+      content: '{{ item.content }}'
+      dest: '{{ item.dest }}'
+      mode: '{{ item.mode }}'
+      owner: root
+      group: root
+    loop:
+    - content: '{{ shared_ssh_priv_key.content | b64decode }}'
+      dest: /root/.ssh/id_rsa
+      mode: '0600'
+    - content: '{{ shared_ssh_pub_key.content | b64decode }}'
+      dest: /root/.ssh/id_rsa.pub
+      mode: '0644'
+    no_log: true
+
+  - name: add public key to authorized_keys
+    authorized_key:
+      user: root
+      key: '{{ shared_ssh_pub_key.content | b64decode }}'
+
+  - name: ensure root login is enabled for sshd
+    lineinfile:
+      path: /etc/ssh/sshd_config
+      regex: '^PermitRootLogin no'
+      line: '#PermitRootLogin no'
+    register: modify_sshd_config
+  when: |
+    ansible_os_family == 'Suse'
 
 - name: ensure sshd reads modified config
   service:
     name: sshd.service
     state: restarted
-  when: |
-    ansible_os_family == 'RedHat' and modify_sshd_config is changed
+  when: modify_sshd_config is changed
 
-- name: check cluster user password
-  command: |
-    awk -F : '/^{{ sap_cluster_user }}:/{print $2}' /etc/shadow
-  register: cluster_password_field
-  changed_when: false
+- name: set pcs cluster authentication
+  command: >-
+    pcs cluster auth {{ sap_primary_instance }} {{ sap_secondary_instance }}
+    -u {{ sap_cluster_user }} -p {{ sap_cluster_user_password }}
+  no_log: true
   when: |
     ansible_os_family == 'RedHat'
-  no_log: true
-
-- name: set cluster user password
-  shell: |
-    echo -n '{{ sap_cluster_user_password }}' | passwd --stdin {{ sap_cluster_user }}
-  when: |
-    ansible_os_family == 'RedHat' and cluster_password_field.stdout in ('!!', '*')
-  no_log: true
-
-- name: stat shared ssh private key
-  stat:
-    path: /root/.ssh/id_rsa
-  register: stat_ssh_priv_key
-  run_once: true
-
-- name: stat shared ssh public key
-  stat:
-    path: /root/.ssh/id_rsa.pub
-  register: stat_ssh_pub_key
-  run_once: true
-
-- name: create shared ssh key
-  shell: yes | ssh-keygen -t rsa -N '' -f /root/.ssh/id_rsa
-  when: false in (stat_ssh_priv_key.stat.exists, stat_ssh_pub_key.stat.exists)
-  run_once: true
-
-- name: read shared ssh private key
-  slurp:
-    src: /root/.ssh/id_rsa
-  register: shared_ssh_priv_key
-  run_once: true
-  no_log: true
-
-- name: read shared ssh public key
-  slurp:
-    src: /root/.ssh/id_rsa.pub
-  register: shared_ssh_pub_key
-  run_once: true
-  no_log: true
-
-- name: copy shared ssh private key
-  copy:
-    content: '{{ item.content }}'
-    dest: '{{ item.dest }}'
-    mode: '{{ item.mode }}'
-    owner: root
-    group: root
-  loop:
-  - content: '{{ shared_ssh_priv_key.content | b64decode }}'
-    dest: /root/.ssh/id_rsa
-    mode: '0600'
-  - content: '{{ shared_ssh_pub_key.content | b64decode }}'
-    dest: /root/.ssh/id_rsa.pub
-    mode: '0644'
-  no_log: true
-
-- name: add public key to authorized_keys
-  authorized_key:
-    user: root
-    key: '{{ shared_ssh_pub_key.content | b64decode }}'
-
-- name: create cluster key
-  command: corosync-keygen
-  args:
-    creates: /etc/corosync/authkey

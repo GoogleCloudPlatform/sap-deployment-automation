@@ -1,0 +1,8 @@
+- name: wait for cluster to be up
+  command: crm_mon -s
+  register: cluster_status
+  retries: 30
+  delay: 10
+  until: |
+    '2 nodes online' in cluster_status.stdout
+  changed_when: false
