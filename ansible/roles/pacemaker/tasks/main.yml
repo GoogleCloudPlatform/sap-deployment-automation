@@ -5,12 +5,24 @@
 
 - include_tasks: install.yml
 
-- include_tasks: start-cluster.yml
-
 - include_tasks: auth.yml
+
+- include_tasks: start-cluster.yml
 
 - include_tasks: wait.yml
   when: is_primary
 
-- include_tasks: resources.yml
+- include_tasks: start-maintenance.yml
+  when: is_primary
+
+- include_tasks: resources-stonith.yml
+  when: is_primary
+
+- include_tasks: resources-vip.yml
+  when: is_primary
+
+- include_tasks: resources-{{ sap_application }}.yml
+  when: is_primary
+
+- include_tasks: stop-maintenance.yml
   when: is_primary

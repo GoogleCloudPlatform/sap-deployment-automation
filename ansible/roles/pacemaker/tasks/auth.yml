@@ -86,13 +86,5 @@
 - name: ensure sshd reads modified config
   service:
     name: sshd.service
-    state: restarted
+    state: reloaded
   when: modify_sshd_config is changed
-
-- name: set pcs cluster authentication
-  command: >-
-    pcs cluster auth {{ sap_primary_instance }} {{ sap_secondary_instance }}
-    -u {{ sap_cluster_user }} -p {{ sap_cluster_user_password }}
-  no_log: true
-  when: |
-    ansible_os_family == 'RedHat'

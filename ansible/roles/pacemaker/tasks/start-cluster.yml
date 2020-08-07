@@ -14,10 +14,21 @@
     loop:
     - pacemaker.service
     - pcsd.service
+
+  - name: set cluster authentication
+    command: >-
+      pcs cluster auth {{ sap_primary_instance }} {{ sap_secondary_instance }}
+      -u {{ sap_cluster_user }} -p {{ sap_cluster_user_password }}
+    no_log: true
   when: |
     ansible_os_family == 'RedHat'
 
 - block:
+  - name: generate corosync key
+    command: corosync-keygen
+    args:
+      creates: /etc/corosync/authkey
+
   - name: initialize cluster on primary
     command: ha-cluster-init -y csync2
     args:

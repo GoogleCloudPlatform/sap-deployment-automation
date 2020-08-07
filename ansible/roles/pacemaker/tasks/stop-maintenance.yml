@@ -1,0 +1,24 @@
+---
+- block:
+  - command: pcs property show maintenance-mode
+    register: maintenance_mode_status
+    changed_when: false
+
+  - name: disable maintenance mode
+    command: pcs property set maintenance-mode=false
+    when: |
+      'maintenance-mode: true' in maintenance_mode_status.stdout
+  when: |
+    ansible_os_family == 'RedHat'
+
+- block:
+  - command: crm configure get_property maintenance-mode
+    register: maintenance_mode_status
+    changed_when: false
+
+  - name: disable maintenance mode
+    command: crm configure property maintenance-mode=false
+    when: |
+      maintenance_mode_status.stdout == 'true'
+  when: |
+    ansible_os_family == 'Suse'

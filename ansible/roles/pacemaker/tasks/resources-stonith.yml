@@ -1,0 +1,98 @@
+---
+- block:
+  - command: |
+      pcs stonith show STONITH-{{ sap_primary_instance }}
+    register: stonith_primary_status
+    changed_when: false
+    failed_when: false
+
+  - name: configure stonith for primary
+    command: >-
+      pcs stonith create STONITH-{{ sap_primary_instance }} fence_gce
+      port={{ sap_primary_instance }}
+      zone={{ sap_primary_zone }}
+      project={{ project_id }}
+    when: stonith_primary_status.rc != 0
+
+  - command: |
+      pcs stonith show STONITH-{{ sap_secondary_instance }}
+    register: stonith_secondary_status
+    failed_when: false
+
+  - name: configure stonith for secondary
+    command: >-
+      pcs stonith create STONITH-{{ sap_secondary_instance }} fence_gce
+      port={{ sap_secondary_instance }}
+      zone={{ sap_secondary_zone }}
+      project={{ project_id }}
+    when: stonith_primary_status.rc != 0
+
+  - name: configure stonith location constraint for primary
+    command: >-
+      pcs constraint location STONITH-{{ sap_primary_instance }}
+      prefers {{ sap_secondary_instance }}=INFINITY
+
+  - name: configure stonith location constraint for secondary
+    command: >-
+      pcs constraint location STONITH-{{ sap_secondary_instance }}
+      prefers {{ sap_primary_instance }}=INFINITY
+
+  - name: set startup-fencing property
+    command: pcs property set startup-fencing=true
+
+  - name: set stonith-enabled property
+    command: pcs property set stonith-enabled=true
+  when: |
+    ansible_os_family == 'RedHat'
+
+- block:
+  - name: configure stonith for primary
+    command: >-
+      crm configure primitive STONITH-{{ sap_primary_instance }} stonith:external/gcpstonith
+      op monitor interval=300s timeout=60s on-fail=restart
+      op start interval=0 timeout=60s onfail=restart
+      params instance_name={{ sap_primary_instance }} gcloud_path="{{ sap_gcloud_path }}" logging=yes
+    register: crm_command_status
+    changed_when: crm_command_status.rc == 0
+    failed_when: |
+      'Found existing primitive with same ID' not in crm_command_status.stderr and crm_command_status.rc != 0
+
+  - name: configure stonith for secondary
+    command: >-
+      crm configure primitive STONITH-{{ sap_secondary_instance }} stonith:external/gcpstonith
+      op monitor interval=300s timeout=60s on-fail=restart
+      op start interval=0 timeout=60s onfail=restart
+      params instance_name={{ sap_secondary_instance }} gcloud_path="{{ sap_gcloud_path }}" logging=yes
+    register: crm_command_status
+    changed_when: crm_command_status.rc == 0
+    failed_when: |
+      'Found existing primitive with same ID' not in crm_command_status.stderr and crm_command_status.rc != 0
+
+  - name: configure location stonith for primary
+    command: >-
+      crm configure location LOC_STONITH-{{ sap_primary_instance }}
+      STONITH-{{ sap_primary_instance }} -inf: {{ sap_primary_instance }}
+    register: crm_command_status
+    changed_when: crm_command_status.rc == 0
+    failed_when: |
+      'Found existing location with same ID' not in crm_command_status.stderr and crm_command_status.rc != 0
+
+  - name: configure location stonith for secondary
+    command: >-
+      crm configure location LOC_STONITH-{{ sap_secondary_instance }}
+      STONITH-{{ sap_secondary_instance }} -inf: {{ sap_secondary_instance }}
+    register: crm_command_status
+    changed_when: crm_command_status.rc == 0
+    failed_when: |
+      'Found existing location with same ID' not in crm_command_status.stderr and crm_command_status.rc != 0
+  when: |
+    ansible_os_family == 'Suse'
+
+#- name: set resource defaults
+#  command: |
+#    pcs resource defaults {{ item }}
+#  loop:
+#  - default-resource-stickness=1000
+#  - default-migration-threshold=5000
+#  when: |
+#    ansible_os_family == 'RedHat'
