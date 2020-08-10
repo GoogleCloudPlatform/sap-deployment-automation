@@ -1,26 +1,5 @@
 ---
 - block:
-  - name: ensure haproxy is installed
-    yum:
-      name: haproxy
-    when: sap_use_lb
-
-  - name: configure haproxy
-    template:
-      src: etc/haproxy/haproxy.cfg.j2
-      dest: /etc/haproxy/haproxy.cfg
-      mode: 0644
-      owner: root
-      group: root
-    when: sap_use_lb
-
-  - name: disable haproxy service
-    service:
-      name: haproxy
-      enabled: false
-      state: stopped
-    when: sap_use_lb
-
   - name: create healthcheck service
     command:
       pcs resource create rsc_healthcheck-primary service:haproxy
@@ -49,11 +28,6 @@
     ansible_os_family == 'RedHat'
 
 - block:
-  - name: ensure socat is installed
-    zypper:
-      name: socat
-    when: sap_use_lb
-
   - name: create healthcheck service
     command: >-
       crm configure primitive rsc_healthcheck-primary anything

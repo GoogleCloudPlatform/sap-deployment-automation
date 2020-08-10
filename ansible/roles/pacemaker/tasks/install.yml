@@ -1,32 +1,51 @@
-- name: ensure directories are present
-  file:
-    path: '{{ item }}'
-    state: directory
-    mode: 0755
-    owner: root
-    group: root
-  loop:
-  - /usr/lib/ocf/resource.d/gcp
-  - /usr/lib64/stonith/plugins/external
-  when: |
-    ansible_os_family == 'Suse'
+- block:
+  - name: ensure haproxy is installed
+    yum:
+      name: haproxy
 
-- name: ensure files are downloaded
-  uri:
-    url: '{{ item.url }}'
-    dest: '{{ item.dest }}'
-    mode: 0755
-    owner: root
-    group: root
-    remote_src: true
-    follow_redirects: true
-    status_code: [200, 304]
-  loop:
-  - url: https://storage.googleapis.com/sapdeploy/pacemaker-gcp/alias
-    dest: /usr/lib/ocf/resource.d/gcp/alias
-  - url: https://storage.googleapis.com/sapdeploy/pacemaker-gcp/route
-    dest: /usr/lib/ocf/resource.d/gcp/route
-  - url: https://storage.googleapis.com/sapdeploy/pacemaker-gcp/gcpstonith
-    dest: /usr/lib64/stonith/plugins/external/gcpstonith
+  - name: configure haproxy
+    template:
+      src: etc/haproxy/haproxy.cfg.j2
+      dest: /etc/haproxy/haproxy.cfg
+      mode: 0644
+      owner: root
+      group: root
+  when: |
+    sap_use_lb and ansible_os_family == 'RedHat'
+
+- block:
+  - name: ensure socat is installed
+    zypper:
+      name: socat
+    when: sap_use_lb
+
+  - name: ensure directories are present
+    file:
+      path: '{{ item }}'
+      state: directory
+      mode: 0755
+      owner: root
+      group: root
+    loop:
+    - /usr/lib/ocf/resource.d/gcp
+    - /usr/lib64/stonith/plugins/external
+
+  - name: ensure files are downloaded
+    uri:
+      url: '{{ item.url }}'
+      dest: '{{ item.dest }}'
+      mode: 0755
+      owner: root
+      group: root
+      remote_src: true
+      follow_redirects: true
+      status_code: [200, 304]
+    loop:
+    - url: https://storage.googleapis.com/sapdeploy/pacemaker-gcp/alias
+      dest: /usr/lib/ocf/resource.d/gcp/alias
+    - url: https://storage.googleapis.com/sapdeploy/pacemaker-gcp/route
+      dest: /usr/lib/ocf/resource.d/gcp/route
+    - url: https://storage.googleapis.com/sapdeploy/pacemaker-gcp/gcpstonith
+      dest: /usr/lib64/stonith/plugins/external/gcpstonith
   when: |
     ansible_os_family == 'Suse'
