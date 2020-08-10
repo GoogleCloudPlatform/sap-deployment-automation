@@ -17,6 +17,7 @@
   - command: |
       pcs stonith show STONITH-{{ sap_secondary_instance }}
     register: stonith_secondary_status
+    changed_when: false
     failed_when: false
 
   - name: configure stonith for secondary

@@ -9,6 +9,9 @@
       op stop timeout=300
       op monitor interval=10 timeout=600
       clone clone-max=2 clone-node-max=1 interleave=true
+    register: crm_command_status
+    changed_when: crm_command_status.rc == 0
+    failed_when: crm_command_status.rc != 0 and 'already exists' not in crm_command_status.stderr
 
   - name: create master and slave sap hana resource
     command: >-
@@ -23,28 +26,43 @@
       op promote timeout=3600
       op demote timeout=3600
       master meta notify=true clone-max=2 clone-node-max=1 interleave=true
+    register: crm_command_status
+    changed_when: crm_command_status.rc == 0
+    failed_when: crm_command_status.rc != 0 and 'already exists' not in crm_command_status.stderr
 
   - name: create start order constraint
     command: >-
       pcs constraint order SAPHanaTopology_{{ sap_hana_sid }}_{{ sap_hana_instance_number }}-clone
       then SAPHana_{{ sap_hana_sid }}_{{ sap_hana_instance_number }}-master symmetrical=false
+    register: crm_command_status
+    changed_when: crm_command_status.rc == 0
+    failed_when: crm_command_status.rc != 0 and 'already exists' not in crm_command_status.stderr
 
   - name: create colocation constraint
     command: >-
       pcs constraint colocation add rsc_vip_gcp-primary with master
       SAPHana_{{ sap_hana_sid }}_{{ sap_hana_instance_number }}-master 2000
     when: not sap_use_lb
+    register: crm_command_status
+    changed_when: crm_command_status.rc == 0
+    failed_when: crm_command_status.rc != 0 and 'already exists' not in crm_command_status.stderr
 
   - name: create colocation constraint
     command: >-
       pcs constraint colocation add rsc_healthcheck-primary with master
       SAPHana_{{ sap_hana_sid }}_{{ sap_hana_instance_number }}-master 2000
     when: sap_use_lb
+    register: crm_command_status
+    changed_when: crm_command_status.rc == 0
+    failed_when: crm_command_status.rc != 0 and 'already exists' not in crm_command_status.stderr
 
   - name: create vip group constraint
     command: >-
       pcs constraint colocation add g-primary with master
       SAPHana_{{ sap_hana_sid }}_{{ sap_hana_instance_number }}-master 2000
+    register: crm_command_status
+    changed_when: crm_command_status.rc == 0
+    failed_when: crm_command_status.rc != 0 and 'already exists' not in crm_command_status.stderr
   when:
     ansible_os_family == 'RedHat'
 

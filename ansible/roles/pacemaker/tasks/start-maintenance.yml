@@ -6,7 +6,8 @@
 
   - name: enable maintenance mode
     command: pcs property set maintenance-mode=true
-    when: |
+    when: >-
+      'maintenance-mode' not in maintenance_mode_status.stdout or
       'maintenance-mode: false' in maintenance_mode_status.stdout
   when: |
     ansible_os_family == 'RedHat'
