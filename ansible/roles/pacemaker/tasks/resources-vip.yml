@@ -1,8 +1,4 @@
 ---
-- name: define vip resource name
-  set_fact:
-    sap_vip_resource: rsc_vip-primary
-
 - block:
   - name: ensure haproxy is installed
     yum:
@@ -32,7 +28,7 @@
 
   - name: create gcp-vpc-move-vip resource
     command: >-
-      pcs resource create {{ sap_vip_resource }} gcp-vpc-move-vip
+      pcs resource create rsc_vip_gcp-primary gcp-vpc-move-vip
       alias_ip={{ sap_vip }}/32 hostlist="{{ sap_primary_instance }} {{ sap_secondary_instance }}"
     when: not sap_use_lb
 
@@ -42,7 +38,13 @@
 
   - name: group vip resources
     command: >-
-      pcs resource group add g-primary rsc_vip_int-primary {{ sap_vip_resource }}
+      pcs resource group add g-primary rsc_vip_int-primary rsc_vip_gcp-primary
+    when: not sap_use_lb
+
+  - name: group vip resources
+    command: >-
+      pcs resource group add g-primary rsc_vip_int-primary rsc_healthcheck-primary
+    when: sap_use_lb
   when:
     ansible_os_family == 'RedHat'
 
@@ -54,7 +56,7 @@
 
   - name: create healthcheck service
     command: >-
-      crm configure primitive {{ sap_vip_resource }} anything
+      crm configure primitive rsc_healthcheck-primary anything
       params binfile=/usr/bin/socat
       cmdline_options="-U TCP-LISTEN:{{ sap_healthcheck_port }},backlog=10,fork,reuseaddr /dev/null"
       op monitor timeout=20s interval=10
@@ -67,7 +69,7 @@
 
   - name: create gcp alias resource
     command: >-
-      crm configure primitive {{ sap_vip_resource }} ocf:gcp:alias
+      crm configure primitive rsc_vip_gcp-primary ocf:gcp:alias
       op monitor interval=60s timeout=60s
       op start interval=0 timeout=180s
       op stop interval=0 timeout=180s params
@@ -91,10 +93,20 @@
 
   - name: group vip resources
     command: >-
-      crm configure group g-primary rsc_vip_int-primary {{ sap_vip_resource }}
+      crm configure group g-primary rsc_vip_int-primary rsc_vip_gcp-primary
     register: crm_command_status
     changed_when: crm_command_status.rc == 0
     failed_when: |
       'Found existing group with same ID' not in crm_command_status.stderr and crm_command_status.rc != 0
+    when: not sap_use_lb
+
+  - name: group vip resources
+    command: >-
+      crm configure group g-primary rsc_vip_int-primary rsc_healthcheck-primary
+    register: crm_command_status
+    changed_when: crm_command_status.rc == 0
+    failed_when: |
+      'Found existing group with same ID' not in crm_command_status.stderr and crm_command_status.rc != 0
+    when: sap_use_lb
   when:
     ansible_os_family == 'Suse'
