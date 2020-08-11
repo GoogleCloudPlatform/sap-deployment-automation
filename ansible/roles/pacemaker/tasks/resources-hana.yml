@@ -59,7 +59,7 @@
   - name: create vip group constraint
     command: >-
       pcs constraint colocation add g-primary with master
-      SAPHana_{{ sap_hana_sid }}_HDB{{ sap_hana_instance_number }}-master 2000
+      SAPHana_{{ sap_hana_sid }}_HDB{{ sap_hana_instance_number }}-master 4000
     register: crm_command_status
     changed_when: crm_command_status.rc == 0
     failed_when: crm_command_status.rc != 0 and 'already exists' not in crm_command_status.stderr
