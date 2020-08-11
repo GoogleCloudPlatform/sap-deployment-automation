@@ -6,4 +6,4 @@ sap_cluster_user_password: linux
 
 sap_use_lb: true
 sap_healthcheck_port: 60000
-sap_hana_instance_number: HDB00
+sap_hana_instance_number: '00'
