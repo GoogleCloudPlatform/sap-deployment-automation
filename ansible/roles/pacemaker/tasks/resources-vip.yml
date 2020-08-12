@@ -75,6 +75,7 @@
       crm configure primitive rsc_vip_int-primary IPaddr2
       params ip={{ sap_vip }} cidr_netmask=32 nic="eth0"
       op monitor interval=10s
+      meta failure-timeout=3600
     register: crm_command_status
     changed_when: crm_command_status.rc == 0
     failed_when: |

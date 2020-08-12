@@ -76,6 +76,7 @@
       op start interval=0 timeout=600
       op stop interval=0 timeout=300
       params SID={{ sap_hana_sid }} InstanceNumber={{ sap_hana_instance_number }}
+      meta failure-timeout=3600
     register: crm_command_status
     changed_when: crm_command_status.rc == 0
     failed_when: |
@@ -99,10 +100,11 @@
       op start interval=0 timeout=3600
       op stop interval=0 timeout=3600
       op promote interval=0 timeout=3600
-      op monitor interval=10 role=Master timeout=700
-      op monitor interval=11 role=Slave timeout=700
+      op monitor interval=60 role=Master timeout=700
+      op monitor interval=61 role=Slave timeout=700
       params SID={{ sap_hana_sid }} InstanceNumber={{ sap_hana_instance_number }}
-      PREFER_SITE_TAKEOVER=true DUPLICATE_PRIMARY_TIMEOUT=7200 AUTOMATED_REGISTER=true
+        PREFER_SITE_TAKEOVER=true DUPLICATE_PRIMARY_TIMEOUT=7200 AUTOMATED_REGISTER=true
+      meta failure-timeout=3600
     register: crm_command_status
     changed_when: crm_command_status.rc == 0
     failed_when: |

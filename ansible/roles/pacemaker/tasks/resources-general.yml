@@ -1,0 +1,52 @@
+---
+- block:
+  - command: pcs resource defaults
+    register: pcs_command_status
+    changed_when: false
+  - name: configure resource-stickiness
+    command: pcs resource defaults resource-stickiness=1000
+    when: |
+      'resource-stickiness: 1000' not in pcs_command_status.stdout
+  - name: configure migration-threshold
+    command: pcs resource defaults migration-threshold=5000
+    when: |
+      'migration-threshold: 5000' not in pcs_command_status.stdout
+  when:
+    ansible_os_family == 'RedHat'
+
+- block:
+  - command: >-
+      crm configure get_property no-quorum-policy
+    register: crm_command_status
+    changed_when: false
+  - name: configure no-quorum-policy
+    command: >-
+      crm configure property no-quorum-policy=stop
+    when: crm_command_status.stdout != 'stop'
+
+  - command: >-
+      crm configure show type:rsc_defaults rsc-options
+    register: crm_command_status
+    changed_when: false
+  - name: configure resource-stickiness
+    command: >-
+      crm configure rsc_defaults resource-stickiness=1000
+    when: |
+      'resource-stickiness=1000' not in crm_command_status.stdout
+  - name: configure migration-threshold
+    command: >-
+      crm configure rsc_defaults migration-threshold=5000
+    when: |
+      'migration-threshold=5000' not in crm_command_status.stdout
+
+  - command: >-
+      crm configure show type:op_defaults op-options
+    register: crm_command_status
+    changed_when: false
+  - name: configure timeout
+    command: >-
+      crm configure op_defaults timeout=600
+    when: |
+      'timeout=600' not in crm_command_status.stdout
+  when:
+    ansible_os_family == 'Suse'

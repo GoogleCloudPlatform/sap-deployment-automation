@@ -15,6 +15,9 @@
 - include_tasks: start-maintenance.yml
   when: is_primary
 
+- include_tasks: resources-general.yml
+  when: is_primary
+
 - include_tasks: resources-stonith.yml
   when: is_primary
 
