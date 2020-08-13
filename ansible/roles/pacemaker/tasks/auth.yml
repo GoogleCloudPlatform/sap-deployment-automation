@@ -1,15 +1,9 @@
 ---
 - block:
-  - command: |
-      awk -F : '/^{{ sap_cluster_user }}:/{print $2}' /etc/shadow
-    register: cluster_password_field
-    changed_when: false
-    no_log: true
-
   - name: set cluster user password
-    shell: |
-      echo -n '{{ sap_cluster_user_password }}' | passwd --stdin {{ sap_cluster_user }}
-    when: cluster_password_field.stdout in ('!!', '*')
+    user:
+      name: '{{ sap_cluster_user }}'
+      password: '{{ sap_cluster_user_password | password_hash("sha512") }}'
     no_log: true
 
   - name: ensure password authentication is enabled for sshd
