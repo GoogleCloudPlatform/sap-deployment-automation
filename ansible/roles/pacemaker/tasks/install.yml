@@ -37,8 +37,8 @@
       mode: 0755
       owner: root
       group: root
-      remote_src: true
-      follow_redirects: true
+      remote_src: 'true'
+      follow_redirects: safe
       status_code: [200, 304]
     loop:
     - url: https://storage.googleapis.com/sapdeploy/pacemaker-gcp/alias
