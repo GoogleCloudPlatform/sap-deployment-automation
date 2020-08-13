@@ -28,6 +28,7 @@
       crm configure show type:rsc_defaults rsc-options
     register: crm_command_status
     changed_when: false
+    failed_when: false
   - name: configure resource-stickiness
     command: >-
       crm configure rsc_defaults resource-stickiness=1000
@@ -43,6 +44,7 @@
       crm configure show type:op_defaults op-options
     register: crm_command_status
     changed_when: false
+    failed_when: false
   - name: configure timeout
     command: >-
       crm configure op_defaults timeout=600
