@@ -12,6 +12,7 @@
       state: started
       enabled: true
     loop:
+    - corosync.service
     - pacemaker.service
     - pcsd.service
 
