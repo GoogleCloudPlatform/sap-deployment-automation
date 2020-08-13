@@ -4,41 +4,41 @@
     command:
       pcs resource create rsc_healthcheck-primary service:haproxy
     when: sap_use_lb
-    register: crm_command_status
-    changed_when: crm_command_status.rc == 0
-    failed_when: crm_command_status.rc != 0 and 'already exists' not in crm_command_status.stderr
+    register: pcs_command_status
+    changed_when: pcs_command_status.rc == 0
+    failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
 
   - name: create gcp-vpc-move-vip resource
     command: >-
       pcs resource create rsc_vip_gcp-primary gcp-vpc-move-vip
       alias_ip={{ sap_vip }}/32 hostlist="{{ sap_primary_instance }} {{ sap_secondary_instance }}"
     when: not sap_use_lb
-    register: crm_command_status
-    changed_when: crm_command_status.rc == 0
-    failed_when: crm_command_status.rc != 0 and 'already exists' not in crm_command_status.stderr
+    register: pcs_command_status
+    changed_when: pcs_command_status.rc == 0
+    failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
 
   - name: create ipaddr2 resource
     command: >-
       pcs resource create rsc_vip_int-primary IPaddr2 nic=eth0 ip={{ sap_vip }} cidr_netmask=32
-    register: crm_command_status
-    changed_when: crm_command_status.rc == 0
-    failed_when: crm_command_status.rc != 0 and 'already exists' not in crm_command_status.stderr
+    register: pcs_command_status
+    changed_when: pcs_command_status.rc == 0
+    failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
 
   - name: group vip resources
     command: >-
       pcs resource group add g-primary rsc_vip_int-primary rsc_vip_gcp-primary
     when: not sap_use_lb
-    register: crm_command_status
-    changed_when: crm_command_status.rc == 0
-    failed_when: crm_command_status.rc != 0 and 'already exists' not in crm_command_status.stderr
+    register: pcs_command_status
+    changed_when: pcs_command_status.rc == 0
+    failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
 
   - name: group vip resources
     command: >-
       pcs resource group add g-primary rsc_vip_int-primary rsc_healthcheck-primary
     when: sap_use_lb
-    register: crm_command_status
-    changed_when: crm_command_status.rc == 0
-    failed_when: crm_command_status.rc != 0 and 'already exists' not in crm_command_status.stderr
+    register: pcs_command_status
+    changed_when: pcs_command_status.rc == 0
+    failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
   when:
     ansible_os_family == 'RedHat'
 
@@ -54,7 +54,7 @@
     register: crm_command_status
     changed_when: crm_command_status.rc == 0
     failed_when: |
-      'Found existing primitive with same ID' not in crm_command_status.stderr and crm_command_status.rc != 0
+      crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
 
   - name: create gcp alias resource
     command: >-
@@ -68,7 +68,7 @@
     register: crm_command_status
     changed_when: crm_command_status.rc == 0
     failed_when: |
-      'Found existing primitive with same ID' not in crm_command_status.stderr and crm_command_status.rc != 0
+      crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
 
   - name: create ipaddr2 resource
     command: >-
@@ -79,7 +79,7 @@
     register: crm_command_status
     changed_when: crm_command_status.rc == 0
     failed_when: |
-      'Found existing primitive with same ID' not in crm_command_status.stderr and crm_command_status.rc != 0
+      crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
 
   - name: group vip resources
     command: >-
@@ -87,7 +87,7 @@
     register: crm_command_status
     changed_when: crm_command_status.rc == 0
     failed_when: |
-      'Found existing group with same ID' not in crm_command_status.stderr and crm_command_status.rc != 0
+      crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
     when: not sap_use_lb
 
   - name: group vip resources
@@ -96,7 +96,7 @@
     register: crm_command_status
     changed_when: crm_command_status.rc == 0
     failed_when: |
-      'Found existing group with same ID' not in crm_command_status.stderr and crm_command_status.rc != 0
+      crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
     when: sap_use_lb
   when:
     ansible_os_family == 'Suse'
