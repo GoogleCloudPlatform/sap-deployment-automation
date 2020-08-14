@@ -1,0 +1,29 @@
+---
+
+- name: Create {{ sap_hana_monitoring_user }} user
+  user:
+    name: "{{ sap_hana_monitoring_user }}"
+
+- name: Create .sql file for HDB user creation
+  lineinfile:
+    dest: /root/.deploy/{{ ansible_hostname }}_hdbadduser.sql
+    line: "{{ item.line }}"
+    state: present
+    create: yes
+    group: sapsys
+  with_items:
+    - { line: "CREATE USER {{ sap_hana_monitoring_user }} PASSWORD {{ sap_hana_deployment_hana_db_system_password }};"}
+    - { line: "GRANT DATA ADMIN TO {{ sap_hana_monitoring_user }};"}
+    - { line: "ALTER USER {{ sap_hana_monitoring_user }} DISABLE PASSWORD LIFETIME;"}
+
+- name: Run HDB user creation .sql file
+  shell: |
+    source /usr/sap/{{ sap_hana_deployment_hana_sid }}/home/.sapenv.sh && \
+    hdbsql -u system -p {{ sap_hana_deployment_hana_db_system_password }} \
+    -i {{ sap_hana_deployment_hana_instance_number }} \
+    -I /root/.deploy/{{ ansible_hostname }}_hdbadduser.sql
+  args:
+     executable: /bin/bash
+  become: yes
+  #become_user: "{{ sap_hana_deployment_hana_sid | lower }}adm"
+  register: hdbuser

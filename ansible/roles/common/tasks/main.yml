@@ -11,9 +11,9 @@
     path: "{{ item }}"
     state: present
   with_items:
-    - "/software/{{ sap_hostagent_file_name }}"
+    - "/software/{{ sap_hana_deployment_hostagent_file_name }}"
     - "/software/{{ sap_hana_bundle_file_name }}"
-    - "/software/{{ sap_hana_sapcar_file_name }}"
+    - "/software/{{ sap_hana_deployment_sapcar_file_name }}"
 
 - name: Copy HANA install files to "/hana/shared/software"
   copy:
@@ -23,9 +23,9 @@
     force: no
     remote_src: yes
   with_items:
-    - "/software/{{ sap_hostagent_file_name }}"
+    - "/software/{{ sap_hana_deployment_hostagent_file_name }}"
     - "/software/{{ sap_hana_bundle_file_name }}"
-    - "/software/{{ sap_hana_sapcar_file_name }}"
+    - "/software/{{ sap_hana_deployment_sapcar_file_name }}"
 
 #- name: Remove old HANA install files under /software
 #  file: 

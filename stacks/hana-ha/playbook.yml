@@ -1,0 +1,192 @@
+---
+
+- name: SAP HANA deploy
+  hosts: 127.0.0.1
+  connection: local
+  tasks:
+  - name: Deploy SAP HANA infrastructure
+    terraform:
+      project_path: ./infra
+      force_init: true
+      state: present
+      backend_config:
+        bucket: '{{ sap_hana_state_bucket }}'
+        prefix: '{{ sap_hana_state_bucket_prefix | default(sap_hana_instance_name) }}'
+      variables:
+        instance_name: '{{ sap_hana_instance_name }}'
+        source_image_family: '{{ sap_hana_source_image_family }}'
+        source_image_project: '{{ sap_hana_source_image_project }}'
+        region: '{{ sap_hana_region }}'
+        zone_a: '{{ sap_hana_zone_a }}'
+        zone_b: '{{ sap_hana_zone_b }}'
+        subnetwork: '{{ sap_hana_subnetwork }}'
+        boot_disk_size: '{{ sap_hana_boot_disk_size }}'
+        sap_install_files_bucket: '{{ sap_install_files_bucket }}'
+        sap_hostagent_file_name: '{{ sap_hostagent_file_name }}'
+        sap_hana_bundle_file_name: '{{ sap_hana_bundle_file_name }}'
+        sap_hana_sapcar_file_name: '{{ sap_hana_sapcar_file_name }}'
+        gce_ssh_user: '{{ sap_hana_gce_ssh_user }}'
+        gce_ssh_pub_key_file: '{{ sap_hana_gce_ssh_pub_key }}'
+        #gce_ssh_priv_key_file: '{{ playbook_dir }}/ssh-key'
+        run_provisioner: 'false'
+    register: terraform
+  - name: Copy ssh public key
+    copy:
+      dest: '{{ playbook_dir }}/ssh-key.pub'
+      src: '{{ sap_hana_gce_ssh_pub_key }}'
+  - name: Copy ssh private key
+    copy:
+      dest: '{{ playbook_dir }}/ssh-key'
+      src: '{{ sap_hana_gce_ssh_priv_key }}'
+      mode: '0600'
+  - name: Build inventory
+    add_host:
+      name: '{{ item }}'
+      ansible_user: '{{ sap_hana_gce_ssh_user }}'
+      ansible_ssh_private_key_file: '{{ playbook_dir }}/ssh-key'
+      terraform: '{{ terraform }}'
+      groups: 
+        - hana
+    changed_when: false
+    loop:
+    - '{{ terraform.outputs.address_primary.value }}'
+    - '{{ terraform.outputs.address_secondary.value }}'
+  - name: Wait for hosts
+    shell: |-
+      ssh -i {{ playbook_dir }}/ssh-key \
+        -o StrictHostKeyChecking=no \
+        {{ sap_hana_gce_ssh_user }}@{{ item }} \
+        exit
+    register: can_ssh
+    retries: 12
+    delay: 10
+    until: can_ssh is succeeded
+    loop:
+    - '{{ terraform.outputs.address_primary.value }}'
+    - '{{ terraform.outputs.address_secondary.value }}'
+
+- name: SAP HANA configure on both primay and secondary
+  hosts: hana
+  become: yes
+  vars:
+    sap_image_family: '{{ terraform.outputs.sap_image_family.value }}'
+    sap_hana_deployment_hostagent_file_name: '{{ terraform.outputs.sap_hostagent_file_name.value }}'
+    sap_hana_deployment_bundle_sar_file_name: '{{ terraform.outputs.sap_hana_bundle_file_name.value }}'
+    sap_hana_deployment_sapcar_file_name: '{{ terraform.outputs.sap_hana_sapcar_file_name.value }}'
+    sap_hana_primary_instance_name: '{{ terraform.outputs.primary_instance_name.value }}'
+    sap_hana_secondary_instance_name: '{{ terraform.outputs.secondary_instance_name.value }}'
+    sap_hana_primary_instance_ip: '{{ terraform.outputs.primary_instance_ip.value }}'
+    sap_hana_secondary_instance_ip: '{{ terraform.outputs.secondary_instance_ip.value }}'
+    sap_hana_primary_instance_zone: '{{ terraform.outputs.zone_a.value }}'
+    sap_hana_secondary_instance_zone: '{{ terraform.outputs.zone_b.value }}'
+    sap_hana_ilb_ip: '{{ terraform.outputs.hana_ilb_ip.value }}'
+    sap_hana_project_id: '{{ terraform.outputs.project_id.value }}'
+    sap_hana_health_check_port: '{{ terraform.outputs.health_check_port.value }}'
+    sap_hana_deployment_hana_sid: RH1
+    sap_hana_deployment_hana_instance_number: "00"
+    sap_hana_deployment_hana_db_system_password: Google123
+    sap_hana_monitoring_user: rhelhasync        # use slehasync for SLES 
+    sap_hana_user_store_key: SAPHANARH2SR     # use SLEHALOC for SLES
+    sap_hana_data_partition_name: hanadata
+    sap_hana_backup_partition_name: hanabackup
+  roles:
+  - role: storage
+    become: true
+    vars:
+      hana_shared_size: '{{ terraform.outputs.hana_shared_size.value }}G'
+      hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
+      hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
+      hana_usr_size: '{{ terraform.outputs.hana_usr_size.value }}G'
+      hana_backup_size: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
+      swapon: false
+      disks:
+        - { name: data, partition_path : "{{ sap_hana_data_partition_name }}"}
+        - { name: backup, partition_path : "{{ sap_hana_backup_partition_name }}"}
+      logvols:
+        shared:
+          size: "{{ hana_shared_size }}"
+          vol: "{{ sap_hana_data_partition_name }}" 
+          mountpoint: /hana/shared
+          fstype: xfs
+        data:
+          size: "{{ hana_data_size }}"
+          vol: "{{ sap_hana_data_partition_name }}"
+          mountpoint: /hana/data
+          fstype: xfs
+        log:
+          size: "{{ hana_log_size }}"
+          vol: "{{ sap_hana_data_partition_name }}"
+          mountpoint: /hana/log
+          fstype: xfs
+        usr:
+          size: "{{ hana_usr_size }}"
+          vol: "{{ sap_hana_data_partition_name }}"
+          mountpoint: /usr/sap
+          fstype: xfs
+        backup:
+          size: "{{ hana_backup_size}}"
+          vol: "{{ sap_hana_backup_partition_name }}"
+          mountpoint: "/{{ sap_hana_backup_partition_name }}"
+          fstype: xfs
+
+  - role: common
+    vars:
+      sap_hana_bundle_file_name: '{{ terraform.outputs.sap_hana_bundle_file_name.value }}'
+
+  - role: sap-hostagent
+    vars:
+      sap_hostagent_rpm_remote_path: "/hana/shared/software"
+      sap_hostagent_rpm_file_name: '{{ terraform.outputs.sap_hostagent_file_name.value }}'
+
+  - role: sap-preconfigure
+    vars:
+      sap_preconfigure_modify_etc_hosts: true
+      sap_domain: automation.local
+    when: sap_image_family == "RedHat"
+
+  - role: sap-hana-preconfigure
+    when: sap_image_family == "RedHat"
+
+  - role: sap-hana-install
+    vars:
+      sap_hana_deployment_root_password: Google123
+      sap_hana_deployment_sapadm_password: Google123
+      sap_hana_deployment_hana_env_type: development
+      sap_hana_deployment_hana_mem_restrict: "n"
+      sap_hana_deployment_common_master_password: Google123
+      sap_hana_deployment_ase_user_password: Google123
+      sap_hana_deployment_sidadm_password: Google123
+      sap_hana_deployment_system_restart: "y"
+
+  - role: sap-hana-start
+
+  - role: sap-hana-ssfs-keys
+
+  - role: sap-hana-config-backup
+
+  - role: sap-hana-hdb-user
+
+  - role: sap-hana-hdb-userstore
+
+  - role: sap-hana-backup
+    vars:
+      sap_hana_backup_name: "/{{ sap_hana_backup_partition_name }}/data/pre_ha_config"
+
+  - role: sap-hana-hsr
+    vars:
+      sap_hana_hsr_operation_mode: logreplay
+      sap_hana_hsr_replication_mode: syncmem
+
+  - role: pacemaker
+    vars:
+      project_id: '{{ sap_hana_project_id }}'
+      sap_vip: '{{ sap_hana_ilb_ip }}'
+      sap_healthcheck_port: '{{ sap_hana_health_check_port }}'
+      sap_application: hana
+      sap_hana_sid: '{{ sap_hana_deployment_hana_sid }}'
+      sap_primary_instance: '{{ sap_hana_primary_instance_name }}'
+      sap_primary_instance_ip: '{{ sap_hana_primary_instance_ip }}'
+      sap_secondary_instance: '{{ sap_hana_secondary_instance_name }}'
+      sap_secondary_instance_ip: '{{ sap_hana_secondary_instance_ip }}'
+      sap_primary_zone: '{{ sap_hana_primary_instance_zone }}'
+      sap_secondary_zone: '{{ sap_hana_secondary_instance_zone }}'

@@ -1,0 +1,58 @@
+---
+
+- name: Enable HANA System Replication in the primary node
+  shell: |
+      source /usr/sap/{{ sap_hana_deployment_hana_sid }}/home/.sapenv.sh && \
+      /usr/sap/{{ sap_hana_deployment_hana_sid | upper }}/HDB{{ sap_hana_deployment_hana_instance_number }}/exe/hdbnsutil \
+      -sr_enable --name="{{ ansible_hostname }}"
+  args:
+    executable: /bin/bash
+  become: yes
+  become_user: "{{ sap_hana_deployment_hana_sid | lower }}adm"
+  register: enablesr
+  changed_when: "'successfully enabled system as system replication source site' in enablesr.stdout"
+  failed_when: |
+    enablesr.rc != 0 and 'this site is already enabled' not in enablesr.stdout
+  when: |
+    '-pri' in ansible_hostname
+
+- name: Ensure HANA instance is stopped in the secondary node
+  shell: |
+      /usr/sap/{{ sap_hana_deployment_hana_sid | upper }}/HDB{{ sap_hana_deployment_hana_instance_number }}/HDB stop
+  args:
+    executable: /bin/bash
+  become: yes
+  become_user: "{{ sap_hana_deployment_hana_sid | lower }}adm"
+  register: stopinstance
+  changed_when: "'StopSystem' in stopinstance.stdout"
+  when:
+    - '"-sec" in "{{ ansible_hostname }}"'
+
+- name: Register secondary node to HANA System Replication
+  shell: |
+      source /usr/sap/{{ sap_hana_deployment_hana_sid }}/home/.sapenv.sh && \
+      /usr/sap/{{ sap_hana_deployment_hana_sid | upper }}/HDB{{ sap_hana_deployment_hana_instance_number }}/exe/hdbnsutil \
+      -sr_register --name={{ ansible_hostname }} \
+      --remoteHost={{ sap_hana_primary_instance_name }} --remoteInstance={{ sap_hana_deployment_hana_instance_number }} \
+      --replicationMode={{ sap_hana_hsr_replication_mode }} --operationMode={{ sap_hana_hsr_operation_mode }}
+  args:
+    executable: /bin/bash
+  become: yes
+  become_user: "{{ sap_hana_deployment_hana_sid | lower }}adm"
+  register: registersr
+  changed_when: "'adding site' in registersr.stdout"
+  when:
+    - '"-sec" in "{{ ansible_hostname }}"'
+
+- name: Ensure HANA instance is started in the secondary node
+  shell: |
+      /usr/sap/{{ sap_hana_deployment_hana_sid | upper }}/HDB{{ sap_hana_deployment_hana_instance_number }}/exe/sapcontrol \
+      -nr {{ sap_hana_deployment_hana_instance_number }} -function StartSystem
+  args:
+    executable: /bin/bash
+  become: yes
+  become_user: "{{ sap_hana_deployment_hana_sid | lower }}adm"
+  register: startinstance
+  changed_when: "'StartSystem' in startinstance.stdout"
+  when:
+    - '"-sec" in "{{ ansible_hostname }}"'
