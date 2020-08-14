@@ -16,11 +16,18 @@
     - pacemaker.service
     - pcsd.service
 
+  - command: timeout 5 pcs cluster auth
+    register: pcs_command_status
+    changed_when: false
+    failed_when: false
   - name: set cluster authentication
     command: >-
       pcs cluster auth {{ sap_primary_instance }} {{ sap_secondary_instance }}
       -u {{ sap_cluster_user }} -p {{ sap_cluster_user_password }}
     no_log: true
+    when: >-
+      sap_primary_instance + ': Already authorized' not in pcs_command_status.stdout and
+      sap_secondary_instance + ': Already authorized' not in pcs_command_status.stdout
   when: |
     ansible_os_family == 'RedHat'
 

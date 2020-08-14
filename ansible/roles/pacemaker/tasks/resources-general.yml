@@ -6,11 +6,11 @@
   - name: configure resource-stickiness
     command: pcs resource defaults resource-stickiness=1000
     when: |
-      'resource-stickiness: 1000' not in pcs_command_status.stdout
+      'resource-stickiness=1000' not in pcs_command_status.stdout
   - name: configure migration-threshold
     command: pcs resource defaults migration-threshold=5000
     when: |
-      'migration-threshold: 5000' not in pcs_command_status.stdout
+      'migration-threshold=5000' not in pcs_command_status.stdout
   when:
     ansible_os_family == 'RedHat'
 

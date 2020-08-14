@@ -1,9 +1,27 @@
 ---
 - block:
-  - name: set cluster user password
+  - command: |
+      awk -F : '/^{{ sap_cluster_user }}:/{print $2}' /etc/shadow
+    register: cluster_password_field
+    changed_when: false
+    no_log: true
+
+  - name: define cluster user password fields
+    set_fact:
+      sap_pw_fields: '{{ cluster_password_field.stdout.split("$") }}'
+
+  - name: ensure cluster user password is set
     user:
       name: '{{ sap_cluster_user }}'
       password: '{{ sap_cluster_user_password | password_hash("sha512") }}'
+    when: sap_pw_fields | length == 1    # No password has been set
+    no_log: true
+
+  - name: ensure cluster user password is set
+    user:
+      name: '{{ sap_cluster_user }}'
+      password: '{{ sap_cluster_user_password | password_hash("sha512", sap_pw_fields[2]) }}'
+    when: sap_pw_fields | length == 4    # Password has been set before
     no_log: true
 
   - name: ensure password authentication is enabled for sshd
