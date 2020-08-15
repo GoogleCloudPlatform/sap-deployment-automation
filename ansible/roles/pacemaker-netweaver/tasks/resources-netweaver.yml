@@ -1,0 +1,144 @@
+---
+- block:
+  - name: create enqueue replication server 1
+    command: >-
+      pcs resource create rsc_sap_SBX_ASCS00 SAPInstance
+      InstanceName=SBX_ASCS00_sbx-ascs
+      START_PROFILE=/sapmnt/SBX/profile/SBX_ASCS00_sbx-ascs
+      AUTOMATIC_RECOVER=false
+      meta resource-stickiness=5000 migration-threshold=1
+    register: pcs_command_status
+    changed_when: pcs_command_status.rc == 0
+    failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
+
+  - name: create enqueue replication server 2
+    command: >-
+      pcs resource create rsc_sap_SBX_ASCS00 SAPInstance
+      InstanceName=SBX_ASCS00_sbx-ascs
+      START_PROFILE=/sapmnt/SBX/profile/SBX_ASCS00_sbx-ascs
+      AUTOMATIC_RECOVER=false
+      meta resource-stickiness=5000
+    register: pcs_command_status
+    changed_when: pcs_command_status.rc == 0
+    failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
+
+  - name: create ers resource
+    command: >-
+      pcs resource create rsc_sap_SBX_ERS10 SAPInstance
+      InstanceName=SBX_ERS10_sbx-ers
+      START_PROFILE=/sapmnt/SBX/profile/SBX_ERS10_sbx-ers
+      AUTOMATIC_RECOVER=false IS_ERS=true
+    register: pcs_command_status
+    changed_when: pcs_command_status.rc == 0
+    failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
+
+  - name: create colocation constraint
+    command: |
+      pcs constraint colocation add g-ers with g-ascs -5000
+    register: pcs_command_status
+    changed_when: pcs_command_status.rc == 0
+    failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
+
+  - name: create optional colocation constraint order
+    command: |
+      pcs constraint order start g-ascs then start g-ers symmetrical=false kind=Optional
+    register: pcs_command_status
+    changed_when: pcs_command_status.rc == 0
+    failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
+
+  - name: create mandatory colocation constraint order
+    command: |
+      pcs constraint order start g-ascs then stop g-ers symmetrical=false kind=Mandatory
+    register: pcs_command_status
+    changed_when: pcs_command_status.rc == 0
+    failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
+
+  - name: create location constraint
+    command: >-
+      pcs constraint location rsc_sap_SBX_ASCS00 rule score=2000 runs_ers_SBX eq 1
+    register: pcs_command_status
+    changed_when: pcs_command_status.rc == 0
+    failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
+  when:
+    ansible_os_family == 'RedHat'
+
+- block:
+  - name: create enqueue replication server 1
+    command: >-
+      crm configure primitive rsc_sap_SBX_ASCS00 SAPInstance
+      operations \$id=rsc_sap_SBX_ASCS00-operations
+      op monitor interval=11 timeout=60 on_fail=restart
+      params InstanceName=SBX_ASCS00_sbx-ascs
+      START_PROFILE=/usr/sap/SBX/SYS/profile/SBX_ASCS00_sbx-ascs AUTOMATIC_RECOVER=false
+      meta resource-stickiness=5000 failure-timeout=60 migration-threshold=1 priority=10
+    register: crm_command_status
+    changed_when: crm_command_status.rc == 0
+    failed_when: crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
+
+  - name: create enqueue replication server 2
+    command: >-
+      crm configure primitive rsc_sap_SBX_ASCS00 SAPInstance
+      operations \$id=rsc_sap_SBX_ASCS00-operations
+      op monitor interval=11 timeout=60 on_fail=restart
+      params InstanceName=SBX_ASCS00_sbx-ascs
+      START_PROFILE=/usr/sap/SBX/SYS/profile/SBX_ASCS00_sbx-ascs AUTOMATIC_RECOVER=false
+      meta resource-stickiness=5000
+    register: crm_command_status
+    changed_when: crm_command_status.rc == 0
+    failed_when: crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
+
+  - name: add ascs resource to vip group
+    command: |
+      crm configure modgroup g-ascs add rsc_sap_SBX_ASCS00
+    register: crm_command_status
+    changed_when: crm_command_status.rc == 0
+    failed_when: crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
+
+  - name: create ers resource
+    command: >-
+      crm configure primitive rsc_sap_SBX_ERS10 SAPInstance
+      operations \$id=rsc_sap_SBX_ERS10-operations
+      op monitor interval=11 timeout=60 on_fail=restart
+      params InstanceName=SBX_ERS10_sbx-ers
+      START_PROFILE=/usr/sap/SBX/SYS/profile/SBX_ERS10_sbx-ers AUTOMATIC_RECOVER=false IS_ERS=true
+    register: crm_command_status
+    changed_when: crm_command_status.rc == 0
+    failed_when: crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
+
+  - name: add ascs resource to vip group
+    command: |
+      crm configure modgroup g-ers  add rsc_sap_SBX_ERS10
+    register: crm_command_status
+    changed_when: crm_command_status.rc == 0
+    failed_when: crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
+
+  - name: create colocation constraint
+    command: |
+      crm -F configure colocation col_sap_SBX_no_both -5000: g-ers g-ascs
+    register: crm_command_status
+    changed_when: crm_command_status.rc == 0
+    failed_when: crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
+
+  - name: create colocation constraint
+    command: |
+      crm -F configure colocation col_sap_SBX_no_both -inf: g-ers g-ascs
+    register: crm_command_status
+    changed_when: crm_command_status.rc == 0
+    failed_when: crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
+
+  - name: create optional colocation constraint order
+    command: >-
+      crm configure order ord_sap_SBX_first_start_ascs
+      Optional: rsc_sap_SBX_ASCS00:start rsc_sap_SBX_ERS10:stop symmetrical=false
+    register: crm_command_status
+    changed_when: crm_command_status.rc == 0
+    failed_when: crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
+
+  - name: create location constraint
+    command: |
+      crm configure location loc_sap_SBX_failover_to_ers rsc_sap_SBX_ASCS00 rule 2000: runs_ers_SBX eq 1
+    register: crm_command_status
+    changed_when: crm_command_status.rc == 0
+    failed_when: crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
+  when:
+    ansible_os_family == 'Suse'

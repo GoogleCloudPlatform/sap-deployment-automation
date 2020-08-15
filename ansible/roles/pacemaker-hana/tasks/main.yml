@@ -1,0 +1,75 @@
+---
+- name: include pacemaker primary tasks
+  include_role:
+    name: pacemaker
+    tasks_from: primary
+
+- name: include pacemaker install tasks
+  include_role:
+    name: pacemaker
+    tasks_from: install
+  vars:
+    sap_health_check_port: '{{ sap_hana_health_check_port }}'
+
+- name: include pacemaker auth tasks
+  include_role:
+    name: pacemaker
+    tasks_from: auth
+
+- name: include pacemaker start-cluster tasks
+  include_role:
+    name: pacemaker
+    tasks_from: start-cluster
+  vars:
+    sap_primary_instance: '{{ sap_hana_primary_instance_name }}'
+    sap_secondary_instance: '{{ sap_hana_secondary_instance_name }}'
+
+- name: include pacemaker wait tasks
+  include_role:
+    name: pacemaker
+    tasks_from: wait
+
+- name: include pacemaker start-maintenance tasks
+  include_role:
+    name: pacemaker
+    tasks_from: start-maintenance
+  when: is_primary
+
+- name: include pacemaker resources-general tasks
+  include_role:
+    name: pacemaker
+    tasks_from: resources-general
+  when: is_primary
+
+- name: include pacemaker resources-stonith tasks
+  include_role:
+    name: pacemaker
+    tasks_from: resources-stonith
+  vars:
+    project_id: '{{ sap_hana_project_id }}'
+    sap_primary_instance: '{{ sap_hana_primary_instance_name }}'
+    sap_secondary_instance: '{{ sap_hana_secondary_instance_name }}'
+    sap_primary_zone: '{{ sap_hana_primary_instance_zone }}'
+    sap_secondary_zone: '{{ sap_hana_secondary_instance_zone }}'
+  when: is_primary
+
+- name: include pacemaker resources-vip tasks
+  include_role:
+    name: pacemaker
+    tasks_from: resources-vip
+  vars:
+    sap_vip: '{{ sap_hana_ilb_ip }}'
+    sap_vip_purpose: primary
+    sap_primary_instance: '{{ sap_hana_primary_instance_name }}'
+    sap_secondary_instance: '{{ sap_hana_secondary_instance_name }}'
+  when: is_primary
+
+- name: include pacemaker resources-hana tasks
+  include_tasks: '{{ role_path }}/tasks/resources-hana.yml'
+  when: is_primary
+
+- name: include pacemaker stop-maintenance tasks
+  include_role:
+    name: pacemaker
+    tasks_from: stop-maintenance
+  when: is_primary

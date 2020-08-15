@@ -2,7 +2,7 @@
 - block:
   - name: create healthcheck service
     command:
-      pcs resource create rsc_healthcheck-primary service:haproxy
+      pcs resource create rsc_healthcheck-{{ sap_vip_purpose }} service:haproxy
     when: sap_use_lb
     register: pcs_command_status
     changed_when: pcs_command_status.rc == 0
@@ -10,8 +10,9 @@
 
   - name: create gcp-vpc-move-vip resource
     command: >-
-      pcs resource create rsc_vip_gcp-primary gcp-vpc-move-vip
+      pcs resource create rsc_vip_gcp-{{ sap_vip_purpose }} gcp-vpc-move-vip
       alias_ip={{ sap_vip }}/32 hostlist="{{ sap_primary_instance }} {{ sap_secondary_instance }}"
+      --force
     when: not sap_use_lb
     register: pcs_command_status
     changed_when: pcs_command_status.rc == 0
@@ -19,14 +20,15 @@
 
   - name: create ipaddr2 resource
     command: >-
-      pcs resource create rsc_vip_int-primary IPaddr2 nic=eth0 ip={{ sap_vip }} cidr_netmask=32
+      pcs resource create rsc_vip_int-{{ sap_vip_purpose }} IPaddr2
+      nic=eth0 ip={{ sap_vip }} cidr_netmask=32
     register: pcs_command_status
     changed_when: pcs_command_status.rc == 0
     failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
 
   - name: group vip resources
     command: >-
-      pcs resource group add g-primary rsc_vip_int-primary rsc_vip_gcp-primary
+      pcs resource group add g-{{ sap_vip_purpose }} rsc_vip_int-{{ sap_vip_purpose }} rsc_vip_gcp-{{ sap_vip_purpose }}
     when: not sap_use_lb
     register: pcs_command_status
     changed_when: pcs_command_status.rc == 0
@@ -34,7 +36,7 @@
 
   - name: group vip resources
     command: >-
-      pcs resource group add g-primary rsc_vip_int-primary rsc_healthcheck-primary
+      pcs resource group add g-{{ sap_vip_purpose }} rsc_vip_int-{{ sap_vip_purpose }} rsc_healthcheck-{{ sap_vip_purpose }}
     when: sap_use_lb
     register: pcs_command_status
     changed_when: pcs_command_status.rc == 0
@@ -45,34 +47,36 @@
 - block:
   - name: create healthcheck service
     command: >-
-      crm configure primitive rsc_healthcheck-primary anything
+      crm -F configure primitive rsc_healthcheck-{{ sap_vip_purpose }} anything
       params binfile=/usr/bin/socat
-      cmdline_options="-U TCP-LISTEN:{{ sap_healthcheck_port }},backlog=10,fork,reuseaddr /dev/null"
+      cmdline_options="-U TCP-LISTEN:{{ sap_health_check_port }},backlog=10,fork,reuseaddr /dev/null"
       op monitor timeout=20s interval=10
       op_params depth=0
     when: sap_use_lb
     register: crm_command_status
     changed_when: crm_command_status.rc == 0
-    failed_when: |
-      crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
+    failed_when:
+    - crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
+    - crm_command_status.rc != 0 and 'violate uniqueness for parameter "binfile"' not in crm_command_status.stderr
 
   - name: create gcp alias resource
     command: >-
-      crm configure primitive rsc_vip_gcp-primary ocf:gcp:alias
+      crm -F configure primitive rsc_vip_gcp-{{ sap_vip_purpose }} ocf:gcp:alias
       op monitor interval=60s timeout=60s
-      op start interval=0 timeout=180s
-      op stop interval=0 timeout=180s params
+      op start interval=0 timeout=300s
+      op stop interval=0 timeout=15s params
       alias_ip={{ sap_vip }}/32 hostlist="{{ sap_primary_instance }} {{ sap_secondary_instance }}"
       gcloud_path={{ sap_gcloud_path }} logging=yes meta priority=10
     when: not sap_use_lb
     register: crm_command_status
     changed_when: crm_command_status.rc == 0
-    failed_when: |
-      crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
+    failed_when:
+    - crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
+    - crm_command_status.rc != 0 and 'violate uniqueness for parameter' not in crm_command_status.stderr
 
   - name: create ipaddr2 resource
     command: >-
-      crm configure primitive rsc_vip_int-primary IPaddr2
+      crm configure primitive rsc_vip_int-{{ sap_vip_purpose }} IPaddr2
       params ip={{ sap_vip }} cidr_netmask=32 nic="eth0"
       op monitor interval=10s
       meta failure-timeout=3600
@@ -83,7 +87,7 @@
 
   - name: group vip resources
     command: >-
-      crm configure group g-primary rsc_vip_int-primary rsc_vip_gcp-primary
+      crm configure group g-{{ sap_vip_purpose }} rsc_vip_int-{{ sap_vip_purpose }} rsc_vip_gcp-{{ sap_vip_purpose }}
     register: crm_command_status
     changed_when: crm_command_status.rc == 0
     failed_when: |
@@ -92,7 +96,7 @@
 
   - name: group vip resources
     command: >-
-      crm configure group g-primary rsc_vip_int-primary rsc_healthcheck-primary
+      crm configure group g-{{ sap_vip_purpose }} rsc_vip_int-{{ sap_vip_purpose }} rsc_healthcheck-{{ sap_vip_purpose }}
     register: crm_command_status
     changed_when: crm_command_status.rc == 0
     failed_when: |
