@@ -50,13 +50,16 @@
     sap_vip: '{{ item.vip }}'
     sap_vip_purpose: '{{ item.vip_purpose }}'
     sap_health_check_port: '{{ item.health_check_port }}'
+    sap_use_lb: '{{ item.use_lb }}'
   loop:
   - vip: '{{ sap_ascs_vip }}'
     vip_purpose: ascs
     health_check_port: '{{ sap_ascs_health_check_port | default("") }}'
+    use_lb: true
   - vip: '{{ sap_ers_vip }}'
     vip_purpose: ers
     health_check_port: '{{ sap_ers_health_check_port | default("") }}'
+    use_lb: '{{ ansible_os_family == "Suse" }}'
   when: is_primary
 
 - name: include pacemaker resources-netweaver tasks
