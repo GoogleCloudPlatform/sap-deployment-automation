@@ -7,6 +7,7 @@
       START_PROFILE=/sapmnt/{{ sap_nw_sid }}/profile/{{ sap_nw_sid }}_ASCS{{ sap_ascs_instance_number }}_{{ sap_ascs_virtual_host }}
       AUTOMATIC_RECOVER=false
       meta resource-stickiness=5000 migration-threshold=1
+      --group g-ascs
     register: pcs_command_status
     changed_when: pcs_command_status.rc == 0
     failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
@@ -20,6 +21,7 @@
       START_PROFILE=/sapmnt/{{ sap_nw_sid }}/profile/{{ sap_nw_sid }}_ASCS{{ sap_ascs_instance_number }}_{{ sap_ascs_virtual_host }}
       AUTOMATIC_RECOVER=false
       meta resource-stickiness=5000
+      --group g-ascs
     register: pcs_command_status
     changed_when: pcs_command_status.rc == 0
     failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
@@ -32,6 +34,7 @@
       InstanceName={{ sap_nw_sid }}_ERS{{ sap_ers_instance_number }}_{{ sap_ers_virtual_host }}
       START_PROFILE=/sapmnt/{{ sap_nw_sid }}/profile/{{ sap_nw_sid }}_ERS{{ sap_ers_instance_number }}_{{ sap_ers_virtual_host }}
       AUTOMATIC_RECOVER=false IS_ERS=true
+      --group g-ers
     register: pcs_command_status
     changed_when: pcs_command_status.rc == 0
     failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
@@ -105,7 +108,7 @@
       crm configure modgroup g-ascs add rsc_{{ sap_nw_sid }}_ASCS{{ sap_ascs_instance_number }}
     register: crm_command_status
     changed_when: crm_command_status.rc == 0
-    failed_when: crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
+    failed_when: crm_command_status.rc != 0 and 'listed more than once in group' not in crm_command_status.stderr
 
   - name: create ers resource
     command: >-
@@ -121,10 +124,10 @@
 
   - name: add ers resource to vip group
     command: |
-      crm configure modgroup g-ers  add rsc_{{ sap_nw_sid }}_ERS{{ sap_ers_instance_number }}
+      crm configure modgroup g-ers add rsc_{{ sap_nw_sid }}_ERS{{ sap_ers_instance_number }}
     register: crm_command_status
     changed_when: crm_command_status.rc == 0
-    failed_when: crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
+    failed_when: crm_command_status.rc != 0 and 'listed more than once in group' not in crm_command_status.stderr
 
   - name: create colocation constraint for ensa1
     command: |
