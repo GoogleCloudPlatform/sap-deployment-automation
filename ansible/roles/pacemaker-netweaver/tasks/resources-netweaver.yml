@@ -1,6 +1,6 @@
 ---
 - block:
-  - name: create enqueue replication server 1
+  - name: create enqueue replication server for ensa1
     command: >-
       pcs resource create rsc_{{ sap_nw_sid }}_ASCS{{ sap_ascs_instance_number }} SAPInstance
       InstanceName={{ sap_nw_sid }}_ASCS{{ sap_ascs_instance_number }}_{{ sap_ascs_virtual_host }}
@@ -10,8 +10,10 @@
     register: pcs_command_status
     changed_when: pcs_command_status.rc == 0
     failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
+    when: |
+      sap_ensa_version == '1'
 
-  - name: create enqueue replication server 2
+  - name: create enqueue replication server for ensa2
     command: >-
       pcs resource create rsc_{{ sap_nw_sid }}_ASCS{{ sap_ascs_instance_number }} SAPInstance
       InstanceName={{ sap_nw_sid }}_ASCS{{ sap_ascs_instance_number }}_{{ sap_ascs_virtual_host }}
@@ -21,6 +23,8 @@
     register: pcs_command_status
     changed_when: pcs_command_status.rc == 0
     failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
+    when: |
+      sap_ensa_version == '2'
 
   - name: create ers resource
     command: >-
@@ -53,18 +57,20 @@
     changed_when: pcs_command_status.rc == 0
     failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
 
-  - name: create location constraint
+  - name: create location constraint for ensa1
     command: >-
       pcs constraint location rsc_{{ sap_nw_sid }}_ASCS{{ sap_ascs_instance_number }}
       rule score=2000 runs_ers_{{ sap_nw_sid }} eq 1
     register: pcs_command_status
     changed_when: pcs_command_status.rc == 0
     failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
+    when: |
+      sap_ensa_version == '1'
   when:
     ansible_os_family == 'RedHat'
 
 - block:
-  - name: create enqueue replication server 1
+  - name: create enqueue replication server for ensa1
     command: >-
       crm configure primitive rsc_{{ sap_nw_sid }}_ASCS{{ sap_ascs_instance_number }} SAPInstance
       operations \$id=rsc_{{ sap_nw_sid }}_ASCS{{ sap_ascs_instance_number }}-operations
@@ -76,8 +82,10 @@
     register: crm_command_status
     changed_when: crm_command_status.rc == 0
     failed_when: crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
+    when: |
+      sap_ensa_version == '1'
 
-  - name: create enqueue replication server 2
+  - name: create enqueue replication server for ensa2
     command: >-
       crm configure primitive rsc_{{ sap_nw_sid }}_ASCS{{ sap_ascs_instance_number }} SAPInstance
       operations \$id=rsc_{{ sap_nw_sid }}_ASCS{{ sap_ascs_instance_number }}-operations
@@ -89,6 +97,8 @@
     register: crm_command_status
     changed_when: crm_command_status.rc == 0
     failed_when: crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
+    when: |
+      sap_ensa_version == '2'
 
   - name: add ascs resource to vip group
     command: |
@@ -116,19 +126,23 @@
     changed_when: crm_command_status.rc == 0
     failed_when: crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
 
-  - name: create colocation constraint
-    command: |
-      crm -F configure colocation col_sap_{{ sap_nw_sid }}_no_both -5000: g-ers g-ascs
-    register: crm_command_status
-    changed_when: crm_command_status.rc == 0
-    failed_when: crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
-
-  - name: create colocation constraint
+  - name: create colocation constraint for ensa1
     command: |
       crm -F configure colocation col_sap_{{ sap_nw_sid }}_no_both -inf: g-ers g-ascs
     register: crm_command_status
     changed_when: crm_command_status.rc == 0
     failed_when: crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
+    when: |
+      sap_ensa_version == '1'
+
+  - name: create colocation constraint for ensa2
+    command: |
+      crm -F configure colocation col_sap_{{ sap_nw_sid }}_no_both -5000: g-ers g-ascs
+    register: crm_command_status
+    changed_when: crm_command_status.rc == 0
+    failed_when: crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
+    when: |
+      sap_ensa_version == '2'
 
   - name: create optional colocation constraint order
     command: >-
@@ -140,7 +154,7 @@
     changed_when: crm_command_status.rc == 0
     failed_when: crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
 
-  - name: create location constraint
+  - name: create location constraint for ensa1
     command: >-
       crm configure location loc_sap_{{ sap_nw_sid }}_failover_to_ers
       rsc_{{ sap_nw_sid }}_ASCS{{ sap_ascs_instance_number }}
@@ -148,5 +162,7 @@
     register: crm_command_status
     changed_when: crm_command_status.rc == 0
     failed_when: crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
+    when: |
+      sap_ensa_version == '1'
   when:
     ansible_os_family == 'Suse'
