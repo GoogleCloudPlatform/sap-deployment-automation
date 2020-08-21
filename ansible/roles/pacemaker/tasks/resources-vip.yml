@@ -1,7 +1,7 @@
 ---
 - block:
   - name: create healthcheck service
-    command:
+    command: |
       pcs resource create rsc_healthcheck-{{ sap_vip_purpose }} service:haproxy
     when: sap_use_lb
     register: pcs_command_status
@@ -27,7 +27,7 @@
     failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
 
   - name: group vip resources
-    command: >-
+    command: |
       pcs resource group add g-{{ sap_vip_purpose }} rsc_vip_int-{{ sap_vip_purpose }} rsc_vip_gcp-{{ sap_vip_purpose }}
     when: not sap_use_lb
     register: pcs_command_status
@@ -35,7 +35,7 @@
     failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
 
   - name: group vip resources
-    command: >-
+    command: |
       pcs resource group add g-{{ sap_vip_purpose }} rsc_vip_int-{{ sap_vip_purpose }} rsc_healthcheck-{{ sap_vip_purpose }}
     when: sap_use_lb
     register: pcs_command_status
