@@ -43,6 +43,20 @@ data "google_compute_image" "image" {
   project = var.linux_image_project
 }
 
+resource "google_compute_attached_disk" "attached_disk_0" {
+  project     = var.project_id
+  device_name = "${var.instance_name}-${var.disk_name_0}-${var.device_name_pd_ssd}"
+  disk        = google_compute_disk.gcp_sap_hana_sd_0.self_link
+  instance    = google_compute_instance.gcp_sap_hana.self_link
+}
+
+resource "google_compute_attached_disk" "attached_disk_1" {
+  project     = var.project_id
+  device_name = "${var.instance_name}-${var.disk_name_1}-${var.device_name_pd_hdd}"
+  disk        = google_compute_disk.gcp_sap_hana_sd_1.self_link
+  instance    = google_compute_instance.gcp_sap_hana.self_link
+}
+
 resource "google_compute_instance" "gcp_sap_hana" {
   project        = var.project_id
   name           = var.instance_name
@@ -67,13 +81,7 @@ resource "google_compute_instance" "gcp_sap_hana" {
     }
   }
 
-  attached_disk {
-    source = google_compute_disk.gcp_sap_hana_sd_0.self_link
-  }
 
-  attached_disk {
-    source = google_compute_disk.gcp_sap_hana_sd_1.self_link
-  }
 
   network_interface {
     subnetwork         = var.subnetwork
