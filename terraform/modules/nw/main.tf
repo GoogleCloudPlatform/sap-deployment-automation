@@ -124,18 +124,7 @@ resource "google_compute_instance" "gcp_nw" {
     publicIP               = var.public_ip
     ssh-keys               = "${var.ssh_user}:${file("${var.public_key_path}")}"
   }
-  provisioner "remote-exec" {
-    inline = [
-      "echo instance is ready for installation",
-      ]
-    
-    connection {
-      type        = "ssh"
-      user        = var.ssh_user
-      host        = google_compute_instance.gcp_nw.network_interface.0.access_config.0.nat_ip
-      private_key = file("${var.private_key_path}")
-    }
-  }
+
   lifecycle {
     # Ignore changes in the instance metadata, since it is modified by the SAP startup script.
     # https://github.com/terraform-providers/terraform-provider-google/issues/2098
