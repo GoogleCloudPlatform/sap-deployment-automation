@@ -4,18 +4,6 @@ variable "assign_public_ip" {
   default        = false
 }
 
-variable "awx_repository" {
-  type           = string
-  description    = "Git repository that hosts AWX installer."
-  default        = "https://github.com/ansible/awx.git"
-}
-
-variable "awx_version" {
-  type           = string
-  description    = "Version of AWX."
-  default        = "13.0.0"
-}
-
 variable "machine_type" {
   type           = string
   description    = "Type of machine."
@@ -64,25 +52,13 @@ variable "service_account" {
 variable "source_image_family" {
   type           = string
   description    = "Family of disk source image."
-  default        = "debian-10"
+  default        = "sap-awx"
 }
 
 variable "source_image_project" {
   type           = string
   description    = "Project of disk source image."
-  default        = "debian-cloud"
-}
-
-variable "ssl_certificate_file" {
-  type           = string
-  description    = "Path to SSL certificate file. If given, `ssl_key_file` must also be defined."
-  default        = ""
-}
-
-variable "ssl_key_file" {
-  type           = string
-  description    = "Path to SSL private key file. If given, `ssl_certificate_file` must also be defined."
-  default        = ""
+  default        = "albatross-duncanl-sandbox-2"
 }
 
 variable "tags" {
