@@ -34,7 +34,7 @@ resource "google_compute_address" "gcp_sap_hana_ip" {
   count = var.public_ip ? 1 : 0
 
   project = var.project_id
-  name    = var.address_name
+  name    = var.instance_name
   region  = var.region
 }
 

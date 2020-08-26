@@ -149,11 +149,6 @@ variable "public_ip" {
   default     = true
 }
 
-variable "address_name" {
-  description = "Name of static IP adress to add to the instance's access config."
-  default     = "sap-hana-single-node"
-}
-
 variable "gce_ssh_user" {
   description = "GCE ssh user"
   default     = "balaguduru"

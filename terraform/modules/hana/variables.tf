@@ -125,11 +125,6 @@ variable "public_ip" {
   default     = true
 }
 
-variable "address_name" {
-  description = "Name of static IP adress to add to the instance's access config."
-  default     = ""
-}
-
 variable "sap_hana_deployment_bucket" {
   description = "SAP hana deployment bucket."
 }
