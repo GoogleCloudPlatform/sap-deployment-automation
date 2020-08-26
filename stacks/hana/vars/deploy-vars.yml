@@ -1,8 +1,9 @@
 ---
 
-sap_hana_gce_ssh_pub_key: ~/.ssh/id_rsa.pub
-sap_hana_gce_ssh_priv_key: ~/.ssh/id_rsa
+sap_hana_gce_ssh_pub_key: # Contents of public key file
+sap_hana_gce_ssh_priv_key: # Contents of private key file
 sap_hana_instance_name: hanslbg
+sap_hana_instance_type: n1-highmem-32
 sap_hana_state_bucket: sap-terraform-state-bg
 sap_hana_source_image_family: rhel-7-7-sap-ha
 sap_hana_source_image_project: rhel-sap-cloud

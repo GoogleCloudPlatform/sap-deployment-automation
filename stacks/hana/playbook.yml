@@ -26,6 +26,7 @@
       state: present
       variables:
         instance_name: '{{ sap_hana_instance_name }}'
+        instance_type: '{{ sap_hana_instance_type }}'
         linux_image_family: '{{ sap_hana_linux_image_family }}'
         linux_image_project: '{{ sap_hana_linux_image_project }}'
         region: '{{ sap_hana_region }}'
@@ -64,6 +65,11 @@
     sap_image_family: '{{ terraform.outputs.sap_image_family.value }}'
     sap_hana_data_partition_name: hanadata
     sap_hana_backup_partition_name: hanabackup
+    sap_hana_deployment_hana_instance_number: '00'
+    sap_hana_deployment_hana_sid: RH1
+    sap_hana_deployment_hostagent_file_name: '{{ terraform.outputs.sap_hostagent_file_name.value }}'
+    sap_hana_deployment_bundle_sar_file_name: '{{ terraform.outputs.sap_hana_bundle_file_name.value }}'
+    sap_hana_deployment_sapcar_file_name: '{{ terraform.outputs.sap_hana_sapcar_file_name.value }}'
   roles:
   - role: storage
     vars:
@@ -74,8 +80,8 @@
       hana_backup_size: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
       swapon: false
       disks:
-        - { name: data, partition_path : "{{ sap_hana_data_partition_name }}"}
-        - { name: backup, partition_path : "{{ sap_hana_backup_partition_name }}"}
+        - { name: hana0-data, partition_path: "{{ sap_hana_data_partition_name }}" }
+        - { name: hana1-backup, partition_path: "{{ sap_hana_backup_partition_name }}" }
       logvols:
         shared:
           size: "{{ hana_shared_size }}"
@@ -111,7 +117,6 @@
 
   - role: sap-hostagent
     vars:
-      sap_hostagent_installation_type: "rpm"          # Use "Zypper" for Suse systems
       sap_hostagent_rpm_remote_path: "/hana/shared/software"
       sap_hostagent_rpm_file_name: '{{ terraform.outputs.sap_hostagent_file_name.value }}'
 
@@ -128,10 +133,8 @@
     vars:
       sap_hana_deployment_bundle_sar_file_name: '{{ terraform.outputs.sap_hana_bundle_file_name.value }}'
       sap_hana_deployment_sapcar_file_name: '{{ terraform.outputs.sap_hana_sapcar_file_name.value }}'
-      sap_hana_deployment_hana_sid: RH1
       sap_hana_deployment_root_password: Google123
       sap_hana_deployment_sapadm_password: Google123
-      sap_hana_deployment_hana_instance_number: 00
       sap_hana_deployment_hana_env_type: development
       sap_hana_deployment_hana_mem_restrict: "n"
       sap_hana_deployment_common_master_password: Google123
@@ -141,5 +144,3 @@
       sap_hana_deployment_system_restart: "y"
 
   - role: sap-hana-start
-    vars:
-      sap_hana_deployment_hana_sid: RH1
