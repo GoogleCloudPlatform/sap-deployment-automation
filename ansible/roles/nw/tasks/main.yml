@@ -33,6 +33,12 @@
   set_fact:
     sapinst_path: /sapmnt/Software/SWPM1.0
 
+- name: Define template variables
+  set_fact:
+    sap_ascs_virtual_hostname: '{{ ansible_hostname if not sap_ascs_virtual_hostname else sap_ascs_virtual_hostname }}'
+    sap_ci_virtual_hostname: '{{ ansible_hostname if not sap_ci_virtual_hostname else sap_ci_virtual_hostname }}'
+    sap_scs_virtual_hostname: '{{ ansible_hostname if not sap_scs_virtual_hostname else sap_scs_virtual_hostname }}'
+
 - name: inifile.params config file 
   template:
     src: inifile.params.j2

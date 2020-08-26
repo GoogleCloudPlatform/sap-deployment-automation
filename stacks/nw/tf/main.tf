@@ -39,5 +39,6 @@ module "gcp_netweaver" {
   boot_disk_size         = var.boot_disk_size
   boot_disk_type         = var.boot_disk_type
   disk_type              = var.disk_type
-  service_account_email = "terraform@albatross-duncanl-sandbox-2.iam.gserviceaccount.com"
+  service_account_email  = "terraform@albatross-duncanl-sandbox-2.iam.gserviceaccount.com"
+  ssh_user               = var.ssh_user
 }

@@ -10,7 +10,7 @@ output "zone" {
 
 output "address" {
   description = "instance private IP"
-  value = module.gcp_netweaver.instance_external_ip
+  value = module.gcp_netweaver.instance_internal_ip
 }
 
 output "sap_image_family" {

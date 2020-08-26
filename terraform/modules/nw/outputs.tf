@@ -29,7 +29,7 @@ output "instance_machine_type" {
 }
 
 output "instance_internal_ip" {
-  description = "external IP of instance"
+  description = "internal IP of instance"
   value = google_compute_instance.gcp_nw.network_interface.0.network_ip
 }
 
