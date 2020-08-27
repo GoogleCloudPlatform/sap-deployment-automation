@@ -25,7 +25,8 @@
         path: /tmp/id_rsa
         state: absent
   - name: define job directories
-    command: 'ls {{ awx_project_path }}/stacks'
+    shell: |
+      find {{ awx_project_path }}/stacks -name awx_survey_spec.json | awk -F / '{print $(NF-1)}'
     register: job_directories
   - name: wait for tower to initialize
     shell: |
