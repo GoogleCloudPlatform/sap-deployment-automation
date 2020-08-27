@@ -1,0 +1,198 @@
+---
+- name: Deploy SAP infrastructure
+  hosts: 127.0.0.1
+  connection: local
+  vars:
+    sap_hostagent_file_name: saphostagentrpm_44-20009394.rpm
+    sap_hana_bundle_file_name: IMDB_SERVER20_047_0-80002031.SAR
+    sap_hana_sapcar_file_name: SAPCAR_1320-80000935.EXE
+  tasks:
+  - name: Copy ssh public key
+    copy:
+      dest: '{{ playbook_dir }}/ssh-key.pub'
+      content: '{{ sap_gce_ssh_pub_key }}'
+  - name: Copy ssh private key
+    copy:
+      dest: '{{ playbook_dir }}/ssh-key'
+      content: '{{ sap_gce_ssh_priv_key }}'
+      mode: '0600'
+  - name: Run Terraform
+    terraform:
+      backend_config:
+        bucket: '{{ sap_state_bucket }}'
+        prefix: '{{ sap_state_bucket_prefix | default(sap_instance_name) }}'
+      force_init: true
+      project_path: ./tf
+      state: present
+      variables:
+        instance_name: '{{ sap_instance_name }}'
+        linux_image_family: '{{ sap_linux_image_family }}'
+        linux_image_project: '{{ sap_linux_image_project }}'
+        region: '{{ sap_region }}'
+        zone: '{{ sap_zone }}'
+        subnetwork: '{{ sap_subnetwork }}'
+        hana_instance_type: '{{ sap_hana_instance_type }}'
+        nw_instance_type: '{{ sap_nw_instance_type }}'
+        sap_install_files_bucket: '{{ sap_install_files_bucket }}'
+        sap_hostagent_file_name: '{{ sap_hostagent_file_name }}'
+        sap_hana_bundle_file_name: '{{ sap_hana_bundle_file_name }}'
+        sap_hana_sapcar_file_name: '{{ sap_hana_sapcar_file_name }}'
+        hana_service_account_email: '{{ sap_hana_service_account_email }}'
+        nw_service_account_email: '{{ sap_nw_service_account_email }}'
+        gce_ssh_user: '{{ sap_gce_ssh_user }}'
+        gce_ssh_pub_key_file: '{{ playbook_dir }}/ssh-key.pub'
+    register: terraform
+  - name: Build HANA inventory
+    add_host:
+      name: '{{ terraform.outputs.hana_address.value }}'
+      ansible_user: '{{ sap_gce_ssh_user }}'
+      ansible_ssh_private_key_file: '{{ playbook_dir }}/ssh-key'
+      terraform: '{{ terraform }}'
+      groups: hana
+    changed_when: false
+  - name: Build NetWeaver inventory
+    add_host:
+      name: '{{ terraform.outputs.nw_address.value }}'
+      ansible_user: '{{ sap_gce_ssh_user }}'
+      ansible_ssh_private_key_file: '{{ playbook_dir }}/ssh-key'
+      terraform: '{{ terraform }}'
+      groups: nw
+    changed_when: false
+  - name: Wait for hosts
+    shell: |-
+      ssh -i {{ playbook_dir }}/ssh-key \
+        -o StrictHostKeyChecking=no \
+        {{ sap_gce_ssh_user }}@{{ item }} \
+        exit
+    register: can_ssh
+    retries: 12
+    delay: 10
+    until: can_ssh is succeeded
+    changed_when: false
+    loop:
+    - '{{ terraform.outputs.hana_address.value }}'
+    - '{{ terraform.outputs.nw_address.value }}'
+
+- name: SAP HANA configure
+  hosts: hana
+  vars:
+    sap_image_family: '{{ terraform.outputs.sap_image_family.value }}'
+    sap_hana_data_partition_name: hanadata
+    sap_hana_backup_partition_name: hanabackup
+    sap_hana_deployment_hana_instance_number: '{{ sap_hana_instance_number }}'
+    sap_hana_deployment_hana_sid: '{{ sap_hana_sid }}'
+    sap_hana_deployment_hostagent_file_name: '{{ terraform.outputs.sap_hostagent_file_name.value }}'
+    sap_hana_deployment_bundle_sar_file_name: '{{ terraform.outputs.sap_hana_bundle_file_name.value }}'
+    sap_hana_deployment_sapcar_file_name: '{{ terraform.outputs.sap_hana_sapcar_file_name.value }}'
+  roles:
+  - role: storage
+    vars:
+      hana_shared_size: '{{ terraform.outputs.hana_shared_size.value }}G'
+      hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
+      hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
+      hana_usr_size: '{{ terraform.outputs.hana_usr_size.value }}G'
+      hana_backup_size: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
+      swapon: false
+      disks:
+        - { name: hana0-data, partition_path: "{{ sap_hana_data_partition_name }}" }
+        - { name: hana1-backup, partition_path: "{{ sap_hana_backup_partition_name }}" }
+      logvols:
+        shared:
+          size: "{{ hana_shared_size }}"
+          vol: hanadata
+          mountpoint: /hana/shared
+          fstype: xfs
+        data:
+          size: "{{ hana_data_size }}"
+          vol: hanadata
+          mountpoint: /hana/data
+          fstype: xfs
+        log:
+          size: "{{ hana_log_size }}"
+          vol: hanadata
+          mountpoint: /hana/log
+          fstype: xfs
+        usr:
+          size: "{{ hana_usr_size }}"
+          vol: hanadata
+          mountpoint: /usr/sap
+          fstype: xfs
+        backup:
+          size: "{{ hana_backup_size}}"
+          vol: hanabackup
+          mountpoint: /hanabackup
+          fstype: xfs
+
+  - role: common
+    vars:
+      sap_hostagent_file_name: '{{ terraform.outputs.sap_hostagent_file_name.value }}'
+      sap_hana_bundle_file_name: '{{ terraform.outputs.sap_hana_bundle_file_name.value }}'
+      sap_hana_sapcar_file_name: '{{ terraform.outputs.sap_hana_sapcar_file_name.value }}'
+
+  - role: sap-hostagent
+    vars:
+      sap_hostagent_rpm_remote_path: "/hana/shared/software"
+      sap_hostagent_rpm_file_name: '{{ terraform.outputs.sap_hostagent_file_name.value }}'
+
+  - role: sap-preconfigure
+    vars:
+      sap_preconfigure_modify_etc_hosts: true
+      sap_domain: automation.local
+    when: sap_image_family == "RedHat"
+
+  - role: sap-hana-preconfigure
+    when: sap_image_family == "RedHat"
+
+  - role: sap-hana-install
+    vars:
+      sap_hana_deployment_bundle_sar_file_name: '{{ terraform.outputs.sap_hana_bundle_file_name.value }}'
+      sap_hana_deployment_sapcar_file_name: '{{ terraform.outputs.sap_hana_sapcar_file_name.value }}'
+      sap_hana_deployment_root_password: Google123
+      sap_hana_deployment_sapadm_password: Google123
+      sap_hana_deployment_hana_env_type: development
+      sap_hana_deployment_hana_mem_restrict: "n"
+      sap_hana_deployment_common_master_password: Google123
+      sap_hana_deployment_ase_user_password: Google123
+      sap_hana_deployment_sidadm_password: Google123
+      sap_hana_deployment_hana_db_system_password: Google123
+      sap_hana_deployment_system_restart: "y"
+
+  - role: sap-hana-start
+
+- name: SAP NetWeaver configure
+  hosts: nw
+  become: yes
+  vars:
+    sap_image_family: '{{ terraform.outputs.sap_image_family.value }}'
+  roles:
+  - role: base
+  - role: nw-pre
+  - role: storage
+    vars:
+      usr_sap_size: 140G
+      sap_mnt_size: 140G
+      swap_size: 29G
+      swapon: True
+      disks:
+        - { name: usrsap, partition_path: sapmnt }
+        - { name: sapmnt, partition_path: usrsap }
+        - { name: swap, partition_path: swap }
+      logvols:
+        sapmnt:
+          size: "{{ sap_mnt_size }}"
+          vol: "sapmnt"
+          mountpoint: /sapmnt
+        usrsap:
+          size: "{{ usr_sap_size }}"
+          vol: usrsap
+          mountpoint: /usr/sap
+      swapvols:
+        swap:
+          size: "{{ swap_size }}"
+          vol: swap
+          mountpoint: /swap
+  - role: nw
+    vars:
+      sap_hana_hostname: "{{ terraform.outputs.hana_instance_name.value }}"
+      sap_hana_sid: '{{ sap_hana_sid }}'
+      sap_hana_instance_number: '{{ sap_hana_instance_number }}'

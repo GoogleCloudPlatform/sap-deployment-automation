@@ -1,0 +1,177 @@
+{
+  "description": "",
+  "name": "parameters",
+  "spec": [
+    {
+      "question_name": "Instance name",
+      "question_description": "This is a base name from which cloud resources are named, and should be unique.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_instance_name",
+      "min": 1,
+      "max": 1024
+    },
+    {
+      "question_name": "Terraform state bucket",
+      "question_description": "This is the bucket where Terraform state is stored. It will be stored in a path derived from the instance name variable.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_state_bucket",
+      "min": 1,
+      "max": 1024
+    },
+    {
+      "question_name": "Installation files bucket",
+      "question_description": "This is the bucket from which installation files will be downloaded.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_install_files_bucket",
+      "min": 1,
+      "max": 1024,
+      "default": "nw-ansible"
+    },
+    {
+      "question_name": "Image family",
+      "question_description": "Family of the image used to create machines.",
+      "required": true,
+      "type": "multiplechoice",
+      "variable": "sap_linux_image_family",
+      "default": "rhel-7-7-sap-ha",
+      "choices": ["rhel-7-4-sap", "rhel-7-6-sap-ha", "rhel-7-7-sap-ha", "sles-12-sp3-bg"]
+    },
+    {
+      "question_name": "Linux image project",
+      "question_description": "Project of the image used to create machines.",
+      "required": true,
+      "type": "multiplechoice",
+      "variable": "sap_linux_image_project",
+      "default": "rhel-sap-cloud",
+      "choices": ["rhel-sap-cloud", "suse-sap-cloud", "albatross-duncanl-sandbox-2"]
+    },
+    {
+      "question_name": "HANA instance type",
+      "question_description": "Machine instance type for HANA.",
+      "required": true,
+      "type": "multiplechoice",
+      "variable": "sap_hana_instance_type",
+      "default": "n1-highmem-32",
+      "choices": ["n1-highmem-32", "n1-highmem-64", "n1-highmem-96", "n2-highmem-32", "n2-highmem-48", "n2-highmem-64", "n2-highmem-80", "m1-megamem-96", "m1-ultramem-40", "m1-ultramem-80", "m1-ultramem-160", "m2-ultramem-208", "m2-ultramem-416"]
+    },
+    {
+      "question_name": "NetWeaver instance type",
+      "question_description": "Machine instance type for NetWeaver.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_nw_instance_type",
+      "min": 1,
+      "max": 1024,
+      "default": "n1-standard-2"
+    },
+    {
+      "question_name": "HANA SID",
+      "question_description": "This is the system identifier for HANA. It must be three characters starting with a letter.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_hana_sid",
+      "min": 3,
+      "max": 3,
+      "default": "ABC"
+    },
+    {
+      "question_name": "NetWeaver SID",
+      "question_description": "This is the system identifier for NetWeaver. It must be three characters starting with a letter.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_nw_sid",
+      "min": 3,
+      "max": 3,
+      "default": "XYZ"
+    },
+    {
+      "question_name": "HANA instance number",
+      "question_description": "This is the instance number for HANA. It must be a two digit number between 00 and 99.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_hana_instance_number",
+      "min": 2,
+      "max": 2,
+      "default": "00"
+    },
+    {
+      "question_name": "Region",
+      "question_description": "This is the region in which cloud resources will be created.",
+      "required": true,
+      "type": "multiplechoice",
+      "variable": "sap_region",
+      "default": "us-central1",
+      "choices": ["asia-east1", "asia-east2", "asia-northeast1", "asia-northeast2", "asia-northeast3", "asia-south1", "asia-southeast1", "asia-southeast2", "australia-southeast1", "europe-north1", "europe-west1", "europe-west2", "europe-west3", "europe-west4", "europe-west6", "northamerica-northeast1", "southamerica-east1", "us-central1", "us-central2", "us-east1", "us-east4", "us-west1", "us-west2", "us-west3", "us-west4"]
+    },
+    {
+      "question_name": "Zone",
+      "question_description": "This is the zone of the region in which cloud resources will be created.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_zone",
+      "min": 1,
+      "max": 30,
+      "default": "us-central1-a"
+    },
+    {
+      "question_name": "Subnetwork",
+      "question_description": "This is the subnetwork for the machine instance network interfaces.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_subnetwork",
+      "min": 1,
+      "max": 1024,
+      "default": "app2"
+    },
+    {
+      "question_name": "HANA service account email",
+      "question_description": "This is the service account email for the HANA machine instance.",
+      "required": false,
+      "type": "text",
+      "variable": "sap_hana_service_account_email",
+      "min": 1,
+      "max": 1024,
+      "default": ""
+    },
+    {
+      "question_name": "NetWeaver service account email",
+      "question_description": "This is the service account email for the NetWeaver machine instance.",
+      "required": false,
+      "type": "text",
+      "variable": "sap_nw_service_account_email",
+      "min": 1,
+      "max": 1024,
+      "default": ""
+    },
+    {
+      "question_name": "SSH user",
+      "question_description": "This is the user Ansible will use to ssh to the machine instances.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_gce_ssh_user",
+      "min": 1,
+      "max": 1024
+    },
+    {
+      "question_name": "SSH public key",
+      "question_description": "This is the public key of the ssh user.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_gce_ssh_pub_key",
+      "min": 1,
+      "max": 1024
+    },
+    {
+      "question_name": "SSH private key",
+      "question_description": "This is the private key of the ssh user.",
+      "required": true,
+      "type": "textarea",
+      "variable": "sap_gce_ssh_priv_key",
+      "min": 1,
+      "max": 4096
+    }
+  ]
+}
