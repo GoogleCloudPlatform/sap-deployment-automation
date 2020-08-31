@@ -6,52 +6,59 @@
     sap_hostagent_file_name: saphostagentrpm_44-20009394.rpm
     sap_hana_bundle_file_name: IMDB_SERVER20_047_0-80002031.SAR
     sap_hana_sapcar_file_name: SAPCAR_1320-80000935.EXE
+    sap_hana_boot_disk_size: 30
+    sap_gce_ssh_user: ansible
   tasks:
   - name: Copy ssh public key
     copy:
       dest: '{{ playbook_dir }}/ssh-key.pub'
-      content: '{{ sap_hana_gce_ssh_pub_key }}'
+      content: '{{ sap_gce_ssh_pub_key }}'
   - name: Copy ssh private key
     copy:
       dest: '{{ playbook_dir }}/ssh-key'
-      content: '{{ sap_hana_gce_ssh_priv_key }}'
+      content: '{{ sap_gce_ssh_priv_key }}'
       mode: '0600'
   - name: Deploy SAP HANA infrastructure
     terraform:
       backend_config:
-        bucket: '{{ sap_hana_state_bucket }}'
-        prefix: '{{ sap_hana_state_bucket_prefix | default(sap_hana_instance_name) }}'
+        bucket: '{{ sap_state_bucket }}'
+        prefix: '{{ sap_state_bucket_prefix | default(sap_instance_name) }}'
       force_init: true
       project_path: ./tf
-      state: present
+      state: '{{ state | default("present") }}'
       variables:
-        instance_name: '{{ sap_hana_instance_name }}'
-        instance_type: '{{ sap_hana_instance_type }}'
-        linux_image_family: '{{ sap_hana_linux_image_family }}'
-        linux_image_project: '{{ sap_hana_linux_image_project }}'
-        zone: '{{ sap_hana_zone }}'
-        subnetwork: '{{ sap_hana_subnetwork }}'
         boot_disk_size: '{{ sap_hana_boot_disk_size }}'
+        gce_ssh_user: '{{ sap_gce_ssh_user }}'
+        gce_ssh_pub_key_file: '{{ playbook_dir }}/ssh-key.pub'
+        instance_name: '{{ sap_instance_name }}'
+        instance_type: '{{ sap_instance_type }}'
+        linux_image_family: '{{ sap_linux_image_family }}'
+        linux_image_project: '{{ sap_linux_image_project }}'
+        project_id: '{{ sap_project_id }}'
         sap_install_files_bucket: '{{ sap_install_files_bucket }}'
         sap_hostagent_file_name: '{{ sap_hostagent_file_name }}'
         sap_hana_bundle_file_name: '{{ sap_hana_bundle_file_name }}'
         sap_hana_sapcar_file_name: '{{ sap_hana_sapcar_file_name }}'
-        gce_ssh_user: '{{ sap_hana_gce_ssh_user }}'
-        gce_ssh_pub_key_file: '{{ playbook_dir }}/ssh-key.pub'
+        service_account_email: '{{ sap_service_account_email }}'
+        subnetwork: '{{ sap_subnetwork }}'
+        subnetwork_project: '{{ sap_subnetwork_project }}'
+        zone: '{{ sap_zone }}'
     register: terraform
   - name: Build inventory
     add_host:
       name: '{{ terraform.outputs.address.value }}'
-      ansible_user: '{{ sap_hana_gce_ssh_user }}'
+      ansible_user: '{{ sap_gce_ssh_user }}'
       ansible_ssh_private_key_file: '{{ playbook_dir }}/ssh-key'
       terraform: '{{ terraform }}'
+      sap_hana_sid: '{{ sap_hana_sid }}'
+      sap_hana_instance_number: '{{ sap_hana_instance_number }}'
       groups: hana
     changed_when: false
   - name: Wait for host
     shell: |-
       ssh -i {{ playbook_dir }}/ssh-key \
         -o StrictHostKeyChecking=no \
-        {{ sap_hana_gce_ssh_user }}@{{ terraform.outputs.address.value }} \
+        {{ sap_gce_ssh_user }}@{{ terraform.outputs.address.value }} \
         exit
     register: can_ssh
     retries: 12
@@ -64,8 +71,8 @@
     sap_image_family: '{{ terraform.outputs.sap_image_family.value }}'
     sap_hana_data_partition_name: hanadata
     sap_hana_backup_partition_name: hanabackup
-    sap_hana_deployment_hana_instance_number: '00'
-    sap_hana_deployment_hana_sid: RH1
+    sap_hana_deployment_hana_instance_number: '{{ sap_hana_instance_number }}'
+    sap_hana_deployment_hana_sid: '{{ sap_hana_sid }}'
     sap_hana_deployment_hostagent_file_name: '{{ terraform.outputs.sap_hostagent_file_name.value }}'
     sap_hana_deployment_bundle_sar_file_name: '{{ terraform.outputs.sap_hana_bundle_file_name.value }}'
     sap_hana_deployment_sapcar_file_name: '{{ terraform.outputs.sap_hana_sapcar_file_name.value }}'
