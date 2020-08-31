@@ -29,7 +29,6 @@
         instance_type: '{{ sap_hana_instance_type }}'
         linux_image_family: '{{ sap_hana_linux_image_family }}'
         linux_image_project: '{{ sap_hana_linux_image_project }}'
-        region: '{{ sap_hana_region }}'
         zone: '{{ sap_hana_zone }}'
         subnetwork: '{{ sap_hana_subnetwork }}'
         boot_disk_size: '{{ sap_hana_boot_disk_size }}'

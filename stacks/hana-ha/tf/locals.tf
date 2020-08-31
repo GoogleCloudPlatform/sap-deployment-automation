@@ -74,4 +74,6 @@ locals {
     request_path        = "/"
     host                = ""
   }
+
+  region = join("-", slice(split("-", var.zone_a), 0, 2))
 }

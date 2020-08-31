@@ -27,7 +27,6 @@
         instance_type: '{{ sap_nw_instance_type }}'
         linux_image_family: '{{ sap_nw_linux_image_family }}'
         linux_image_project: '{{ sap_nw_linux_image_project }}'
-        region: '{{ sap_nw_region }}'
         zone: '{{ sap_nw_zone }}'
         subnetwork: '{{ sap_nw_subnetwork }}'
         subnetwork_project: '{{ sap_nw_subnetwork_project }}'

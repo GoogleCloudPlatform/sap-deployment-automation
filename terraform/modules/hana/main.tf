@@ -35,7 +35,7 @@ resource "google_compute_address" "gcp_sap_hana_ip" {
 
   project = var.project_id
   name    = var.instance_name
-  region  = var.region
+  region  = local.region
 }
 
 data "google_compute_image" "image" {

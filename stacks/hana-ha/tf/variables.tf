@@ -13,11 +13,6 @@ variable "zone_b" {
   default     = "us-central1-b"
 }
 
-variable "region" {
-  description = "Region to deploy the resources. Should be in the same region as the zone."
-  default     = "us-central1"
-}
-
 variable "instance_name" {
   description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
   default     = "hanslbg"

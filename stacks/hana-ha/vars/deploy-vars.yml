@@ -6,7 +6,6 @@ sap_hana_instance_name: hanslbg
 sap_hana_state_bucket: sap-terraform-state-bg
 sap_hana_source_image_family: rhel-7-7-sap-ha
 sap_hana_source_image_project: rhel-sap-cloud
-sap_hana_region: us-central1
 sap_hana_zone_a: us-central1-a
 sap_hana_zone_b: us-central1-b
 sap_hana_subnetwork: app2

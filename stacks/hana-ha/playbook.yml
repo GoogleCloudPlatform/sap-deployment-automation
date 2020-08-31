@@ -16,7 +16,6 @@
         instance_name: '{{ sap_hana_instance_name }}'
         source_image_family: '{{ sap_hana_source_image_family }}'
         source_image_project: '{{ sap_hana_source_image_project }}'
-        region: '{{ sap_hana_region }}'
         zone_a: '{{ sap_hana_zone_a }}'
         zone_b: '{{ sap_hana_zone_b }}'
         subnetwork: '{{ sap_hana_subnetwork }}'

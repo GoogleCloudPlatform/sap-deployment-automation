@@ -5,7 +5,7 @@ module "sap_hana_template" {
   name_prefix  = "${var.instance_name}-instance-template"
   machine_type = var.instance_type
   project_id   = var.project_id
-  region       = var.region
+  region       = local.region
   startup_script = contains([element(split("-", var.source_image_family), 0)], "rhel") ? templatefile("${path.module}/files/redhat.sh",
     {
       sap_install_files_bucket  = var.sap_install_files_bucket
@@ -61,7 +61,7 @@ resource "google_compute_address" "gcp_sap_hana_intip_primary" {
   name         = "${var.instance_name}-int-primary"
   address_type = "INTERNAL"
   subnetwork   = var.subnetwork
-  region       = var.region
+  region       = local.region
   project      = var.subnetwork_project
   purpose      = "GCE_ENDPOINT"
 }
@@ -70,7 +70,7 @@ resource "google_compute_address" "gcp_sap_hana_intip_secondary" {
   name         = "${var.instance_name}-int-secondary"
   address_type = "INTERNAL"
   subnetwork   = var.subnetwork
-  region       = var.region
+  region       = local.region
   project      = var.subnetwork_project
   purpose      = "GCE_ENDPOINT"
 }
@@ -78,7 +78,7 @@ resource "google_compute_address" "gcp_sap_hana_intip_secondary" {
 module "sap_hana_umig_primary" {
   source             = "git::ssh://balabharat.guduru@googlecloud.corp-partner.google.com@source.developers.google.com:2022/p/albatross-duncanl-sandbox-2/r/terraform-google-vm//modules/umig"
   project_id         = var.project_id
-  region             = var.region
+  region             = local.region
   zone               = var.zone_a
   subnetwork         = var.subnetwork
   subnetwork_project = var.subnetwork_project
@@ -91,7 +91,7 @@ module "sap_hana_umig_primary" {
 module "sap_hana_umig_secondary" {
   source             = "git::ssh://balabharat.guduru@googlecloud.corp-partner.google.com@source.developers.google.com:2022/p/albatross-duncanl-sandbox-2/r/terraform-google-vm//modules/umig"
   project_id         = var.project_id
-  region             = var.region
+  region             = local.region
   zone               = var.zone_b
   subnetwork         = var.subnetwork
   subnetwork_project = var.subnetwork_project
@@ -211,7 +211,7 @@ resource "google_compute_firewall" "hana_healthcheck_firewall_rule" {
 module "sap_hana_ilb" {
   source       = "git::ssh://balabharat.guduru@googlecloud.corp-partner.google.com@source.developers.google.com:2022/p/albatross-duncanl-sandbox-2/r/terraform-google-lb-internal"
   project      = var.project_id
-  region       = var.region
+  region       = local.region
   network      = var.network
   subnetwork   = var.subnetwork
   name         = "${var.instance_name}-ilb"

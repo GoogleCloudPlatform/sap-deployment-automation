@@ -21,10 +21,6 @@ variable "zone" {
   description = "The zone that the instance should be created in."
 }
 
-variable "region" {
-  description = "Region to deploy the resources. Should be in the same region as the zone."
-}
-
 variable "instance_name" {
   description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
 }

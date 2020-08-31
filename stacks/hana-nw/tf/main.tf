@@ -7,7 +7,6 @@ module "gcp_hana" {
   instance_type              = var.hana_instance_type
   subnetwork_project         = var.subnetwork_project
   project_id                 = var.project_id
-  region                     = var.region
   zone                       = var.zone
   service_account_email      = var.hana_service_account_email
   boot_disk_type             = var.hana_boot_disk_type
@@ -48,7 +47,6 @@ module "gcp_netweaver" {
   swap_size              = var.nw_swap_size
   instance_name          = local.nw_instance_name
   instance_type          = var.nw_instance_type
-  region                 = var.region
   network_tags           = var.network_tags
   project_id             = var.project_id
   zone                   = var.zone

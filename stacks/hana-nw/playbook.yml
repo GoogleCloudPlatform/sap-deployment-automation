@@ -28,7 +28,6 @@
         instance_name: '{{ sap_instance_name }}'
         linux_image_family: '{{ sap_linux_image_family }}'
         linux_image_project: '{{ sap_linux_image_project }}'
-        region: '{{ sap_region }}'
         zone: '{{ sap_zone }}'
         subnetwork: '{{ sap_subnetwork }}'
         hana_instance_type: '{{ sap_hana_instance_type }}'
