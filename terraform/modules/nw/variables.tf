@@ -79,6 +79,7 @@ variable "subnetwork" {
 }
 
 variable "subnetwork_project" {
+  default = ""
 }
 
 variable "network_tags" {

@@ -19,6 +19,7 @@ locals {
   device_name_1 = "${var.instance_name}-${var.device_1}"
   device_name_2 = "${var.instance_name}-${var.device_2}"
   device_name_3 = "${var.instance_name}-${var.device_3}"
+  subnetwork_project = var.subnetwork_project == "" ? var.project_id : var.subnetwork_project
 }
 
 resource "google_compute_disk" "gcp_nw_pd_0" {
@@ -104,7 +105,7 @@ resource "google_compute_instance" "gcp_nw" {
 
   network_interface {
     subnetwork         = var.subnetwork
-    subnetwork_project = var.subnetwork_project
+    subnetwork_project = local.subnetwork_project
     dynamic "access_config" {
       for_each = [for i in [""] : i if var.public_ip]
       content {}

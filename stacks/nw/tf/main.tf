@@ -34,6 +34,7 @@ module "gcp_netweaver" {
   instance_type          = var.instance_type
   network_tags           = var.network_tags
   project_id             = var.project_id
+  public_key_path        = var.public_key_path
   zone                   = var.zone
   boot_disk_size         = var.boot_disk_size
   boot_disk_type         = var.boot_disk_type

@@ -2,51 +2,59 @@
 - name: SAP NW deploy
   hosts: 127.0.0.1
   connection: local
+  vars:
+    sap_nw_boot_disk_size: 30
+    sap_gce_ssh_user: ansible
 
   tasks:
   - name: Copy ssh public key
     copy:
       dest: '{{ playbook_dir }}/ssh-key.pub'
-      content: '{{ sap_nw_gce_ssh_pub_key }}'
+      content: '{{ sap_gce_ssh_pub_key }}'
   - name: Copy ssh private key
     copy:
       dest: '{{ playbook_dir }}/ssh-key'
-      content: '{{ sap_nw_gce_ssh_priv_key }}'
+      content: '{{ sap_gce_ssh_priv_key }}'
       mode: '0600'
   - name: Deploy SAP NW infrastructure
     terraform:
       backend_config:
-        bucket: '{{ sap_nw_state_bucket }}'
-        prefix: '{{ sap_nw_state_bucket_prefix | default(sap_nw_instance_name) }}'
+        bucket: '{{ sap_state_bucket }}'
+        prefix: '{{ sap_state_bucket_prefix | default(sap_instance_name) }}'
       force_init: true
       project_path: ./tf
-      state: present
+      state: '{{ state | default("present") }}'
       variables:
-        project_id: '{{ sap_nw_project_id }}'
-        instance_name: '{{ sap_nw_instance_name }}'
-        instance_type: '{{ sap_nw_instance_type }}'
-        linux_image_family: '{{ sap_nw_linux_image_family }}'
-        linux_image_project: '{{ sap_nw_linux_image_project }}'
-        zone: '{{ sap_nw_zone }}'
-        subnetwork: '{{ sap_nw_subnetwork }}'
-        subnetwork_project: '{{ sap_nw_subnetwork_project }}'
         boot_disk_size: '{{ sap_nw_boot_disk_size }}'
-        ssh_user: '{{ sap_nw_gce_ssh_user }}'
+        instance_name: '{{ sap_instance_name }}'
+        instance_type: '{{ sap_instance_type }}'
+        linux_image_family: '{{ sap_linux_image_family }}'
+        linux_image_project: '{{ sap_linux_image_project }}'
+        project_id: '{{ sap_project_id }}'
         public_key_path: '{{ playbook_dir }}/ssh-key.pub'
+        subnetwork: '{{ sap_subnetwork }}'
+        subnetwork_project: '{{ sap_subnetwork_project }}'
+        ssh_user: '{{ sap_gce_ssh_user }}'
+        zone: '{{ sap_zone }}'
     register: terraform
   - name: Build inventory
     add_host:
       name: '{{ terraform.outputs.address.value }}'
-      ansible_user: '{{ sap_nw_gce_ssh_user }}'
+      ansible_user: '{{ sap_gce_ssh_user }}'
       ansible_ssh_private_key_file: '{{ playbook_dir }}/ssh-key'
       terraform: '{{ terraform }}'
+      sap_nw_sid: '{{ sap_nw_sid }}'
+      sap_nw_instance_number: '{{ sap_nw_instance_number }}'
+      sap_hana_hostname: '{{ sap_hana_hostname }}'
+      sap_hana_sid: '{{ sap_hana_sid }}'
+      sap_hana_instance_number: '{{ sap_hana_instance_number }}'
       groups: nw
     changed_when: false
   - name: Wait for host
     shell: |-
       ssh -i {{ playbook_dir }}/ssh-key \
         -o StrictHostKeyChecking=no \
-        {{ sap_nw_gce_ssh_user }}@{{ terraform.outputs.address.value }} \
+        {{ sap_gce_ssh_user }}@{{ terraform.outputs.address.value }} \
         exit
     register: can_ssh
     retries: 12
