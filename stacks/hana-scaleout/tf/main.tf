@@ -1,7 +1,7 @@
 provider "google" {}
 
 module "sap_hana_template" {
-  source       = "git::ssh://balabharat.guduru@googlecloud.corp-partner.google.com@source.developers.google.com:2022/p/albatross-duncanl-sandbox-2/r/terraform-google-vm//modules/instance_template"
+  source       = "../../../terraform-google-vm//modules/instance_template"
   name_prefix  = "${var.instance_name}-instance-template"
   machine_type = var.instance_type
   project_id   = var.project_id
@@ -53,7 +53,7 @@ resource "google_compute_address" "gcp_sap_hana_intip_worker" {
 }
 
 module "sap_hana_instance_master" {
-  source             = "git::ssh://balabharat.guduru@googlecloud.corp-partner.google.com@source.developers.google.com:2022/p/albatross-duncanl-sandbox-2/r/terraform-google-vm//modules/compute_instance"
+  source             = "../../../terraform-google-vm//modules/compute_instance"
   project_id         = var.project_id
   region             = var.region
   zone               = var.zone
@@ -65,7 +65,7 @@ module "sap_hana_instance_master" {
 }
 
 module "sap_hana_instance_worker" {
-  source             = "git::ssh://balabharat.guduru@googlecloud.corp-partner.google.com@source.developers.google.com:2022/p/albatross-duncanl-sandbox-2/r/terraform-google-vm//modules/compute_instance"
+  source             = "../../../terraform-google-vm//modules/compute_instance"
   project_id         = var.project_id
   region             = var.region
   zone               = var.zone
