@@ -1,0 +1,3 @@
+{% for item in logvols.values() %}
+{{ item.mountpoint }} {{ subnet_cidr }}(rw,no_root_squash,no_subtree_check)
+{% endfor %}

@@ -1,6 +1,6 @@
 output "instance_name" {
   description = "Name of Netweaver instance"
-  value       = var.instance_name
+  value       = module.gcp_netweaver.instance_name
 }
 
 output "zone" {
@@ -10,7 +10,7 @@ output "zone" {
 
 output "address" {
   description = "instance private IP"
-  value = module.gcp_netweaver.instance_internal_ip
+  value = module.gcp_netweaver.instance_external_ip
 }
 
 output "sap_image_family" {

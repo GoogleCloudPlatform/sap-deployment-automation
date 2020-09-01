@@ -1,0 +1,6 @@
+---
+product_id: NW_ABAP_ASCS:NW750.HDB.ABAP
+mountpaths:
+  usrsap: /usr/sap
+  sapmnt: /sapmnt
+...

@@ -1,0 +1,57 @@
+########################################################################################################################################################################################
+
+# Installation service ABAP ASCS with HANA DB (distributed)
+
+
+########################################################################################################################################################################################
+
+# Start of User Input parameters
+
+# The SAP system ID <SAPSID> of the system to be installed
+NW_GetSidNoProfiles.sid = {{ ascs_sid }} 
+
+# The instance number of the (A)SCS instance.  
+NW_SCS_Instance.instanceNumber = {{ sap_s4hana_deployment_ascs_instance_nr }} 
+
+# The FQDN of the system
+NW_getFQDN.FQDN = c.albatross-duncanl-sandbox-2.internal 
+
+# Master password
+NW_GetMasterPassword.masterPwd = Google123 
+
+# Password for the 'sapadm' user of the SAP Host Agent
+hostAgent.sapAdmPassword = Google123 
+
+# The password of the '<sapsid>adm' user
+nwUsers.sidadmPassword = Google123
+
+# The folder containing all archives 
+archives.downloadBasket = /sapmnt/Software/Kernel_Files  
+
+SAPINST.CD.PACKAGE.KERNEL = /sapmnt/Software/Kernel_Files
+
+
+# End of user Input Parameters
+####################################
+
+
+# Specify whether the all operating system users are to be removed from group 'sapinst' after the execution of Software Provisioning Manager has completed.
+NW_Delete_Sapinst_Users.removeUsers = false
+
+# Unix only: The SAP mount directory path. Default value is '/sapmnt'.
+NW_GetSidNoProfiles.sapmnt = /sapmnt
+
+# Only use this parameter if recommended by SAP - check for reserved SIDs
+NW_GetSidNoProfiles.strictSidCheck = true
+
+# Specify whether this system is to be a Unicode system.
+NW_GetSidNoProfiles.unicode = true
+
+# Specify whether you want to set FQDN for the system.
+NW_getFQDN.setFQDN = true
+
+# Add gateway process in the ASCS instance
+# NW_SCS_Instance.ascsInstallGateway = false
+
+# Add Web Dispatcher process in the ASCS instance
+# NW_SCS_Instance.ascsInstallWebDispatcher = false

@@ -4,7 +4,7 @@
     src: /opt/Software
     dest: /sapmnt/
     remote_src: yes
-    
+
 - name: permissions to home 
   file:
     path: /tmp/sapinst_instdir
@@ -26,11 +26,11 @@
 - name: inifile.params config file 
   template:
     src: "{{ template }}"
-    dest: /usr/sap/inifile_nw.params
+    dest: /usr/sap/inifile_db.params
     
 - name: installing s4-hana 
   command: >- 
-     ./sapinst SAPINST_INPUT_PARAMETERS_URL=/usr/sap/inifile_nw.params \
+     ./sapinst SAPINST_INPUT_PARAMETERS_URL=/usr/sap/inifile_db.params \
      SAPINST_EXECUTE_PRODUCT_ID={{ sap_s4hana_deployment_product_id }} \
      SAPINST_SKIP_DIALOGS=true SAPINST_START_GUISERVER=false
   register: installnw

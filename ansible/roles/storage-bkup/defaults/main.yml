@@ -1,0 +1,26 @@
+# package_retries_cnt: 10
+# package_retries_delay: 10
+# partition_number: 0
+# swapon: True
+#nfs_mount: False
+
+# disks:
+#   - { name : 'usrsap'}
+#   - { name : 'sapmnt'}
+#   - { name : 'swap'}
+
+# logvols:
+#   usrsap:
+#     size: 50G
+#     vol: usrsap
+#     mountpoint: /usr/sap
+#   sapmnt:
+#     size: 50G
+#     vol: sapmnt
+#     mountpoint: /sapmnt
+
+# swapvols:
+#   swap:
+#     size: 28G
+#     vol: swap
+#     mountpoint: /swap

@@ -33,6 +33,15 @@ variable "instance_name" {
   default = "sap-nw"
 }
 
+variable "pas_instance_name" {
+  description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
+  default = "wplsapps"
+}
+
+variable "ascs_instance_name" {
+  description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
+  default = "wplsapas"
+}
 
 variable "instance_type" {
   description = "The GCE instance/machine type."
@@ -56,22 +65,18 @@ variable "autodelete_disk" {
 
 variable "usr_sap_size" {
   description = "USR SAP size"
-  default     = 150
 }
 
 variable "sap_mnt_size" {
   description = "SAP mount size"
-  default     = 150
 }
 
 variable "swap_size" {
   description = "SWAP Size"
-  default     = 30
 }
 
 variable "disk_type" {
   description = "The GCE data disk type. May be set to pd-standard (for PD HDD) or pd-ssd."
-  default = "pd-ssd"
 }
 
 variable "boot_disk_size" {
@@ -82,7 +87,6 @@ variable "boot_disk_size" {
 
 variable "boot_disk_type" {
   description = "The GCE boot disk type. May be set to pd-standard (for PD HDD) or pd-ssd."
-  default = "pd-ssd"
 }
 
 variable "subnetwork" {
@@ -110,7 +114,7 @@ variable "sap_deployment_debug" {
 
 variable "public_ip" {
   description = "Determines whether a public IP address is added to your VM instance."
-  default     = true
+  default     = 1
 }
 variable "ssh_user" {
   description = "SSH user name to connect to your instance."
