@@ -6,6 +6,7 @@
     sap_hostagent_file_name: saphostagentrpm_44-20009394.rpm
     sap_hana_bundle_file_name: IMDB_SERVER20_047_0-80002031.SAR
     sap_hana_sapcar_file_name: SAPCAR_1320-80000935.EXE
+    sap_gce_ssh_user: ansible
   tasks:
   - name: Copy ssh public key
     copy:
@@ -23,23 +24,23 @@
         prefix: '{{ sap_state_bucket_prefix | default(sap_instance_name) }}'
       force_init: true
       project_path: ./tf
-      state: present
+      state: '{{ state | default("present") }}'
       variables:
+        gce_ssh_user: '{{ sap_gce_ssh_user }}'
+        gce_ssh_pub_key_file: '{{ playbook_dir }}/ssh-key.pub'
+        hana_instance_type: '{{ sap_hana_instance_type }}'
         instance_name: '{{ sap_instance_name }}'
         linux_image_family: '{{ sap_linux_image_family }}'
         linux_image_project: '{{ sap_linux_image_project }}'
-        zone: '{{ sap_zone }}'
-        subnetwork: '{{ sap_subnetwork }}'
-        hana_instance_type: '{{ sap_hana_instance_type }}'
         nw_instance_type: '{{ sap_nw_instance_type }}'
-        sap_install_files_bucket: '{{ sap_install_files_bucket }}'
         sap_hostagent_file_name: '{{ sap_hostagent_file_name }}'
         sap_hana_bundle_file_name: '{{ sap_hana_bundle_file_name }}'
         sap_hana_sapcar_file_name: '{{ sap_hana_sapcar_file_name }}'
+        sap_install_files_bucket: '{{ sap_install_files_bucket }}'
+        subnetwork: '{{ sap_subnetwork }}'
         hana_service_account_email: '{{ sap_hana_service_account_email }}'
         nw_service_account_email: '{{ sap_nw_service_account_email }}'
-        gce_ssh_user: '{{ sap_gce_ssh_user }}'
-        gce_ssh_pub_key_file: '{{ playbook_dir }}/ssh-key.pub'
+        zone: '{{ sap_zone }}'
     register: terraform
   - name: Build HANA inventory
     add_host:

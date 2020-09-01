@@ -85,7 +85,7 @@ resource "google_compute_instance" "gcp_sap_hana" {
 
   network_interface {
     subnetwork         = var.subnetwork
-    subnetwork_project = var.subnetwork_project
+    subnetwork_project = local.subnetwork_project
 
     dynamic "access_config" {
       for_each = var.public_ip ? google_compute_address.gcp_sap_hana_ip : []
