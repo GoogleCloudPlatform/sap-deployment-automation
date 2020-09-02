@@ -1,21 +1,42 @@
 ---
 
-sap_nw_project_id: albatross-duncanl-sandbox-2
-sap_nw_gce_ssh_pub_key: ~/.ssh/id_rsa.pub
-sap_nw_gce_ssh_priv_key: ~/.ssh/id_rsa
-sap_nw_state_bucket: sap-terraform-state-nw
-sap_nw_instance_name: sap-nw
-sap_nw_instance_type: n1-standard-8
-sap_nw_linux_image_family: sles-12-sp3-sap
-sap_nw_linux_image_project: suse-sap-cloud
-sap_nw_region: us-central1
-sap_nw_zone: us-central1-a
-sap_nw_subnetwork: app2
-sap_nw_subnetwork_project: albatross-duncanl-sandbox-2
-sap_nw_boot_disk_size: 30
-sap_nw_gce_ssh_user: sushma
-
-sap_install_files_bucket: nw-ansible
-sap_hostagent_file_name: saphostagentrpm_44-20009394.rpm
-#sap_nw_bundle_file_name: IMDB_SERVER20_047_0-80002031.SAR
-#sap_nw_sapcar_file_name: SAPCAR_1320-80000935.EXE
+    sap_nw_project_id: albatross-duncanl-sandbox-2
+    sap_nw_gce_ssh_pub_key: ~/.ssh/id_rsa.pub
+    sap_nw_gce_ssh_priv_key: ~/.ssh/id_rsa
+    sap_nw_state_bucket: nw-code-ansible
+    sap_nw_instance_name: sap-standard
+    sap_nw_instance_type: n1-standard-8
+    sap_nw_linux_image_family: sles-12-sp3-sap
+    sap_nw_linux_image_project: suse-sap-cloud
+#    sap_nw_region: us-central1
+    sap_nw_zone: us-central1-a
+    sap_nw_subnetwork: app2
+    sap_nw_subnetwork_project: albatross-duncanl-sandbox-2
+    sap_nw_boot_disk_size: 30
+    sap_nw_gce_ssh_user: sushma
+    usr_sap_size: 140G
+    sap_mnt_size: 140G
+    swap_size: 29G
+    nw_bucket: "nw-code-ansible"
+    folder: nw75  
+    sap_s4hana_deployment_product_id: "NW_ABAP_OneHost:NW750.HDB.ABAP"
+    sap_s4hana_deployment_password: Google123
+    sap_s4hana_deployment_ascs_instance_nr: "00"
+    sap_s4hana_deployment_ascs_instance_hostname: '{{ terraform.outputs.instance_name.value }}'
+    sap_s4hana_deployment_pas_instance_nr: "01"
+    sap_s4hana_deployment_pas_instance_hostname: '{{ terraform.outputs.instance_name.value }}'
+    sap_nw_sid: "SL1"
+    sap_s4hana_deployment_db_sid: "SL1"
+    template: "inifile.params.standard.j2"
+    sap_s4hana_deployment_db_host: "wplsaphana"
+    sap_s4hana_deployment_hana_instance_nr: "00"
+    sap_s4hana_sapinst_package_kernel: /sapmnt/Software/Kernel_Files
+    sap_s4hana_nw_sapcryptofile: SAPEXE_200-80002573.SAR
+    sap_s4hana_deployment_igs_file_name: igsexe_4-80003187.sar
+    sap_s4hana_deployment_igs_helper_file_name: igshelper_17-10010245.sar
+    sap_s4hana_deployment_sapexedbsar: SAPEXEDB_200-80002572.SAR
+    sap_s4hana_deployment_sapexesar: SAPEXE_200-80002573.SAR
+    sap_s4hana_deployment_sapcar_path: /sapmnt/Software/SWPM1.0
+    sap_s4hana_sapinst_package_load: /sapmnt/Software/NW75
+    sap_s4hana_sapinst_package_client: /sapmnt/Software/HANA_CLIENT 
+    sap_s4hana_archives_downloadbasket: /sapmnt/Software/Kernel_Files       
