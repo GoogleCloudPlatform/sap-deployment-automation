@@ -169,7 +169,7 @@
       sap_s4hana_sapinst_package_kernel: /sapmnt/Software/Kernel_Files  
       sap_s4hana_sapinst_package_load: /sapmnt/Software/NW75  
       sap_s4hana_sapinst_package_client: /sapmnt/Software/HANA_CLIENT  
-      nw_sid: "SL3" 
+      sap_nw_sid: "SL3" 
       sap_s4hana_deployment_sapcar_path: /sapmnt/Software/SWPM1.0
   - role: nw    
     vars:    
@@ -181,7 +181,7 @@
       sap_s4hana_deployment_db_host: "wplsaphana"
       sap_s4hana_deployment_db_sid: "SL1"
       sap_s4hana_deployment_hana_instance_nr: "00"
-      nw_sid: "SL3" 
+      sap_nw_sid: "SL3" 
       template: inifile.params.distribution.j2
       sap_s4hana_deployment_igs_path: /sapmnt/Software/Kernel_Files
       sap_s4hana_deployment_igs_file_name: igsexe_4-80003187.sar
