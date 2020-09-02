@@ -115,10 +115,10 @@
       sap_s4hana_deployment_pas_instance_nr: "01"
       sap_s4hana_deployment_pas_instance_hostname: '{{ terraform.outputs.instance_name.value }}'
       sap_nw_sid: "SL1"
-      sap_hana_sid: "SL1"
+      sap_s4hana_deployment_db_sid: "SL1"
       template: "inifile.params.standard.j2"
-      sap_hana_hostname: "wplsaphana"
-      sap_hana_instance_number: "00"
+      sap_s4hana_deployment_db_host: "wplsaphana"
+      sap_s4hana_deployment_hana_instance_nr: "00"
       sap_s4hana_sapinst_package_kernel: /sapmnt/Software/Kernel_Files
       sap_s4hana_nw_sapcryptofile: SAPEXE_200-80002573.SAR
       sap_s4hana_deployment_igs_file_name: igsexe_4-80003187.sar
