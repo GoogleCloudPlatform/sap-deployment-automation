@@ -146,6 +146,8 @@
       ascs_sid: "SL3"
       sap_s4hana_deployment_sapcar_path: /sapmnt/Software/SWPM1.0      
       sap_s4hana_deployment_ascs_instance_nr: "03"
+      sap_s4hana_sapinst_package_kernel: /sapmnt/Software/Kernel_Files 
+      sap_s4hana_archives_downloadbasket: /sapmnt/Software/Kernel_Files        
 #      sap_s4hana_deployment_sapcar_path: /sapmnt/Software/SWPM1.0 
 - name: SAP NW configure
   hosts: pas
@@ -187,6 +189,10 @@
       sap_s4hana_deployment_db_sid: "SL1"
       sap_s4hana_deployment_hana_instance_nr: "00" 
       template: inifile.params.distribution.j2 
+      sap_s4hana_archives_downloadbasket: /sapmnt/Software/Kernel_Files  
+      sap_s4hana_sapinst_package_kernel: /sapmnt/Software/Kernel_Files  
+      sap_s4hana_sapinst_package_load: /sapmnt/Software/NW75  
+      sap_s4hana_sapinst_package_client: /sapmnt/Software/HANA_CLIENT  
       nw_sid: "SL3" 
       sap_s4hana_deployment_sapcar_path: /sapmnt/Software/SWPM1.0
   - role: nw    
@@ -212,3 +218,4 @@
       sap_s4hana_deployment_ci_ascsvirtualhostname: '{{ terraform.outputs.ascs_instance_name.value }}'
 # Virtual host name of the primary application server instance
       sap_s4hana_deployment_ci_civirtualhostname: '{{ terraform.outputs.pas_instance_name.value }}'     
+      

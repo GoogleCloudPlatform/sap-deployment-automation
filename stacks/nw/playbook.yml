@@ -11,7 +11,7 @@
     sap_nw_instance_type: n1-standard-8
     sap_nw_linux_image_family: sles-12-sp3-sap
     sap_nw_linux_image_project: suse-sap-cloud
-    sap_nw_region: us-central1
+#    sap_nw_region: us-central1
     sap_nw_zone: us-central1-a
     sap_nw_subnetwork: app2
     sap_nw_subnetwork_project: albatross-duncanl-sandbox-2
@@ -43,7 +43,7 @@
         instance_type: '{{ sap_nw_instance_type }}'
         linux_image_family: '{{ sap_nw_linux_image_family }}'
         linux_image_project: '{{ sap_nw_linux_image_project }}'
-        region: '{{ sap_nw_region }}'
+#        region: '{{ sap_nw_region }}'
         zone: '{{ sap_nw_zone }}'
         subnetwork: '{{ sap_nw_subnetwork }}'
         subnetwork_project: '{{ sap_nw_subnetwork_project }}'

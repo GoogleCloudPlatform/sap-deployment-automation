@@ -32,7 +32,7 @@ module "gcp_netweaver" {
   swap_size              = var.swap_size
   instance_name          = var.instance_name
   instance_type          = var.instance_type
-  region                 = var.region
+#  region                 = var.region
   network_tags           = var.network_tags
   project_id             = var.project_id
   zone                   = var.zone
