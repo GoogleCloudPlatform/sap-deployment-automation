@@ -1,0 +1,8 @@
+project_id = ""
+
+region = "us-central1"
+
+service_account = {
+  email  = ""
+  scopes = ["cloud-platform"]
+}
