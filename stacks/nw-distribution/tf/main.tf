@@ -30,9 +30,9 @@ module "ascs" {
   usr_sap_size           = var.usr_sap_size
   sap_mnt_size           = var.sap_mnt_size
   swap_size              = var.swap_size
-  instance_name          = var.ascs_instance_name
+  instance_name          = var.sap_ascs_instance_name
   instance_type          = var.instance_type
-  region                 = var.region
+#  region                 = var.region
   network_tags           = var.network_tags
   project_id             = var.project_id
   zone                   = var.zone
@@ -52,9 +52,9 @@ module "pas" {
   public_ip              = var.public_ip
   sap_deployment_debug   = var.sap_deployment_debug
   swap_size              = var.swap_size
-  instance_name          = var.pas_instance_name
+  instance_name          = var.sap_pas_instance_name
   instance_type          = var.instance_type
-  region                 = var.region
+#  region                 = var.region
   network_tags           = var.network_tags
   project_id             = var.project_id
   zone                   = var.zone

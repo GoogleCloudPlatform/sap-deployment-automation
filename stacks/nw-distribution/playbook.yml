@@ -7,8 +7,8 @@
     sap_gce_ssh_pub_key: ~/.ssh/id_rsa.pub
     sap_gce_ssh_priv_key: ~/.ssh/id_rsa
     sap_state_bucket: nw-code-ansible
-    sap_ascs_instance_name: sap-ascs-new
-    sap_pas_instance_name: sap-pas-new
+    sap_ascs_instance_name: s-ascsss
+    sap_pas_instance_name: s-passs
     sap_instance_type: n1-standard-8
     sap_linux_image_family: sles-12-sp3-sap
     sap_linux_image_project: suse-sap-cloud
@@ -38,7 +38,8 @@
       state: present
       variables:
         project_id: '{{ sap_project_id }}'
-        instance_name: '{{ sap_ascs_instance_name }}'
+        sap_ascs_instance_name: '{{ sap_ascs_instance_name }}'
+        sap_pas_instance_name: '{{ sap_pas_instance_name }}'
         instance_type: '{{ sap_instance_type }}'
         linux_image_family: '{{ sap_linux_image_family }}'
         linux_image_project: '{{ sap_linux_image_project }}'
@@ -68,24 +69,6 @@
     retries: 12
     delay: 10
     until: can_ssh is succeeded
-  - name: Deploy SAP NW infrastructure
-    terraform:
-      project_path: ./tf
-      state: present
-      variables:
-        project_id: '{{ sap_project_id }}'
-        instance_name: '{{ sap_pas_instance_name }}'
-        instance_type: '{{ sap_instance_type }}'
-        linux_image_family: '{{ sap_linux_image_family }}'
-        linux_image_project: '{{ sap_linux_image_project }}'
-        region: '{{ sap_region }}'
-        zone: '{{ sap_zone }}'
-        subnetwork: '{{ sap_subnetwork }}'
-        subnetwork_project: '{{ sap_subnetwork_project }}'
-        boot_disk_size: '{{ sap_boot_disk_size }}'
-        ssh_user: '{{ sap_gce_ssh_user }}'
-        public_key_path: '{{ playbook_dir }}/ssh-key.pub'
-    register: terraform
   - name: Build inventory
     add_host:
       name: '{{ terraform.outputs.pas_address.value }}'
@@ -104,10 +87,10 @@
     retries: 12
     delay: 10
     until: can_ssh is succeeded
-- name: SAP NW configure
+- name: SAP ASCS configure
   hosts: ascs
   become: yes
-  become_user: root
+  become_user: root 
   vars:
     sap_image_family: '{{ terraform.outputs.sap_image_family.value }}'
   roles:
@@ -148,7 +131,6 @@
       sap_s4hana_deployment_ascs_instance_nr: "03"
       sap_s4hana_sapinst_package_kernel: /sapmnt/Software/Kernel_Files 
       sap_s4hana_archives_downloadbasket: /sapmnt/Software/Kernel_Files        
-#      sap_s4hana_deployment_sapcar_path: /sapmnt/Software/SWPM1.0 
 - name: SAP NW configure
   hosts: pas
   become: yes
@@ -172,12 +154,6 @@
       mountpa:
         usrsap: /usr/sap
         sapmnt: /sapmnt                  
-  # - role: storage-nfs
-  #   vars:
-  #     nfs_private_ip: '{{ terraform.outputs.nfs_private_ip.value }}'
-  #     mountpaths:
-  #       usrsap: /usr/sap
-  #       sapmnt: /sapmnt
   - role: nw-pre
     vars: 
       nw_bucket: "nw-code-ansible"

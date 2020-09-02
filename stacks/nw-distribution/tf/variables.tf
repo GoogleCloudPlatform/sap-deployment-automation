@@ -28,17 +28,17 @@ variable "region" {
   default ="us-central1"
 }
 
-variable "instance_name" {
-  description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
-  default = "sap-nw"
-}
+# variable "instance_name" {
+#   description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
+#   default = "sap-nw"
+# }
 
-variable "pas_instance_name" {
+variable "sap_pas_instance_name" {
   description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
   default = "wplsapps"
 }
 
-variable "ascs_instance_name" {
+variable "sap_ascs_instance_name" {
   description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
   default = "wplsapas"
 }
