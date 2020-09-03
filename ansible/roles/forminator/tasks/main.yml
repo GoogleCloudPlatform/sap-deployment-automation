@@ -1,13 +1,18 @@
 ---
+- name: check if ssh key files are present
+  stat:
+    path: '{{ item }}'
+  loop:
+  - '{{ sap_gce_ssh_priv_key_file }}'
+  - '{{ sap_gce_ssh_pub_key_file }}'
+  register: stat_ssh_key_files
+  changed_when: false
+
+- name: define ssh key file existence
+  set_fact:
+    stat_ssh_key_files_exists: "{{ stat_ssh_key_files.results | map(attribute='stat') | map(attribute='exists') | list }}"
+
 - block:
-  - name: ensure ssh key files are present
-    command: |
-      [ -f "{{ item }}" ]
-    loop:
-    - '{{ sap_gce_ssh_priv_key_file }}'
-    - '{{ sap_gce_ssh_pub_key_file }}'
-    changed_when: false
-  rescue:
   - name: download ssh key files
     debug:
       msg: 'Download {{ item }} from bucket not yet implemented'
@@ -19,17 +24,26 @@
       path: '{{ sap_gce_ssh_priv_key_file | dirname }}'
       mode: 0700
       state: directory
+  - name: clean up stale ssh key file
+    file:
+      path: '{{ item }}'
+      state: absent
+    loop:
+    - '{{ sap_gce_ssh_priv_key_file }}'
+    - '{{ sap_gce_ssh_pub_key_file }}'
+    when: false in stat_ssh_key_files_exists and true in stat_ssh_key_files_exists
   - name: generate key files
     command: |
       ssh-keygen -t rsa -N '' -m pem -f {{ sap_gce_ssh_priv_key_file }}
     args:
-      creates: '{{ sap_gce_ssh_priv_key_file }}*'
+      creates: '{{ sap_gce_ssh_priv_key_file }}'
   - name: store ssh key files
     debug:
       msg: 'Upload {{ item | basename }} to bucket not yet implemented'
     loop:
     - '{{ sap_gce_ssh_priv_key_file }}'
     - '{{ sap_gce_ssh_pub_key_file }}'
+  when: false in stat_ssh_key_files_exists
 
 - name: deploy infrastructure with terraform
   terraform:
