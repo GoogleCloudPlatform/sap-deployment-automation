@@ -1,0 +1,6 @@
+galaxy_info:
+  author: Joseph Wright
+  description: Deploy infrastructure with Terraform
+  min_ansible_version: 2.9
+  galaxy_tags: []
+dependencies: []

@@ -1,0 +1,77 @@
+---
+- block:
+  - name: ensure ssh key files are present
+    command: |
+      [ -f "{{ item }}" ]
+    loop:
+    - '{{ sap_gce_ssh_priv_key_file }}'
+    - '{{ sap_gce_ssh_pub_key_file }}'
+    changed_when: false
+  rescue:
+  - name: download ssh key files
+    debug:
+      msg: 'Download {{ item }} from bucket not yet implemented'
+    loop:
+    - '{{ sap_gce_ssh_priv_key_file }}'
+    - '{{ sap_gce_ssh_pub_key_file }}'
+  - name: ensure ssh key file directory is present
+    file:
+      path: '{{ sap_gce_ssh_priv_key_file | dirname }}'
+      mode: 0700
+      state: directory
+  - name: generate key files
+    command: |
+      ssh-keygen -t rsa -N '' -m pem -f {{ sap_gce_ssh_priv_key_file }}
+    args:
+      creates: '{{ sap_gce_ssh_priv_key_file }}*'
+  - name: store ssh key files
+    debug:
+      msg: 'Upload {{ item | basename }} to bucket not yet implemented'
+    loop:
+    - '{{ sap_gce_ssh_priv_key_file }}'
+    - '{{ sap_gce_ssh_pub_key_file }}'
+
+- name: deploy infrastructure with terraform
+  terraform:
+    backend_config:
+      bucket: '{{ sap_state_bucket }}'
+      prefix: '{{ sap_state_bucket_prefix }}'
+    force_init: true
+    project_path: '{{ sap_tf_project_path }}'
+    state: '{{ sap_state }}'
+    variables: '{{ sap_tfvars_defaults | combine(sap_tfvars) }}'
+  register: terraform
+
+- name: flatten inventory map into a list of maps
+  # Convert { "abc": ["10.10.10.10", "10.10.10.11"], "xyz": ["10.10.10.12"] } into:
+  # [
+  #   { "group": "abc", "host": "10.10.10.10" },
+  #   { "group": "abc", "host": "10.10.10.11" },
+  #   { "group": "xyz", "host": "10.10.10.12" }
+  # ]
+  set_fact:
+    inventory_hosts: |
+      {{ inventory_hosts | default([]) }} + {% set j = joiner(",") %}
+        [{% for host in item.value %}{{ j() }}{ "group": "{{ item.key }}", "host": "{{ host }}" }{% endfor %}]
+  with_dict: '{{ terraform.outputs.inventory.value }}'
+
+- name: build inventory
+  add_host:
+    name: '{{ item.host }}'
+    ansible_user: '{{ sap_gce_ssh_user }}'
+    ansible_ssh_private_key_file: '{{ sap_gce_ssh_priv_key_file }}'
+    terraform: '{{ terraform }}'
+    groups: '{{ item.group }}'
+  loop: '{{ inventory_hosts }}'
+  changed_when: false
+
+- name: wait for hosts
+  command: >-
+    ssh -i {{ sap_gce_ssh_priv_key_file }} -o StrictHostKeyChecking=no
+    {{ sap_gce_ssh_user }}@{{ item.host }} exit
+  register: can_ssh
+  retries: 12
+  delay: 10
+  until: can_ssh is succeeded
+  loop: '{{ inventory_hosts }}'
+  changed_when: false

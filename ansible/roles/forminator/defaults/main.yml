@@ -1,0 +1,9 @@
+---
+sap_state: present
+sap_tfvars: {}
+sap_tfvars_defaults:
+  gce_ssh_user: '{{ sap_gce_ssh_user }}'
+  gce_ssh_pub_key_file: '{{ sap_gce_ssh_pub_key_file }}'
+sap_gce_ssh_user: ansible
+sap_gce_ssh_pub_key_file: ~/.ssh/id_rsa.pub
+sap_gce_ssh_priv_key_file: ~/.ssh/id_rsa
