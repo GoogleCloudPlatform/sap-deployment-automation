@@ -14,7 +14,7 @@
 
 # Deploy SAPHOSTAGENT using SAP Installation Bundle
 - import_tasks: deploy_bundle.yml
-  when: when: sap_hostagent_installation_type | lower == "bundle"
+  when: sap_hostagent_installation_type | lower == "bundle"
 
 # Deploy SAPHOSTAGENT using SAP Installation Zypper
 - import_tasks: deploy_zypper.yml
