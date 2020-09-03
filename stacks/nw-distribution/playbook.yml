@@ -2,22 +2,6 @@
 - name: SAP ASCS deploy
   hosts: 127.0.0.1
   connection: local
-  vars:
-    sap_project_id: albatross-duncanl-sandbox-2
-    sap_gce_ssh_pub_key: ~/.ssh/id_rsa.pub
-    sap_gce_ssh_priv_key: ~/.ssh/id_rsa
-    sap_state_bucket: nw-code-ansible
-    sap_ascs_instance_name: s-ascsss
-    sap_pas_instance_name: s-passs
-    sap_instance_type: n1-standard-8
-    sap_linux_image_family: sles-12-sp3-sap
-    sap_linux_image_project: suse-sap-cloud
-    sap_region: us-central1
-    sap_zone: us-central1-a
-    sap_subnetwork: app2
-    sap_subnetwork_project: albatross-duncanl-sandbox-2
-    sap_boot_disk_size: 30
-    sap_gce_ssh_user: sushma
   tasks:
   - name: Copy ssh public key
     copy:
@@ -106,31 +90,31 @@
         - { name: swap, partition_path : swap }
       logvols:
         usrsap:
-          size: 50G
+          size: "{{ usr_sap_size }}"
           vol: usrsap
           mountpoint: /usr/sap
         sapmnt:
-          size: 50G
+          size: "{{ sap_mnt_size }}"
           vol: sapmnt
           mountpoint: /sapmnt
       swapvols:
         swap:
-          size: 29G
+          size: "{{ swap_size }}"
           vol: swap 
           mountpoint: /swap   
   - role: nw-pre
     vars: 
-      nw_bucket: "nw-code-ansible"
-      folder: nw75            
+      nw_bucket: "{{ bucket }}"
+      folder: "{{ path }}"           
   - role: ascs  
     vars:
-      sap_deployment_product_id: "NW_ABAP_ASCS:NW750.HDB.ABAP"
-      template: inifile.params.distribution.j2
-      ascs_sid: "SL3"
-      sap_deployment_sapcar_path: /sapmnt/Software/SWPM1.0      
-      sap_deployment_ascs_instance_nr: "03"
-      sap_sapinst_package_kernel: /sapmnt/Software/Kernel_Files 
-      sap_archives_downloadbasket: /sapmnt/Software/Kernel_Files        
+      sap_deployment_product_id: "{{ sap_ascs_deployment_product_id }}"
+      template: "{{ template }}"
+      ascs_sid: "{{ ascs_sid }}"
+      sap_deployment_sapcar_path: "{{ sap_deployment_sapcar_path }}"     
+      sap_deployment_ascs_instance_nr: "{{ sap_deployment_ascs_instance_nr }}"
+      sap_sapinst_package_kernel: "{{ sap_sapinst_package_kernel }}"
+      sap_archives_downloadbasket: "{{ sap_archives_downloadbasket }}"       
 - name: SAP NW configure
   hosts: pas
   become: yes
@@ -147,7 +131,7 @@
         - { name: swap, partition_path : swap }
       swapvols:
         swap:
-          size: 29G
+          size: "{{ swap_size }}"
           vol: swap 
           mountpoint: /swap
       nfs_private_ip: '{{ terraform.outputs.nfs_private_ip.value }}'
@@ -156,41 +140,41 @@
         sapmnt: /sapmnt                  
   - role: nw-pre
     vars: 
-      nw_bucket: "nw-code-ansible"
-      folder: nw75        
+      nw_bucket: "{{ bucket }}"
+      folder: "{{ path }}"        
   - role: db
     vars:   
-      sap_deployment_product_id: "NW_ABAP_DB:NW750.HDB.ABAP"
-      sap_deployment_db_host: "wplsaphana"
-      sap_deployment_db_sid: "SL1"
-      sap_deployment_hana_instance_nr: "00" 
-      template: inifile.params.distribution.j2 
-      sap_archives_downloadbasket: /sapmnt/Software/Kernel_Files  
-      sap_sapinst_package_kernel: /sapmnt/Software/Kernel_Files  
-      sap_sapinst_package_load: /sapmnt/Software/NW75  
-      sap_sapinst_package_client: /sapmnt/Software/HANA_CLIENT  
-      sap_nw_sid: "SL3" 
-      sap_deployment_sapcar_path: /sapmnt/Software/SWPM1.0
+      sap_deployment_product_id: "{{ sap_db_deployment_product_id }}"
+      sap_deployment_db_host: "{{ sap_deployment_db_host }}"
+      sap_deployment_db_sid: "{{ sap_deployment_db_sid }}"
+      sap_deployment_hana_instance_nr: "{{ sap_deployment_hana_instance_nr }}" 
+      template: "{{ template }}"
+      sap_archives_downloadbasket: "{{ sap_archives_downloadbasket }}" 
+      sap_sapinst_package_kernel: "{{ sap_sapinst_package_kernel }}" 
+      sap_sapinst_package_load: "{{ sap_sapinst_package_load }}"
+      sap_sapinst_package_client: "{{ sap_sapinst_package_client }}" 
+      sap_nw_sid: "{{ sap_nw_sid }}"
+      sap_deployment_sapcar_path: "{{ sap_deployment_sapcar_path }}"
   - role: nw    
     vars:    
-      sap_deployment_product_id: "NW_ABAP_CI:NW750.HDB.ABAP"
-      sap_deployment_password: "Google123"
-      sap_deployment_db_schema_abap_password: "Google123"
-      sap_deployment_hana_systemdb_password: "Google123"
-      sap_deployment_sapcar_path: /sapmnt/Software/SWPM1.0
-      sap_deployment_db_host: "wplsaphana"
-      sap_deployment_db_sid: "SL1"
-      sap_deployment_hana_instance_nr: "00"
-      sap_nw_sid: "SL3" 
-      template: inifile.params.distribution.j2
-      sap_deployment_igs_path: /sapmnt/Software/Kernel_Files
-      sap_deployment_igs_file_name: igsexe_4-80003187.sar
-      sap_deployment_igs_helper_path: /sapmnt/Software/Kernel_Files
-      sap_deployment_igs_helper_file_name: igshelper_17-10010245.sar
-      sap_deployment_software_path: /sapmnt/Software/Kernel_Files
-      sap_sapinst_package_load: /sapmnt/Software/NW75
-      sap_sapinst_package_client: /sapmnt/Software/HANA_CLIENT  
-      sap_deployment_ci_instance_ciinstanceNumber: "02"
+      sap_deployment_product_id: "{{ sap_pas_deployment_product_id }}"
+      sap_deployment_password: "{{ sap_deployment_password }}"
+      sap_deployment_db_schema_abap_password: "{{ sap_deployment_db_schema_abap_password }}"
+      sap_deployment_hana_systemdb_password: "{{ sap_deployment_hana_systemdb_password }}"
+      sap_deployment_sapcar_path: "{{ sap_deployment_sapcar_path }}"
+      sap_deployment_db_host: "{{ sap_deployment_db_host }}"
+      sap_deployment_db_sid: "{{ sap_deployment_db_sid }}"
+      sap_deployment_hana_instance_nr: "{{ sap_deployment_hana_instance_nr }}"
+      sap_nw_sid: "{{ sap_nw_sid }}" 
+      template: "{{ template }}"
+      sap_deployment_igs_path: "{{ sap_deployment_igs_path }}"
+      sap_deployment_igs_file_name: "{{ sap_deployment_igs_file_name }}"
+      sap_deployment_igs_helper_path: "{{ sap_deployment_igs_helper_path }}"
+      sap_deployment_igs_helper_file_name: "{{ sap_deployment_igs_helper_file_name }}"
+      sap_deployment_software_path: "{{ sap_deployment_software_path }}"
+      sap_sapinst_package_load: "{{ sap_sapinst_package_load }}"
+      sap_sapinst_package_client: "{{ sap_sapinst_package_client }}"
+      sap_deployment_ci_instance_ciinstanceNumber: "{{ sap_deployment_ci_instance_ciinstanceNumber }}"
       sap_deployment_ci_ascsvirtualhostname: '{{ terraform.outputs.ascs_instance_name.value }}'
 # Virtual host name of the primary application server instance
       sap_deployment_ci_civirtualhostname: '{{ terraform.outputs.pas_instance_name.value }}'     
