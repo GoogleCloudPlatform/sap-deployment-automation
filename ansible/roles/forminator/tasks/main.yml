@@ -22,7 +22,7 @@
   - name: ensure ssh key file directory is present
     file:
       path: '{{ sap_gce_ssh_priv_key_file | dirname }}'
-      mode: 0700
+      mode: '0700'
       state: directory
   - name: clean up stale ssh key file
     file:
@@ -43,6 +43,15 @@
     loop:
     - '{{ sap_gce_ssh_priv_key_file }}'
     - '{{ sap_gce_ssh_pub_key_file }}'
+  - name: ensure correct permissions on ssh key files
+    file:
+      path: '{{ item.path }}'
+      mode: '{{ item.mode }}'
+    loop:
+    - path: '{{ sap_gce_ssh_priv_key_file }}'
+      mode: '0600'
+    - path: '{{ sap_gce_ssh_pub_key_file }}'
+      mode: '0644'
   when: false in stat_ssh_key_files_exists
 
 - name: deploy infrastructure with terraform
