@@ -1,0 +1,48 @@
+---
+
+- name: Mount nfs volume {{ sap_hana_shared_mountpoint }}
+  lineinfile:
+    path: "/etc/fstab"
+    line: "{{ sap_hana_master_instance_name }}:{{ item }} {{ item }} nfs nfsvers=3,rsize=32768,wsize=32768,hard,intr,timeo=18,retrans=200 0 0"
+  with_items:
+    - "{{ sap_hana_shared_mountpoint }}"
+  notify: Reload NFS
+
+- name: Mount nfs volume {{ sap_hana_backup_mountpoint }}
+  lineinfile:
+    path: "/etc/fstab"
+    line: "{{ sap_hana_master_instance_name }}:{{ item }} {{ item }} nfs nfsvers=3,rsize=32768,wsize=32768,hard,intr,timeo=18,retrans=200 0 0"
+  with_items:
+    - "{{ sap_hana_backup_mountpoint }}"
+  notify: Reload NFS
+  when: 
+    - "{{ create_backup_volume }} == true"
+
+- name: Create {{ sap_hana_shared_mountpoint }} dir
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0775'
+  with_items:
+    - "{{ sap_hana_shared_mountpoint }}"
+  notify: Reload NFS
+
+- name: Create {{ sap_hana_backup_mountpoint }} dir
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0775'
+  with_items:
+    - "{{ sap_hana_backup_mountpoint }}"
+  notify: Reload NFS
+  when: 
+    - "{{ create_backup_volume }} == true"
+
+- name: Create {{ sap_hana_deployment_hana_sid }} directories in /hana/data and /hana/log
+  file:
+    path: "{{ item }}/{{ sap_hana_deployment_hana_sid }}"
+    state: directory
+    mode: '0777'
+  with_items:
+    - "{{ sap_hana_data_mountpoint }}"
+    - "{{ sap_hana_log_mountpoint }}"

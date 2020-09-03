@@ -1,0 +1,31 @@
+---
+
+- name: Start NFS service if Redhat
+  service:
+    name: nfs
+    state: started
+    enabled: yes
+  when: ansible_os_family == "RedHat"
+
+- name: Start NFS service if Suse
+  service:
+    name: nfsserver
+    state: started
+    enabled: yes
+  when: ansible_os_family == "Suse"
+
+- name: Add hana shared entry to /etc/exports
+  lineinfile:
+    path: "/etc/exports"
+    line: "{{ sap_hana_shared_mountpoint }} {{ item.split('/')[10] }}(rw,no_root_squash,sync,no_subtree_check)"
+  with_list: "{{ sap_hana_worker_node_names }}"
+  notify: Reload NFS
+
+- name: Add /hanabackup entry to /etc/exports
+  lineinfile:
+    path: "/etc/exports"
+    line: "{{ sap_hana_backup_mountpoint}} {{ item.split('/')[10] }}(rw,no_root_squash,sync,no_subtree_check)"
+  with_list: "{{ sap_hana_worker_node_names }}"
+  notify: Reload NFS
+  when: 
+    - "{{ create_backup_volume }} == true"

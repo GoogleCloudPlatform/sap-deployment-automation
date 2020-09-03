@@ -35,13 +35,13 @@
 - name: Extract HANA Archive
   block:
     - name: Extract SAR Archive
-      command: "./{{ sap_hana_deployment_sapcar_file_name }} -manifest SIGNATURE.SMF -xvf  {{ sap_hana_deployment_bundle_sar_file_name }}"
+      command: "./{{ sap_hana_sapcar_file_name }} -manifest SIGNATURE.SMF -xvf  {{ sap_hana_bundle_file_name }}"
       args:
         chdir: /hana/shared/software
         creates: /hana/shared/software/SAP_HANA_DATABASE/hdblcm
       register: sap_hana_deployment_register_extractbundle
       when:
-        - not(( sap_hana_deployment_bundle_sar_file_name is none ) or (sap_hana_deployment_bundle_sar_file_name | trim == ''))
+        - not(( sap_hana_bundle_file_name is none ) or (sap_hana_bundle_file_name | trim == ''))
     - name: Extract ZIP Archive
       unarchive:
         src: 51053787.ZIP

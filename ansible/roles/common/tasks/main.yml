@@ -1,33 +1,20 @@
 ---
 
-# Create software directory to store HANA install files
-- name: Create /hana/shared/software dir
-  file:
-    path: /hana/shared/software
-    state: directory
-
-- name: Wait for HANA files to download
-  wait_for: 
-    path: "{{ item }}"
+- name: Install GCC 7.x for RedHat
+  package:
+    name: "{{ item }}"
     state: present
   with_items:
-    - "/software/{{ sap_hana_deployment_hostagent_file_name }}"
-    - "/software/{{ sap_hana_bundle_file_name }}"
-    - "/software/{{ sap_hana_deployment_sapcar_file_name }}"
-
-- name: Copy HANA install files to "/hana/shared/software"
-  copy:
-    src: "{{ item }}"
-    dest: /hana/shared/software
-    mode: 0775
-    force: no
-    remote_src: yes
+    - compat-sap-c++-7
+    - libatomic
+  when:  ansible_os_family == "RedHat"
+  
+- name: Install GCC 7.x for Suse
+  package:
+    name: "{{ item }}"
+    state: present
   with_items:
-    - "/software/{{ sap_hana_deployment_hostagent_file_name }}"
-    - "/software/{{ sap_hana_bundle_file_name }}"
-    - "/software/{{ sap_hana_deployment_sapcar_file_name }}"
-
-#- name: Remove old HANA install files under /software
-#  file: 
-#    path: /software/
-#    state: absent
+    - libgcc_s1
+    - libstdc++6
+    - libatomic1
+  when: ansible_os_family == "Suse"

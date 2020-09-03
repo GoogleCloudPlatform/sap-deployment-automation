@@ -1,0 +1,44 @@
+---
+
+- name: stat shared ssh private key
+  stat:
+    path: /root/.ssh/id_rsa
+  register: stat_ssh_priv_key
+  run_once: true
+
+- name: stat shared ssh public key
+  stat:
+    path: /root/.ssh/id_rsa.pub
+  register: stat_ssh_pub_key
+  run_once: true
+
+- name: create shared ssh key
+  shell: yes | ssh-keygen -t rsa -N '' -f /root/.ssh/id_rsa
+  when: false in (stat_ssh_priv_key.stat.exists, stat_ssh_pub_key.stat.exists)
+  run_once: true
+
+- name: read shared ssh public key
+  slurp:
+    src: /root/.ssh/id_rsa.pub
+  register: shared_ssh_pub_key
+  run_once: true
+  no_log: true
+
+- name: Fetch root pub ssh key
+  fetch:
+    src: /root/.ssh/id_rsa.pub
+    dest: /tmp/id_rsa_sc.pub
+    flat: yes
+
+- name: ensure root login is enabled for sshd
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regex: '^PermitRootLogin no'
+    line: '#PermitRootLogin no'
+  register: modify_sshd_config
+
+- name: ensure sshd reads modified config
+  service:
+    name: sshd.service
+    state: reloaded
+  when: modify_sshd_config is changed

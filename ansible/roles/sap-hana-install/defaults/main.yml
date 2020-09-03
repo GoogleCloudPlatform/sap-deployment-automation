@@ -14,7 +14,7 @@ url_retries_delay: 10
 
 # Target host path and file name for the bundle installation file
 sap_hana_deployment_bundle_path:
-sap_hana_deployment_bundle_sar_file_name:
+sap_hana_bundle_file_name:
 
 # Target host path and file name for the zip installation file
 sap_hana_deployment_zip_path:
@@ -22,7 +22,7 @@ sap_hana_deployment_zip_file_name:
 
 # Target host path and file name for the sapcar installation file
 sap_hana_deployment_sapcar_path:
-sap_hana_deployment_sapcar_file_name:
+sap_hana_sapcar_file_name:
 
 # if the previous variables are undefined because you do not want to provide a bundle
 # you can define sap_hana_installdir variable, which points to the directory containing hdblcm

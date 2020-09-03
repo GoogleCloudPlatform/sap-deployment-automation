@@ -1,0 +1,20 @@
+---
+
+- name: Add master public key to authorized_keys
+  authorized_key:
+    user: root
+    state: present
+    key: "{{ lookup('file', '/tmp/id_rsa_sc.pub') }}"
+
+- name: Ensure root login is enabled for sshd
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regex: '^PermitRootLogin no'
+    line: '#PermitRootLogin no'
+  register: modify_sshd_config
+
+- name: Ensure sshd reads modified config
+  service:
+    name: sshd.service
+    state: reloaded
+  when: modify_sshd_config is changed

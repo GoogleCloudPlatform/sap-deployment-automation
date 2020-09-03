@@ -1,0 +1,4 @@
+---
+
+- name: Reload NFS
+  command: "exportfs -rav"
