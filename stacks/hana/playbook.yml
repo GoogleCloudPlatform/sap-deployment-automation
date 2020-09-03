@@ -44,6 +44,7 @@
     sap_hana_deployment_bundle_sar_file_name: '{{ terraform.outputs.sap_hana_bundle_file_name.value }}'
     sap_hana_deployment_sapcar_file_name: '{{ terraform.outputs.sap_hana_sapcar_file_name.value }}'
   roles:
+  - role: sap-hana-download-packages
   - role: storage
     vars:
       hana_shared_size: '{{ terraform.outputs.hana_shared_size.value }}G'
