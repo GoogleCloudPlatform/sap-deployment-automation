@@ -14,7 +14,7 @@ sap_instance_name: hanslbg
 sap_instance_type: n1-highmem-32
 sap_linux_image_family: rhel-7-7-sap-ha
 sap_linux_image_project: rhel-sap-cloud
-sap_state_bucket: sap-terraform-state-bg
+sap_tf_state_bucket: sap-terraform-state-bg
 sap_subnetwork: app2
 sap_subnetwork_project: ''
 sap_zone: us-central1-a

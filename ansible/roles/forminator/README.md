@@ -14,9 +14,9 @@ The Terraform module that is passed in the `sap_tf_project_path` variable must d
 
 # Role Variables
 
-`sap_state_bucket`: (Required, type _string_) - A bucket for storing Terraform state. The bucket must already exist.
+`sap_tf_state_bucket`: (Required, type _string_) - A bucket for storing Terraform state. The bucket must already exist.
 
-`sap_state_bucket_prefix`: (Required, type _string_) - The prefix in the bucket where the Terraform state file will be stored.
+`sap_tf_state_bucket_prefix`: (Required, type _string_) - The prefix in the bucket where the Terraform state file will be stored.
 
 `sap_tf_project_path`: (Required, type _string_) - The path to the Terraform module which will be applied.
 
@@ -28,7 +28,7 @@ The Terraform module that is passed in the `sap_tf_project_path` variable must d
 
 `sap_state`: (Optional, choice of `present` or `absent`, default `present`) - Whether or not the Terraform resources should be present or absent.
 
-`sap_tfvars`: (Optional, type _map_, default `{}`) - Variables to be passed to Terraform. The variables `gce_ssh_user` and `gce_ssh_pub_key_file` will always be passed, regardless of the value of this variable.
+`sap_tf_variables`: (Optional, type _map_, default `{}`) - Variables to be passed to Terraform. The variables `gce_ssh_user` and `gce_ssh_pub_key_file` will always be passed, regardless of the value of this variable.
 
 # Example Playbook
 
@@ -38,7 +38,8 @@ The Terraform module that is passed in the `sap_tf_project_path` variable must d
   roles:
   - role: forminator
     vars:
-      sap_state_bucket_prefix: '{{ sap_instance_name }}'
+      sap_tf_state_bucket: jw-tf-state-xyz
+      sap_tf_state_bucket_prefix: '{{ sap_instance_name }}'
       sap_tf_project_path: './tf'
       sap_tf_variables:
         gce_ssh_user: '{{ sap_gce_ssh_user }}'

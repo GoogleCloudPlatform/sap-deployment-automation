@@ -11,10 +11,10 @@
   roles:
   - role: forminator
     vars:
-      sap_state_bucket_prefix: '{{ sap_instance_name }}'
+      sap_tf_state_bucket_prefix: '{{ sap_instance_name }}'
       sap_tf_project_path: './tf'
       sap_state: '{{ state | default("present") }}'
-      sap_tfvars:
+      sap_tf_variables:
         boot_disk_size: '{{ sap_hana_boot_disk_size }}'
         gce_ssh_user: '{{ sap_gce_ssh_user }}'
         gce_ssh_pub_key_file: '{{ playbook_dir }}/ssh-key.pub'
