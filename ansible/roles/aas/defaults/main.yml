@@ -1,0 +1,8 @@
+---
+sap_ascs_virtual_hostname: ''
+sap_ascs_instance_number: '01'
+
+sap_ci_virtual_hostname: ''
+sap_ci_instance_number: '00'
+
+sap_scs_virtual_hostname: ''

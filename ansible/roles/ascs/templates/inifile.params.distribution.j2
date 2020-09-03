@@ -17,13 +17,13 @@ NW_SCS_Instance.instanceNumber = {{ sap_deployment_ascs_instance_nr }}
 NW_getFQDN.FQDN = c.albatross-duncanl-sandbox-2.internal 
 
 # Master password
-NW_GetMasterPassword.masterPwd = Google123 
+NW_GetMasterPassword.masterPwd = {{ sap_deployment_password }}
 
 # Password for the 'sapadm' user of the SAP Host Agent
-hostAgent.sapAdmPassword = Google123 
+hostAgent.sapAdmPassword = {{ sap_deployment_password }} 
 
 # The password of the '<sapsid>adm' user
-nwUsers.sidadmPassword = Google123
+nwUsers.sidadmPassword = {{ sap_deployment_password }}
 
 # The folder containing all archives 
 archives.downloadBasket = {{ sap_archives_downloadbasket }}  

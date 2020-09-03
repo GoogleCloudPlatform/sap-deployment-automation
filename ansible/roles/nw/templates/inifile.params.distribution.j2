@@ -11,7 +11,7 @@
 HDB_Schema_Check_Dialogs.schemaName = SAPABAP1
 
 # The password of the database schema.
-HDB_Schema_Check_Dialogs.schemaPassword = {{ sap_deployment_db_schema_abap_password }}
+HDB_Schema_Check_Dialogs.schemaPassword = {{ sap_hana_password }}
 
 NW_HDB_getDBInfo.dbhost = {{ sap_deployment_db_host }}
 NW_HDB_getDBInfo.dbsid = {{ sap_deployment_db_sid }} 
@@ -100,13 +100,13 @@ NW_CI_Instance_ABAP_Reports.executeReportsForDepooling = true
 # NW_Delete_Sapinst_Users.removeUsers = false
 
 # Master password
-NW_GetMasterPassword.masterPwd = Google123
+NW_GetMasterPassword.masterPwd = {{ sap_deployment_password }}
 
 # Install the SAP HANA database client in a central or local directory. Possible values are: 'SAPCPE', 'LOCAL'
 # NW_HDB_DBClient.clientPathStrategy = LOCAL
 
 # Password of user 'SYSTEM' within the 'SystemDB' tenant in an SAP HANA MultiDB server
-NW_HDB_getDBInfo.systemDbPassword = Google123
+NW_HDB_getDBInfo.systemDbPassword = {{ sap_hana_password }}
 
 # DEPRECATED, DO NOT USE!
 # NW_SAPCrypto.SAPCryptoFile = 
@@ -232,7 +232,7 @@ nwUsers.sidAdmUID = 1003
 storageBasedCopy.hdb.instanceNumber = 00
 
 # Password of user 'SYSTEM' inside the SAP HANA Database Server
-storageBasedCopy.hdb.systemPassword = {{ sap_deployment_hana_systemdb_password }}
+storageBasedCopy.hdb.systemPassword = {{ {{ sap_hana_password }} }}
 
 # Sets the SAP<SAPSID>DB schema password using a  parameter file.
 # storageBasedCopy.javaSchemaPassword = 

@@ -1,0 +1,95 @@
+---
+- name: SAP ASCS deploy
+  hosts: 127.0.0.1
+  connection: local
+  tasks:
+  - name: Copy ssh public key
+    copy:
+      dest: '{{ playbook_dir }}/ssh-key.pub'
+      src: '{{ sap_gce_ssh_pub_key }}'
+  - name: Copy ssh private key
+    copy:
+      dest: '{{ playbook_dir }}/ssh-key'
+      src: '{{ sap_gce_ssh_priv_key }}'
+      mode: '0600'
+  - name: Deploy SAP NW infrastructure
+    terraform:
+      backend_config:
+        bucket: '{{ sap_state_bucket }}'
+        prefix: '{{ sap_state_bucket_prefix | default(sap_instance_name) }}'
+      force_init: true
+      project_path: ./tf
+      state: present
+      variables:
+        project_id: '{{ sap_project_id }}'
+        sap_instance_name: '{{ sap_instance_name }}'
+        instance_type: '{{ sap_instance_type }}'
+        linux_image_family: '{{ sap_linux_image_family }}'
+        linux_image_project: '{{ sap_linux_image_project }}'
+        region: '{{ sap_region }}'
+        zone: '{{ sap_zone }}'
+        subnetwork: '{{ sap_subnetwork }}'
+        subnetwork_project: '{{ sap_subnetwork_project }}'
+        boot_disk_size: '{{ sap_boot_disk_size }}'
+        ssh_user: '{{ sap_gce_ssh_user }}'
+        public_key_path: '{{ playbook_dir }}/ssh-key.pub'
+    register: terraform
+  - name: Build inventory
+    add_host:
+      name: '{{ terraform.outputs.app_address.value }}'
+      ansible_user: '{{ sap_gce_ssh_user }}'
+      ansible_ssh_private_key_file: '{{ playbook_dir }}/ssh-key'
+      terraform: '{{ terraform }}'
+      groups: app
+    changed_when: false
+  - name: Wait for host
+    shell: |-
+      ssh -i {{ playbook_dir }}/ssh-key \
+        -o StrictHostKeyChecking=no \
+        {{ sap_gce_ssh_user }}@{{ terraform.outputs.app_address.value }} \
+        exit
+    register: can_ssh
+    retries: 12
+    delay: 10
+    until: can_ssh is succeeded
+- name: SAP NW configure
+  hosts: app
+  become: yes
+  become_user: root
+  vars:
+    sap_image_family: '{{ terraform.outputs.sap_image_family.value }}'
+  roles:
+  - role: base
+  - role: storage-bkup
+    vars:
+      swapon: True     
+      subnet_cidr: '{{ terraform.outputs.subnet_cidr.value }}'
+      disks:
+        - { name: swap, partition_path : swap }
+      swapvols:
+        swap:
+          size: "{{ swap_size }}"
+          vol: swap 
+          mountpoint: /swap
+      nfs_private_ip: 10.0.10.181
+      mountpa:
+        usrsap: /usr/sap
+        sapmnt: /sapmnt                  
+  - role: nw-pre
+    vars: 
+      nw_bucket: "{{ bucket }}"
+      folder: "{{ path }}"        
+  - role: aas   
+    vars:    
+      sap_deployment_product_id: "{{ sap_aas_deployment_product_id }}"
+      sap_deployment_password: "{{ sap_deployment_password }}"
+      sap_hana_password: "{{ sap_hana_password }}"
+      sap_deployment_sapcar_path: "{{ sap_deployment_sapcar_path }}"
+      sap_nw_sid: "{{ sap_nw_sid }}" 
+      template: "{{ template }}"
+      sap_sapinst_package_kernel: "{{ sap_sapinst_package_kernel }}" 
+      sap_deployment_software_path: "{{ sap_deployment_software_path }}"
+      sap_sapinst_package_client: "{{ sap_sapinst_package_client }}"
+      sap_deployment_as_instanceNumber: "{{ sap_deployment_as_instanceNumber }}"
+# Virtual host name of the primary application server instance
+      sap_deployment_AS_virtualhostname: '{{ terraform.outputs.app_instance_name.value }}'     

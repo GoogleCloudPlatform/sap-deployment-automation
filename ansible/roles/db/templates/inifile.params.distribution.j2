@@ -16,21 +16,21 @@ NW_HDB_getDBInfo.dbsid = {{ sap_deployment_db_sid }}
 NW_HDB_getDBInfo.instanceNumber = {{ sap_deployment_hana_instance_nr }} 
 
 # The password of the database schema.
-HDB_Schema_Check_Dialogs.schemaPassword = Google123
+HDB_Schema_Check_Dialogs.schemaPassword = {{ sap_deployment_password }}
 
 # Number of parallel Migration Monitor jobs
 NW_ABAP_Import_Dialog.migmonJobNum = 24 
 
 # Master password
-NW_GetMasterPassword.masterPwd = Google123
+NW_GetMasterPassword.masterPwd = {{ sap_deployment_password }}
 
 NW_System.installSAPHostAgent = false
 
 # Password of user 'SYSTEM' within the 'SystemDB' tenant in an SAP HANA MultiDB server
-NW_HDB_getDBInfo.systemDbPassword = Google123
+NW_HDB_getDBInfo.systemDbPassword = {{ sap_hana_password }}
 
 # Password of user 'SYSTEM' inside the SAP HANA database server
-NW_HDB_getDBInfo.systemPassword = Google123
+NW_HDB_getDBInfo.systemPassword = {{ sap_hana_password }}
 
 # The FQDN of the system
 NW_getFQDN.FQDN = c.albatross-duncanl-sandbox-2.internal  

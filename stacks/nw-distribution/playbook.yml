@@ -114,7 +114,8 @@
       sap_deployment_sapcar_path: "{{ sap_deployment_sapcar_path }}"     
       sap_deployment_ascs_instance_nr: "{{ sap_deployment_ascs_instance_nr }}"
       sap_sapinst_package_kernel: "{{ sap_sapinst_package_kernel }}"
-      sap_archives_downloadbasket: "{{ sap_archives_downloadbasket }}"       
+      sap_archives_downloadbasket: "{{ sap_archives_downloadbasket }}"  
+      sap_deployment_password: "{{ sap_deployment_password }}"          
 - name: SAP NW configure
   hosts: pas
   become: yes
@@ -149,6 +150,8 @@
       sap_deployment_db_sid: "{{ sap_deployment_db_sid }}"
       sap_deployment_hana_instance_nr: "{{ sap_deployment_hana_instance_nr }}" 
       template: "{{ template }}"
+      sap_deployment_password: "{{ sap_deployment_password }}"
+      sap_hana_password: "{{ sap_hana_password }}"
       sap_archives_downloadbasket: "{{ sap_archives_downloadbasket }}" 
       sap_sapinst_package_kernel: "{{ sap_sapinst_package_kernel }}" 
       sap_sapinst_package_load: "{{ sap_sapinst_package_load }}"
@@ -159,8 +162,7 @@
     vars:    
       sap_deployment_product_id: "{{ sap_pas_deployment_product_id }}"
       sap_deployment_password: "{{ sap_deployment_password }}"
-      sap_deployment_db_schema_abap_password: "{{ sap_deployment_db_schema_abap_password }}"
-      sap_deployment_hana_systemdb_password: "{{ sap_deployment_hana_systemdb_password }}"
+      sap_hana_password: "{{ sap_hana_password }}"
       sap_deployment_sapcar_path: "{{ sap_deployment_sapcar_path }}"
       sap_deployment_db_host: "{{ sap_deployment_db_host }}"
       sap_deployment_db_sid: "{{ sap_deployment_db_sid }}"

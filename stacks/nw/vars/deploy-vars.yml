@@ -18,25 +18,24 @@
     sap_mnt_size: 140G
     swap_size: 29G
     nw_bucket: "nw-code-ansible"
-    folder: nw75  
-    sap_s4hana_deployment_product_id: "NW_ABAP_OneHost:NW750.HDB.ABAP"
-    sap_s4hana_deployment_password: Google123
-    sap_s4hana_deployment_ascs_instance_nr: "00"
-    sap_s4hana_deployment_ascs_instance_hostname: '{{ terraform.outputs.instance_name.value }}'
-    sap_s4hana_deployment_pas_instance_nr: "01"
-    sap_s4hana_deployment_pas_instance_hostname: '{{ terraform.outputs.instance_name.value }}'
+    path: nw75  
+    sap_deployment_product_id: "NW_ABAP_OneHost:NW750.HDB.ABAP"
+    sap_deployment_password: Google123
+    sap_hana_password: Google123
+    sap_deployment_ascs_instance_nr: "00"
+    sap_deployment_pas_instance_nr: "01"
     sap_nw_sid: "SL1"
-    sap_s4hana_deployment_db_sid: "SL1"
+    sap_deployment_db_sid: "SL1"
     template: "inifile.params.standard.j2"
-    sap_s4hana_deployment_db_host: "wplsaphana"
-    sap_s4hana_deployment_hana_instance_nr: "00"
-    sap_s4hana_sapinst_package_kernel: /sapmnt/Software/Kernel_Files
-    sap_s4hana_nw_sapcryptofile: SAPEXE_200-80002573.SAR
-    sap_s4hana_deployment_igs_file_name: igsexe_4-80003187.sar
-    sap_s4hana_deployment_igs_helper_file_name: igshelper_17-10010245.sar
-    sap_s4hana_deployment_sapexedbsar: SAPEXEDB_200-80002572.SAR
-    sap_s4hana_deployment_sapexesar: SAPEXE_200-80002573.SAR
-    sap_s4hana_deployment_sapcar_path: /sapmnt/Software/SWPM1.0
-    sap_s4hana_sapinst_package_load: /sapmnt/Software/NW75
-    sap_s4hana_sapinst_package_client: /sapmnt/Software/HANA_CLIENT 
-    sap_s4hana_archives_downloadbasket: /sapmnt/Software/Kernel_Files       
+    sap_deployment_db_host: "wplsaphana"
+    sap_deployment_hana_instance_nr: "00"
+    sap_sapinst_package_kernel: /sapmnt/Software/Kernel_Files
+    sap_nw_sapcryptofile: SAPEXE_200-80002573.SAR
+    sap_deployment_igs_file_name: igsexe_4-80003187.sar
+    sap_deployment_igs_helper_file_name: igshelper_17-10010245.sar
+    sap_deployment_sapexedbsar: SAPEXEDB_200-80002572.SAR
+    sap_deployment_sapexesar: SAPEXE_200-80002573.SAR
+    sap_deployment_sapcar_path: /sapmnt/Software/SWPM1.0
+    sap_sapinst_package_load: /sapmnt/Software/NW75
+    sap_sapinst_package_client: /sapmnt/Software/HANA_CLIENT 
+    sap_archives_downloadbasket: /sapmnt/Software/Kernel_Files       
