@@ -52,7 +52,7 @@ NW_CI_Instance.ascsVirtualHostname = {{ sap_deployment_ci_ascsvirtualhostname }}
 NW_CI_Instance.ciInstanceNumber = {{ sap_deployment_ci_instance_ciinstanceNumber }}
 
 # The ABAP message server port. Leave empty for default.
-NW_CI_Instance.ciMSPort = 3601
+NW_CI_Instance.ciMSPort = {{ sap_ci_instance.cimsport }}
 
 # The internal ABAP message server port. Leave empty for default.
 # NW_CI_Instance.ciMSPortInternal = 
@@ -232,7 +232,7 @@ nwUsers.sidAdmUID = 1003
 storageBasedCopy.hdb.instanceNumber = 00
 
 # Password of user 'SYSTEM' inside the SAP HANA Database Server
-storageBasedCopy.hdb.systemPassword = {{ {{ sap_hana_password }} }}
+storageBasedCopy.hdb.systemPassword = {{ sap_hana_password }}
 
 # Sets the SAP<SAPSID>DB schema password using a  parameter file.
 # storageBasedCopy.javaSchemaPassword = 

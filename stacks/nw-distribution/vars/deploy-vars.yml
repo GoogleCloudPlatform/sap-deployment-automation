@@ -42,3 +42,4 @@ sap_deployment_igs_helper_path: /sapmnt/Software/Kernel_Files
 sap_deployment_igs_helper_file_name: igshelper_17-10010245.sar
 sap_deployment_software_path: /sapmnt/Software/Kernel_Files
 sap_deployment_ci_instance_ciinstanceNumber: "02"
+sap_ci_instance.cimsport: "3601"
