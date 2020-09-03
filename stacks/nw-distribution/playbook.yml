@@ -180,4 +180,4 @@
       sap_deployment_ci_ascsvirtualhostname: '{{ terraform.outputs.ascs_instance_name.value }}'
 # Virtual host name of the primary application server instance
       sap_deployment_ci_civirtualhostname: '{{ terraform.outputs.pas_instance_name.value }}'     
-      sap_ci_instance.cimsport: "{{ sap_ci_instance.cimsport }}"
+      sap_ci_instance_cimsport: "{{ sap_ci_instance_cimsport }}"
