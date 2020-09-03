@@ -18,7 +18,7 @@
     recurse: true
 - name: Setting fact for nw installer path
   set_fact:
-    sapinst_path: "{{ sap_s4hana_deployment_sapcar_path }}"
+    sapinst_path: "{{ sap_deployment_sapcar_path }}"
 - name: inifile.params config file 
   template:
     src: "{{ template }}"
@@ -26,7 +26,7 @@
 - name: installing ascs
   command: >- 
      ./sapinst SAPINST_INPUT_PARAMETERS_URL=/usr/sap/inifile_ascs.params \
-     SAPINST_EXECUTE_PRODUCT_ID={{ sap_s4hana_deployment_product_id }} \
+     SAPINST_EXECUTE_PRODUCT_ID={{ sap_deployment_product_id }} \
      SAPINST_SKIP_DIALOGS=true SAPINST_START_GUISERVER=false
   register: installnw
   args:

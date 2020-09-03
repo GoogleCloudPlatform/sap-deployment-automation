@@ -7,13 +7,13 @@
 # Start of User Input parameters
 
 # Database host
-NW_HDB_getDBInfo.dbhost = {{ sap_s4hana_deployment_db_host }}
+NW_HDB_getDBInfo.dbhost = {{ sap_deployment_db_host }}
 
 # Database system ID
-NW_HDB_getDBInfo.dbsid = {{ sap_s4hana_deployment_db_sid }} 
+NW_HDB_getDBInfo.dbsid = {{ sap_deployment_db_sid }} 
 
 # The instance number of the SAP HANA database server
-NW_HDB_getDBInfo.instanceNumber = {{ sap_s4hana_deployment_hana_instance_nr }} 
+NW_HDB_getDBInfo.instanceNumber = {{ sap_deployment_hana_instance_nr }} 
 
 # The password of the database schema.
 HDB_Schema_Check_Dialogs.schemaPassword = Google123
@@ -38,13 +38,13 @@ NW_getFQDN.FQDN = c.albatross-duncanl-sandbox-2.internal
 # Provide  'profile' directory of SAP Netweaver-based system.
 NW_readProfileDir.profileDir = /sapmnt/{{ sap_nw_sid }}/profile
 
-archives.downloadBasket = {{ sap_s4hana_archives_downloadbasket }}  
+archives.downloadBasket = {{ sap_archives_downloadbasket }}  
 
-SAPINST.CD.PACKAGE.KERNEL = {{ sap_s4hana_sapinst_package_kernel }}  
+SAPINST.CD.PACKAGE.KERNEL = {{ sap_sapinst_package_kernel }}  
 
-SAPINST.CD.PACKAGE.LOAD = {{ sap_s4hana_sapinst_package_load }}  
+SAPINST.CD.PACKAGE.LOAD = {{ sap_sapinst_package_load }}  
 
-SAPINST.CD.PACKAGE.RDBMS = {{ sap_s4hana_sapinst_package_client }}  
+SAPINST.CD.PACKAGE.RDBMS = {{ sap_sapinst_package_client }}  
 
 # End of user Input Parameters
 ####################################
