@@ -5,19 +5,21 @@
 
 # Deploy SAPHOSTAGENT using RPM file
 - import_tasks: deploy_rpm.yml
-  when: sap_hostagent_installation_type == "rpm"
+  when:
+    sap_hostagent_installation_type | lower == "rpm" or ansible_os_family == "RedHat"
 
 # Deploy SAPHOSTAGENT using SAR file
 - import_tasks: deploy_sar.yml
-  when: sap_hostagent_installation_type == "sar"
+  when: sap_hostagent_installation_type | lower == "sar"
 
 # Deploy SAPHOSTAGENT using SAP Installation Bundle
 - import_tasks: deploy_bundle.yml
-  when: sap_hostagent_installation_type == "bundle"
+  when: when: sap_hostagent_installation_type | lower == "bundle"
 
 # Deploy SAPHOSTAGENT using SAP Installation Zypper
 - import_tasks: deploy_zypper.yml
-  when: sap_hostagent_installation_type == "Zypper"
+  when:
+    sap_hostagent_installation_type | lower == "zypper" or ansible_os_family == "Suse"
 
 # Configuring SSL for SAP Host Agent
 - import_tasks: config_ssl.yml

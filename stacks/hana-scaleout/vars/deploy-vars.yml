@@ -31,4 +31,3 @@ sap_hana_deployment_hana_userid: 2233
 sap_hana_deployment_hana_groupid: 992
 sap_hana_deployment_sapadm_password: Google123
 sap_hana_deployment_sidadm_password: Google123
-sap_hostagent_installation_type: zypper   # use rpm for RedHat and zypper for SLES

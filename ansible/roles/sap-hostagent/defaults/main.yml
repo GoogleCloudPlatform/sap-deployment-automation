@@ -2,8 +2,8 @@
 # Global Default variables
 # Adapt to your default settings
 
-# Installation type: RPM, SAR or OTHER -- Defaulting to RPM
-sap_hostagent_installation_type: "rpm"
+# Installation type: RPM, SAR or OTHER
+sap_hostagent_installation_type: ""
 
 # Temporary directory for SAPHOSTAGENT files
 sap_hostagent_agent_tmp_directory: "/tmp/hostagent"
