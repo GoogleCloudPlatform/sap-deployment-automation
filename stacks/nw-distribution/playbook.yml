@@ -124,7 +124,7 @@
       folder: nw75            
   - role: ascs  
     vars:
-      sap_s4hana_ascs_deployment_product_id: "NW_ABAP_ASCS:NW750.HDB.ABAP"
+      sap_s4hana_deployment_product_id: "NW_ABAP_ASCS:NW750.HDB.ABAP"
       template: inifile.params.distribution.j2
       ascs_sid: "SL3"
       sap_s4hana_deployment_sapcar_path: /sapmnt/Software/SWPM1.0      
@@ -160,7 +160,7 @@
       folder: nw75        
   - role: db
     vars:   
-      sap_s4hana_db_deployment_product_id: "NW_ABAP_DB:NW750.HDB.ABAP"
+      sap_s4hana_deployment_product_id: "NW_ABAP_DB:NW750.HDB.ABAP"
       sap_s4hana_deployment_db_host: "wplsaphana"
       sap_s4hana_deployment_db_sid: "SL1"
       sap_s4hana_deployment_hana_instance_nr: "00" 
@@ -173,8 +173,8 @@
       sap_s4hana_deployment_sapcar_path: /sapmnt/Software/SWPM1.0
   - role: nw    
     vars:    
-      sap_ci_deployment_product_id: "NW_ABAP_CI:NW750.HDB.ABAP"
-      sap_deployment_password: "Google123"
+      sap_s4hana_deployment_product_id: "NW_ABAP_CI:NW750.HDB.ABAP"
+      sap_s4hana_deployment_password: "Google123"
       sap_s4hana_deployment_db_schema_abap_password: "Google123"
       sap_s4hana_deployment_hana_systemdb_password: "Google123"
       sap_s4hana_deployment_sapcar_path: /sapmnt/Software/SWPM1.0
@@ -187,7 +187,7 @@
       sap_s4hana_deployment_igs_file_name: igsexe_4-80003187.sar
       sap_s4hana_deployment_igs_helper_path: /sapmnt/Software/Kernel_Files
       sap_s4hana_deployment_igs_helper_file_name: igshelper_17-10010245.sar
-#      sap_s4hana_deployment_software_path: /sapmnt/Software/Kernel_Files
+      sap_s4hana_deployment_software_path: /sapmnt/Software/Kernel_Files
       sap_s4hana_sapinst_package_load: /sapmnt/Software/NW75
       sap_s4hana_sapinst_package_client: /sapmnt/Software/HANA_CLIENT  
       sap_s4hana_deployment_ci_instance_ciinstanceNumber: "02"
