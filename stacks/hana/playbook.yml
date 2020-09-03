@@ -8,25 +8,13 @@
     sap_hana_sapcar_file_name: SAPCAR_1320-80000935.EXE
     sap_hana_boot_disk_size: 30
     sap_gce_ssh_user: ansible
-  tasks:
-  - name: Copy ssh public key
-    copy:
-      dest: '{{ playbook_dir }}/ssh-key.pub'
-      content: '{{ sap_gce_ssh_pub_key }}'
-  - name: Copy ssh private key
-    copy:
-      dest: '{{ playbook_dir }}/ssh-key'
-      content: '{{ sap_gce_ssh_priv_key }}'
-      mode: '0600'
-  - name: Deploy SAP HANA infrastructure
-    terraform:
-      backend_config:
-        bucket: '{{ sap_state_bucket }}'
-        prefix: '{{ sap_state_bucket_prefix | default(sap_instance_name) }}'
-      force_init: true
-      project_path: ./tf
-      state: '{{ state | default("present") }}'
-      variables:
+  roles:
+  - role: forminator
+    vars:
+      sap_state_bucket_prefix: '{{ sap_instance_name }}'
+      sap_tf_project_path: './tf'
+      sap_state: '{{ state | default("present") }}'
+      sap_tfvars:
         boot_disk_size: '{{ sap_hana_boot_disk_size }}'
         gce_ssh_user: '{{ sap_gce_ssh_user }}'
         gce_ssh_pub_key_file: '{{ playbook_dir }}/ssh-key.pub'
@@ -43,27 +31,6 @@
         subnetwork: '{{ sap_subnetwork }}'
         subnetwork_project: '{{ sap_subnetwork_project }}'
         zone: '{{ sap_zone }}'
-    register: terraform
-  - name: Build inventory
-    add_host:
-      name: '{{ terraform.outputs.address.value }}'
-      ansible_user: '{{ sap_gce_ssh_user }}'
-      ansible_ssh_private_key_file: '{{ playbook_dir }}/ssh-key'
-      terraform: '{{ terraform }}'
-      sap_hana_sid: '{{ sap_hana_sid }}'
-      sap_hana_instance_number: '{{ sap_hana_instance_number }}'
-      groups: hana
-    changed_when: false
-  - name: Wait for host
-    shell: |-
-      ssh -i {{ playbook_dir }}/ssh-key \
-        -o StrictHostKeyChecking=no \
-        {{ sap_gce_ssh_user }}@{{ terraform.outputs.address.value }} \
-        exit
-    register: can_ssh
-    retries: 12
-    delay: 10
-    until: can_ssh is succeeded
 
 - name: SAP HANA configure
   hosts: hana

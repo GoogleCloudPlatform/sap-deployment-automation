@@ -64,3 +64,7 @@ output "sap_hana_bundle_file_name" {
 output "sap_hana_sapcar_file_name" {
   value = var.sap_hana_sapcar_file_name
 }
+
+output "inventory" {
+  value = { hana = [module.gcp_sap_hana.address] }
+}
