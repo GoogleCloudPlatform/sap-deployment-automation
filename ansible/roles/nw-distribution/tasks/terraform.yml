@@ -1,0 +1,63 @@
+---
+- block:
+  - name: Copy ssh public key
+    copy:
+      dest: '{{ playbook_dir }}/ssh-key.pub'
+      src: '{{ sap_gce_ssh_pub_key }}'
+  - name: Copy ssh private key
+    copy:
+      dest: '{{ playbook_dir }}/ssh-key'
+      src: '{{ sap_gce_ssh_priv_key }}'
+      mode: '0600'
+  - name: Deploy SAP NW infrastructure
+    terraform:
+      backend_config:
+        bucket: '{{ sap_state_bucket }}'
+        prefix: '{{ sap_state_bucket_prefix | default(sap_ascs_instance_name) }}'
+      force_init: true
+      project_path: ../../stacks/nw-distribution/tf
+      state: present
+      variables:
+        project_id: '{{ sap_project_id }}'
+        sap_ascs_instance_name: '{{ sap_ascs_instance_name }}'
+        sap_pas_instance_name: '{{ sap_pas_instance_name }}'
+        instance_type: '{{ sap_instance_type }}'
+        linux_image_family: '{{ sap_linux_image_family }}'
+        linux_image_project: '{{ sap_linux_image_project }}'
+        region: '{{ sap_region }}'
+        zone: '{{ sap_zone }}'
+        subnetwork: '{{ sap_subnetwork }}'
+        subnetwork_project: '{{ sap_subnetwork_project }}'
+        boot_disk_size: '{{ sap_boot_disk_size }}'
+        ssh_user: '{{ sap_gce_ssh_user }}'
+        public_key_path: '{{ playbook_dir }}/ssh-key.pub'
+    register: terraform
+  - name: flatten inventory map into a list of maps
+    set_fact:
+      inventory_hosts: |
+         {{ inventory_hosts | default([]) }} + {% set j = joiner(",") %}
+           [{% for host in item.value %}{{ j() }}{ "group": "{{ item.key }}", "host": "{{ host }}" }{% endfor %}]
+    with_dict: '{{ terraform.outputs.inventory.value }}'
+
+  - name: build inventory
+    add_host:
+      name: '{{ item.host }}'
+      ansible_user: '{{ sap_gce_ssh_user }}'
+      ansible_ssh_private_key_file: '{{ playbook_dir }}/ssh-key'
+      terraform: '{{ terraform }}'
+      groups: '{{ item.group }}'
+    loop: '{{ inventory_hosts }}'
+    changed_when: false
+
+  - name: wait for hosts
+    command: >-
+      ssh -i {{ playbook_dir }}/ssh-key \
+        -o StrictHostKeyChecking=no \
+        {{ sap_gce_ssh_user }}@{{ item.host }} \
+        exit
+    register: can_ssh
+    retries: 12
+    delay: 10
+    until: can_ssh is succeeded
+    loop: '{{ inventory_hosts }}'
+    changed_when: false     

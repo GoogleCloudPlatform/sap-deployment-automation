@@ -1,0 +1,58 @@
+---  
+- name: include base primary tasks
+  include_role:
+    name: base
+- name: include storage primary tasks
+  include_role:
+    name: storage-bkup   
+  vars:
+    swapon: True
+    disks:
+      - { name: sapmnt, partition_path : sapmnt }
+      - { name: usrsap, partition_path : usrsap }
+      - { name: swap, partition_path : swap }
+    logvols:
+      sapmnt:
+        size: "{{ sap_mnt_size }}"
+        vol: "sapmnt"
+        mountpoint: /sapmnt
+      usrsap:
+        size: "{{ usr_sap_size }}"
+        vol: usrsap
+        mountpoint: /usr/sap
+    swapvols:
+      swap:
+        size: "{{ swap_size }}"
+        vol: swap 
+        mountpoint: /swap 
+- name: include nw-pre primary tasks
+  include_role:
+    name: nw-pre  
+  vars: 
+    nw_bucket: "{{ nw_bucket }}"
+    folder: "{{ path }}"   
+- name: include nw primary tasks
+  include_role:
+    name: nw   
+  vars:
+    sap_deployment_product_id: "{{ sap_app_deployment_product_id }}"
+    sap_deployment_password: "{{ sap_deployment_password }}"
+    sap_deployment_ascs_instance_nr: "{{ sap_deployment_ascs_instance_nr }}"
+    sap_deployment_ascs_instance_hostname: '{{ terraform.outputs.instance_name.value }}'
+    sap_deployment_pas_instance_nr: "{{ sap_deployment_pas_instance_nr }}"
+    sap_deployment_pas_instance_hostname: '{{ terraform.outputs.instance_name.value }}'
+    sap_nw_sid: "{{ sap_nw_sid }}"
+    sap_deployment_db_sid: "{{ sap_deployment_db_sid }}"
+    template: "{{ template }}"
+    sap_deployment_db_host: "{{ sap_deployment_db_host }}"
+    sap_deployment_hana_instance_nr: "{{ sap_deployment_hana_instance_nr }}"
+    sap_sapinst_package_kernel: "{{ sap_sapinst_package_kernel }}"
+    sap_nw_sapcryptofile: "{{ sap_nw_sapcryptofile }}"
+    sap_deployment_igs_file_name: "{{ sap_deployment_igs_file_name }}"
+    sap_deployment_igs_helper_file_name: "{{ sap_deployment_igs_helper_file_name }}"
+    sap_deployment_sapexedbsar: "{{ sap_deployment_sapexedbsar }}"
+    sap_deployment_sapexesar: "{{ sap_deployment_sapexesar }}"
+    sap_deployment_sapcar_path: "{{ sap_deployment_sapcar_path }}"
+    sap_sapinst_package_load: "{{ sap_sapinst_package_load }}"
+    sap_sapinst_package_client: "{{ sap_sapinst_package_client }}"
+    sap_archives_downloadbasket: "{{ sap_archives_downloadbasket }}"                 
