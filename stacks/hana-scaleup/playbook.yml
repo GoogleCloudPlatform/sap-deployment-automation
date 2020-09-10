@@ -18,7 +18,7 @@
         project_id: '{{ sap_hana_project_id }}'
         service_account_email: '{{ sap_hana_service_account_email }}'
         subnetwork: '{{ sap_hana_subnetwork }}'
-        subnetwork_project: '{{ sap_subnetwork_project }}'
+        subnetwork_project: '{{ sap_hana_subnetwork_project_id }}'
         zone: '{{ sap_hana_zone }}'
 
 - name: SAP HANA configure
