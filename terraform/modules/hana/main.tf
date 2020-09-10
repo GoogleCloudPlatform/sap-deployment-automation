@@ -1,4 +1,4 @@
-resource "google_compute_disk" "gcp_sap_hana_sd_0" {
+resource "google_compute_disk" "gcp_sap_hana_sd_data" {
   project = var.project_id
   name    = "${var.instance_name}-${var.disk_name_0}-${var.device_name_pd_ssd}"
   type    = var.disk_type_0
@@ -14,7 +14,7 @@ resource "google_compute_disk" "gcp_sap_hana_sd_0" {
   }
 }
 
-resource "google_compute_disk" "gcp_sap_hana_sd_1" {
+resource "google_compute_disk" "gcp_sap_hana_sd_backup" {
   project = var.project_id
   name    = "${var.instance_name}-${var.disk_name_1}-${var.device_name_pd_hdd}"
   type    = var.disk_type_1
@@ -34,27 +34,13 @@ resource "google_compute_address" "gcp_sap_hana_ip" {
   count = var.public_ip ? 1 : 0
 
   project = var.project_id
-  name    = var.instance_name
-  region  = local.region
+  name    = var.address_name
+  region  = var.region
 }
 
 data "google_compute_image" "image" {
   family  = var.linux_image_family
   project = var.linux_image_project
-}
-
-resource "google_compute_attached_disk" "attached_disk_0" {
-  project     = var.project_id
-  device_name = "${var.instance_name}-${var.disk_name_0}-${var.device_name_pd_ssd}"
-  disk        = google_compute_disk.gcp_sap_hana_sd_0.self_link
-  instance    = google_compute_instance.gcp_sap_hana.self_link
-}
-
-resource "google_compute_attached_disk" "attached_disk_1" {
-  project     = var.project_id
-  device_name = "${var.instance_name}-${var.disk_name_1}-${var.device_name_pd_hdd}"
-  disk        = google_compute_disk.gcp_sap_hana_sd_1.self_link
-  instance    = google_compute_instance.gcp_sap_hana.self_link
 }
 
 resource "google_compute_instance" "gcp_sap_hana" {
@@ -81,11 +67,19 @@ resource "google_compute_instance" "gcp_sap_hana" {
     }
   }
 
+  attached_disk {
+    source      = google_compute_disk.gcp_sap_hana_sd_data.self_link
+    device_name = google_compute_disk.gcp_sap_hana_sd_data.name
+  }
 
+  attached_disk {
+    source      = google_compute_disk.gcp_sap_hana_sd_backup.self_link
+    device_name = google_compute_disk.gcp_sap_hana_sd_backup.name
+  }
 
   network_interface {
     subnetwork         = var.subnetwork
-    subnetwork_project = local.subnetwork_project
+    subnetwork_project = var.subnetwork_project
 
     dynamic "access_config" {
       for_each = var.public_ip ? google_compute_address.gcp_sap_hana_ip : []
@@ -134,4 +128,10 @@ resource "google_compute_instance" "gcp_sap_hana" {
     email  = var.service_account_email
     scopes = ["cloud-platform"]
   }
+}
+
+data "google_compute_instance" "sap_instance" {
+  name    = google_compute_instance.gcp_sap_hana.name
+  project = var.project_id
+  zone    = var.zone
 }

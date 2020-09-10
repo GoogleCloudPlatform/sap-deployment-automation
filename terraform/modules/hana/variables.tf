@@ -6,6 +6,10 @@ variable "zone" {
   description = "The zone that the instance should be created in."
 }
 
+variable "region" {
+  description = "Region to deploy the resources. Should be in the same region as the zone."
+}
+
 variable "instance_name" {
   description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
 }
@@ -107,7 +111,7 @@ variable "subnetwork" {
 
 variable "subnetwork_project" {
   description = "The name or self_link of the subnetwork project where the isntance will be deployed. The subnetwork must exist in the same region this instance will be created in."
-  default     = ""
+  default     = "albatross-duncanl-sandbox-2"
 }
 
 variable "network_tags" {
@@ -119,6 +123,11 @@ variable "network_tags" {
 variable "public_ip" {
   description = "Determines whether a public IP address is added to your VM instance."
   default     = true
+}
+
+variable "address_name" {
+  description = "Name of static IP adress to add to the instance's access config."
+  default     = ""
 }
 
 variable "sap_hana_deployment_bucket" {

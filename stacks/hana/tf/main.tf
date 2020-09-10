@@ -1,3 +1,5 @@
+provider "google" {}
+
 module "gcp_sap_hana" {
   source                     = "../../../terraform/modules/hana"
   subnetwork                 = var.subnetwork
@@ -5,8 +7,9 @@ module "gcp_sap_hana" {
   linux_image_project        = var.linux_image_project
   instance_name              = var.instance_name
   instance_type              = var.instance_type
-  subnetwork_project         = local.subnetwork_project
+  subnetwork_project         = var.subnetwork_project
   project_id                 = var.project_id
+  region                     = var.region
   zone                       = var.zone
   service_account_email      = var.service_account_email
   boot_disk_type             = var.boot_disk_type
@@ -29,6 +32,7 @@ module "gcp_sap_hana" {
   sap_hana_sidadm_uid        = 900
   sap_hana_sapsys_gid        = 900
   public_ip                  = var.public_ip
+  address_name               = "${var.instance_name}-reservedip"
   gce_ssh_user               = var.gce_ssh_user
   gce_ssh_pub_key_file       = var.gce_ssh_pub_key_file
 }

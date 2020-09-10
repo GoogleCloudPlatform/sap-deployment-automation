@@ -8,6 +8,11 @@ variable "zone" {
   default     = "us-central1-a"
 }
 
+variable "region" {
+  description = "Region to deploy the resources. Should be in the same region as the zone."
+  default     = "us-central1"
+}
+
 variable "instance_name" {
   description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
   default     = "saphanasles-bg"
@@ -85,7 +90,7 @@ variable "subnetwork" {
 
 variable "subnetwork_project" {
   description = "The name or self_link of the subnetwork project where the isntance will be deployed. The subnetwork must exist in the same region this instance will be created in."
-  default     = ""
+  default     = "albatross-duncanl-sandbox-2"
 }
 
 variable "network_tags" {
@@ -144,6 +149,11 @@ variable "public_ip" {
   default     = true
 }
 
+variable "address_name" {
+  description = "Name of static IP adress to add to the instance's access config."
+  default     = "sap-hana-single-node"
+}
+
 variable "gce_ssh_user" {
   description = "GCE ssh user"
   default     = "balaguduru"
@@ -152,4 +162,15 @@ variable "gce_ssh_user" {
 variable "gce_ssh_pub_key_file" {
   description = "GCE ssh user pub key file name"
   default     = "~/.ssh/id_rsa.pub"
+}
+
+variable "gce_ssh_priv_key_file" {
+  description = "GCE ssh user private key file name"
+  default     = "~/.ssh/id_rsa"
+}
+
+variable "run_provisioner" {
+  type        = bool
+  description = "Whether or not to run the Ansible provisioner"
+  default     = true
 }
