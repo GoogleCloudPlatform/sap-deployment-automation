@@ -17,18 +17,6 @@ create_backup_volume: "true"
 sap_hostagent_file_name: saphostagentrpm_44-20009394.rpm
 sap_hana_bundle_file_name: IMDB_SERVER20_047_0-80002031.SAR
 sap_hana_sapcar_file_name: SAPCAR_1320-80000935.EXE
-<<<<<<< HEAD
-sap_hostagent_file_name: saphostagentrpm_44-20009394.rpm
-sap_install_files_bucket: nw-ansible
-sap_instance_name: hanslbg
-sap_instance_type: n1-highmem-32
-sap_linux_image_family: rhel-7-7-sap-ha
-sap_linux_image_project: rhel-sap-cloud
-sap_tf_state_bucket: sap-terraform-state-bg
-sap_subnetwork: app2
-sap_subnetwork_project: ''
-sap_zone: us-central1-a
-=======
 sap_hana_data_partition_name: hanadata
 sap_hana_backup_partition_name: hanabackup
 sap_hana_shared_mountpoint: /hana/shared
@@ -51,4 +39,3 @@ sap_hana_deployment_common_master_password: Google123
 sap_hana_deployment_ase_user_password: Google123
 sap_hana_deployment_sidadm_password: Google123
 sap_hana_deployment_system_restart: "y"
->>>>>>> SAP hana scaleup ansible role code
