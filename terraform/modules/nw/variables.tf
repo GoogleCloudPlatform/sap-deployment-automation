@@ -44,22 +44,22 @@ variable "autodelete_disk" {
 
 variable "usr_sap_size" {
   description = "USR SAP size"
-  default = 0
+  default     = 0
 }
 
 variable "sap_mnt_size" {
   description = "SAP mount size"
-  default = 0
+  default     = 0
 }
 
 variable "swap_size" {
   description = "SWAP Size"
-  default = 0
+  default     = 0
 }
 
 variable "disk_type" {
   description = "The GCE data disk type. May be set to pd-standard (for PD HDD) or pd-ssd."
-  default = ""
+  default     = ""
 }
 
 variable "boot_disk_size" {

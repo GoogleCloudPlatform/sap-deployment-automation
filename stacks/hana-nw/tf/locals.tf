@@ -47,13 +47,13 @@ locals {
     "m2-ultramem-416" = 11766
   }
 
-  hana_log_size    = min(512, max(64, lookup(local.instance_mem_map, var.hana_instance_type) / 2))
-  hana_data_size   = lookup(local.instance_mem_map, var.hana_instance_type) * 15 / 10
-  hana_shared_size = min(1024, lookup(local.instance_mem_map, var.hana_instance_type))
-  hana_usr_size    = 32
-  hana_backup_size = lookup(local.instance_mem_map, var.hana_instance_type) * 2
-  hana_pd_ssd_size      = max(lookup(local.hana_pd_ssd_map, var.hana_instance_type), (local.hana_log_size + local.hana_data_size + local.hana_shared_size + local.hana_usr_size))
-  hana_pd_hdd_size      = local.hana_backup_size
-  hana_instance_name    = "${var.instance_name}-hana"
-  nw_instance_name      = "${var.instance_name}-nw"
+  hana_log_size      = min(512, max(64, lookup(local.instance_mem_map, var.hana_instance_type) / 2))
+  hana_data_size     = lookup(local.instance_mem_map, var.hana_instance_type) * 15 / 10
+  hana_shared_size   = min(1024, lookup(local.instance_mem_map, var.hana_instance_type))
+  hana_usr_size      = 32
+  hana_backup_size   = lookup(local.instance_mem_map, var.hana_instance_type) * 2
+  hana_pd_ssd_size   = max(lookup(local.hana_pd_ssd_map, var.hana_instance_type), (local.hana_log_size + local.hana_data_size + local.hana_shared_size + local.hana_usr_size))
+  hana_pd_hdd_size   = local.hana_backup_size
+  hana_instance_name = "${var.instance_name}-hana"
+  nw_instance_name   = "${var.instance_name}-nw"
 }

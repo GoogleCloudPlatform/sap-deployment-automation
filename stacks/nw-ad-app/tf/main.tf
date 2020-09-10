@@ -19,30 +19,30 @@ provider "google" {
 }
 
 module "app" {
-  source                 = "../../../terraform/modules/nw"
-  subnetwork             = var.subnetwork
-  subnetwork_project     = var.subnetwork_project
-  linux_image_family     = var.linux_image_family
-  linux_image_project    = var.linux_image_project
-  autodelete_disk        = "true"
-  public_ip              = var.public_ip
-  sap_deployment_debug   = var.sap_deployment_debug
-  swap_size              = var.swap_size
-  instance_name          = var.sap_instance_name
-  instance_type          = var.instance_type
-#  region                 = var.region
-  network_tags           = var.network_tags
-  project_id             = var.project_id
-  zone                   = var.zone
-  boot_disk_size         = var.boot_disk_size
-  boot_disk_type         = var.boot_disk_type
-  disk_type              = var.disk_type
+  source               = "../../../terraform/modules/nw"
+  subnetwork           = var.subnetwork
+  subnetwork_project   = var.subnetwork_project
+  linux_image_family   = var.linux_image_family
+  linux_image_project  = var.linux_image_project
+  autodelete_disk      = "true"
+  public_ip            = var.public_ip
+  sap_deployment_debug = var.sap_deployment_debug
+  swap_size            = var.swap_size
+  instance_name        = var.sap_instance_name
+  instance_type        = var.instance_type
+  #  region                 = var.region
+  network_tags          = var.network_tags
+  project_id            = var.project_id
+  zone                  = var.zone
+  boot_disk_size        = var.boot_disk_size
+  boot_disk_type        = var.boot_disk_type
+  disk_type             = var.disk_type
   service_account_email = "terraform@albatross-duncanl-sandbox-2.iam.gserviceaccount.com"
 }
 
 
 data "google_compute_subnetwork" "subnetwork" {
-  name   = var.subnetwork
-  region = var.region
+  name    = var.subnetwork
+  region  = var.region
   project = var.project_id
 }

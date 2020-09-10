@@ -16,9 +16,9 @@
 
 
 locals {
-  device_name_1 = "${var.instance_name}-${var.device_1}"
-  device_name_2 = "${var.instance_name}-${var.device_2}"
-  device_name_3 = "${var.instance_name}-${var.device_3}"
+  device_name_1      = "${var.instance_name}-${var.device_1}"
+  device_name_2      = "${var.instance_name}-${var.device_2}"
+  device_name_3      = "${var.instance_name}-${var.device_3}"
   subnetwork_project = var.subnetwork_project == "" ? var.project_id : var.subnetwork_project
 }
 
@@ -27,8 +27,8 @@ resource "google_compute_disk" "gcp_nw_pd_0" {
   name    = "${var.instance_name}-nw-0"
   type    = var.disk_type
   zone    = var.zone
-#  count   = var.usr_sap_size > 0 ? 1 : 0
-  size    = var.usr_sap_size
+  #  count   = var.usr_sap_size > 0 ? 1 : 0
+  size = var.usr_sap_size
 }
 
 resource "google_compute_disk" "gcp_nw_pd_1" {
@@ -36,8 +36,8 @@ resource "google_compute_disk" "gcp_nw_pd_1" {
   name    = "${var.instance_name}-nw-1"
   type    = var.disk_type
   zone    = var.zone
-#  count   = var.sap_mnt_size > 0 ? 1 : 0
-  size    = var.sap_mnt_size
+  #  count   = var.sap_mnt_size > 0 ? 1 : 0
+  size = var.sap_mnt_size
 }
 
 resource "google_compute_disk" "gcp_nw_pd_2" {
@@ -45,8 +45,8 @@ resource "google_compute_disk" "gcp_nw_pd_2" {
   name    = "${var.instance_name}-nw-2"
   type    = var.disk_type
   zone    = var.zone
-#  count   = var.swap_size > 0 ? 1 : 0
-  size    = var.swap_size
+  #  count   = var.swap_size > 0 ? 1 : 0
+  size = var.swap_size
 }
 
 resource "google_compute_attached_disk" "gcp_nw_attached_pd_0" {
@@ -74,8 +74,8 @@ resource "google_compute_attached_disk" "gcp_nw_attached_pd_2" {
 }
 
 data "google_compute_image" "image" {
- family  = var.linux_image_family
- project = var.linux_image_project
+  family  = var.linux_image_family
+  project = var.linux_image_project
 }
 
 resource "google_compute_instance" "gcp_nw" {
@@ -129,7 +129,7 @@ resource "google_compute_instance" "gcp_nw" {
   lifecycle {
     # Ignore changes in the instance metadata, since it is modified by the SAP startup script.
     # https://github.com/terraform-providers/terraform-provider-google/issues/2098
-    ignore_changes = [metadata,attached_disk]
+    ignore_changes = [metadata, attached_disk]
   }
 
 

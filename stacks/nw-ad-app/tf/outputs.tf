@@ -9,7 +9,7 @@ output "zone" {
 
 output "app_address" {
   description = "instance private IP"
-  value = module.app.instance_external_ip
+  value       = module.app.instance_external_ip
 }
 
 output "sap_image_family" {
@@ -22,6 +22,6 @@ output "subnet_cidr" {
 
 output "app_private_ip" {
   description = "instance private IP"
-  value = module.app.instance_internal_ip
+  value       = module.app.instance_internal_ip
 }
 

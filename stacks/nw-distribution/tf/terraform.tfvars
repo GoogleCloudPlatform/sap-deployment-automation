@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-network_tags = ["ssh","http-server","https-server"]
+network_tags = ["ssh", "http-server", "https-server"]
 
 instance_name = "sm-s4hana"
 
@@ -26,7 +26,7 @@ disk_type = "pd-standard"
 
 sap_deployment_debug = "false"
 
-public_ip              = true
+public_ip = true
 
 usr_sap_size = 150
 
