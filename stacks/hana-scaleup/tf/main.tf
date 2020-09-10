@@ -7,7 +7,7 @@ module "gcp_sap_hana" {
   linux_image_project        = var.linux_image_project
   instance_name              = var.instance_name
   instance_type              = var.instance_type
-  subnetwork_project         = var.subnetwork_project
+  subnetwork_project         = local.subnetwork_project
   project_id                 = var.project_id
   region                     = var.region
   zone                       = var.zone

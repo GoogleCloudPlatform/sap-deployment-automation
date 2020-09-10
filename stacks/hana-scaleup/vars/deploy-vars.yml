@@ -12,7 +12,6 @@ sap_hana_service_account_email: terraform-managed-sa@albatross-duncanl-sandbox-2
 sap_hana_region: us-central1
 sap_hana_zone: us-central1-a
 sap_hana_subnetwork: app2
-sap_hana_subnetwork_project_id: albatross-duncanl-sandbox-2
 sap_hana_boot_disk_size: 30
 sap_hana_gce_ssh_user: balaguduru
 sap_install_files_bucket: nw-ansible
