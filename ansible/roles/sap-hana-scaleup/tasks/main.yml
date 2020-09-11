@@ -6,7 +6,7 @@
 
 - name: Include common role
   include_role:
-    name: common
+    name: common-delete
 
 - name: Include SAP hostagent install role
   include_role:
