@@ -127,3 +127,7 @@ output "hana_ilb_ip" {
 output "health_check_port" {
   value = local.health_check["port"]
 }
+
+output "inventory" {
+  value = { hana = [google_compute_address.gcp_sap_hana_intip_primary.address, google_compute_address.gcp_sap_hana_intip_secondary.address] }
+}

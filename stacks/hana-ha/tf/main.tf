@@ -1,38 +1,14 @@
 provider "google" {}
 
 module "sap_hana_template" {
-  source       = "../../../terraform-google-vm//modules/instance_template"
+  source       = "git::ssh://balabharat.guduru@googlecloud.corp-partner.google.com@source.developers.google.com:2022/p/albatross-duncanl-sandbox-2/r/terraform-google-vm//modules/instance_template"
   name_prefix  = "${var.instance_name}-instance-template"
   machine_type = var.instance_type
   project_id   = var.project_id
-  region       = local.region
-  startup_script = contains([element(split("-", var.source_image_family), 0)], "rhel") ? templatefile("${path.module}/files/redhat.sh",
-    {
-      sap_install_files_bucket  = var.sap_install_files_bucket
-      sap_hostagent_file_name   = var.sap_hostagent_file_name
-      sap_hana_bundle_file_name = var.sap_hana_bundle_file_name
-      sap_hana_sapcar_file_name = var.sap_hana_sapcar_file_name
-    }
-    ) : templatefile("${path.module}/files/sles.sh",
-    {
-      sap_install_files_bucket  = var.sap_install_files_bucket
-      sap_hostagent_file_name   = var.sap_hostagent_file_name
-      sap_hana_bundle_file_name = var.sap_hana_bundle_file_name
-      sap_hana_sapcar_file_name = var.sap_hana_sapcar_file_name
-    }
-  )
+  region       = var.region
 
   metadata = {
-    sap_hana_deployment_bucket = var.sap_hana_deployment_bucket
-    sap_deployment_debug       = var.sap_deployment_debug
-    post_deployment_script     = var.post_deployment_script
-    sap_hana_sid               = var.sap_hana_sid
-    sap_hana_instance_number   = var.sap_hana_instance_number
-    sap_hana_sidadm_password   = var.sap_hana_sidadm_password
-    sap_hana_system_password   = var.sap_hana_system_password
-    sap_hana_sidadm_uid        = var.sap_hana_sidadm_uid
-    sap_hana_sapsys_gid        = var.sap_hana_sapsys_gid
-    ssh-keys                   = "${var.gce_ssh_user}:${file("${var.gce_ssh_pub_key_file}")}"
+    ssh-keys = "${var.gce_ssh_user}:${file("${var.gce_ssh_pub_key_file}")}"
   }
 
   service_account = {
@@ -45,7 +21,7 @@ module "sap_hana_template" {
   }
 
   subnetwork         = var.subnetwork
-  subnetwork_project = var.subnetwork_project
+  subnetwork_project = local.subnetwork_project
   tags               = var.network_tags
   can_ip_forward     = true
 
@@ -61,8 +37,8 @@ resource "google_compute_address" "gcp_sap_hana_intip_primary" {
   name         = "${var.instance_name}-int-primary"
   address_type = "INTERNAL"
   subnetwork   = var.subnetwork
-  region       = local.region
-  project      = var.subnetwork_project
+  region       = var.region
+  project      = local.subnetwork_project
   purpose      = "GCE_ENDPOINT"
 }
 
@@ -70,18 +46,18 @@ resource "google_compute_address" "gcp_sap_hana_intip_secondary" {
   name         = "${var.instance_name}-int-secondary"
   address_type = "INTERNAL"
   subnetwork   = var.subnetwork
-  region       = local.region
-  project      = var.subnetwork_project
+  region       = var.region
+  project      = local.subnetwork_project
   purpose      = "GCE_ENDPOINT"
 }
 
 module "sap_hana_umig_primary" {
-  source             = "../../../terraform-google-vm//modules/umig"
+  source             = "git::ssh://balabharat.guduru@googlecloud.corp-partner.google.com@source.developers.google.com:2022/p/albatross-duncanl-sandbox-2/r/terraform-google-vm//modules/umig"
   project_id         = var.project_id
-  region             = local.region
+  region             = var.region
   zone               = var.zone_a
   subnetwork         = var.subnetwork
-  subnetwork_project = var.subnetwork_project
+  subnetwork_project = local.subnetwork_project
   static_ips         = [google_compute_address.gcp_sap_hana_intip_primary.address]
   hostname           = substr("${var.instance_name}-pri", 0, 11) # Limit length to 12 charecters
   num_instances      = var.target_size
@@ -89,12 +65,12 @@ module "sap_hana_umig_primary" {
 }
 
 module "sap_hana_umig_secondary" {
-  source             = "../../../terraform-google-vm//modules/umig"
+  source             = "git::ssh://balabharat.guduru@googlecloud.corp-partner.google.com@source.developers.google.com:2022/p/albatross-duncanl-sandbox-2/r/terraform-google-vm//modules/umig"
   project_id         = var.project_id
-  region             = local.region
+  region             = var.region
   zone               = var.zone_b
   subnetwork         = var.subnetwork
-  subnetwork_project = var.subnetwork_project
+  subnetwork_project = local.subnetwork_project
   static_ips         = [google_compute_address.gcp_sap_hana_intip_secondary.address]
   hostname           = substr("${var.instance_name}-sec", 0, 11) # Limit length to 12 charecters
   num_instances      = var.target_size
@@ -209,9 +185,9 @@ resource "google_compute_firewall" "hana_healthcheck_firewall_rule" {
 }
 
 module "sap_hana_ilb" {
-  source       = "../../../terraform-google-lb-internal"
+  source       = "git::ssh://balabharat.guduru@googlecloud.corp-partner.google.com@source.developers.google.com:2022/p/albatross-duncanl-sandbox-2/r/terraform-google-lb-internal"
   project      = var.project_id
-  region       = local.region
+  region       = var.region
   network      = var.network
   subnetwork   = var.subnetwork
   name         = "${var.instance_name}-ilb"

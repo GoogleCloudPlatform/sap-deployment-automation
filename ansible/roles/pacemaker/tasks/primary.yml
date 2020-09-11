@@ -1,4 +1,4 @@
 ---
 - name: determine if node is primary
   set_fact:
-    is_primary: '{{ ansible_default_ipv4.address == sap_primary_instance_ip }}'
+    is_primary: '{{ ansible_default_ipv4.address == sap_hana_primary_instance_ip }}'

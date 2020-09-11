@@ -3,9 +3,13 @@
 sap_hana_gce_ssh_pub_key: ~/.ssh/id_rsa.pub
 sap_hana_gce_ssh_priv_key: ~/.ssh/id_rsa
 sap_hana_instance_name: hanslbg
+sap_hana_instance_type: n1-highmem-32
 sap_hana_state_bucket: sap-terraform-state-bg
 sap_hana_source_image_family: rhel-7-7-sap-ha
 sap_hana_source_image_project: rhel-sap-cloud
+sap_hana_project_id: albatross-duncanl-sandbox-2
+sap_hana_service_account_email: terraform-managed-sa@albatross-duncanl-sandbox-2.iam.gserviceaccount.com
+sap_hana_region: us-central1
 sap_hana_zone_a: us-central1-a
 sap_hana_zone_b: us-central1-b
 sap_hana_subnetwork: app2
@@ -15,3 +19,29 @@ sap_install_files_bucket: nw-ansible
 sap_hostagent_file_name: saphostagentrpm_44-20009394.rpm
 sap_hana_bundle_file_name: IMDB_SERVER20_047_0-80002031.SAR
 sap_hana_sapcar_file_name: SAPCAR_1320-80000935.EXE
+sap_hana_data_partition_name: hanadata
+sap_hana_backup_partition_name: hanabackup
+sap_hana_shared_mountpoint: /hana/shared
+sap_hana_data_mountpoint: /hana/data
+sap_hana_log_mountpoint: /hana/log
+sap_hana_usr_mountpoint: /usr/sap
+sap_hana_backup_mountpoint: /hanabackup
+sap_hana_deployment_hana_sid: RH1
+sap_hana_deployment_hana_instance_number: "00"
+sap_hana_deployment_hana_db_system_password: Google123
+sap_hostagent_rpm_remote_path: "/hana/shared/software"
+sap_hana_monitoring_user: rhelhasync        # use slehasync for SLES 
+sap_hana_user_store_key: SAPHANARH2SR     # use SLEHALOC for SLES
+sap_preconfigure_modify_etc_hosts: true
+sap_domain: automation.local
+sap_hana_deployment_root_password: Google123
+sap_hana_deployment_sapadm_password: Google123
+sap_hana_deployment_hana_env_type: development
+sap_hana_deployment_hana_mem_restrict: "n"
+sap_hana_deployment_common_master_password: Google123
+sap_hana_deployment_ase_user_password: Google123
+sap_hana_deployment_sidadm_password: Google123
+sap_hana_deployment_system_restart: "y"
+sap_hana_backup_name: "/{{ sap_hana_backup_partition_name }}/data/pre_ha_config"
+sap_hana_hsr_operation_mode: logreplay
+sap_hana_hsr_replication_mode: syncmem

@@ -47,13 +47,14 @@ locals {
     "m2-ultramem-416" = 11766
   }
 
-  hana_log_size    = min(512, max(64, lookup(local.instance_mem_map, var.instance_type) / 2))
-  hana_data_size   = lookup(local.instance_mem_map, var.instance_type) * 15 / 10
-  hana_shared_size = min(1024, lookup(local.instance_mem_map, var.instance_type))
-  hana_usr_size    = 32
-  hana_backup_size = lookup(local.instance_mem_map, var.instance_type) * 2
-  pd_ssd_size      = max(lookup(local.pd_ssd_map, var.instance_type), (local.hana_log_size + local.hana_data_size + local.hana_shared_size + local.hana_usr_size))
-  pd_hdd_size      = local.hana_backup_size
+  hana_log_size      = min(512, max(64, lookup(local.instance_mem_map, var.instance_type) / 2))
+  hana_data_size     = lookup(local.instance_mem_map, var.instance_type) * 15 / 10
+  hana_shared_size   = min(1024, lookup(local.instance_mem_map, var.instance_type))
+  hana_usr_size      = 32
+  hana_backup_size   = lookup(local.instance_mem_map, var.instance_type) * 2
+  pd_ssd_size        = max(lookup(local.pd_ssd_map, var.instance_type), (local.hana_log_size + local.hana_data_size + local.hana_shared_size + local.hana_usr_size))
+  pd_hdd_size        = local.hana_backup_size
+  subnetwork_project = var.subnetwork_project == "" ? var.project_id : var.subnetwork_project
 
   named_ports = [{
     name = "hana-health-check-port"
@@ -74,6 +75,4 @@ locals {
     request_path        = "/"
     host                = ""
   }
-
-  region = join("-", slice(split("-", var.zone_a), 0, 2))
 }
