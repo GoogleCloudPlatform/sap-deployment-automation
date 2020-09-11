@@ -9,7 +9,6 @@ module "gcp_sap_hana" {
   instance_type              = var.instance_type
   subnetwork_project         = local.subnetwork_project
   project_id                 = var.project_id
-  region                     = var.region
   zone                       = var.zone
   service_account_email      = var.service_account_email
   boot_disk_type             = var.boot_disk_type
