@@ -73,11 +73,3 @@ output "sap_hana_bundle_file_name" {
 output "sap_hana_sapcar_file_name" {
   value = var.sap_hana_sapcar_file_name
 }
-
-output "device_name_hana_data" {
-  value = module.gcp_hana.device_name_hana_data
-}
-
-output "device_name_hana_backup" {
-  value = module.gcp_hana.device_name_hana_backup
-}
