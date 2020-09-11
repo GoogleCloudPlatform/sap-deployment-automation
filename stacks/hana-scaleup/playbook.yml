@@ -6,6 +6,7 @@
   roles:
   - role: forminator
     vars:
+      sap_tf_state_bucket: '{{ sap_hana_state_bucket }}'
       sap_tf_state_bucket_prefix: '{{ sap_hana_instance_name }}'
       sap_tf_project_path: ./tf
       sap_state: '{{ state | default("present") }}'
@@ -18,7 +19,7 @@
         project_id: '{{ sap_hana_project_id }}'
         service_account_email: '{{ sap_hana_service_account_email }}'
         subnetwork: '{{ sap_hana_subnetwork }}'
-        subnetwork_project: '{{ sap_hana_subnetwork_project_id }}'
+        subnetwork_project: '{{ sap_hana_subnetwork_project_id | default("") }}'
         zone: '{{ sap_hana_zone }}'
 
 - name: SAP HANA configure
