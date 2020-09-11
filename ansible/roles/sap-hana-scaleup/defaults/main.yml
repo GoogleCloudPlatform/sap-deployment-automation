@@ -1,0 +1,42 @@
+sap_hana_bundle_file_name_default: IMDB_SERVER20_047_0-80002031.SAR
+sap_hana_sapcar_file_name_default: SAPCAR_1320-80000935.EXE
+sap_hostagent_file_name_default: saphostagentrpm_44-20009394.rpm
+
+sap_hana_backup_size_default: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
+sap_hana_data_size_default: '{{ terraform.outputs.hana_data_size.value }}G'
+sap_hana_log_size_default: '{{ terraform.outputs.hana_log_size.value }}G'
+sap_hana_shared_size_default: '{{ terraform.outputs.hana_shared_size.value }}G'
+sap_hana_usr_size_default: '{{ terraform.outputs.hana_usr_size.value }}G'
+
+sap_hana_disks_defaults:
+- name: '{{ terraform.outputs.instance_attached_disks_data.value }}'
+  partition_path: hanadata
+- name: '{{ terraform.outputs.instance_attached_disks_backup.value }}'
+  partition_path : hanabackup
+
+sap_hana_logvols_defaults:
+  backup:
+    size: "{{ sap_hana_backup_size | default(sap_hana_backup_size_default) }}"
+    vol: hanabackup
+    mountpoint: /hanabackup
+    fstype: xfs
+  data:
+    size: "{{ sap_hana_data_size | default(sap_hana_data_size_default) }}"
+    vol: hanadata
+    mountpoint: /hana/data
+    fstype: xfs
+  log:
+    size: "{{ sap_hana_log_size | default(sap_hana_log_size_default) }}"
+    vol: hanadata
+    mountpoint: /hana/log
+    fstype: xfs
+  shared:
+    size: "{{ sap_hana_shared_size | default(sap_hana_shared_size_default) }}"
+    vol: hanadata
+    mountpoint: /hana/shared
+    fstype: xfs
+  usr:
+    size: "{{ sap_hana_usr_size | default(sap_hana_usr_size_default) }}"
+    vol: hanadata
+    mountpoint: /usr/sap
+    fstype: xfs

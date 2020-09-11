@@ -3,28 +3,42 @@
 - name: Include storage role
   include_role:
     name: storage-delete
+  vars:
+    disks: "{{ sap_hana_disks | default(sap_hana_disks_defaults) }}"
+    logvols: "{{ sap_hana_logvols | default(sap_hana_logvols_defaults) }}"
+    swapon: "{{ sap_hana_swapon | default(false) }}"
 
 - name: Include common role
   include_role:
     name: common-delete
+  vars:
+    sap_hana_bundle_file_name: "{{ sap_hana_bundle_file_name_default }}"
+    sap_hana_sapcar_file_name: "{{ sap_hana_sapcar_file_name_default }}"
+    sap_hostagent_file_name: "{{ sap_hostagent_file_name_default }}"
 
 - name: Include SAP hostagent install role
   include_role:
     name: sap-hostagent
+  vars:
+    sap_hostagent_file_name: "{{ sap_hostagent_file_name_default }}"
 
 - name: Include sap pre-configure role
   include_role:
     name: sap-preconfigure
-  when: sap_image_family == "RedHat"
+  when: ansible_os_family == "RedHat"
 
 - name: Include sap hana pre-configure role
   include_role:
     name: sap-hana-preconfigure
-  when: sap_image_family == "RedHat"
+  when: ansible_os_family == "RedHat"
 
 - name: Include sap hana install role
   include_role:
     name: sap-hana-install
+  vars:
+    sap_hana_bundle_file_name: "{{ sap_hana_bundle_file_name_default }}"
+    sap_hana_sapcar_file_name: "{{ sap_hana_sapcar_file_name_default }}"
+    sap_hostagent_file_name: "{{ sap_hostagent_file_name_default }}"
 
 - name: Include sap hana start role
   include_role:
