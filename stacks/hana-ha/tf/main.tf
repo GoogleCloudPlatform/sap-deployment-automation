@@ -1,7 +1,7 @@
 provider "google" {}
 
 module "sap_hana_template" {
-  source       = "git::ssh://balabharat.guduru@googlecloud.corp-partner.google.com@source.developers.google.com:2022/p/albatross-duncanl-sandbox-2/r/terraform-google-vm//modules/instance_template"
+  source       = "../../../terraform/modules/terraform-google-vm//modules/instance_template"
   name_prefix  = "${var.instance_name}-instance-template"
   machine_type = var.instance_type
   project_id   = var.project_id
@@ -52,7 +52,7 @@ resource "google_compute_address" "gcp_sap_hana_intip_secondary" {
 }
 
 module "sap_hana_umig_primary" {
-  source             = "git::ssh://balabharat.guduru@googlecloud.corp-partner.google.com@source.developers.google.com:2022/p/albatross-duncanl-sandbox-2/r/terraform-google-vm//modules/umig"
+  source             = "../../../terraform/modules/terraform-google-vm//modules/umig"
   project_id         = var.project_id
   region             = var.region
   zone               = var.zone_a
@@ -65,7 +65,7 @@ module "sap_hana_umig_primary" {
 }
 
 module "sap_hana_umig_secondary" {
-  source             = "git::ssh://balabharat.guduru@googlecloud.corp-partner.google.com@source.developers.google.com:2022/p/albatross-duncanl-sandbox-2/r/terraform-google-vm//modules/umig"
+  source             = "../../../terraform/modules/terraform-google-vm//modules/umig"
   project_id         = var.project_id
   region             = var.region
   zone               = var.zone_b
@@ -185,7 +185,7 @@ resource "google_compute_firewall" "hana_healthcheck_firewall_rule" {
 }
 
 module "sap_hana_ilb" {
-  source       = "git::ssh://balabharat.guduru@googlecloud.corp-partner.google.com@source.developers.google.com:2022/p/albatross-duncanl-sandbox-2/r/terraform-google-lb-internal"
+  source       = "../../../terraform/modules/terraform-google-lb-internal"
   project      = var.project_id
   region       = var.region
   network      = var.network

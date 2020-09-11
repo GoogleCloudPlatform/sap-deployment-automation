@@ -63,7 +63,7 @@
 
 - block:
   - name: join cluster on secondary
-    command: ha-cluster-join -y -c {{ sap_hana_primary_instance_ip }} csync2
+    command: ha-cluster-join -y -c {{ sap_primary_instance_ip }} csync2
     args:
       creates: /etc/corosync/corosync.conf
     register: join_cluster_secondary

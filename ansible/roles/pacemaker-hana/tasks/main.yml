@@ -3,6 +3,8 @@
   include_role:
     name: pacemaker
     tasks_from: primary
+  vars: 
+    sap_primary_instance_ip: '{{ sap_hana_primary_instance_ip }}'
 
 - name: include pacemaker install tasks
   include_role:
@@ -23,6 +25,7 @@
   vars:
     sap_primary_instance: '{{ sap_hana_primary_instance_name }}'
     sap_secondary_instance: '{{ sap_hana_secondary_instance_name }}'
+    sap_primary_instance_ip: '{{ sap_hana_primary_instance_ip }}'
 
 - name: include pacemaker wait tasks
   include_role:
