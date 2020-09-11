@@ -10,7 +10,7 @@ output "zone" {
 
 output "address" {
   description = "instance private IP"
-  value = module.gcp_netweaver.instance_external_ip
+  value       = module.gcp_netweaver.instance_external_ip
 }
 
 output "sap_image_family" {
@@ -39,7 +39,4 @@ output "device_name_sapmnt" {
 
 output "device_name_swap" {
   value = module.gcp_netweaver.device_name_swap
-}
-output "inventory" {
-  value = { nw = [module.gcp_netweaver.instance_external_ip] }
 }

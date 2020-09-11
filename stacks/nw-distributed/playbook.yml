@@ -1,4 +1,3 @@
----
 - name: SAP NW deploy
   hosts: 127.0.0.1
   connection: local
@@ -6,7 +5,7 @@
   - role: forminator
     vars:
       sap_tf_project_path: './tf'
-      sap_tf_state_bucket_prefix: '{{ sap_instance_name }}'
+      sap_tf_state_bucket_prefix: '{{ sap_ascs_instance_name }}'
       sap_tf_state_bucket: 'nw-code-ansible'
       sap_tf_variables:
         project_id: '{{ sap_project_id }}'
@@ -19,14 +18,24 @@
         subnetwork_project: '{{ sap_subnetwork_project }}'
         boot_disk_size: '{{ sap_boot_disk_size }}'
         gce_ssh_user: '{{ sap_gce_ssh_user }}'
+        usr_sap_size: '{{ usr_sap_size }}'
+        sap_mnt_size: '{{ sap_mnt_size }}'
+        swap_size: '{{ swap_size }}'
         public_ip: "true"
         gce_ssh_pub_key_file: '~/.ssh/id_rsa.pub'
         boot_disk_type: '{{ boot_disk_type }}'
         disk_type: '{{ disk_type }}'
-        instance_name: '{{ sap_instance_name }}'
+        sap_ascs_instance_name: '{{ sap_ascs_instance_name }}'
+        sap_pas_instance_name: '{{ sap_pas_instance_name }}'
 - name: SAP NW configure
-  hosts: nw
+  hosts: ascs
   become: yes
   become_user: root  
   roles:
-  - role: nw-standard         
+  - role: nw-distributed 
+- name: SAP NW configure
+  hosts: pas
+  become: yes
+  become_user: root
+  roles:
+  - role: nw-distributed

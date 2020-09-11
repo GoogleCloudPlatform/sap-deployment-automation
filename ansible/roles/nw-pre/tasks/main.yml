@@ -1,22 +1,3 @@
 ---
-- name: Create a software directory
-  file:
-    path: /opt/Software
-    state: directory
-    mode: '0775'
-
-- name: Copy netweaver binaries from GCS
-  command: "gsutil {{ gsutil_opts }} cp -r gs://{{ nw_bucket }}/{{ folder }}/software/{{ item }} /opt/Software"
-  loop:
-    - "HANA_CLIENT"
-    - "Kernel_Files"
-    - "NW75"
-    - "SWPM1.0"
-    - "SAPCAR"
-    - "ehp7export"
-    
-- name: Create a software directory
-  file:
-    path: /opt/Software
-    state: directory
-    mode: '0775'
+- name: Copy netweaver binaries from GC
+  command: "gsutil {{ gsutil_opts }} cp -r gs://{{ nw_bucket }}/{{ folder }} /sapmnt"
