@@ -1,0 +1,19 @@
+---
+driver:
+  name: terraform
+  root_module_directory: test/fixtures/sap_hana
+
+provisioner:
+  name: terraform
+
+verifier:
+  name: terraform
+  groups:
+    - name: sap_hana
+      controls: instance
+
+suites:
+  - name: sap_hana
+
+platforms:
+  - name: terraform

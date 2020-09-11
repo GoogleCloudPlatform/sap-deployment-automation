@@ -1,0 +1,183 @@
+---
+- name: SAP ASCS deploy
+  hosts: 127.0.0.1
+  connection: local
+  tasks:
+  - name: Copy ssh public key
+    copy:
+      dest: '{{ playbook_dir }}/ssh-key.pub'
+      src: '{{ sap_gce_ssh_pub_key }}'
+  - name: Copy ssh private key
+    copy:
+      dest: '{{ playbook_dir }}/ssh-key'
+      src: '{{ sap_gce_ssh_priv_key }}'
+      mode: '0600'
+  - name: Deploy SAP NW infrastructure
+    terraform:
+      backend_config:
+        bucket: '{{ sap_state_bucket }}'
+        prefix: '{{ sap_state_bucket_prefix | default(sap_ascs_instance_name) }}'
+      force_init: true
+      project_path: ./tf
+      state: present
+      variables:
+        project_id: '{{ sap_project_id }}'
+        sap_ascs_instance_name: '{{ sap_ascs_instance_name }}'
+        sap_pas_instance_name: '{{ sap_pas_instance_name }}'
+        instance_type: '{{ sap_instance_type }}'
+        linux_image_family: '{{ sap_linux_image_family }}'
+        linux_image_project: '{{ sap_linux_image_project }}'
+        region: '{{ sap_region }}'
+        zone: '{{ sap_zone }}'
+        subnetwork: '{{ sap_subnetwork }}'
+        subnetwork_project: '{{ sap_subnetwork_project }}'
+        boot_disk_size: '{{ sap_boot_disk_size }}'
+        ssh_user: '{{ sap_gce_ssh_user }}'
+        public_key_path: '{{ playbook_dir }}/ssh-key.pub'
+    register: terraform
+  - name: Build inventory
+    add_host:
+      name: '{{ terraform.outputs.ascs_address.value }}'
+      ansible_user: '{{ sap_gce_ssh_user }}'
+      ansible_ssh_private_key_file: '{{ playbook_dir }}/ssh-key'
+      terraform: '{{ terraform }}'
+      groups: ascs
+    changed_when: false
+  - name: Wait for host
+    shell: |-
+      ssh -i {{ playbook_dir }}/ssh-key \
+        -o StrictHostKeyChecking=no \
+        {{ sap_gce_ssh_user }}@{{ terraform.outputs.ascs_address.value }} \
+        exit
+    register: can_ssh
+    retries: 12
+    delay: 10
+    until: can_ssh is succeeded
+  - name: Build inventory
+    add_host:
+      name: '{{ terraform.outputs.pas_address.value }}'
+      ansible_user: '{{ sap_gce_ssh_user }}'
+      ansible_ssh_private_key_file: '{{ playbook_dir }}/ssh-key'
+      terraform: '{{ terraform }}'
+      groups: pas
+    changed_when: false
+  - name: Wait for host
+    shell: |-
+      ssh -i {{ playbook_dir }}/ssh-key \
+        -o StrictHostKeyChecking=no \
+        {{ sap_gce_ssh_user }}@{{ terraform.outputs.pas_address.value }} \
+        exit
+    register: can_ssh
+    retries: 12
+    delay: 10
+    until: can_ssh is succeeded
+- name: SAP ASCS configure
+  hosts: ascs
+  become: yes
+  become_user: root 
+  vars:
+    sap_image_family: '{{ terraform.outputs.sap_image_family.value }}'
+  roles:
+  - role: base 
+  - role: storage-bkup
+    vars:
+      swapon: True
+      nfs_mount: True
+      subnet_cidr: '{{ terraform.outputs.subnet_cidr.value }}'
+      disks:
+        - { name: sapmnt, partition_path : sapmnt }
+        - { name: usrsap, partition_path : usrsap }
+        - { name: swap, partition_path : swap }
+      logvols:
+        usrsap:
+          size: "{{ usr_sap_size }}"
+          vol: usrsap
+          mountpoint: /usr/sap
+        sapmnt:
+          size: "{{ sap_mnt_size }}"
+          vol: sapmnt
+          mountpoint: /sapmnt
+      swapvols:
+        swap:
+          size: "{{ swap_size }}"
+          vol: swap 
+          mountpoint: /swap   
+  - role: nw-pre
+    vars: 
+      nw_bucket: "{{ bucket }}"
+      folder: "{{ path }}"           
+  - role: ascs  
+    vars:
+      sap_deployment_product_id: "{{ sap_ascs_deployment_product_id }}"
+      template: "{{ template }}"
+      ascs_sid: "{{ ascs_sid }}"
+      sap_deployment_sapcar_path: "{{ sap_deployment_sapcar_path }}"     
+      sap_deployment_ascs_instance_nr: "{{ sap_deployment_ascs_instance_nr }}"
+      sap_sapinst_package_kernel: "{{ sap_sapinst_package_kernel }}"
+      sap_archives_downloadbasket: "{{ sap_archives_downloadbasket }}"  
+      sap_deployment_password: "{{ sap_deployment_password }}"          
+- name: SAP NW configure
+  hosts: pas
+  become: yes
+  become_user: root
+  vars:
+    sap_image_family: '{{ terraform.outputs.sap_image_family.value }}'
+  roles:
+  - role: base
+  - role: storage-bkup
+    vars:
+      swapon: True     
+      subnet_cidr: '{{ terraform.outputs.subnet_cidr.value }}'
+      disks:
+        - { name: swap, partition_path : swap }
+      swapvols:
+        swap:
+          size: "{{ swap_size }}"
+          vol: swap 
+          mountpoint: /swap
+      nfs_private_ip: '{{ terraform.outputs.nfs_private_ip.value }}'
+      mountpa:
+        usrsap: /usr/sap
+        sapmnt: /sapmnt                  
+  - role: nw-pre
+    vars: 
+      nw_bucket: "{{ bucket }}"
+      folder: "{{ path }}"        
+  - role: db
+    vars:   
+      sap_deployment_product_id: "{{ sap_db_deployment_product_id }}"
+      sap_deployment_db_host: "{{ sap_deployment_db_host }}"
+      sap_deployment_db_sid: "{{ sap_deployment_db_sid }}"
+      sap_deployment_hana_instance_nr: "{{ sap_deployment_hana_instance_nr }}" 
+      template: "{{ template }}"
+      sap_deployment_password: "{{ sap_deployment_password }}"
+      sap_hana_password: "{{ sap_hana_password }}"
+      sap_archives_downloadbasket: "{{ sap_archives_downloadbasket }}" 
+      sap_sapinst_package_kernel: "{{ sap_sapinst_package_kernel }}" 
+      sap_sapinst_package_load: "{{ sap_sapinst_package_load }}"
+      sap_sapinst_package_client: "{{ sap_sapinst_package_client }}" 
+      sap_nw_sid: "{{ sap_nw_sid }}"
+      sap_deployment_sapcar_path: "{{ sap_deployment_sapcar_path }}"
+  - role: nw    
+    vars:    
+      sap_deployment_product_id: "{{ sap_pas_deployment_product_id }}"
+      sap_deployment_password: "{{ sap_deployment_password }}"
+      sap_hana_password: "{{ sap_hana_password }}"
+      sap_deployment_sapcar_path: "{{ sap_deployment_sapcar_path }}"
+      sap_deployment_db_host: "{{ sap_deployment_db_host }}"
+      sap_deployment_db_sid: "{{ sap_deployment_db_sid }}"
+      sap_deployment_hana_instance_nr: "{{ sap_deployment_hana_instance_nr }}"
+      sap_nw_sid: "{{ sap_nw_sid }}" 
+      template: "{{ template }}"
+      sap_deployment_igs_path: "{{ sap_deployment_igs_path }}"
+      sap_deployment_igs_file_name: "{{ sap_deployment_igs_file_name }}"
+      sap_deployment_igs_helper_path: "{{ sap_deployment_igs_helper_path }}"
+      sap_deployment_igs_helper_file_name: "{{ sap_deployment_igs_helper_file_name }}"
+      sap_deployment_software_path: "{{ sap_deployment_software_path }}"
+      sap_sapinst_package_load: "{{ sap_sapinst_package_load }}"
+      sap_sapinst_package_client: "{{ sap_sapinst_package_client }}"
+      sap_deployment_ci_instance_ciinstanceNumber: "{{ sap_deployment_ci_instance_ciinstanceNumber }}"
+      sap_deployment_ci_ascsvirtualhostname: '{{ terraform.outputs.ascs_instance_name.value }}'
+# Virtual host name of the primary application server instance
+      sap_deployment_ci_civirtualhostname: '{{ terraform.outputs.pas_instance_name.value }}'     
+      sap_ci_instance_cimsport: "{{ sap_ci_instance_cimsport }}"

@@ -1,0 +1,92 @@
+---
+- block:
+  - name: write cluster configuration
+    command: >-
+      pcs cluster setup --name {{ sap_cluster_name }} --local --force
+      {{ sap_primary_instance }} {{ sap_secondary_instance }}
+    args:
+      creates: /etc/corosync/corosync.conf
+  - name: start and enable services
+    service:
+      name: '{{ item }}'
+      state: started
+      enabled: true
+    loop:
+    - corosync.service
+    - pacemaker.service
+    - pcsd.service
+
+  - command: timeout 5 pcs cluster auth
+    register: pcs_command_status
+    changed_when: false
+    failed_when: false
+  - name: set cluster authentication
+    command: >-
+      pcs cluster auth {{ sap_primary_instance }} {{ sap_secondary_instance }}
+      -u {{ sap_cluster_user }} -p {{ sap_cluster_user_password }}
+    no_log: true
+    when: >-
+      sap_primary_instance + ': Already authorized' not in pcs_command_status.stdout and
+      sap_secondary_instance + ': Already authorized' not in pcs_command_status.stdout
+  when: |
+    ansible_os_family == 'RedHat'
+
+- block:
+  - name: generate corosync key
+    command: corosync-keygen
+    args:
+      creates: /etc/corosync/authkey
+
+  - name: initialize cluster on primary
+    command: ha-cluster-init -y csync2
+    args:
+      creates: /etc/csync2/key_hagroup
+
+  - name: write cluster configuration on primary
+    template:
+      src: etc/corosync/corosync.conf.j2
+      dest: /etc/corosync/corosync.conf
+      mode: 0644
+      owner: root
+      group: root
+
+  - name: start and enable services on primary
+    service:
+      name: '{{ item }}'
+      state: started
+      enabled: true
+    loop:
+    - corosync.service
+    - pacemaker.service
+  when: |
+    is_primary and ansible_os_family == 'Suse'
+
+- block:
+  - name: join cluster on secondary
+    command: ha-cluster-join -y -c {{ sap_primary_instance_ip }} csync2
+    args:
+      creates: /etc/corosync/corosync.conf
+    register: join_cluster_secondary
+    retries: 12
+    delay: 10
+    until: join_cluster_secondary is succeeded
+
+  - name: write cluster configuration on secondary
+    template:
+      src: etc/corosync/corosync.conf.j2
+      dest: /etc/corosync/corosync.conf
+      mode: 0644
+      owner: root
+      group: root
+
+  - name: start and enable services
+    service:
+      name: '{{ item }}'
+      state: started
+      enabled: true
+    loop:
+    - corosync.service
+    - hawk.service
+    - pacemaker.service
+  when: |
+    not is_primary and ansible_os_family == 'Suse'
