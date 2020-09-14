@@ -5,7 +5,7 @@ module "sap_hana_template" {
   name_prefix  = "${var.instance_name}-instance-template"
   machine_type = var.instance_type
   project_id   = var.project_id
-  region       = var.region
+  region       = local.region
 
   metadata = {
     ssh-keys = "${var.gce_ssh_user}:${file("${var.gce_ssh_pub_key_file}")}"
@@ -37,7 +37,7 @@ resource "google_compute_address" "gcp_sap_hana_intip_primary" {
   name         = "${var.instance_name}-int-primary"
   address_type = "INTERNAL"
   subnetwork   = var.subnetwork
-  region       = var.region
+  region       = local.region
   project      = local.subnetwork_project
   purpose      = "GCE_ENDPOINT"
 }
@@ -46,7 +46,7 @@ resource "google_compute_address" "gcp_sap_hana_intip_secondary" {
   name         = "${var.instance_name}-int-secondary"
   address_type = "INTERNAL"
   subnetwork   = var.subnetwork
-  region       = var.region
+  region       = local.region
   project      = local.subnetwork_project
   purpose      = "GCE_ENDPOINT"
 }
@@ -54,7 +54,7 @@ resource "google_compute_address" "gcp_sap_hana_intip_secondary" {
 module "sap_hana_umig_primary" {
   source             = "../../../terraform/modules/terraform-google-vm//modules/umig"
   project_id         = var.project_id
-  region             = var.region
+  region             = local.region
   zone               = var.zone_a
   subnetwork         = var.subnetwork
   subnetwork_project = local.subnetwork_project
@@ -67,7 +67,7 @@ module "sap_hana_umig_primary" {
 module "sap_hana_umig_secondary" {
   source             = "../../../terraform/modules/terraform-google-vm//modules/umig"
   project_id         = var.project_id
-  region             = var.region
+  region             = local.region
   zone               = var.zone_b
   subnetwork         = var.subnetwork
   subnetwork_project = local.subnetwork_project
@@ -187,7 +187,7 @@ resource "google_compute_firewall" "hana_healthcheck_firewall_rule" {
 module "sap_hana_ilb" {
   source       = "../../../terraform/modules/terraform-google-lb-internal"
   project      = var.project_id
-  region       = var.region
+  region       = local.region
   network      = var.network
   subnetwork   = var.subnetwork
   name         = "${var.instance_name}-ilb"

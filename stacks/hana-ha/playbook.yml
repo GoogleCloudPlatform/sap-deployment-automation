@@ -16,7 +16,6 @@
         instance_type: '{{ sap_hana_instance_type }}'
         source_image_family: '{{ sap_hana_source_image_family }}'
         source_image_project: '{{ sap_hana_source_image_project }}'
-        region: '{{ sap_hana_region }}'
         zone_a: '{{ sap_hana_zone_a }}'
         zone_b: '{{ sap_hana_zone_b }}'
         service_account_email: '{{ sap_hana_service_account_email }}'
@@ -51,6 +50,8 @@
     hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
     hana_usr_size: '{{ terraform.outputs.hana_usr_size.value }}G'
     hana_backup_size: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
+    sap_hana_monitoring_user: '{{ sap_hana_monitoring_user | default('hanahamu') }}'
+    sap_hana_user_store_key: '{{ sap_hana_monitoring_user | default('HANAHAUSK') }}'
     swapon: false
     disks:
         - { name: data, partition_path : "{{ sap_hana_data_partition_name }}"}
