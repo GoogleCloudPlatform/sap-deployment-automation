@@ -18,9 +18,6 @@
         subnetwork_project: '{{ sap_subnetwork_project }}'
         boot_disk_size: '{{ sap_boot_disk_size }}'
         gce_ssh_user: '{{ sap_gce_ssh_user }}'
-        usr_sap_size: '{{ usr_sap_size }}'
-        sap_mnt_size: '{{ sap_mnt_size }}'
-        swap_size: '{{ swap_size }}'
         public_ip: "true"
         gce_ssh_pub_key_file: '~/.ssh/id_rsa.pub'
         boot_disk_type: '{{ boot_disk_type }}'

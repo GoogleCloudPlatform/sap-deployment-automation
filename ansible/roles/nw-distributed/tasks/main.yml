@@ -1,0 +1,13 @@
+---
+- name: selecting ASCS machines
+  set_fact:
+    is_ascs: '{{ ansible_default_ipv4.address in terraform.outputs.inventory.value["ascs"] }}'
+- name: include ASCS Tasks
+  include_tasks: '{{ role_path }}/tasks/ascs.yml'
+  when: is_ascs
+- name: selecting PAS machines
+  set_fact:
+    is_pas: '{{ ansible_default_ipv4.address in terraform.outputs.inventory.value["pas"] }}'
+- name: include PAS Tasks
+  include_tasks: '{{ role_path }}/tasks/pas.yml'
+  when: is_pas
