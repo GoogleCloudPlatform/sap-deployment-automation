@@ -54,16 +54,23 @@
       mode: '0644'
   when: false in stat_ssh_key_files_exists
 
-- name: deploy infrastructure with terraform
-  terraform:
-    backend_config:
-      bucket: '{{ sap_tf_state_bucket }}'
-      prefix: '{{ sap_tf_state_bucket_prefix }}'
-    force_init: true
-    project_path: '{{ sap_tf_project_path }}'
-    state: '{{ sap_state }}'
-    variables: '{{ sap_tf_variables_defaults | combine(sap_tf_variables) }}'
-  register: terraform
+- block:
+  - name: deploy infrastructure with terraform
+    terraform:
+      backend_config:
+        bucket: '{{ sap_tf_state_bucket }}'
+        prefix: '{{ sap_tf_state_bucket_prefix }}'
+      force_init: true
+      project_path: '{{ sap_tf_project_path }}'
+      state: '{{ sap_state }}'
+      variables: '{{ sap_tf_variables_defaults | combine(sap_tf_variables) }}'
+    register: terraform
+  always:
+  - name: clean up terraform state directory
+    file:
+      path: '{{ sap_tf_project_path }}/.terraform'
+      state: absent
+    changed_when: terraform is changed
 
 - name: flatten inventory map into a list of maps
   # Convert { "abc": ["10.10.10.10", "10.10.10.11"], "xyz": ["10.10.10.12"] } into:
