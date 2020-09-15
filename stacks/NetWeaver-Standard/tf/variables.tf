@@ -1,6 +1,5 @@
 variable "project_id" {
   description = "The ID of the project in which the resources will be deployed."
-  default     = "albatross-duncanl-sandbox-2"
 }
 
 variable "zone" {
@@ -10,7 +9,6 @@ variable "zone" {
 
 variable "instance_name" {
   description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
-  default     = "saphanasles-bg"
 }
 
 variable "hana_instance_type" {
@@ -35,7 +33,6 @@ variable "linux_image_project" {
 
 variable "sap_install_files_bucket" {
   description = "SAP install files GCE bucket name"
-  default     = "nw-ansible"
 }
 
 variable "sap_hostagent_file_name" {
@@ -100,12 +97,10 @@ variable "nw_swap_size" {
 
 variable "hana_service_account_email" {
   description = "Email of service account to attach to the HANA instance."
-  default     = "terraform-managed-sa@albatross-duncanl-sandbox-2.iam.gserviceaccount.com"
 }
 
 variable "nw_service_account_email" {
   description = "Email of service account to attach to the NetWeaver instance."
-  default     = "terraform-managed-sa@albatross-duncanl-sandbox-2.iam.gserviceaccount.com"
 }
 
 variable "subnetwork" {

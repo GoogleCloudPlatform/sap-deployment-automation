@@ -1,0 +1,39 @@
+---
+- hosts: 127.0.0.1
+  connection: local
+  roles:
+  - role: forminator
+    vars:
+      sap_tf_state_bucket: '{{ sap_state_bucket }}'
+      sap_tf_state_bucket_prefix: '{{ sap_instance_name }}'
+      sap_tf_project_path: ./tf
+      sap_state: '{{ state | default("present") }}'
+      sap_tf_variables:
+        hana_instance_type: '{{ sap_hana_instance_type }}'
+        hana_service_account_email: '{{ sap_hana_service_account_email }}'
+        instance_name: '{{ sap_instance_name }}'
+        linux_image_family: '{{ sap_source_image_family }}'
+        linux_image_project: '{{ sap_source_image_project }}'
+        nw_instance_type: '{{ sap_nw_instance_type }}'
+        nw_service_account_email: '{{ sap_nw_service_account_email }}'
+        project_id: '{{ sap_project_id }}'
+        sap_install_files_bucket: '{{ sap_hana_install_files_bucket }}'
+        subnetwork: '{{ sap_subnetwork }}'
+        subnetwork_project: '{{ sap_subnetwork_project_id | default("") }}'
+        zone: '{{ sap_zone }}'
+
+- name: SAP HANA configure
+  hosts: hana
+  become: yes
+  roles:
+  - role: sap-hana-scaleup
+
+- name: SAP NetWeaver configure
+  hosts: nw
+  become: yes
+  roles:
+  - role: nw-standard
+    vars:
+      sap_deployment_db_host: '{{ terraform.outputs.inventory.value.hana.0 }}'
+      sap_deployment_ascs_instance_hostname: '{{ terraform.outputs.nw_instance_name.value }}'
+      sap_deployment_pas_instance_hostname: '{{ terraform.outputs.nw_instance_name.value }}'

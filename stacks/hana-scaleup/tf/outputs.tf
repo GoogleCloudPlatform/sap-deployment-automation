@@ -69,10 +69,10 @@ output "inventory" {
   value = { hana = [module.gcp_sap_hana.address] }
 }
 
-output "instance_attached_disks_data" {
+output "hana_attached_disks_data" {
   value = module.gcp_sap_hana.instance_attached_disks_data
 }
 
-output "instance_attached_disks_backup" {
+output "hana_attached_disks_backup" {
   value = module.gcp_sap_hana.instance_attached_disks_backup
 }

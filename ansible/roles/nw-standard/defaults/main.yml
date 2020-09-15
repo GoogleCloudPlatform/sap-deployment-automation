@@ -1,41 +1,18 @@
 ---
 
-    sap_nw_project_id: albatross-duncanl-sandbox-2
-    sap_nw_gce_ssh_pub_key: ~/.ssh/id_rsa.pub
-    sap_nw_gce_ssh_priv_key: ~/.ssh/id_rsa
-    sap_nw_state_bucket: nw-code-ansible
-    sap_nw_instance_name: sap-standard
-    sap_nw_instance_type: n1-standard-8
-    sap_nw_linux_image_family: sles-12-sp3-sap
-    sap_nw_linux_image_project: suse-sap-cloud
-#    sap_nw_region: us-central1
-    sap_nw_zone: us-central1-a
-    sap_nw_subnetwork: app2
-    sap_nw_subnetwork_project: albatross-duncanl-sandbox-2
-    sap_nw_boot_disk_size: 30
-    sap_nw_gce_ssh_user: sushma
-    usr_sap_size: 140G
-    sap_mnt_size: 140G
-    swap_size: 29G
-    nw_bucket: "nw-code-ansible"
-    path: "nw75"  
-    sap_deployment_product_id: "NW_ABAP_OneHost:NW750.HDB.ABAP"
-    sap_deployment_password: Google123
-    sap_hana_password: Google123
-    sap_deployment_ascs_instance_nr: "00"
-    sap_deployment_pas_instance_nr: "01"
-    sap_nw_sid: "SL1"
-    sap_deployment_db_sid: "SL1"
-    template: "inifile.params.standard.j2"
-    sap_deployment_db_host: "wplsaphana"
-    sap_deployment_hana_instance_nr: "00"
-    sap_sapinst_package_kernel: /sapmnt/Software/Kernel_Files
-    sap_nw_sapcryptofile: SAPEXE_200-80002573.SAR
-    sap_deployment_igs_file_name: igsexe_4-80003187.sar
-    sap_deployment_igs_helper_file_name: igshelper_17-10010245.sar
-    sap_deployment_sapexedbsar: SAPEXEDB_200-80002572.SAR
-    sap_deployment_sapexesar: SAPEXE_200-80002573.SAR
-    sap_deployment_sapcar_path: /sapmnt/Software/SWPM1.0
-    sap_sapinst_package_load: /sapmnt/Software/NW75
-    sap_sapinst_package_client: /sapmnt/Software/HANA_CLIENT 
-    sap_archives_downloadbasket: /sapmnt/Software/Kernel_Files 
+sap_nw_std_usr_sap_size: 140G
+sap_nw_std_sap_mnt_size: 140G
+sap_nw_std_swap_size: 29G
+sap_nw_std_bucket_prefix: nw75/Software
+sap_nw_std_product_id: "NW_ABAP_OneHost:NW750.HDB.ABAP"
+sap_nw_std_template: "inifile.params.standard.j2"
+sap_nw_std_sapinst_package_kernel: /sapmnt/Software/Kernel_Files
+sap_nw_std_sapcryptofile: SAPEXE_200-80002573.SAR
+sap_nw_std_igs_file_name: igsexe_4-80003187.sar
+sap_nw_std_igs_helper_file_name: igshelper_17-10010245.sar
+sap_nw_std_sapexedbsar: SAPEXEDB_200-80002572.SAR
+sap_nw_std_sapexesar: SAPEXE_200-80002573.SAR
+sap_nw_std_sapcar_path: /sapmnt/Software/SWPM1.0
+sap_nw_std_sapinst_package_load: /sapmnt/Software/NW75
+sap_nw_std_sapinst_package_client: /sapmnt/Software/HANA_CLIENT
+sap_nw_std_archives_downloadbasket: /sapmnt/Software/Kernel_Files

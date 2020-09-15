@@ -9,9 +9,9 @@ sap_hana_shared_size_default: '{{ terraform.outputs.hana_shared_size.value }}G'
 sap_hana_usr_size_default: '{{ terraform.outputs.hana_usr_size.value }}G'
 
 sap_hana_disks_defaults:
-- name: '{{ terraform.outputs.instance_attached_disks_data.value }}'
+- name: '{{ terraform.outputs.hana_attached_disks_data.value }}'
   partition_path: hanadata
-- name: '{{ terraform.outputs.instance_attached_disks_backup.value }}'
+- name: '{{ terraform.outputs.hana_attached_disks_backup.value }}'
   partition_path : hanabackup
 
 sap_hana_logvols_defaults:
