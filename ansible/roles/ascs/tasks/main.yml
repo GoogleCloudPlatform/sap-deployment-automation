@@ -1,9 +1,4 @@
 ---
-- name: Copy binaries to mount folder
-  copy:
-    src: /opt/Software
-    dest: /sapmnt/
-    remote_src: yes
 - name: permissions to home 
   file:
     path: /tmp/sapinst_instdir
