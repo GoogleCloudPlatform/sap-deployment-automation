@@ -21,21 +21,31 @@
       "max": 1024
     },
     {
-      "question_name": "Installation files bucket",
-      "question_description": "This is the bucket from which installation files will be downloaded.",
+      "question_name": "HANA installation files bucket",
+      "question_description": "This is the bucket from which HANA installation files will be downloaded.",
       "required": true,
       "type": "text",
-      "variable": "sap_install_files_bucket",
+      "variable": "sap_hana_install_files_bucket",
       "min": 1,
       "max": 1024,
       "default": "nw-ansible"
+    },
+    {
+      "question_name": "NetWeaver installation files bucket",
+      "question_description": "This is the bucket from which NetWeaver installation files will be downloaded.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_nw_install_files_bucket",
+      "min": 1,
+      "max": 1024,
+      "default": "nw-code-ansible"
     },
     {
       "question_name": "Image family",
       "question_description": "Family of the image used to create machines.",
       "required": true,
       "type": "multiplechoice",
-      "variable": "sap_linux_image_family",
+      "variable": "sap_source_image_family",
       "default": "rhel-7-7-sap-ha",
       "choices": ["rhel-7-4-sap", "rhel-7-6-sap-ha", "rhel-7-7-sap-ha", "sles-12-sp3-bg"]
     },
@@ -44,7 +54,7 @@
       "question_description": "Project of the image used to create machines.",
       "required": true,
       "type": "multiplechoice",
-      "variable": "sap_linux_image_project",
+      "variable": "sap_source_image_project",
       "default": "rhel-sap-cloud",
       "choices": ["rhel-sap-cloud", "suse-sap-cloud", "albatross-duncanl-sandbox-2"]
     },
@@ -62,7 +72,7 @@
       "question_description": "This is the system identifier for HANA. It must be three characters starting with a letter.",
       "required": true,
       "type": "text",
-      "variable": "sap_hana_sid",
+      "variable": "sap_hana_deployment_hana_sid",
       "min": 3,
       "max": 3,
       "default": "ABC"
@@ -72,10 +82,19 @@
       "question_description": "This is the instance number for HANA. It must be a two digit number between 00 and 99.",
       "required": true,
       "type": "text",
-      "variable": "sap_hana_instance_number",
+      "variable": "sap_hana_deployment_hana_instance_number",
       "min": 2,
       "max": 2,
       "default": "00"
+    },
+    {
+      "question_name": "HANA password",
+      "question_description": "This is the password for HANA.",
+      "required": true,
+      "type": "password",
+      "variable": "sap_hana_password",
+      "min": 8,
+      "max": 100
     },
     {
       "question_name": "NetWeaver instance type",
@@ -96,6 +115,15 @@
       "min": 3,
       "max": 3,
       "default": "XYZ"
+    },
+    {
+      "question_name": "NetWeaver password",
+      "question_description": "This is the password for NetWeaver.",
+      "required": true,
+      "type": "password",
+      "variable": "sap_nw_password",
+      "min": 8,
+      "max": 100
     },
     {
       "question_name": "Project ID",
@@ -144,24 +172,6 @@
       "min": 0,
       "max": 1024,
       "default": ""
-    },
-    {
-      "question_name": "SSH public key",
-      "question_description": "This is the public ssh key of the ansible user, to inject into machines when they are created.",
-      "required": true,
-      "type": "text",
-      "variable": "sap_gce_ssh_pub_key",
-      "min": 1,
-      "max": 1024
-    },
-    {
-      "question_name": "SSH private key",
-      "question_description": "This is the private ssh key of the ansible user, for ansible to authenticate to machines containing the public key.",
-      "required": true,
-      "type": "textarea",
-      "variable": "sap_gce_ssh_priv_key",
-      "min": 1,
-      "max": 4096
     },
     {
       "question_name": "Zone",
