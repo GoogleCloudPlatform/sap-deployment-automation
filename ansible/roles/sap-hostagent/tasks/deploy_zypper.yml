@@ -11,6 +11,10 @@
     name: "{{ sap_hostagent_agent_tmp_directory }}/{{ sap_hostagent_rpm_file_name }}"
     state: present
   when: sap_hostagent_rpm_local_path is defined
+  register: rpm_is_installed
+  until: rpm_is_installed is succeeded
+  retries: 30
+  delay: 10
 
 - name: Ensure RPM file is installed
   zypper:
@@ -18,3 +22,7 @@
     state: present
     disable_gpg_check: yes
   when: sap_hostagent_rpm_remote_path is defined
+  register: rpm_is_installed
+  until: rpm_is_installed is succeeded
+  retries: 30
+  delay: 10
