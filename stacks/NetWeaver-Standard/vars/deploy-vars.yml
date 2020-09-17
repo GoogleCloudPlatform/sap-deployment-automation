@@ -20,5 +20,3 @@ sap_nw_instance_type: n1-standard-2
 sap_nw_password:
 sap_nw_service_account_email:
 sap_nw_sid: XYZ
-sap_ascs_instance_number: "00"
-sap_pas_instance_number: "01"

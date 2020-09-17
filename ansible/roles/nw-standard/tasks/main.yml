@@ -37,10 +37,6 @@
   vars:
     sap_deployment_product_id: "{{ sap_nw_std_product_id }}"
     sap_deployment_password: "{{ sap_nw_password }}"
-    sap_deployment_ascs_instance_nr: "{{ sap_ascs_instance_number }}"
-    # sap_deployment_ascs_instance_hostname: '{{ terraform.outputs.instance_name.value }}'
-    sap_deployment_pas_instance_nr: "{{ sap_pas_instance_number }}"
-    # sap_deployment_pas_instance_hostname: '{{ terraform.outputs.instance_name.value }}'
     sap_deployment_db_sid: "{{ sap_hana_deployment_hana_sid }}"
     template: "{{ sap_nw_std_template }}"
     sap_deployment_hana_instance_nr: "{{ sap_hana_deployment_hana_instance_number }}"
