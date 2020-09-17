@@ -3,7 +3,7 @@
 sap_nw_std_usr_sap_size: 140G
 sap_nw_std_sap_mnt_size: 140G
 sap_nw_std_swap_size: 29G
-sap_nw_std_bucket_prefix: nw75/Software
+sap_nw_install_files_bucket_prefix: nw75/Software
 sap_nw_std_product_id: "NW_ABAP_OneHost:NW750.HDB.ABAP"
 sap_nw_std_template: "inifile.params.standard.j2"
 sap_nw_std_sapinst_package_kernel: /sapmnt/Software/Kernel_Files

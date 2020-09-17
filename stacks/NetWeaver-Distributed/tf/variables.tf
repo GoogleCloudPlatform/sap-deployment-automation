@@ -114,7 +114,7 @@ variable "sap_deployment_debug" {
 
 variable "public_ip" {
   description = "Determines whether a public IP address is added to your VM instance."
-  default     = "true"
+  default     = "false"
 }
 variable "gce_ssh_user" {
   description = "SSH user name to connect to your instance."

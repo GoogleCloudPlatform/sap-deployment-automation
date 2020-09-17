@@ -6,13 +6,13 @@ sap_state_bucket: nw-code-ansible
 sap_ascs_instance_name: s-ascsss
 sap_pas_instance_name: s-passs
 sap_instance_type: n1-standard-8
-sap_linux_image_family: sles-12-sp3-sap
-sap_linux_image_project: suse-sap-cloud
+sap_source_image_family: sles-12-sp3-sap
+sap_source_image_project: suse-sap-cloud
 gce_ssh_pub_key_file: '{{ playbook_dir }}/ssh-key.pub'
 sap_region: us-central1
 sap_zone: us-central1-a
 sap_subnetwork: app2
-sap_subnetwork_project: albatross-duncanl-sandbox-2
+sap_subnetwork_project_id: albatross-duncanl-sandbox-2
 sap_boot_disk_size: '30'
 sap_gce_ssh_user: sushma
 usr_sap_size: '50'
@@ -20,8 +20,7 @@ sap_mnt_size: '50'
 disk_type: "pd-standard"
 boot_disk_type: pd-ssd
 swap_size: '28'
-bucket: "nw-code-ansible"
-path: "nw75/Software" 
+sap_nw_install_files_bucket: nw-code-ansible
 sap_ascs_deployment_product_id: "NW_ABAP_ASCS:NW750.HDB.ABAP"
 template: inifile.params.distribution.j2
 ascs_sid: "SL3"

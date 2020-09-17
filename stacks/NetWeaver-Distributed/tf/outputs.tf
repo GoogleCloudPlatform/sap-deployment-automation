@@ -44,5 +44,12 @@ output "nfs_private_ip" {
   value       = module.ascs.instance_internal_ip
 }
 output "inventory" {
-  value = { ascs = [module.ascs.instance_internal_ip], pas = [module.pas.instance_internal_ip] }
+  value = {
+    ascs = [module.ascs.instance_internal_ip],
+    pas = [module.pas.instance_internal_ip],
+    nodes = [
+      module.ascs.instance_internal_ip,
+      module.pas.instance_internal_ip,
+    ],
+  }
 }
