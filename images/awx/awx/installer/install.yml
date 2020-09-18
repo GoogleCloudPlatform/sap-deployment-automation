@@ -1,4 +1,0 @@
-# This is a dummy playbook. Packer will not run unless the Ansible provisioner playbook
-# file exists. This will be moved out of the way and replaced with the actual playbook,
-# which is in a git repository that is cloned by a shell-local provisioner after Packer
-# is started.

@@ -13,6 +13,22 @@
       # Line gets inserted after last match, which in this case is in the volumes of the task container.
       insertafter: '^      - rsyslog-config:/var/lib/awx/rsyslog/$'
       line: '      - "/usr/local/bin/terraform:/usr/local/bin/terraform"'
+  - name: stat sap-iac repo to get absolute path
+    stat:
+      path: '{{ playbook_dir }}/../..'
+    register: stat_sap_iac
+  - name: define sap-iac repo path
+    set_fact:
+      sap_iac_path: '{{ stat_sap_iac.stat.path.split("/")[0:-4] | join("/") }}'
+  - name: archive sap-iac repo for copying to image build machine
+    archive:
+      path:
+      - '{{ sap_iac_path }}/ansible*'
+      - '{{ sap_iac_path }}/stacks'
+      - '{{ sap_iac_path }}/terraform'
+      dest: '{{ playbook_dir }}/sap-iac.tar.gz'
+      format: gz
+    register: archive_sap_iac
 
 - hosts: all
   gather_facts: false

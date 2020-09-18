@@ -1,7 +1,6 @@
 {
   "variables": {
     "awx-version": "",
-    "git-repo": "",
     "image-version": "",
     "keep-inventory-file": "false",
     "project-id": "",
@@ -25,13 +24,6 @@
     "zone": "{{ user `zone` }}"
   }],
   "provisioners": [
-    {
-      "type": "shell-local",
-      "inline": [
-        "[ -d _awx ] || mv awx _awx",
-        "[ -f awx/INSTALL.md ] || git clone --depth 1 --branch {{ user `awx-version` }} https://github.com/ansible/awx.git"
-      ]
-    },
     {
       "type": "ansible",
       "command": "./ansible-wrapper",
@@ -75,8 +67,7 @@
     {
       "type": "shell-local",
       "inline": [
-        "[ -f ./awx/INSTALL.md ] && rm -rf ./awx",
-        "[ -d _awx -a ! -d awx ] && mv _awx awx",
+        "rm -f ./sap-iac.tar.gz",
         "rm -f ./inventory/host_vars/default",
         "rm -rf ./venv"
       ]
