@@ -1,0 +1,958 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ResourceAccessListItem /> initially renders succesfully 1`] = `
+<ResourceAccessListItem
+  accessRecord={
+    Object {
+      "first_name": "jane",
+      "id": 2,
+      "last_name": "brown",
+      "summary_fields": Object {
+        "direct_access": Array [
+          Object {
+            "role": Object {
+              "id": 3,
+              "name": "Member",
+              "resource_name": "Org",
+              "resource_type": "organization",
+              "team_id": 5,
+              "team_name": "The Team",
+              "user_capabilities": Object {
+                "unattach": true,
+              },
+            },
+          },
+        ],
+        "indirect_access": Array [],
+      },
+      "url": "/bar",
+      "username": "jane",
+    }
+  }
+  i18n={"/i18n/"}
+  onRoleDelete={[Function]}
+>
+  <DataListItem
+    aria-labelledby="access-list-item"
+    id="2"
+    key="2"
+  >
+    <li
+      aria-labelledby="access-list-item"
+      className="pf-c-data-list__item"
+      id="2"
+    >
+      <DataListItemRow
+        key=".0"
+        rowid="access-list-item"
+      >
+        <div
+          className="pf-c-data-list__item-row"
+        >
+          <ResourceAccessListItem__DataListItemCells
+            dataListCells={
+              Array [
+                <ForwardRef(Styled(PFDataListCell))>
+                  <TextContent>
+                    <Text
+                      component="h6"
+                    >
+                      <ForwardRef(ResourceAccessListItem___StyledLink)
+                        to={
+                          Object {
+                            "pathname": "/users/2/details",
+                          }
+                        }
+                      >
+                        jane
+                      </ForwardRef(ResourceAccessListItem___StyledLink)>
+                    </Text>
+                  </TextContent>
+                  <ForwardRef(Styled(DetailList))
+                    stacked={true}
+                  >
+                    <Detail
+                      alwaysVisible={false}
+                      fullWidth={false}
+                      label="Name"
+                      value="jane brown"
+                    />
+                  </ForwardRef(Styled(DetailList))>
+                </ForwardRef(Styled(PFDataListCell))>,
+                <ForwardRef(Styled(PFDataListCell))>
+                  <ForwardRef(Styled(DetailList))
+                    stacked={true}
+                  >
+                    <Detail
+                      alwaysVisible={false}
+                      fullWidth={false}
+                      label="Team Roles"
+                      value={
+                        <WithI18n
+                          numChips={5}
+                          totalChips={1}
+                        >
+                          <Chip
+                            className=""
+                            closeBtnAriaLabel="close"
+                            component="div"
+                            isOverflowChip={false}
+                            isReadOnly={false}
+                            onClick={[Function]}
+                            tooltipPosition="top"
+                          >
+                            Member
+                          </Chip>
+                        </WithI18n>
+                      }
+                    />
+                  </ForwardRef(Styled(DetailList))>
+                </ForwardRef(Styled(PFDataListCell))>,
+              ]
+            }
+            key=".0"
+            rowid="access-list-item"
+          >
+            <StyledComponent
+              dataListCells={
+                Array [
+                  <ForwardRef(Styled(PFDataListCell))>
+                    <TextContent>
+                      <Text
+                        component="h6"
+                      >
+                        <ForwardRef(ResourceAccessListItem___StyledLink)
+                          to={
+                            Object {
+                              "pathname": "/users/2/details",
+                            }
+                          }
+                        >
+                          jane
+                        </ForwardRef(ResourceAccessListItem___StyledLink)>
+                      </Text>
+                    </TextContent>
+                    <ForwardRef(Styled(DetailList))
+                      stacked={true}
+                    >
+                      <Detail
+                        alwaysVisible={false}
+                        fullWidth={false}
+                        label="Name"
+                        value="jane brown"
+                      />
+                    </ForwardRef(Styled(DetailList))>
+                  </ForwardRef(Styled(PFDataListCell))>,
+                  <ForwardRef(Styled(PFDataListCell))>
+                    <ForwardRef(Styled(DetailList))
+                      stacked={true}
+                    >
+                      <Detail
+                        alwaysVisible={false}
+                        fullWidth={false}
+                        label="Team Roles"
+                        value={
+                          <WithI18n
+                            numChips={5}
+                            totalChips={1}
+                          >
+                            <Chip
+                              className=""
+                              closeBtnAriaLabel="close"
+                              component="div"
+                              isOverflowChip={false}
+                              isReadOnly={false}
+                              onClick={[Function]}
+                              tooltipPosition="top"
+                            >
+                              Member
+                            </Chip>
+                          </WithI18n>
+                        }
+                      />
+                    </ForwardRef(Styled(DetailList))>
+                  </ForwardRef(Styled(PFDataListCell))>,
+                ]
+              }
+              forwardedComponent={
+                Object {
+                  "$$typeof": Symbol(react.forward_ref),
+                  "attrs": Array [],
+                  "componentStyle": ComponentStyle {
+                    "componentId": "ResourceAccessListItem__DataListItemCells-sc-658iqk-0",
+                    "isStatic": false,
+                    "lastClassName": "jCdAGK",
+                    "rules": Array [
+                      "align-items:start;",
+                    ],
+                  },
+                  "displayName": "ResourceAccessListItem__DataListItemCells",
+                  "foldedComponentIds": Array [],
+                  "render": [Function],
+                  "styledComponentId": "ResourceAccessListItem__DataListItemCells-sc-658iqk-0",
+                  "target": [Function],
+                  "toString": [Function],
+                  "warnTooManyClasses": [Function],
+                  "withComponent": [Function],
+                }
+              }
+              forwardedRef={null}
+              rowid="access-list-item"
+            >
+              <DataListItemCells
+                className="ResourceAccessListItem__DataListItemCells-sc-658iqk-0 jCdAGK"
+                dataListCells={
+                  Array [
+                    <ForwardRef(Styled(PFDataListCell))>
+                      <TextContent>
+                        <Text
+                          component="h6"
+                        >
+                          <ForwardRef(ResourceAccessListItem___StyledLink)
+                            to={
+                              Object {
+                                "pathname": "/users/2/details",
+                              }
+                            }
+                          >
+                            jane
+                          </ForwardRef(ResourceAccessListItem___StyledLink)>
+                        </Text>
+                      </TextContent>
+                      <ForwardRef(Styled(DetailList))
+                        stacked={true}
+                      >
+                        <Detail
+                          alwaysVisible={false}
+                          fullWidth={false}
+                          label="Name"
+                          value="jane brown"
+                        />
+                      </ForwardRef(Styled(DetailList))>
+                    </ForwardRef(Styled(PFDataListCell))>,
+                    <ForwardRef(Styled(PFDataListCell))>
+                      <ForwardRef(Styled(DetailList))
+                        stacked={true}
+                      >
+                        <Detail
+                          alwaysVisible={false}
+                          fullWidth={false}
+                          label="Team Roles"
+                          value={
+                            <WithI18n
+                              numChips={5}
+                              totalChips={1}
+                            >
+                              <Chip
+                                className=""
+                                closeBtnAriaLabel="close"
+                                component="div"
+                                isOverflowChip={false}
+                                isReadOnly={false}
+                                onClick={[Function]}
+                                tooltipPosition="top"
+                              >
+                                Member
+                              </Chip>
+                            </WithI18n>
+                          }
+                        />
+                      </ForwardRef(Styled(DetailList))>
+                    </ForwardRef(Styled(PFDataListCell))>,
+                  ]
+                }
+                rowid="access-list-item"
+              >
+                <div
+                  className="pf-c-data-list__item-content ResourceAccessListItem__DataListItemCells-sc-658iqk-0 jCdAGK"
+                >
+                  <DataListCell
+                    key="name"
+                  >
+                    <StyledComponent
+                      forwardedComponent={
+                        Object {
+                          "$$typeof": Symbol(react.forward_ref),
+                          "attrs": Array [],
+                          "componentStyle": ComponentStyle {
+                            "componentId": "sc-bdVaJa",
+                            "isStatic": false,
+                            "lastClassName": "kruorc",
+                            "rules": Array [
+                              "
+  word-break: break-word;
+",
+                            ],
+                          },
+                          "displayName": "DataListCell",
+                          "foldedComponentIds": Array [],
+                          "render": [Function],
+                          "styledComponentId": "sc-bdVaJa",
+                          "target": [Function],
+                          "toString": [Function],
+                          "warnTooManyClasses": [Function],
+                          "withComponent": [Function],
+                        }
+                      }
+                      forwardedRef={null}
+                    >
+                      <PFDataListCell
+                        className="sc-bdVaJa kruorc"
+                      >
+                        <div
+                          className="pf-c-data-list__cell sc-bdVaJa kruorc"
+                        >
+                          <TextContent>
+                            <div
+                              className="pf-c-content"
+                            >
+                              <Text
+                                component="h6"
+                              >
+                                <h6
+                                  className=""
+                                  data-pf-content={true}
+                                >
+                                  <ResourceAccessListItem___StyledLink
+                                    to={
+                                      Object {
+                                        "pathname": "/users/2/details",
+                                      }
+                                    }
+                                  >
+                                    <StyledComponent
+                                      forwardedComponent={
+                                        Object {
+                                          "$$typeof": Symbol(react.forward_ref),
+                                          "attrs": Array [],
+                                          "componentStyle": ComponentStyle {
+                                            "componentId": "ResourceAccessListItem___StyledLink-sc-658iqk-1",
+                                            "isStatic": false,
+                                            "lastClassName": "ddHgXz",
+                                            "rules": Array [
+                                              "font-weight:bold",
+                                            ],
+                                          },
+                                          "displayName": "ResourceAccessListItem___StyledLink",
+                                          "foldedComponentIds": Array [],
+                                          "propTypes": Object {
+                                            "innerRef": [Function],
+                                            "onClick": [Function],
+                                            "replace": [Function],
+                                            "target": [Function],
+                                            "to": [Function],
+                                          },
+                                          "render": [Function],
+                                          "styledComponentId": "ResourceAccessListItem___StyledLink-sc-658iqk-1",
+                                          "target": Object {
+                                            "$$typeof": Symbol(react.forward_ref),
+                                            "displayName": "Link",
+                                            "propTypes": Object {
+                                              "innerRef": [Function],
+                                              "onClick": [Function],
+                                              "replace": [Function],
+                                              "target": [Function],
+                                              "to": [Function],
+                                            },
+                                            "render": [Function],
+                                          },
+                                          "toString": [Function],
+                                          "warnTooManyClasses": [Function],
+                                          "withComponent": [Function],
+                                        }
+                                      }
+                                      forwardedRef={null}
+                                      to={
+                                        Object {
+                                          "pathname": "/users/2/details",
+                                        }
+                                      }
+                                    >
+                                      <Link
+                                        className="ResourceAccessListItem___StyledLink-sc-658iqk-1 ddHgXz"
+                                        to={
+                                          Object {
+                                            "pathname": "/users/2/details",
+                                          }
+                                        }
+                                      >
+                                        <LinkAnchor
+                                          className="ResourceAccessListItem___StyledLink-sc-658iqk-1 ddHgXz"
+                                          href="/users/2/details"
+                                          navigate={[Function]}
+                                        >
+                                          <a
+                                            className="ResourceAccessListItem___StyledLink-sc-658iqk-1 ddHgXz"
+                                            href="/users/2/details"
+                                            onClick={[Function]}
+                                          >
+                                            jane
+                                          </a>
+                                        </LinkAnchor>
+                                      </Link>
+                                    </StyledComponent>
+                                  </ResourceAccessListItem___StyledLink>
+                                </h6>
+                              </Text>
+                            </div>
+                          </TextContent>
+                          <Styled(DetailList)
+                            stacked={true}
+                          >
+                            <StyledComponent
+                              forwardedComponent={
+                                Object {
+                                  "$$typeof": Symbol(react.forward_ref),
+                                  "attrs": Array [],
+                                  "componentStyle": ComponentStyle {
+                                    "componentId": "sc-bwzfXH",
+                                    "isStatic": false,
+                                    "lastClassName": "kVCDmm",
+                                    "rules": Array [
+                                      "
+  display: grid;
+  grid-gap: 20px;
+  align-items: center;
+  ",
+                                      [Function],
+                                      "
+",
+                                    ],
+                                  },
+                                  "displayName": "Styled(DetailList)",
+                                  "foldedComponentIds": Array [],
+                                  "render": [Function],
+                                  "styledComponentId": "sc-bwzfXH",
+                                  "target": [Function],
+                                  "toString": [Function],
+                                  "warnTooManyClasses": [Function],
+                                  "withComponent": [Function],
+                                }
+                              }
+                              forwardedRef={null}
+                              stacked={true}
+                            >
+                              <DetailList
+                                className="sc-bwzfXH kVCDmm"
+                                stacked={true}
+                              >
+                                <TextList
+                                  className="sc-bwzfXH kVCDmm"
+                                  component="dl"
+                                >
+                                  <dl
+                                    className="sc-bwzfXH kVCDmm"
+                                    data-pf-content={true}
+                                  >
+                                    <Detail
+                                      alwaysVisible={false}
+                                      fullWidth={false}
+                                      label="Name"
+                                      value="jane brown"
+                                    >
+                                      <Styled(Component)
+                                        component="dt"
+                                        data-cy={null}
+                                        fullWidth={false}
+                                      >
+                                        <StyledComponent
+                                          component="dt"
+                                          data-cy={null}
+                                          forwardedComponent={
+                                            Object {
+                                              "$$typeof": Symbol(react.forward_ref),
+                                              "attrs": Array [],
+                                              "componentStyle": ComponentStyle {
+                                                "componentId": "sc-htpNat",
+                                                "isStatic": false,
+                                                "lastClassName": "iYJcPm",
+                                                "rules": Array [
+                                                  "
+  font-weight: var(--pf-global--FontWeight--bold);
+  ",
+                                                  [Function],
+                                                  "
+",
+                                                ],
+                                              },
+                                              "displayName": "Styled(Component)",
+                                              "foldedComponentIds": Array [],
+                                              "render": [Function],
+                                              "styledComponentId": "sc-htpNat",
+                                              "target": [Function],
+                                              "toString": [Function],
+                                              "warnTooManyClasses": [Function],
+                                              "withComponent": [Function],
+                                            }
+                                          }
+                                          forwardedRef={null}
+                                          fullWidth={false}
+                                        >
+                                          <Component
+                                            className="sc-htpNat iYJcPm"
+                                            component="dt"
+                                            data-cy={null}
+                                            fullWidth={false}
+                                          >
+                                            <TextListItem
+                                              className="sc-htpNat iYJcPm"
+                                              component="dt"
+                                              data-cy={null}
+                                            >
+                                              <dt
+                                                className="sc-htpNat iYJcPm"
+                                                data-cy={null}
+                                                data-pf-content={true}
+                                              >
+                                                Name
+                                              </dt>
+                                            </TextListItem>
+                                          </Component>
+                                        </StyledComponent>
+                                      </Styled(Component)>
+                                      <Styled(Component)
+                                        component="dd"
+                                        data-cy={null}
+                                        fullWidth={false}
+                                      >
+                                        <StyledComponent
+                                          component="dd"
+                                          data-cy={null}
+                                          forwardedComponent={
+                                            Object {
+                                              "$$typeof": Symbol(react.forward_ref),
+                                              "attrs": Array [],
+                                              "componentStyle": ComponentStyle {
+                                                "componentId": "sc-bxivhb",
+                                                "isStatic": false,
+                                                "lastClassName": "gxmPlV",
+                                                "rules": Array [
+                                                  "
+  word-break: break-all;
+  ",
+                                                  [Function],
+                                                  "
+  ",
+                                                  [Function],
+                                                  "
+",
+                                                ],
+                                              },
+                                              "displayName": "Styled(Component)",
+                                              "foldedComponentIds": Array [],
+                                              "render": [Function],
+                                              "styledComponentId": "sc-bxivhb",
+                                              "target": [Function],
+                                              "toString": [Function],
+                                              "warnTooManyClasses": [Function],
+                                              "withComponent": [Function],
+                                            }
+                                          }
+                                          forwardedRef={null}
+                                          fullWidth={false}
+                                        >
+                                          <Component
+                                            className="sc-bxivhb gxmPlV"
+                                            component="dd"
+                                            data-cy={null}
+                                            fullWidth={false}
+                                          >
+                                            <TextListItem
+                                              className="sc-bxivhb gxmPlV"
+                                              component="dd"
+                                              data-cy={null}
+                                            >
+                                              <dd
+                                                className="sc-bxivhb gxmPlV"
+                                                data-cy={null}
+                                                data-pf-content={true}
+                                              >
+                                                jane brown
+                                              </dd>
+                                            </TextListItem>
+                                          </Component>
+                                        </StyledComponent>
+                                      </Styled(Component)>
+                                    </Detail>
+                                  </dl>
+                                </TextList>
+                              </DetailList>
+                            </StyledComponent>
+                          </Styled(DetailList)>
+                        </div>
+                      </PFDataListCell>
+                    </StyledComponent>
+                  </DataListCell>
+                  <DataListCell
+                    key="roles"
+                  >
+                    <StyledComponent
+                      forwardedComponent={
+                        Object {
+                          "$$typeof": Symbol(react.forward_ref),
+                          "attrs": Array [],
+                          "componentStyle": ComponentStyle {
+                            "componentId": "sc-bdVaJa",
+                            "isStatic": false,
+                            "lastClassName": "kruorc",
+                            "rules": Array [
+                              "
+  word-break: break-word;
+",
+                            ],
+                          },
+                          "displayName": "DataListCell",
+                          "foldedComponentIds": Array [],
+                          "render": [Function],
+                          "styledComponentId": "sc-bdVaJa",
+                          "target": [Function],
+                          "toString": [Function],
+                          "warnTooManyClasses": [Function],
+                          "withComponent": [Function],
+                        }
+                      }
+                      forwardedRef={null}
+                    >
+                      <PFDataListCell
+                        className="sc-bdVaJa kruorc"
+                      >
+                        <div
+                          className="pf-c-data-list__cell sc-bdVaJa kruorc"
+                        >
+                          <Styled(DetailList)
+                            stacked={true}
+                          >
+                            <StyledComponent
+                              forwardedComponent={
+                                Object {
+                                  "$$typeof": Symbol(react.forward_ref),
+                                  "attrs": Array [],
+                                  "componentStyle": ComponentStyle {
+                                    "componentId": "sc-bwzfXH",
+                                    "isStatic": false,
+                                    "lastClassName": "kVCDmm",
+                                    "rules": Array [
+                                      "
+  display: grid;
+  grid-gap: 20px;
+  align-items: center;
+  ",
+                                      [Function],
+                                      "
+",
+                                    ],
+                                  },
+                                  "displayName": "Styled(DetailList)",
+                                  "foldedComponentIds": Array [],
+                                  "render": [Function],
+                                  "styledComponentId": "sc-bwzfXH",
+                                  "target": [Function],
+                                  "toString": [Function],
+                                  "warnTooManyClasses": [Function],
+                                  "withComponent": [Function],
+                                }
+                              }
+                              forwardedRef={null}
+                              stacked={true}
+                            >
+                              <DetailList
+                                className="sc-bwzfXH kVCDmm"
+                                stacked={true}
+                              >
+                                <TextList
+                                  className="sc-bwzfXH kVCDmm"
+                                  component="dl"
+                                >
+                                  <dl
+                                    className="sc-bwzfXH kVCDmm"
+                                    data-pf-content={true}
+                                  >
+                                    <Detail
+                                      alwaysVisible={false}
+                                      fullWidth={false}
+                                      label="Team Roles"
+                                      value={
+                                        <WithI18n
+                                          numChips={5}
+                                          totalChips={1}
+                                        >
+                                          <Chip
+                                            className=""
+                                            closeBtnAriaLabel="close"
+                                            component="div"
+                                            isOverflowChip={false}
+                                            isReadOnly={false}
+                                            onClick={[Function]}
+                                            tooltipPosition="top"
+                                          >
+                                            Member
+                                          </Chip>
+                                        </WithI18n>
+                                      }
+                                    >
+                                      <Styled(Component)
+                                        component="dt"
+                                        data-cy={null}
+                                        fullWidth={false}
+                                      >
+                                        <StyledComponent
+                                          component="dt"
+                                          data-cy={null}
+                                          forwardedComponent={
+                                            Object {
+                                              "$$typeof": Symbol(react.forward_ref),
+                                              "attrs": Array [],
+                                              "componentStyle": ComponentStyle {
+                                                "componentId": "sc-htpNat",
+                                                "isStatic": false,
+                                                "lastClassName": "iYJcPm",
+                                                "rules": Array [
+                                                  "
+  font-weight: var(--pf-global--FontWeight--bold);
+  ",
+                                                  [Function],
+                                                  "
+",
+                                                ],
+                                              },
+                                              "displayName": "Styled(Component)",
+                                              "foldedComponentIds": Array [],
+                                              "render": [Function],
+                                              "styledComponentId": "sc-htpNat",
+                                              "target": [Function],
+                                              "toString": [Function],
+                                              "warnTooManyClasses": [Function],
+                                              "withComponent": [Function],
+                                            }
+                                          }
+                                          forwardedRef={null}
+                                          fullWidth={false}
+                                        >
+                                          <Component
+                                            className="sc-htpNat iYJcPm"
+                                            component="dt"
+                                            data-cy={null}
+                                            fullWidth={false}
+                                          >
+                                            <TextListItem
+                                              className="sc-htpNat iYJcPm"
+                                              component="dt"
+                                              data-cy={null}
+                                            >
+                                              <dt
+                                                className="sc-htpNat iYJcPm"
+                                                data-cy={null}
+                                                data-pf-content={true}
+                                              >
+                                                Team Roles
+                                              </dt>
+                                            </TextListItem>
+                                          </Component>
+                                        </StyledComponent>
+                                      </Styled(Component)>
+                                      <Styled(Component)
+                                        component="dd"
+                                        data-cy={null}
+                                        fullWidth={false}
+                                      >
+                                        <StyledComponent
+                                          component="dd"
+                                          data-cy={null}
+                                          forwardedComponent={
+                                            Object {
+                                              "$$typeof": Symbol(react.forward_ref),
+                                              "attrs": Array [],
+                                              "componentStyle": ComponentStyle {
+                                                "componentId": "sc-bxivhb",
+                                                "isStatic": false,
+                                                "lastClassName": "gxmPlV",
+                                                "rules": Array [
+                                                  "
+  word-break: break-all;
+  ",
+                                                  [Function],
+                                                  "
+  ",
+                                                  [Function],
+                                                  "
+",
+                                                ],
+                                              },
+                                              "displayName": "Styled(Component)",
+                                              "foldedComponentIds": Array [],
+                                              "render": [Function],
+                                              "styledComponentId": "sc-bxivhb",
+                                              "target": [Function],
+                                              "toString": [Function],
+                                              "warnTooManyClasses": [Function],
+                                              "withComponent": [Function],
+                                            }
+                                          }
+                                          forwardedRef={null}
+                                          fullWidth={false}
+                                        >
+                                          <Component
+                                            className="sc-bxivhb gxmPlV"
+                                            component="dd"
+                                            data-cy={null}
+                                            fullWidth={false}
+                                          >
+                                            <TextListItem
+                                              className="sc-bxivhb gxmPlV"
+                                              component="dd"
+                                              data-cy={null}
+                                            >
+                                              <dd
+                                                className="sc-bxivhb gxmPlV"
+                                                data-cy={null}
+                                                data-pf-content={true}
+                                              >
+                                                <WithI18n
+                                                  numChips={5}
+                                                  totalChips={1}
+                                                >
+                                                  <I18n
+                                                    update={true}
+                                                    withHash={true}
+                                                  >
+                                                    <ChipGroup
+                                                      i18n={"/i18n/"}
+                                                      numChips={5}
+                                                      totalChips={1}
+                                                    >
+                                                      <ChipGroup
+                                                        aria-label="Chip group category"
+                                                        categoryName=""
+                                                        closeBtnAriaLabel="Close chip group"
+                                                        collapsedText="-4 more"
+                                                        defaultIsOpen={false}
+                                                        expandedText="Show less"
+                                                        isClosable={false}
+                                                        numChips={5}
+                                                        onClick={[Function]}
+                                                        tooltipPosition="top"
+                                                      >
+                                                        <GenerateId
+                                                          prefix="pf-random-id-"
+                                                        >
+                                                          <div
+                                                            className="pf-c-chip-group"
+                                                          >
+                                                            <ul
+                                                              aria-label="Chip group category"
+                                                              className="pf-c-chip-group__list"
+                                                              role="list"
+                                                            >
+                                                              <li
+                                                                className="pf-c-chip-group__list-item"
+                                                                key="0"
+                                                              >
+                                                                <Chip
+                                                                  className=""
+                                                                  closeBtnAriaLabel="close"
+                                                                  component="div"
+                                                                  isOverflowChip={false}
+                                                                  isReadOnly={false}
+                                                                  key=".$3"
+                                                                  onClick={[Function]}
+                                                                  tooltipPosition="top"
+                                                                >
+                                                                  <GenerateId
+                                                                    prefix="pf-random-id-"
+                                                                  >
+                                                                    <div
+                                                                      className="pf-c-chip"
+                                                                      data-ouia-component-id={2}
+                                                                      data-ouia-component-type="PF4/Chip"
+                                                                      data-ouia-safe={true}
+                                                                    >
+                                                                      <span
+                                                                        className="pf-c-chip__text"
+                                                                        id="pf-random-id-1"
+                                                                      >
+                                                                        Member
+                                                                      </span>
+                                                                      <Button
+                                                                        aria-label="close"
+                                                                        aria-labelledby="remove_pf-random-id-1 pf-random-id-1"
+                                                                        id="remove_pf-random-id-1"
+                                                                        onClick={[Function]}
+                                                                        variant="plain"
+                                                                      >
+                                                                        <button
+                                                                          aria-disabled={false}
+                                                                          aria-label="close"
+                                                                          aria-labelledby="remove_pf-random-id-1 pf-random-id-1"
+                                                                          className="pf-c-button pf-m-plain"
+                                                                          data-ouia-component-id={3}
+                                                                          data-ouia-component-type="PF4/Button"
+                                                                          data-ouia-safe={true}
+                                                                          disabled={false}
+                                                                          id="remove_pf-random-id-1"
+                                                                          onClick={[Function]}
+                                                                          type="button"
+                                                                        >
+                                                                          <TimesIcon
+                                                                            aria-hidden="true"
+                                                                            color="currentColor"
+                                                                            noVerticalAlign={false}
+                                                                            size="sm"
+                                                                          >
+                                                                            <svg
+                                                                              aria-hidden="true"
+                                                                              aria-labelledby={null}
+                                                                              fill="currentColor"
+                                                                              height="1em"
+                                                                              role="img"
+                                                                              style={
+                                                                                Object {
+                                                                                  "verticalAlign": "-0.125em",
+                                                                                }
+                                                                              }
+                                                                              viewBox="0 0 352 512"
+                                                                              width="1em"
+                                                                            >
+                                                                              <path
+                                                                                d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"
+                                                                                transform=""
+                                                                              />
+                                                                            </svg>
+                                                                          </TimesIcon>
+                                                                        </button>
+                                                                      </Button>
+                                                                    </div>
+                                                                  </GenerateId>
+                                                                </Chip>
+                                                              </li>
+                                                            </ul>
+                                                          </div>
+                                                        </GenerateId>
+                                                      </ChipGroup>
+                                                    </ChipGroup>
+                                                  </I18n>
+                                                </WithI18n>
+                                              </dd>
+                                            </TextListItem>
+                                          </Component>
+                                        </StyledComponent>
+                                      </Styled(Component)>
+                                    </Detail>
+                                  </dl>
+                                </TextList>
+                              </DetailList>
+                            </StyledComponent>
+                          </Styled(DetailList)>
+                        </div>
+                      </PFDataListCell>
+                    </StyledComponent>
+                  </DataListCell>
+                </div>
+              </DataListItemCells>
+            </StyledComponent>
+          </ResourceAccessListItem__DataListItemCells>
+        </div>
+      </DataListItemRow>
+    </li>
+  </DataListItem>
+</ResourceAccessListItem>
+`;

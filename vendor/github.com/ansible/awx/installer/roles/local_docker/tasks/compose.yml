@@ -1,0 +1,52 @@
+---
+- name: Create {{ docker_compose_dir }} directory
+  file:
+    path: "{{ docker_compose_dir }}"
+    state: directory
+
+- name: Create Redis socket directory
+  file:
+    path: "{{ docker_compose_dir }}/redis_socket"
+    state: directory
+    mode: 0777
+
+- name: Create Docker Compose Configuration
+  template:
+    src: "{{ item.file }}.j2"
+    dest: "{{ docker_compose_dir }}/{{ item.file }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - file: environment.sh
+      mode: "0600"
+    - file: credentials.py
+      mode: "0600"
+    - file: docker-compose.yml
+      mode: "0600"
+    - file: nginx.conf
+      mode: "0600"
+    - file: redis.conf
+      mode: "0664"
+  register: awx_compose_config
+
+- name: Render SECRET_KEY file
+  copy:
+    content: "{{ secret_key }}"
+    dest: "{{ docker_compose_dir }}/SECRET_KEY"
+    mode: 0600
+  register: awx_secret_key
+
+- block:
+    - name: Start the containers
+      docker_compose:
+        project_src: "{{ docker_compose_dir }}"
+        restarted: "{{ awx_compose_config is changed or awx_secret_key is changed }}"
+      register: awx_compose_start
+
+    - name: Update CA trust in awx_web container
+      command: docker exec awx_web '/usr/bin/update-ca-trust'
+      when: awx_compose_config.changed or awx_compose_start.changed
+
+    - name: Update CA trust in awx_task container
+      command: docker exec awx_task '/usr/bin/update-ca-trust'
+      when: awx_compose_config.changed or awx_compose_start.changed
+  when: compose_start_containers|bool

@@ -1,0 +1,149 @@
+# Ignore generated schema
+swagger.json
+schema.json
+reference-schema.json
+
+# Tags
+.tags
+.tags1
+
+# Tower
+awx-dev
+awx/settings/local_*.py*
+awx/*.sqlite3
+awx/*.sqlite3_*
+awx/job_status
+awx/projects
+awx/job_output
+awx/public/media
+awx/public/static
+awx/ui/tests/test-results.xml
+awx/ui/client/src/local_settings.json
+awx/main/fixtures
+awx/*.log
+tower/tower_warnings.log
+celerybeat-schedule
+awx/ui/static
+awx/ui/build_test
+awx/ui/client/languages
+awx/ui/templates/ui/index.html
+awx/ui/templates/ui/installing.html
+awx/ui_next/node_modules/
+awx/ui_next/src/locales/
+awx/ui_next/coverage/
+awx/ui_next/build
+awx/ui_next/.env.local
+rsyslog.pid
+/tower-license
+/tower-license/**
+tools/prometheus/data
+tools/docker-compose/Dockerfile
+
+# Tower setup playbook testing
+setup/test/roles/postgresql
+**/provision_docker
+
+# Python & setuptools
+__pycache__
+/build
+/deb-build
+/reprepro
+/rpm-build
+/tar-build
+/setup-bundle-build
+/dist
+/*.egg-info
+*.py[c,o]
+
+# JavaScript
+/Gruntfile.js
+/Brocfile.js
+/bower.json
+/package.json
+/testem.yml
+**/coverage
+/.istanbul.yml
+**/node_modules/**
+/tmp
+**/npm-debug.log*
+**/package-lock.json
+
+# UI build flag files
+awx/ui/.deps_built
+awx/ui/.release_built
+awx/ui/.release_deps_built
+
+# Testing
+.cache
+.coverage
+.tox
+coverage.xml
+htmlcov
+pep8.txt
+scratch
+testem.log
+awx/awx_test.sqlite3-journal
+.pytest_cache/
+
+# Mac OS X
+*.DS_Store
+
+# Editors
+*.sw[poj]
+*~
+
+# Vagrant
+/Vagrantfile
+tools/vagrant/local.yml
+.vagrant*
+
+# Virtualbox
+ansible-tower-*-ova
+ansible-tower-*.box
+
+# Setup
+setup.log
+backup.log
+restore.log
+setup/tower_setup_conf.yml
+setup/setup.log
+setup/inventory
+tower-backup-*
+
+# Ansible
+**/*.retry
+
+# Other
+.tower_cycle
+env/*
+nohup.out
+reports
+*.bak
+*.bak[0-9]
+*.dot
+*.log
+*.log.[0-9]
+*.results
+local/
+*.mo
+requirements/vendor
+.i18n_built
+.idea/*
+*credentials*.y*ml*
+
+# AWX python libs populated by requirements.txt
+awx/lib/.deps_built
+awx/lib/site-packages
+venv/*
+use_dev_supervisor.txt
+
+
+# Ansible module tests
+/awx_collection_test_venv/
+/awx_collection/*.tar.gz
+/sanity/
+/awx_collection_build/
+
+.idea/*
+*.unison.tmp
+*.#
