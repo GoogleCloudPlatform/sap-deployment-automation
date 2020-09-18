@@ -3,8 +3,8 @@
   stat:
     path: '{{ item }}'
   loop:
-  - '{{ sap_gce_ssh_priv_key_file }}'
-  - '{{ sap_gce_ssh_pub_key_file }}'
+  - '{{ sap_ssh_priv_key }}'
+  - '{{ sap_ssh_pub_key }}'
   register: stat_ssh_key_files
   changed_when: false
 
@@ -17,11 +17,11 @@
     debug:
       msg: 'Download {{ item }} from bucket not yet implemented'
     loop:
-    - '{{ sap_gce_ssh_priv_key_file }}'
-    - '{{ sap_gce_ssh_pub_key_file }}'
+    - '{{ sap_ssh_priv_key }}'
+    - '{{ sap_ssh_pub_key }}'
   - name: ensure ssh key file directory is present
     file:
-      path: '{{ sap_gce_ssh_priv_key_file | dirname }}'
+      path: '{{ sap_ssh_priv_key | dirname }}'
       mode: '0700'
       state: directory
   - name: clean up stale ssh key file
@@ -29,28 +29,28 @@
       path: '{{ item }}'
       state: absent
     loop:
-    - '{{ sap_gce_ssh_priv_key_file }}'
-    - '{{ sap_gce_ssh_pub_key_file }}'
+    - '{{ sap_ssh_priv_key }}'
+    - '{{ sap_ssh_pub_key }}'
     when: false in stat_ssh_key_files_exists and true in stat_ssh_key_files_exists
   - name: generate key files
     command: |
-      ssh-keygen -t rsa -N '' -m pem -f {{ sap_gce_ssh_priv_key_file }}
+      ssh-keygen -t rsa -N '' -m pem -f {{ sap_ssh_priv_key }}
     args:
-      creates: '{{ sap_gce_ssh_priv_key_file }}'
+      creates: '{{ sap_ssh_priv_key }}'
   - name: store ssh key files
     debug:
       msg: 'Upload {{ item | basename }} to bucket not yet implemented'
     loop:
-    - '{{ sap_gce_ssh_priv_key_file }}'
-    - '{{ sap_gce_ssh_pub_key_file }}'
+    - '{{ sap_ssh_priv_key }}'
+    - '{{ sap_ssh_pub_key }}'
   - name: ensure correct permissions on ssh key files
     file:
       path: '{{ item.path }}'
       mode: '{{ item.mode }}'
     loop:
-    - path: '{{ sap_gce_ssh_priv_key_file }}'
+    - path: '{{ sap_ssh_priv_key }}'
       mode: '0600'
-    - path: '{{ sap_gce_ssh_pub_key_file }}'
+    - path: '{{ sap_ssh_pub_key }}'
       mode: '0644'
   when: false in stat_ssh_key_files_exists
 
@@ -88,8 +88,8 @@
 - name: build inventory
   add_host:
     name: '{{ item.host }}'
-    ansible_user: '{{ sap_gce_ssh_user }}'
-    ansible_ssh_private_key_file: '{{ sap_gce_ssh_priv_key_file }}'
+    ansible_user: '{{ sap_ssh_user }}'
+    ansible_ssh_private_key_file: '{{ sap_ssh_priv_key }}'
     terraform: '{{ terraform }}'
     groups: '{{ item.group }}'
   loop: '{{ inventory_hosts }}'
@@ -97,8 +97,8 @@
 
 - name: wait for hosts
   command: >-
-    ssh -i {{ sap_gce_ssh_priv_key_file }} -o StrictHostKeyChecking=no
-    {{ sap_gce_ssh_user }}@{{ item.host }} exit
+    ssh -i {{ sap_ssh_priv_key }} -o StrictHostKeyChecking=no
+    {{ sap_ssh_user }}@{{ item.host }} exit
   register: can_ssh
   retries: 12
   delay: 10

@@ -1,133 +1,112 @@
-output "sap_hana_sid" {
-  description = "SAP Hana SID user"
-  value       = var.sap_hana_sid
-}
-
 output "project_id" {
-  value = var.project_id
+  value = module.hana_ha.project_id
 }
 
 output "instance_name" {
   description = "Name of instance"
-  value       = var.instance_name
+  value       = module.hana_ha.instance_name
 }
 
 output "zone_a" {
   description = "Primary Compute Engine instance deployment zone"
-  value       = var.zone_a
+  value       = module.hana_ha.zone_a
 }
 
 output "zone_b" {
   description = "Secondary Compute Engine instance deployment zone"
-  value       = var.zone_b
+  value       = module.hana_ha.zone_b
 }
 
 output "instances_self_links_primary" {
   description = "List of self-links for primary compute instances"
-  value       = module.sap_hana_umig_primary.instances_self_links
+  value       = module.hana_ha.instances_self_links_primary
 }
 
 output "instances_self_links_secondary" {
   description = "List of self-links for secondary compute instances"
-  value       = module.sap_hana_umig_secondary.instances_self_links
+  value       = module.hana_ha.instances_self_links_secondary
 }
 
 output "address_primary" {
-  value = google_compute_address.gcp_sap_hana_intip_primary.address
+  value = module.hana_ha.address_primary
 }
 
 output "address_secondary" {
-  value = google_compute_address.gcp_sap_hana_intip_secondary.address
+  value = module.hana_ha.address_secondary
 }
 
 output "hana_data_size" {
-  value = local.hana_data_size
+  value = module.hana_ha.hana_data_size
 }
 
 output "hana_shared_size" {
-  value = local.hana_shared_size
+  value = module.hana_ha.hana_shared_size
 }
 
 output "hana_log_size" {
-  value = local.hana_log_size
+  value = module.hana_ha.hana_log_size
 }
 
 output "hana_usr_size" {
-  value = local.hana_usr_size
+  value = module.hana_ha.hana_usr_size
 }
 
 output "hana_backup_size" {
-  value = local.hana_backup_size
+  value = module.hana_ha.hana_backup_size
 }
 
 output "sap_image_family" {
-  value = contains([element(split("-", var.source_image_family), 0)], "rhel") ? "RedHat" : "Suse"
-}
-
-output "sap_install_files_bucket" {
-  value = var.sap_install_files_bucket
-}
-
-output "sap_hostagent_file_name" {
-  value = var.sap_hostagent_file_name
-}
-
-output "sap_hana_bundle_file_name" {
-  value = var.sap_hana_bundle_file_name
-}
-
-output "sap_hana_sapcar_file_name" {
-  value = var.sap_hana_sapcar_file_name
+  value = module.hana_ha.sap_image_family
 }
 
 output "primary_attached_disks_data" {
-  value = google_compute_attached_disk.primary_data.device_name
+  value = module.hana_ha.primary_attached_disks_data
 }
 
 output "primary_attached_disks_backup" {
-  value = google_compute_attached_disk.primary_backup.device_name
+  value = module.hana_ha.primary_attached_disks_backup
 }
 
 output "secondary_attached_disks_data" {
-  value = google_compute_attached_disk.secondary_data.device_name
+  value = module.hana_ha.secondary_attached_disks_data
 }
 
 output "secondary_attached_disks_backup" {
-  value = google_compute_attached_disk.secondary_backup.device_name
+  value = module.hana_ha.secondary_attached_disks_backup
 }
 
 output "primary_umig_group_link" {
-  value = length(module.sap_hana_umig_primary.self_links) != 0 ? element(tolist(module.sap_hana_umig_primary.self_links), 0) : ""
+  value = module.hana_ha.primary_umig_group_link
 }
 
 output "secondary_umig_group_link" {
-  value = length(module.sap_hana_umig_secondary.self_links) != 0 ? element(tolist(module.sap_hana_umig_secondary.self_links), 0) : ""
+  value = module.hana_ha.secondary_umig_group_link
 }
 
 output "primary_instance_name" {
-  value = length(module.sap_hana_umig_primary.instances_self_links) != 0 ? element(split("/", element(tolist(module.sap_hana_umig_primary.instances_self_links), 0)), 10) : ""
+  value = module.hana_ha.primary_instance_name
 }
 
 output "secondary_instance_name" {
-  value = length(module.sap_hana_umig_secondary.instances_self_links) != 0 ? element(split("/", element(tolist(module.sap_hana_umig_secondary.instances_self_links), 0)), 10) : ""
+  value = module.hana_ha.secondary_instance_name
 }
 
 output "primary_instance_ip" {
-  value = google_compute_address.gcp_sap_hana_intip_primary.address
+  value = module.hana_ha.primary_instance_ip
 }
 
 output "secondary_instance_ip" {
-  value = google_compute_address.gcp_sap_hana_intip_secondary.address
+  value = module.hana_ha.secondary_instance_ip
 }
 
 output "hana_ilb_ip" {
-  value = module.sap_hana_ilb.ip_address
+  value = module.hana_ha.hana_ilb_ip
 }
 
 output "health_check_port" {
-  value = local.health_check["port"]
+  value = module.hana_ha.health_check_port
 }
 
 output "inventory" {
-  value = { hana = [google_compute_address.gcp_sap_hana_intip_primary.address, google_compute_address.gcp_sap_hana_intip_secondary.address] }
+  value = module.hana_ha.inventory
 }

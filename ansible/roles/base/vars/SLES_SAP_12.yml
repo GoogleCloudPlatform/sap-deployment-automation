@@ -8,3 +8,6 @@ package_list:
   - numactl
   - sap-suse-cluster-connector
   - socat
+  - libgcc_s1
+  - libstdc++6
+  - libatomic1

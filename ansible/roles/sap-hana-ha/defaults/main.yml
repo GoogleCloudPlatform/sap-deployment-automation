@@ -1,0 +1,41 @@
+sap_hana_bundle_file_name_default: IMDB_SERVER20_047_0-80002031.SAR
+sap_hana_sapcar_file_name_default: SAPCAR_1320-80000935.EXE
+sap_hostagent_file_name_default: saphostagentrpm_44-20009394.rpm
+sap_install_files_bucket_default: nw-ansible
+sap_hana_monitoring_user: hanahamu
+sap_hana_user_store_key: HANAHAUSK
+sap_hana_disks_defaults:
+  - { name: data, partition_path : hanadata }
+  - { name: backup, partition_path : hanabackup }
+
+sap_hana_swapon: false
+
+sap_hana_disks:
+  - { name: data, partition_path : "{{ sap_hana_data_partition_name }}"}
+  - { name: backup, partition_path : "{{ sap_hana_backup_partition_name }}"}
+sap_hana_logvols:
+  shared:
+    size: "{{ sap_hana_shared_size }}"
+    vol: "{{ sap_hana_data_partition_name }}" 
+    mountpoint: "{{ sap_hana_shared_mountpoint }}"
+    fstype: xfs
+  data:
+    size: "{{ sap_hana_data_size }}"
+    vol: "{{ sap_hana_data_partition_name }}"
+    mountpoint: "{{ sap_hana_data_mountpoint }}"
+    fstype: xfs
+  log:
+    size: "{{ sap_hana_log_size }}"
+    vol: "{{ sap_hana_data_partition_name }}"
+    mountpoint: "{{ sap_hana_log_mountpoint }}"
+    fstype: xfs
+  usr:
+    size: "{{ sap_hana_usr_size }}"
+    vol: "{{ sap_hana_data_partition_name }}"
+    mountpoint: "{{ sap_hana_usr_mountpoint }}"
+    fstype: xfs
+  backup:
+    size: "{{ sap_hana_backup_size}}"
+    vol: "{{ sap_hana_backup_partition_name }}"
+    mountpoint: "{{ sap_hana_backup_mountpoint }}"
+    fstype: xfs

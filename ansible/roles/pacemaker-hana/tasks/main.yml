@@ -49,7 +49,7 @@
     name: pacemaker
     tasks_from: resources-stonith
   vars:
-    project_id: '{{ sap_hana_project_id }}'
+    project_id: '{{ sap_project_id }}'
     sap_primary_instance: '{{ sap_hana_primary_instance_name }}'
     sap_secondary_instance: '{{ sap_hana_secondary_instance_name }}'
     sap_primary_zone: '{{ sap_hana_primary_instance_zone }}'

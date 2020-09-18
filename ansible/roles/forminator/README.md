@@ -20,11 +20,11 @@ The Terraform module that is passed in the `sap_tf_project_path` variable must d
 
 `sap_tf_project_path`: (Required, type _string_) - The path to the Terraform module which will be applied.
 
-`sap_gce_ssh_priv_key_file`: (Optional, type _string_, default `~/.ssh/id_rsa`) - Private ssh key for `sap_gce_ssh_user`.
+`sap_ssh_priv_key`: (Optional, type _string_, default `~/.ssh/id_rsa`) - Private ssh key for `sap_ssh_user`.
 
-`sap_gce_ssh_pub_key_file`: (Optional, type _string_, default `~/.ssh/id_rsa.pub`) - Public ssh key for `sap_gce_ssh_user`.
+`sap_ssh_pub_key`: (Optional, type _string_, default `~/.ssh/id_rsa.pub`) - Public ssh key for `sap_ssh_user`.
 
-`sap_gce_ssh_user`: (Optional, type _string_, default `ansible`) - User to be added to machines along with a public ssh key, for use by Ansible.
+`sap_ssh_user`: (Optional, type _string_, default `ansible`) - User to be added to machines along with a public ssh key, for use by Ansible.
 
 `sap_state`: (Optional, choice of `present` or `absent`, default `present`) - Whether or not the Terraform resources should be present or absent.
 
@@ -42,7 +42,7 @@ The Terraform module that is passed in the `sap_tf_project_path` variable must d
       sap_tf_state_bucket_prefix: '{{ sap_instance_name }}'
       sap_tf_project_path: './tf'
       sap_tf_variables:
-        gce_ssh_user: '{{ sap_gce_ssh_user }}'
+        gce_ssh_user: '{{ sap_ssh_user }}'
         gce_ssh_pub_key_file: '{{ playbook_dir }}/ssh-key.pub'
         boot_disk_size: 30
 ```

@@ -14,12 +14,12 @@ output "zone" {
 
 output "ascs_address" {
   description = "instance private IP"
-  value = module.ascs.instance_external_ip
+  value       = module.ascs.instance_external_ip
 }
 
 output "pas_address" {
   description = "instance private IP"
-  value = module.pas.instance_external_ip
+  value       = module.pas.instance_external_ip
 }
 
 output "sap_image_family" {
@@ -32,16 +32,16 @@ output "subnet_cidr" {
 
 output "ascs_private_ip" {
   description = "instance private IP"
-  value = module.ascs.instance_internal_ip
+  value       = module.ascs.instance_internal_ip
 }
 
 output "pas_private_ip" {
   description = "instance private IP"
-  value = module.pas.instance_internal_ip
+  value       = module.pas.instance_internal_ip
 }
 output "nfs_private_ip" {
   description = "instance private IP"
-  value = module.ascs.instance_internal_ip
+  value       = module.ascs.instance_internal_ip
 }
 output "inventory" {
   value = { ascs = [module.ascs.instance_internal_ip], pas = [module.pas.instance_internal_ip] }

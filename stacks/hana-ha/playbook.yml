@@ -6,81 +6,49 @@
   roles:
   - role: forminator
     vars:
-      sap_tf_state_bucket: '{{ sap_hana_state_bucket }}'
-      sap_tf_state_bucket_prefix: '{{ sap_hana_instance_name }}'
+      sap_tf_state_bucket: '{{ sap_tf_state_bucket }}'
+      sap_tf_state_bucket_prefix: '{{ sap_tf_state_bucket_prefix }}'
       sap_tf_project_path: ./tf
       sap_state: '{{ state | default("present") }}'
+      sap_ssh_user: '{{ sap_ssh_user }}'
+      sap_ssh_pub_key: '{{ sap_ssh_pub_key }}'
+      sap_ssh_priv_key: '{{ sap_ssh_priv_key }}'
       sap_tf_variables:
-        boot_disk_size: '{{ sap_hana_boot_disk_size }}'
         instance_name: '{{ sap_hana_instance_name }}'
-        instance_type: '{{ sap_hana_instance_type }}'
-        source_image_family: '{{ sap_hana_source_image_family }}'
-        source_image_project: '{{ sap_hana_source_image_project }}'
-        zone_a: '{{ sap_hana_zone_a }}'
-        zone_b: '{{ sap_hana_zone_b }}'
+        gce_ssh_user: '{{ sap_ssh_user }}'
+        gce_ssh_pub_key_file: '{{ sap_ssh_pub_key }}'
+        project_id: '{{ sap_project_id }}'
+        source_image_family: '{{ sap_source_image_family }}'
+        source_image_project: '{{ sap_source_image_project }}'
+        network: '{{ sap_network }}'
+        subnetwork: '{{ sap_subnetwork }}'
         service_account_email: '{{ sap_hana_service_account_email }}'
-        subnetwork: '{{ sap_hana_subnetwork }}'
-        subnetwork_project: '{{ sap_hana_subnetwork_project_id | default("") }}'
-        sap_install_files_bucket: '{{ sap_install_files_bucket }}'
-        sap_hostagent_file_name: '{{ sap_hostagent_file_name }}'
-        sap_hana_bundle_file_name: '{{ sap_hana_bundle_file_name }}'
-        sap_hana_sapcar_file_name: '{{ sap_hana_sapcar_file_name }}'
-        run_provisioner: 'false'
+        subnetwork_project: '{{ sap_subnetwork_project_id | default(sap_hana_project_id) }}'
+        zone_a: '{{ sap_hana_primary_instance_zone | default("us-central1-a") }}'
+        zone_b: '{{ sap_hana_secondary_instance_zone | default("us-central1-b") }}'
+        instance_type: '{{ sap_hana_instance_type | default("n1-highmem-32") }}'
+        autodelete_disk: '{{ sap_hana_autodelete_boot_disk | default("true") }}'
+        boot_disk_size: '{{ sap_hana_boot_disk_size | default(30) }}'
+        boot_disk_type: '{{ sap_hana_boot_disk_type | default("pd-ssd") }}'
+        network_tags: '{{ sap_hana_network_tags | default([]) }}'
+        target_size: '{{ sap_hana_target_instance_size | default(1) }}'
+        pd_kms_key: '{{ sap_hana_pd_kms_key | default(null) }}'
+        create_backup_volume: '{{ sap_hana_create_backup_volume | default(true) }}'
 
 - name: SAP HANA configure on both primay and secondary
   hosts: hana
   become: yes
   vars:
-    sap_image_family: '{{ terraform.outputs.sap_image_family.value }}'
-    sap_hana_deployment_hostagent_file_name: '{{ terraform.outputs.sap_hostagent_file_name.value }}'
-    sap_hana_deployment_bundle_sar_file_name: '{{ terraform.outputs.sap_hana_bundle_file_name.value }}'
-    sap_hana_deployment_sapcar_file_name: '{{ terraform.outputs.sap_hana_sapcar_file_name.value }}'
     sap_hana_primary_instance_name: '{{ terraform.outputs.primary_instance_name.value }}'
     sap_hana_secondary_instance_name: '{{ terraform.outputs.secondary_instance_name.value }}'
     sap_hana_primary_instance_ip: '{{ terraform.outputs.primary_instance_ip.value }}'
     sap_hana_secondary_instance_ip: '{{ terraform.outputs.secondary_instance_ip.value }}'
-    sap_hana_primary_instance_zone: '{{ terraform.outputs.zone_a.value }}'
-    sap_hana_secondary_instance_zone: '{{ terraform.outputs.zone_b.value }}'
     sap_hana_ilb_ip: '{{ terraform.outputs.hana_ilb_ip.value }}'
-    sap_hana_project_id: '{{ terraform.outputs.project_id.value }}'
     sap_hana_health_check_port: '{{ terraform.outputs.health_check_port.value }}'
-    sap_hostagent_rpm_file_name: '{{ terraform.outputs.sap_hostagent_file_name.value }}'
-    hana_shared_size: '{{ terraform.outputs.hana_shared_size.value }}G'
-    hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
-    hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
-    hana_usr_size: '{{ terraform.outputs.hana_usr_size.value }}G'
-    hana_backup_size: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
-    sap_hana_monitoring_user: '{{ sap_hana_monitoring_user | default('hanahamu') }}'
-    sap_hana_user_store_key: '{{ sap_hana_monitoring_user | default('HANAHAUSK') }}'
-    swapon: false
-    disks:
-        - { name: data, partition_path : "{{ sap_hana_data_partition_name }}"}
-        - { name: backup, partition_path : "{{ sap_hana_backup_partition_name }}"}
-    logvols:
-      shared:
-        size: "{{ hana_shared_size }}"
-        vol: "{{ sap_hana_data_partition_name }}" 
-        mountpoint: "{{ sap_hana_shared_mountpoint }}"
-        fstype: xfs
-      data:
-        size: "{{ hana_data_size }}"
-        vol: "{{ sap_hana_data_partition_name }}"
-        mountpoint: "{{ sap_hana_data_mountpoint }}"
-        fstype: xfs
-      log:
-        size: "{{ hana_log_size }}"
-        vol: "{{ sap_hana_data_partition_name }}"
-        mountpoint: "{{ sap_hana_log_mountpoint }}"
-        fstype: xfs
-      usr:
-        size: "{{ hana_usr_size }}"
-        vol: "{{ sap_hana_data_partition_name }}"
-        mountpoint: "{{ sap_hana_usr_mountpoint }}"
-        fstype: xfs
-      backup:
-        size: "{{ hana_backup_size}}"
-        vol: "{{ sap_hana_backup_partition_name }}"
-        mountpoint: "{{ sap_hana_backup_mountpoint }}"
-        fstype: xfs
+    sap_hana_shared_size: '{{ terraform.outputs.hana_shared_size.value }}G'
+    sap_hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
+    sap_hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
+    sap_hana_usr_size: '{{ terraform.outputs.hana_usr_size.value }}G'
+    sap_hana_backup_size: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
   roles:
-  - role: sap-hana-ha-role
+  - role: sap-hana-ha
