@@ -10,6 +10,9 @@
       sap_tf_state_bucket_prefix: '{{ sap_tf_state_bucket_prefix }}'
       sap_tf_project_path: ./tf
       sap_state: '{{ state | default("present") }}'
+      sap_ssh_user: '{{ sap_ssh_user }}'
+      sap_ssh_pub_key: '{{ sap_ssh_pub_key }}'
+      sap_ssh_priv_key: '{{ sap_ssh_priv_key }}'
       sap_tf_variables:
         instance_name: '{{ sap_hana_instance_name }}'
         project_id: '{{ sap_project_id }}'

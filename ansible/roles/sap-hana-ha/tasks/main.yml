@@ -36,6 +36,10 @@
 - name: Include sap hana install role
   include_role:
     name: sap-hana-install
+  vars:
+    sap_hana_bundle_file_name: "{{ sap_hana_bundle_file_name_default }}"
+    sap_hana_sapcar_file_name: "{{ sap_hana_sapcar_file_name_default }}"
+    sap_hostagent_file_name: "{{ sap_hostagent_file_name_default }}"
 
 - name: Include sap hana start role
   include_role:
