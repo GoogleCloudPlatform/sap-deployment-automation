@@ -5,7 +5,7 @@
     state: present
   register: result
   retries: "{{ package_retries_cnt }}"
-  until: result.rc == 0
+  until: result is succeeded
   delay: "{{ package_retries_delay }}"
 
 - name: Disable SELinux
