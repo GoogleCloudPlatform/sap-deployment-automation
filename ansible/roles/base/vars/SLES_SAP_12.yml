@@ -6,3 +6,5 @@ package_list:
   - krb5-32bit
   - unrar
   - numactl
+  - sap-suse-cluster-connector
+  - socat

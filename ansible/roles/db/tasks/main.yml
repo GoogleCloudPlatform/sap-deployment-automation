@@ -8,7 +8,7 @@
 
 - name: changing permissions
   file:
-    path: /sapmnt/Software
+    path: /sapmnt
     state: directory
     mode: 0775
     recurse: true
