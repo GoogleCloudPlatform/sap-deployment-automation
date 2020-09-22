@@ -6,8 +6,8 @@
     dest: /tmp/
     flat: yes
   loop:
-    - /usr/sap/{{ sap_hana_deployment_hana_sid }}/SYS/global/security/rsecssfs/data/SSFS_{{ sap_hana_deployment_hana_sid }}.DAT
-    - /usr/sap/{{ sap_hana_deployment_hana_sid }}/SYS/global/security/rsecssfs/key/SSFS_{{ sap_hana_deployment_hana_sid }}.KEY
+    - /usr/sap/{{ sap_hana_sid }}/SYS/global/security/rsecssfs/data/SSFS_{{ sap_hana_sid }}.DAT
+    - /usr/sap/{{ sap_hana_sid }}/SYS/global/security/rsecssfs/key/SSFS_{{ sap_hana_sid }}.KEY
   when:
     - '"-pri" in "{{ ansible_hostname }}"'
 
@@ -15,12 +15,12 @@
   copy:
     src: "/tmp/{{ item.file }}"
     dest: "{{ item.path }}{{ item.file }}"
-    owner: "{{ sap_hana_deployment_hana_sid | lower }}adm"
+    owner: "{{ sap_hana_sid | lower }}adm"
     group: sapsys
     mode: '{{ item.mode }}'
   loop:
-    - { path: '/usr/sap/{{ sap_hana_deployment_hana_sid }}/SYS/global/security/rsecssfs/data/', file: 'SSFS_{{ sap_hana_deployment_hana_sid }}.DAT', mode: '0600' }
-    - { path: '/usr/sap/{{ sap_hana_deployment_hana_sid }}/SYS/global/security/rsecssfs/key/', file: 'SSFS_{{ sap_hana_deployment_hana_sid }}.KEY', mode: '0640' }
+    - { path: '/usr/sap/{{ sap_hana_sid }}/SYS/global/security/rsecssfs/data/', file: 'SSFS_{{ sap_hana_sid }}.DAT', mode: '0600' }
+    - { path: '/usr/sap/{{ sap_hana_sid }}/SYS/global/security/rsecssfs/key/', file: 'SSFS_{{ sap_hana_sid }}.KEY', mode: '0640' }
   when:
     - '"-sec" in "{{ ansible_hostname }}"'
   notify: "Delete ssfs keys stored in /tmp"

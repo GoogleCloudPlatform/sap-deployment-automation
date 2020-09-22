@@ -15,16 +15,16 @@
       - { name: swap, partition_path : swap }
     logvols:
       usrsap:
-        size: "{{ usr_sap_size }}"
+        size: "{{ sap_nw_usrsap_disk_size - 1 }}G"
         vol: usrsap
         mountpoint: /usr/sap
       sapmnt:
-        size: "{{ sap_mnt_size }}"
+        size: "{{ sap_nw_sapmnt_disk_size - 1 }}G"
         vol: sapmnt
         mountpoint: /sapmnt
     swapvols:
       swap:
-        size: "{{ swap_size }}"
+        size: "{{ sap_nw_swap_disk_size - 1 }}G"
         vol: swap 
         mountpoint: /swap 
 - name: include nw-pre primary tasks
@@ -39,11 +39,4 @@
   include_role:
     name: ascs  
   vars:
-    sap_deployment_product_id: "{{ sap_ascs_deployment_product_id }}"
-    template: "{{ template }}"
-    ascs_sid: "{{ ascs_sid }}"
-    sap_deployment_sapcar_path: "{{ sap_deployment_sapcar_path }}"     
-    sap_deployment_ascs_instance_nr: "{{ sap_deployment_ascs_instance_nr }}"
-    sap_sapinst_package_kernel: "{{ sap_sapinst_package_kernel }}"
-    sap_archives_downloadbasket: "{{ sap_archives_downloadbasket }}"  
-    sap_deployment_password: "{{ sap_deployment_password }}"                
+    sap_nw_product_id: "{{ sap_nw_ascs_product_id }}"

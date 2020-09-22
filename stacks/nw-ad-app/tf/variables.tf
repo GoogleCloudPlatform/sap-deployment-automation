@@ -92,13 +92,6 @@ variable "network_tags" {
   default     = []
 }
 
-
-
-variable "sap_deployment_debug" {
-  description = "Debug flag for Netweaver deployment."
-  default     = "false"
-}
-
 variable "public_ip" {
   description = "Determines whether a public IP address is added to your VM instance."
   default     = 1

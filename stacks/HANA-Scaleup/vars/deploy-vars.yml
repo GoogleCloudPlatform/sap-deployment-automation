@@ -13,6 +13,6 @@ sap_hana_service_account_email: terraform-managed-sa@albatross-duncanl-sandbox-2
 sap_hana_zone: us-central1-a
 sap_hana_subnetwork: app2
 sap_install_files_bucket: nw-ansible
-sap_hana_deployment_hana_sid: RH1
-sap_hana_deployment_hana_instance_number: "00"
+sap_hana_sid: RH1
+sap_hana_instance_number: "00"
 sap_hana_password: Google123

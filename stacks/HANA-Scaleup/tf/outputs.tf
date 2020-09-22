@@ -1,13 +1,3 @@
-output "sap_hana_sid" {
-  description = "SAP Hana SID user"
-  value       = var.sap_hana_sid
-}
-
-output "instance_name" {
-  description = "Name of instance"
-  value       = var.instance_name
-}
-
 output "zone" {
   description = "Compute Engine instance deployment zone"
   value       = var.zone
@@ -45,16 +35,8 @@ output "hana_backup_size" {
   value = local.hana_backup_size
 }
 
-output "sap_image_family" {
-  value = contains([element(split("-", var.linux_image_family), 0)], "rhel") ? "RedHat" : "Suse"
-}
-
-output "sap_install_files_bucket" {
-  value = var.sap_install_files_bucket
-}
-
-output "sap_hostagent_file_name" {
-  value = var.sap_hostagent_file_name
+output "sap_hostagent_rpm_file_name" {
+  value = var.sap_hostagent_rpm_file_name
 }
 
 output "sap_hana_bundle_file_name" {

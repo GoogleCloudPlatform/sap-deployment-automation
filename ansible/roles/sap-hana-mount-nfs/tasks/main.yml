@@ -38,9 +38,9 @@
   when: 
     - "{{ create_backup_volume }} == true"
 
-- name: Create {{ sap_hana_deployment_hana_sid }} directories in /hana/data and /hana/log
+- name: Create {{ sap_hana_sid }} directories in /hana/data and /hana/log
   file:
-    path: "{{ item }}/{{ sap_hana_deployment_hana_sid }}"
+    path: "{{ item }}/{{ sap_hana_sid }}"
     state: directory
     mode: '0777'
   with_items:

@@ -14,11 +14,11 @@ variable "instance_type" {
   description = "The GCE instance/machine type."
 }
 
-variable "linux_image_family" {
+variable "source_image_family" {
   description = "GCE image family."
 }
 
-variable "linux_image_project" {
+variable "source_image_project" {
   description = "Project name containing the linux image."
 }
 
@@ -26,7 +26,7 @@ variable "sap_install_files_bucket" {
   description = "SAP install files GCE bucket name"
 }
 
-variable "sap_hostagent_file_name" {
+variable "sap_hostagent_rpm_file_name" {
   description = "SAP Host agent filename"
 }
 
@@ -116,52 +116,8 @@ variable "network_tags" {
   default     = []
 }
 
-variable "public_ip" {
+variable "use_public_ip" {
   description = "Determines whether a public IP address is added to your VM instance."
-  default     = true
-}
-
-variable "address_name" {
-  description = "Name of static IP adress to add to the instance's access config."
-  default     = ""
-}
-
-variable "sap_hana_deployment_bucket" {
-  description = "SAP hana deployment bucket."
-}
-
-variable "sap_deployment_debug" {
-  description = "Debug flag for SAP HANA deployment."
-  default     = "false"
-}
-
-variable "post_deployment_script" {
-  description = "SAP HANA post deployment script. Must be a gs:// or https:// link to the script."
-  default     = ""
-}
-
-variable "sap_hana_sid" {
-  description = "SAP HANA System Identifier. When using the SID to enter a user session, like this for example, `su - [SID]adm`, make sure that [SID] is in lower case."
-}
-
-variable "sap_hana_instance_number" {
-  description = "SAP HANA instance number"
-}
-
-variable "sap_hana_sidadm_password" {
-  description = "SAP HANA System Identifier Admin password"
-}
-
-variable "sap_hana_system_password" {
-  description = "SAP HANA system password"
-}
-
-variable "sap_hana_sidadm_uid" {
-  description = "SAP HANA System Identifier Admin UID"
-}
-
-variable "sap_hana_sapsys_gid" {
-  description = "SAP HANA SAP System GID"
 }
 
 variable "gce_ssh_user" {

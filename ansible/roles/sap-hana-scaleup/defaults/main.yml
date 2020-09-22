@@ -1,6 +1,7 @@
-sap_hana_bundle_file_name_default: IMDB_SERVER20_047_0-80002031.SAR
-sap_hana_sapcar_file_name_default: SAPCAR_1320-80000935.EXE
-sap_hostagent_file_name_default: saphostagentrpm_44-20009394.rpm
+sap_hana_zip_file_name: ""
+sap_hana_bundle_file_name: IMDB_SERVER20_047_0-80002031.SAR
+sap_hana_sapcar_file_name: SAPCAR_1320-80000935.EXE
+sap_hostagent_rpm_file_name: saphostagentrpm_44-20009394.rpm
 
 sap_hana_backup_size_default: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
 sap_hana_data_size_default: '{{ terraform.outputs.hana_data_size.value }}G'

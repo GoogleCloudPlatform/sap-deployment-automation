@@ -31,16 +31,16 @@ resource "google_compute_disk" "gcp_sap_hana_sd_backup" {
 }
 
 resource "google_compute_address" "gcp_sap_hana_ip" {
-  count = var.public_ip ? 1 : 0
+  count = var.use_public_ip ? 1 : 0
 
   project = var.project_id
-  name    = var.address_name
+  name    = var.instance_name
   region  = local.region
 }
 
 data "google_compute_image" "image" {
-  family  = var.linux_image_family
-  project = var.linux_image_project
+  family  = var.source_image_family
+  project = var.source_image_project
 }
 
 resource "google_compute_instance" "gcp_sap_hana" {
@@ -82,7 +82,7 @@ resource "google_compute_instance" "gcp_sap_hana" {
     subnetwork_project = local.subnetwork_project
 
     dynamic "access_config" {
-      for_each = var.public_ip ? google_compute_address.gcp_sap_hana_ip : []
+      for_each = var.use_public_ip ? google_compute_address.gcp_sap_hana_ip : []
       content {
         nat_ip = access_config.value.address
       }
@@ -91,29 +91,20 @@ resource "google_compute_instance" "gcp_sap_hana" {
   }
 
   metadata = {
-    sap_hana_deployment_bucket = var.sap_hana_deployment_bucket
-    sap_deployment_debug       = var.sap_deployment_debug
-    post_deployment_script     = var.post_deployment_script
-    sap_hana_sid               = var.sap_hana_sid
-    sap_hana_instance_number   = var.sap_hana_instance_number
-    sap_hana_sidadm_password   = var.sap_hana_sidadm_password
-    sap_hana_system_password   = var.sap_hana_system_password
-    sap_hana_sidadm_uid        = var.sap_hana_sidadm_uid
-    sap_hana_sapsys_gid        = var.sap_hana_sapsys_gid
     ssh-keys                   = "${var.gce_ssh_user}:${file("${var.gce_ssh_pub_key_file}")}"
   }
 
-  metadata_startup_script = contains([element(split("-", var.linux_image_family), 0)], "rhel") ? templatefile("${path.module}/files/redhat.sh",
+  metadata_startup_script = contains([element(split("-", var.source_image_family), 0)], "rhel") ? templatefile("${path.module}/files/redhat.sh",
     {
       sap_install_files_bucket  = var.sap_install_files_bucket
-      sap_hostagent_file_name   = var.sap_hostagent_file_name
+      sap_hostagent_rpm_file_name   = var.sap_hostagent_rpm_file_name
       sap_hana_bundle_file_name = var.sap_hana_bundle_file_name
       sap_hana_sapcar_file_name = var.sap_hana_sapcar_file_name
     }
     ) : templatefile("${path.module}/files/sles.sh",
     {
       sap_install_files_bucket  = var.sap_install_files_bucket
-      sap_hostagent_file_name   = var.sap_hostagent_file_name
+      sap_hostagent_rpm_file_name   = var.sap_hostagent_rpm_file_name
       sap_hana_bundle_file_name = var.sap_hana_bundle_file_name
       sap_hana_sapcar_file_name = var.sap_hana_sapcar_file_name
     }

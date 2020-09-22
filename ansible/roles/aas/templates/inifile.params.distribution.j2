@@ -4,9 +4,9 @@
 #                                                                                                                                                                                                                                              #
 ################################################################################################################################################################################################################################################
 
-archives.downloadBasket = {{ sap_deployment_software_path }}
-SAPINST.CD.PACKAGE.KERNEL = {{ sap_sapinst_package_kernel }}
-SAPINST.CD.PACKAGE.RDBMS = {{ sap_sapinst_package_client }}
+archives.downloadBasket = {{ sap_nw_software_path }}
+SAPINST.CD.PACKAGE.KERNEL = {{ sap_nw_sapinst_package_kernel }}
+SAPINST.CD.PACKAGE.RDBMS = {{ sap_nw_sapinst_package_client }}
 
 # Specify whether Software Provisioning Manager is to drop the schema if it exists.
 # HDB_Schema_Check_Dialogs.dropSchema = false
@@ -45,7 +45,7 @@ NW_DI_Instance.virtualHostname = {{ sap_deployment_AS_virtualhostname }}
 # NW_Delete_Sapinst_Users.removeUsers = false
 
 # Master password
-NW_GetMasterPassword.masterPwd = {{ sap_deployment_password }}
+NW_GetMasterPassword.masterPwd = {{ sap_nw_password }}
 
 # Install the SAP HANA database client in a central or local directory. Possible values are: 'SAPCPE', 'LOCAL'
 # NW_HDB_DBClient.clientPathStrategy = LOCAL

@@ -7,22 +7,22 @@
 # Start of User Input parameters
 
 # Database host
-NW_HDB_getDBInfo.dbhost = {{ sap_deployment_db_host }}
+NW_HDB_getDBInfo.dbhost = {{ sap_hana_instance_name }}
 
 # Database system ID
-NW_HDB_getDBInfo.dbsid = {{ sap_deployment_db_sid }} 
+NW_HDB_getDBInfo.dbsid = {{ sap_hana_sid }} 
 
 # The instance number of the SAP HANA database server
-NW_HDB_getDBInfo.instanceNumber = {{ sap_deployment_hana_instance_nr }} 
+NW_HDB_getDBInfo.instanceNumber = {{ sap_hana_instance_number }} 
 
 # The password of the database schema.
-HDB_Schema_Check_Dialogs.schemaPassword = {{ sap_deployment_password }}
+HDB_Schema_Check_Dialogs.schemaPassword = {{ sap_nw_password }}
 
 # Number of parallel Migration Monitor jobs
 NW_ABAP_Import_Dialog.migmonJobNum = 24 
 
 # Master password
-NW_GetMasterPassword.masterPwd = {{ sap_deployment_password }}
+NW_GetMasterPassword.masterPwd = {{ sap_nw_password }}
 
 NW_System.installSAPHostAgent = false
 
@@ -38,13 +38,13 @@ NW_getFQDN.FQDN = c.albatross-duncanl-sandbox-2.internal
 # Provide  'profile' directory of SAP Netweaver-based system.
 NW_readProfileDir.profileDir = /sapmnt/{{ sap_nw_sid }}/profile
 
-archives.downloadBasket = {{ sap_archives_downloadbasket }}  
+archives.downloadBasket = {{ sap_nw_archives_downloadbasket }}  
 
-SAPINST.CD.PACKAGE.KERNEL = {{ sap_sapinst_package_kernel }}  
+SAPINST.CD.PACKAGE.KERNEL = {{ sap_nw_sapinst_package_kernel }}  
 
-SAPINST.CD.PACKAGE.LOAD = {{ sap_sapinst_package_load }}  
+SAPINST.CD.PACKAGE.LOAD = {{ sap_nw_sapinst_package_load }}  
 
-SAPINST.CD.PACKAGE.RDBMS = {{ sap_sapinst_package_client }}  
+SAPINST.CD.PACKAGE.RDBMS = {{ sap_nw_sapinst_package_client }}  
 
 # End of user Input Parameters
 ####################################

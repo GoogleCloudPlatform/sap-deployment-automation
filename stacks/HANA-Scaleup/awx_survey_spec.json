@@ -100,7 +100,7 @@
       "question_description": "This is the system identifier for HANA. It must be three uppercase letters or numbers, starting with a letter.",
       "required": true,
       "type": "text",
-      "variable": "sap_hana_deployment_hana_sid",
+      "variable": "sap_hana_sid",
       "min": 3,
       "max": 3,
       "default": "ABC"
@@ -110,7 +110,7 @@
       "question_description": "This is the instance number for HANA. It must be a two digit number between 00 and 99.",
       "required": true,
       "type": "text",
-      "variable": "sap_hana_deployment_hana_instance_number",
+      "variable": "sap_hana_instance_number",
       "min": 2,
       "max": 2,
       "default": "00"

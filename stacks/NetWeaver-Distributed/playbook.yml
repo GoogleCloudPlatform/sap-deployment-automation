@@ -4,34 +4,68 @@
   roles:
   - role: forminator
     vars:
+      sap_state: '{{ state | default("present") }}'
       sap_tf_project_path: './tf'
       sap_tf_state_bucket: '{{ sap_tf_state_bucket }}'
       sap_tf_state_bucket_prefix: '{{ sap_tf_state_bucket_prefix }}'
       sap_tf_variables:
-        boot_disk_size: '{{ sap_boot_disk_size }}'
-        gce_ssh_user: '{{ sap_gce_ssh_user }}'
-        gce_ssh_pub_key_file: '~/.ssh/id_rsa.pub'
         project_id: '{{ sap_project_id }}'
-        instance_type: '{{ sap_instance_type }}'
-        linux_image_family: '{{ sap_source_image_family }}'
-        linux_image_project: '{{ sap_source_image_project }}'
-        subnetwork: '{{ sap_subnetwork }}'
-        subnetwork_project: '{{ sap_subnetwork_project_id }}'
-        public_ip: "true"
-        boot_disk_type: '{{ boot_disk_type }}'
-        disk_type: '{{ disk_type }}'
         sap_ascs_instance_name: '{{ sap_ascs_instance_name }}'
+        sap_hana_autodelete_boot_disk: '{{ sap_hana_autodelete_boot_disk | default("false") }}'
+        sap_hana_boot_disk_size: '{{ sap_hana_boot_disk_size | default(30) }}'
+        sap_hana_boot_disk_type: '{{ sap_hana_boot_disk_type | default("pd-ssd") }}'
+        sap_hana_instance_name: '{{ sap_hana_instance_name }}'
+        sap_hana_instance_type: '{{ sap_hana_instance_type | default("n1-highmem-32") }}'
+        sap_hana_install_files_bucket: '{{ sap_hana_install_files_bucket }}'
+        sap_hana_network_tags: '{{ sap_hana_network_tags | default([]) }}'
+        sap_hana_service_account_email: '{{ sap_hana_service_account_email }}'
+        sap_hana_use_public_ip: '{{ sap_hana_use_public_ip | default("false") }}'
+        sap_nw_additional_disk_type: '{{ sap_nw_additional_disk_type | default("pd-ssd") }}'
+        sap_nw_autodelete_boot_disk: '{{ sap_hana_autodelete_boot_disk | default("false") }}'
+        sap_nw_boot_disk_size: '{{ sap_nw_boot_disk_size | default(30) }}'
+        sap_nw_boot_disk_type: '{{ sap_nw_boot_disk_type | default("pd-ssd") }}'
+        sap_nw_instance_type: '{{ sap_nw_instance_type | default("n1-standard-8") }}'
+        sap_nw_network_tags: '{{ sap_nw_network_tags | default([]) }}'
+        sap_nw_service_account_email: '{{ sap_nw_service_account_email }}'
+        sap_nw_sapmnt_disk_size: '{{ sap_nw_sapmnt_disk_size | default(50) }}'
+        sap_nw_swap_disk_size: '{{ sap_nw_swap_disk_size | default(28) }}'
+        sap_nw_usrsap_disk_size: '{{ sap_nw_usrsap_disk_size | default(50) }}'
+        sap_nw_use_public_ip: '{{ sap_nw_use_public_ip | default("false") }}'
         sap_pas_instance_name: '{{ sap_pas_instance_name }}'
+        source_image_family: '{{ sap_source_image_family }}'
+        source_image_project: '{{ sap_source_image_project }}'
+        subnetwork: '{{ sap_subnetwork }}'
+        subnetwork_project: '{{ sap_subnetwork_project_id | default("") }}'
         zone: '{{ sap_zone }}'
-- name: SAP NW configure
-  hosts: nodes
+  tags: [hana, ascs, pas, nw]
+
+- name: SAP HANA configure
+  hosts: hana
   become: yes
-  become_user: root  
+  roles:
+  - role: sap-hana-scaleup
+  tags: [hana]
+
+- name: SAP NW configure
+  hosts: ascs
+  become: yes
+  roles:
+  - role: nw-distributed
+    vars:
+      sap_hana_instance_name: '{{ terraform.outputs.hana_instance_name.value }}'
+      sap_nw_ascs_virtual_host: '{{ terraform.outputs.ascs_instance_name.value }}'
+      sap_nw_ci_virtual_host: '{{ terraform.outputs.pas_instance_name.value }}'
+      sap_nw_pas_virtual_host: '{{ terraform.outputs.pas_instance_name.value }}'
+  tags: [ascs, nw]
+
+- name: SAP NW configure
+  hosts: pas
+  become: yes
   roles:
   - role: nw-distributed 
-#- name: SAP NW configure
-#  hosts: pas
-#  become: yes
-#  become_user: root
-#  roles:
-#  - role: nw-distributed
+    vars:
+      sap_hana_instance_name: '{{ terraform.outputs.hana_instance_name.value }}'
+      sap_nw_ascs_virtual_host: '{{ terraform.outputs.ascs_instance_name.value }}'
+      sap_nw_ci_virtual_host: '{{ terraform.outputs.pas_instance_name.value }}'
+      sap_nw_pas_virtual_host: '{{ terraform.outputs.pas_instance_name.value }}'
+  tags: [pas, nw]

@@ -5,8 +5,8 @@
     path: "{{ item.path }}"
     state: directory
   with_items:
-    - { path: "/{{ sap_hana_backup_partition_name }}/data/{{ sap_hana_deployment_hana_sid }}" }
-    - { path: "/{{ sap_hana_backup_partition_name }}/log/{{ sap_hana_deployment_hana_sid }}" }
+    - { path: "/{{ sap_hana_backup_partition_name }}/data/{{ sap_hana_sid }}" }
+    - { path: "/{{ sap_hana_backup_partition_name }}/log/{{ sap_hana_sid }}" }
 
 - name: Check hana backup directory permissions
   file:

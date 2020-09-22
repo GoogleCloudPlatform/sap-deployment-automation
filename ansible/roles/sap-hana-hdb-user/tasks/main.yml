@@ -12,18 +12,18 @@
     create: yes
     group: sapsys
   with_items:
-    - { line: "CREATE USER {{ sap_hana_monitoring_user }} PASSWORD {{ sap_hana_deployment_hana_db_system_password }};"}
+    - { line: "CREATE USER {{ sap_hana_monitoring_user }} PASSWORD {{ sap_hana_db_system_password }};"}
     - { line: "GRANT DATA ADMIN TO {{ sap_hana_monitoring_user }};"}
     - { line: "ALTER USER {{ sap_hana_monitoring_user }} DISABLE PASSWORD LIFETIME;"}
 
 - name: Run HDB user creation .sql file
   shell: |
-    source /usr/sap/{{ sap_hana_deployment_hana_sid }}/home/.sapenv.sh && \
-    hdbsql -u system -p {{ sap_hana_deployment_hana_db_system_password }} \
-    -i {{ sap_hana_deployment_hana_instance_number }} \
+    source /usr/sap/{{ sap_hana_sid }}/home/.sapenv.sh && \
+    hdbsql -u system -p {{ sap_hana_db_system_password }} \
+    -i {{ sap_hana_instance_number }} \
     -I /root/.deploy/{{ ansible_hostname }}_hdbadduser.sql
   args:
      executable: /bin/bash
   become: yes
-  #become_user: "{{ sap_hana_deployment_hana_sid | lower }}adm"
+  #become_user: "{{ sap_hana_sid | lower }}adm"
   register: hdbuser

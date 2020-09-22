@@ -41,7 +41,7 @@ NW_Users_Create.sid = {{ sap_nw_sid }}
 ## hostAgent.domain = 
 #
 ## Password for the 'sapadm' user of the SAP Host Agent
-hostAgent.sapAdmPassword = {{ sap_deployment_password }}
+hostAgent.sapAdmPassword = {{ sap_nw_password }}
 #
 ## Which database. Must be one of ada,db2,db4,db6,hdb,inf,mss,ora,syb. Needed, if NW_Users_Create.installDBUsers is set to true.
 nwUsers.dbtype = ind
@@ -62,7 +62,7 @@ nwUsers.dbtype = ind
 ## nwUsers.sidAdmUID = 
 #
 ## The password of the '<sapsid>adm' user
-nwUsers.sidadmPassword = {{ sap_deployment_password }}
+nwUsers.sidadmPassword = {{ sap_nw_password }}
 #
 ## ABAP schema
 ## storageBasedCopy.ora.ABAPSchema = SAPSR3

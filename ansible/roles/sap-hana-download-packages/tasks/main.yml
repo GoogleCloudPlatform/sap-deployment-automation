@@ -19,7 +19,7 @@
   environment:
     CLOUDSDK_PYTHON: "{{ cloudsdk_python_export_path }}"
   with_items:
-    - "{{ sap_hostagent_file_name }}"
+    - "{{ sap_hostagent_rpm_file_name }}"
     - "{{ sap_hana_bundle_file_name }}"
     - "{{ sap_hana_sapcar_file_name }}"
 
@@ -28,7 +28,7 @@
     path: "/hana/shared/software/{{ item }}"
     mode: '0775'
   with_items:
-    - "{{ sap_hostagent_file_name }}"
+    - "{{ sap_hostagent_rpm_file_name }}"
     - "{{ sap_hana_bundle_file_name }}"
     - "{{ sap_hana_sapcar_file_name }}"
   

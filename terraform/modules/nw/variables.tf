@@ -33,12 +33,12 @@ variable "instance_type" {
   default     = "n1-standard-8"
 }
 
-variable "linux_image_family" {
+variable "source_image_family" {
   description = "GCE image family."
   default     = "sles-12-sp3-sap"
 }
 
-variable "linux_image_project" {
+variable "source_image_project" {
   description = "Project name containing the linux image."
   default     = "suse-sap-cloud"
 }
@@ -48,24 +48,22 @@ variable "autodelete_disk" {
   default     = "false"
 }
 
-variable "usr_sap_size" {
+variable "usrsap_disk_size" {
   description = "USR SAP size"
   default     = 0
 }
 
-variable "sap_mnt_size" {
+variable "sapmnt_disk_size" {
   description = "SAP mount size"
   default     = 0
 }
 
-variable "swap_size" {
+variable "swap_disk_size" {
   description = "SWAP Size"
-  default     = 0
 }
 
-variable "disk_type" {
+variable "additional_disk_type" {
   description = "The GCE data disk type. May be set to pd-standard (for PD HDD) or pd-ssd."
-  default     = "pd-ssd"
 }
 
 variable "boot_disk_size" {
@@ -76,6 +74,10 @@ variable "boot_disk_size" {
 variable "boot_disk_type" {
   description = "The GCE boot disk type. May be set to pd-standard (for PD HDD) or pd-ssd."
   default     = "pd-ssd"
+}
+
+variable "service_account_email" {
+  description = "Email of service account to attach to the instance."
 }
 
 variable "subnetwork" {
@@ -93,9 +95,8 @@ variable "network_tags" {
   description = "List of network tags to attach to the instance."
 }
 
-variable "public_ip" {
+variable "use_public_ip" {
   description = "Determines whether a public IP address is added to your VM instance."
-  default     = false
   type        = bool
 }
 
@@ -119,25 +120,11 @@ variable "device_3" {
   default     = "swap"
 }
 
-variable "post_deployment_script" {
-  description = "Netweaver post deployment script. Must be a gs:// or https:// link to the script."
-  default     = ""
-}
-
-variable "sap_deployment_debug" {
-  description = "Debug flag for Netweaver deployment."
-}
 variable "ssh_user" {
   description = "SSH user name to connect to your instance."
-  default     = "sushma"
 }
 
 variable "public_key_path" {
   description = "Path to the public SSH key you want to bake into the instance."
   default     = "~/.ssh/id_rsa.pub"
-}
-
-variable "private_key_path" {
-  description = "Path to the private SSH key, used to access the instance."
-  default     = "~/.ssh/id_rsa"
 }

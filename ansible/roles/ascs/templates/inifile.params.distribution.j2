@@ -8,27 +8,28 @@
 # Start of User Input parameters
 
 # The SAP system ID <SAPSID> of the system to be installed
-NW_GetSidNoProfiles.sid = {{ ascs_sid }} 
+NW_GetSidNoProfiles.sid = {{ sap_nw_ascs_sid }}
 
-# The instance number of the (A)SCS instance.  
-NW_SCS_Instance.instanceNumber = {{ sap_deployment_ascs_instance_nr }} 
+# The instance number of the (A)SCS instance.
+NW_SCS_Instance.instanceNumber = {{ sap_nw_ascs_instance_number }}
 
 # The FQDN of the system
-NW_getFQDN.FQDN = c.albatross-duncanl-sandbox-2.internal 
+# TODO: this needs to be a variable
+NW_getFQDN.FQDN = c.albatross-duncanl-sandbox-2.internal
 
 # Master password
-NW_GetMasterPassword.masterPwd = {{ sap_deployment_password }}
+NW_GetMasterPassword.masterPwd = {{ sap_nw_password }}
 
 # Password for the 'sapadm' user of the SAP Host Agent
-hostAgent.sapAdmPassword = {{ sap_deployment_password }} 
+hostAgent.sapAdmPassword = {{ sap_nw_password }}
 
 # The password of the '<sapsid>adm' user
-nwUsers.sidadmPassword = {{ sap_deployment_password }}
+nwUsers.sidadmPassword = {{ sap_nw_password }}
 
-# The folder containing all archives 
-archives.downloadBasket = {{ sap_archives_downloadbasket }}  
+# The folder containing all archives
+archives.downloadBasket = {{ sap_nw_archives_downloadbasket }}
 
-SAPINST.CD.PACKAGE.KERNEL = {{ sap_sapinst_package_kernel }}
+SAPINST.CD.PACKAGE.KERNEL = {{ sap_nw_sapinst_package_kernel }}
 
 
 # End of user Input Parameters

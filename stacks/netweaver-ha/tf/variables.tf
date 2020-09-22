@@ -32,11 +32,11 @@ variable "network_tags" {
   default     = ["ssh","hana-allow-port","allow-internal"]
 }
 
-variable "ers_healthcheck_port" {
+variable "ers_health_check_port" {
   description = "ers health check port."
 }
 
-variable "ascs_healthcheck_port" {
+variable "ascs_health_check_port" {
   description = "ascs health check port"
 }
 
@@ -115,16 +115,19 @@ variable "source_image_project" {
 }
 variable "boot_disk_size" {
   description = "Root disk size in GB"
+  type        = number
   default     = 30
 }
 
 variable "usr_sap_size" {
   description = "Persistent disk size in GB"
+  type        = number
   default     = 100
 }
 
 variable "swap_size" {
   description = "Persistent disk size in GB."
+  type        = number
   default     = 30
 }
 

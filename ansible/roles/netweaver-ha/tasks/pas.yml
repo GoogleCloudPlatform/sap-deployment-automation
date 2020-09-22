@@ -13,12 +13,12 @@
       - { name: swap, partition_path : swap }
     logvols:
       usrsap:
-        size: "{{ sap_nw_usrsap_disk_size }}"
+        size: "{{ sap_nw_usrsap_disk_size }}G"
         vol: usrsap
         mountpoint: /usr/sap
     swapvols:
       swap:
-        size: "{{ sap_nw_swap_disk_size }}"
+        size: "{{ sap_nw_swap_disk_size }}G"
         vol: swap
         mountpoint: /swap    
 - name: include storage primary tasks
@@ -31,41 +31,9 @@
   include_role:
     name: db 
   vars:   
-    sap_deployment_product_id: "{{ sap_nw_db_product_id }}"
-    sap_deployment_db_host: "{{ sap_hana_instance_name }}"
-    sap_deployment_db_sid: "{{ sap_hana_sid }}"
-    sap_deployment_hana_instance_nr: "{{ sap_hana_instance_number }}" 
-    template: "{{ sap_nw_ini_template }}"
-    sap_deployment_password: "{{ sap_nw_password }}"
-    sap_hana_password: "{{ sap_hana_password }}"
-    sap_archives_downloadbasket: "{{ sap_nw_archives_downloadbasket }}" 
-    sap_sapinst_package_kernel: "{{ sap_nw_sapinst_package_kernel }}" 
-    sap_sapinst_package_load: "{{ sap_nw_sapinst_package_load }}"
-    sap_sapinst_package_client: "{{ sap_nw_sapinst_package_client }}" 
-    sap_nw_sid: "{{ sap_nw_sid }}"
-    sap_deployment_sapcar_path: "{{ sap_nw_sapcar_path }}"              
+    sap_nw_product_id: "{{ sap_nw_db_product_id }}"
 - name: include nw primary tasks
   include_role:
     name: nw
   vars: 
-    sap_deployment_product_id: "{{ sap_nw_pas_product_id }}"
-    sap_deployment_password: "{{ sap_nw_password }}"
-    sap_hana_password: "{{ sap_hana_password }}"
-    sap_deployment_sapcar_path: "{{ sap_nw_sapcar_path }}"
-    sap_deployment_db_host: "{{ sap_hana_instance_name }}"
-    sap_deployment_db_sid: "{{ sap_hana_sid }}"
-    sap_deployment_hana_instance_nr: "{{ sap_hana_instance_number }}"
-    sap_nw_sid: "{{ sap_nw_sid }}" 
-    template: "{{ sap_nw_ini_template }}"
-    sap_deployment_igs_path: "{{ sap_nw_igs_path }}"
-    sap_deployment_igs_file_name: "{{ sap_nw_igs_file_name }}"
-    sap_deployment_igs_helper_path: "{{ sap_nw_igs_helper_path }}"
-    sap_deployment_igs_helper_file_name: "{{ sap_nw_igs_helper_file_name }}"
-    sap_deployment_software_path: "{{ sap_nw_software_path }}"
-    sap_sapinst_package_load: "{{ sap_nw_sapinst_package_load }}"
-    sap_sapinst_package_client: "{{ sap_nw_sapinst_package_client }}"
-    sap_deployment_ci_instance_ciinstanceNumber: "{{ sap_nw_ci_instance_ciinstanceNumber }}"
-    sap_deployment_ci_ascsvirtualhostname: '{{ sap_nw_ci_ascsvirtualhostname }}'
-# Virtual host name of the primary application server instance
-    sap_deployment_ci_civirtualhostname: '{{ terraform.outputs.pas_instance_name.value }}'     
-    sap_ci_instance_cimsport: "{{ sap_nw_ci_instance_cimsport }}"      
+    sap_nw_product_id: "{{ sap_nw_pas_product_id }}"

@@ -22,8 +22,7 @@ sap_nw_ers_instance: '{{ terraform.outputs.ers_instance_name.value }}'
 sap_nw_pas_instance: '{{ terraform.outputs.pas_instance_name.value }}'
 sap_nw_ers_private_ip: '{{ terraform.outputs.ers_instance_ip.value }}'
 sap_nw_ascs_private_ip: '{{ terraform.outputs.ascs_instance_ip.value }}'
-sap_nw_db_ilb_ip: "192.168.0.16"
-sap_nw_ascs_virtualhostname: "ascstest"
+sap_nw_ascs_virtual_host: "ascstest"
 sap_nw_ascs_health_check_port: "6666"
 sap_nw_ers_health_check_port: "6667"
 sap_nw_ascs_dns: "ascstest.c.albatross-duncanl-sandbox-2.internal"
@@ -55,14 +54,12 @@ sap_nw_install_files_bucket_prefix: "nw-code-ansible-new/Software"
 sap_nw_ascs_product_id: "NW_ABAP_ASCS:S4HANA1709.CORE.HDB.ABAPHA"
 sap_nw_ers_product_id: "NW_ERS:S4HANA1709.CORE.HDB.ABAPHA"
 sap_nw_user_product_id: "NW_Users_Create:GENERIC.SYB.PD"
-sap_nw_getFQDN_FQDN: c.albatross-duncanl-sandbox-2.internal
 sap_nw_ini_template: inifile.params.ha.j2
 sap_nw_sapcar_path: /sapmnt/Software/SWPM1.0      
 sap_nw_ascs_instance_number: "06"
 sap_nw_ers_instance_number: "16"
-sap_nw_ers_virtualhostname: "erstest"
-sap_nw_db_virtualhostname: "saphana"
-sap_nw_ci_ascsvirtualhostname: '{{ sap_nw_ascs_virtualhostname }}'
+sap_nw_ers_virtual_host: "erstest"
+sap_nw_ascs_virtual_host: "ascstest"
 sap_nw_archives_downloadbasket: /sapmnt/Software/Kernel_Files 
 sap_nw_db_product_id: "NW_ABAP_DB:S4HANA1709.CORE.HDB.ABAPHA"
 sap_hana_instance_name: "saphanasles-bg-delete"
@@ -81,5 +78,5 @@ sap_nw_igs_file_name: igsexe_4-80003187.sar
 sap_nw_igs_helper_path: /sapmnt/Software/Kernel_Files
 sap_nw_igs_helper_file_name: igshelper_17-10010245.sar
 sap_nw_software_path: /sapmnt/Software/Kernel_Files
-sap_nw_ci_instance_ciinstanceNumber: "{{ sap_nw_ascs_instance_number }}"
-sap_nw_ci_instance_cimsport: "3906"
+sap_nw_ci_instance_number: "06"
+sap_nw_ci_ms_port: "3906"

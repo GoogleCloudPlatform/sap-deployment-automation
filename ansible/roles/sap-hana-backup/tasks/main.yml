@@ -2,15 +2,15 @@
 
 - name: Run hana db backup
   shell: |
-    source /usr/sap/{{ sap_hana_deployment_hana_sid }}/home/.sapenv.sh && \
-    /usr/sap/{{ sap_hana_deployment_hana_sid | upper }}/HDB{{ sap_hana_deployment_hana_instance_number }}/exe/hdbsql \
-    -i {{ sap_hana_deployment_hana_instance_number }} -u SYSTEM -p {{ sap_hana_deployment_hana_db_system_password }} -d SYSTEMDB -m <<EOF
-    BACKUP DATA FOR {{ sap_hana_deployment_hana_sid }} USING FILE ('{{ sap_hana_backup_file_name }}');
+    source /usr/sap/{{ sap_hana_sid }}/home/.sapenv.sh && \
+    /usr/sap/{{ sap_hana_sid | upper }}/HDB{{ sap_hana_instance_number }}/exe/hdbsql \
+    -i {{ sap_hana_instance_number }} -u SYSTEM -p {{ sap_hana_db_system_password }} -d SYSTEMDB -m <<EOF
+    BACKUP DATA FOR {{ sap_hana_sid }} USING FILE ('{{ sap_hana_backup_file_name }}');
     EOF
   args:
      executable: /bin/bash
   become: yes
-  become_user: "{{ sap_hana_deployment_hana_sid | lower }}adm"
+  become_user: "{{ sap_hana_sid | lower }}adm"
   register: hanabackup
   changed_when: "'0 rows affected' in hanabackup.stdout"
   when:
@@ -18,15 +18,15 @@
 
 - name: Run system db backup
   shell: |
-    source /usr/sap/{{ sap_hana_deployment_hana_sid }}/home/.sapenv.sh && \
-    /usr/sap/{{ sap_hana_deployment_hana_sid | upper }}/HDB{{ sap_hana_deployment_hana_instance_number }}/exe/hdbsql \
-    -i {{ sap_hana_deployment_hana_instance_number }} -u SYSTEM -p {{ sap_hana_deployment_hana_db_system_password }} -d SYSTEMDB -m <<EOF
+    source /usr/sap/{{ sap_hana_sid }}/home/.sapenv.sh && \
+    /usr/sap/{{ sap_hana_sid | upper }}/HDB{{ sap_hana_instance_number }}/exe/hdbsql \
+    -i {{ sap_hana_instance_number }} -u SYSTEM -p {{ sap_hana_db_system_password }} -d SYSTEMDB -m <<EOF
     BACKUP DATA USING FILE ('{{ sap_hana_backup_file_name }}_SYSTEMDB');
     EOF
   args:
      executable: /bin/bash
   become: yes
-  become_user: "{{ sap_hana_deployment_hana_sid | lower }}adm"
+  become_user: "{{ sap_hana_sid | lower }}adm"
   register: systembackup
   changed_when: "'0 rows affected' in systembackup.stdout"
   when:

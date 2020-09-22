@@ -5,27 +5,24 @@
     state: directory
     mode: 0775
     recurse: true
+
 - name: changing permissions
   file:
     path: /sapmnt
     state: directory
     mode: 0775
     recurse: true
-- name: Setting fact for nw installer path
-  set_fact:
-    sapinst_path: "{{ sap_deployment_sapcar_path }}"
+
 - name: inifile.params config file 
   template:
-    src: "{{ template }}"
+    src: "{{ sap_nw_ini_template }}"
     dest: /usr/sap/inifile_ascs.params  
 - name: installing ascs
   command: >- 
      ./sapinst SAPINST_INPUT_PARAMETERS_URL=/usr/sap/inifile_ascs.params \
-     SAPINST_EXECUTE_PRODUCT_ID={{ sap_deployment_product_id }} \
+     SAPINST_EXECUTE_PRODUCT_ID={{ sap_nw_product_id }} \
      SAPINST_SKIP_DIALOGS=true SAPINST_START_GUISERVER=false
   register: installnw
   args:
-   chdir: "{{ sapinst_path }}"
+    chdir: "{{ sap_nw_sapcar_path }}"
   when: true
-- debug:
-   var: installs4hana

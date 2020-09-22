@@ -12,7 +12,7 @@ locals {
     unhealthy_threshold = 5
     response            = ""
     proxy_header        = "NONE"
-    port                = var.ascs_healthcheck_port
+    port                = var.ascs_health_check_port
     port_name           = "health-check-port"
     request             = ""
     request_path        = "/"
@@ -26,7 +26,7 @@ locals {
     unhealthy_threshold = 5
     response            = ""
     proxy_header        = "NONE"
-    port                = var.ers_healthcheck_port
+    port                = var.ers_health_check_port
     port_name           = "health-check-port"
     request             = ""
     request_path        = "/"

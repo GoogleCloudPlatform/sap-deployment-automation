@@ -23,7 +23,6 @@ module "gcp_netweaver" {
   linux_image_project    = "${var.linux_image_project}"
   autodelete_disk        = "true"
   public_ip              = "${var.public_ip}"
-  sap_deployment_debug   = "${var.sap_deployment_debug}"
   usr_sap_size           = "${var.usr_sap_size}"
   sap_mnt_size           = "${var.sap_mnt_size}"
   swap_size              = "${var.swap_size}"

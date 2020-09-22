@@ -5,15 +5,15 @@
 ##############################################################################################################################################################################################################################################
 
 NW_GetSidNoProfiles.sid = {{ sap_nw_sid }}
-NW_getFQDN.FQDN = {{ sap_getFQDN_FQDN }}
-NW_GetMasterPassword.masterPwd = {{ sap_deployment_password }}
+NW_getFQDN.FQDN = {{ sap_domain }}
+NW_GetMasterPassword.masterPwd = {{ sap_nw_password }}
 NW_Delete_Sapinst_Users.removeUsers = false
 NW_GetSidNoProfiles.sapmnt = /sapmnt
 NW_GetSidNoProfiles.strictSidCheck = true
 NW_GetSidNoProfiles.unicode = true
 NW_getFQDN.setFQDN = true
-archives.downloadBasket = {{ sap_archives_downloadbasket }}
-SAPINST.CD.PACKAGE.KERNEL = {{ sap_sapinst_package_kernel }}
+archives.downloadBasket = {{ sap_nw_archives_downloadbasket }}
+SAPINST.CD.PACKAGE.KERNEL = {{ sap_nw_sapinst_package_kernel }}
 
 # Password for the Diagnostics Agent specific <dasid>adm user. Provided value may be encoded.
 # DiagnosticsAgent.dasidAdmPassword = 
@@ -78,7 +78,7 @@ nwUsers.sidAdmUID = 1005
 # nwUsers.sidadmPassword = 
 
 # The  instance number of the ERS instance. Leave empty for default.
-nw_instance_ers.ersInstanceNumber = {{ sap_deployment_ers_instance_nr }}
+nw_instance_ers.ersInstanceNumber = {{ sap_nw_ers_instance_number }}
 
 # Host name of the ERS instance. It can be either the physical host name or -  in case of  high-availability system installation, - one of the virtual host names.
-nw_instance_ers.ersVirtualHostname = {{ sap_deployment_ersVirtualHostname }}
+nw_instance_ers.ersVirtualHostname = {{ sap_nw_ers_virtual_host }}

@@ -33,10 +33,13 @@ output "instance_internal_ip" {
   value       = google_compute_instance.gcp_nw.network_interface.0.network_ip
 }
 
-
 output "instance_external_ip" {
   description = "external IP of instance"
-  value       = google_compute_instance.gcp_nw.network_interface.0.access_config.0.nat_ip
+  value = (
+    length(google_compute_instance.gcp_nw.network_interface[0].access_config) != 0 ? (
+      google_compute_instance.gcp_nw.network_interface[0].access_config[0].nat_ip
+    ) : ""
+  )
 }
 
 output "instance_attached_disks_sapmnt" {

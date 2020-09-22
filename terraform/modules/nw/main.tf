@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 locals {
   device_name_1      = "${var.instance_name}-${var.device_1}"
   device_name_2      = "${var.instance_name}-${var.device_2}"
@@ -25,33 +24,33 @@ locals {
 resource "google_compute_disk" "gcp_nw_pd_0" {
   project = var.project_id
   name    = "${var.instance_name}-nw-0"
-  type    = var.disk_type
+  type    = var.additional_disk_type
   zone    = var.zone
-  #  count   = var.usr_sap_size > 0 ? 1 : 0
-  size = var.usr_sap_size
+  #  count   = var.usrsap_disk_size > 0 ? 1 : 0
+  size = var.usrsap_disk_size
 }
 
 resource "google_compute_disk" "gcp_nw_pd_1" {
   project = var.project_id
   name    = "${var.instance_name}-nw-1"
-  type    = var.disk_type
+  type    = var.additional_disk_type
   zone    = var.zone
-  #  count   = var.sap_mnt_size > 0 ? 1 : 0
-  size = var.sap_mnt_size
+  #  count   = var.sapmnt_disk_size > 0 ? 1 : 0
+  size = var.sapmnt_disk_size
 }
 
 resource "google_compute_disk" "gcp_nw_pd_2" {
   project = var.project_id
   name    = "${var.instance_name}-nw-2"
-  type    = var.disk_type
+  type    = var.additional_disk_type
   zone    = var.zone
-  #  count   = var.swap_size > 0 ? 1 : 0
-  size = var.swap_size
+  #  count   = var.swap_disk_size > 0 ? 1 : 0
+  size = var.swap_disk_size
 }
 
 resource "google_compute_attached_disk" "gcp_nw_attached_pd_0" {
   project     = var.project_id
-  count       = var.usr_sap_size > 0 ? 1 : 0
+  count       = var.usrsap_disk_size > 0 ? 1 : 0
   device_name = local.device_name_1
   disk        = element(google_compute_disk.gcp_nw_pd_0.*.self_link, count.index)
   instance    = google_compute_instance.gcp_nw.self_link
@@ -59,7 +58,7 @@ resource "google_compute_attached_disk" "gcp_nw_attached_pd_0" {
 
 resource "google_compute_attached_disk" "gcp_nw_attached_pd_1" {
   project     = var.project_id
-  count       = var.sap_mnt_size > 0 ? 1 : 0
+  count       = var.sapmnt_disk_size > 0 ? 1 : 0
   device_name = local.device_name_2
   disk        = element(google_compute_disk.gcp_nw_pd_1.*.self_link, count.index)
   instance    = google_compute_instance.gcp_nw.self_link
@@ -67,15 +66,15 @@ resource "google_compute_attached_disk" "gcp_nw_attached_pd_1" {
 
 resource "google_compute_attached_disk" "gcp_nw_attached_pd_2" {
   project     = var.project_id
-  count       = var.swap_size > 0 ? 1 : 0
+  count       = var.swap_disk_size > 0 ? 1 : 0
   device_name = local.device_name_3
   disk        = element(google_compute_disk.gcp_nw_pd_2.*.self_link, count.index)
   instance    = google_compute_instance.gcp_nw.self_link
 }
 
 data "google_compute_image" "image" {
-  family  = var.linux_image_family
-  project = var.linux_image_project
+  family  = var.source_image_family
+  project = var.source_image_project
 }
 
 resource "google_compute_instance" "gcp_nw" {
@@ -107,22 +106,13 @@ resource "google_compute_instance" "gcp_nw" {
     subnetwork         = var.subnetwork
     subnetwork_project = local.subnetwork_project
     dynamic "access_config" {
-      for_each = [for i in [""] : i if var.public_ip]
+      for_each = [for i in [""] : i if var.use_public_ip]
       content {}
     }
 
   }
 
   metadata = {
-    instanceName           = var.instance_name
-    instanceType           = var.instance_type
-    post_deployment_script = var.post_deployment_script
-    subnetwork             = var.subnetwork
-    usrsapSize             = var.usr_sap_size
-    sapmntSize             = var.sap_mnt_size
-    swapSize               = var.swap_size
-    sap_deployment_debug   = var.sap_deployment_debug
-    publicIP               = var.public_ip
     ssh-keys               = "${var.ssh_user}:${file("${var.public_key_path}")}"
   }
 
@@ -132,12 +122,12 @@ resource "google_compute_instance" "gcp_nw" {
     ignore_changes = [metadata, attached_disk]
   }
 
-
   service_account {
     email  = var.service_account_email
     scopes = ["cloud-platform"]
   }
 }
+
 data "google_compute_instance" "sap_instance" {
   name    = google_compute_instance.gcp_nw.name
   project = var.project_id

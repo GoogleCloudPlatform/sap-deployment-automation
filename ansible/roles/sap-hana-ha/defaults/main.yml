@@ -1,7 +1,8 @@
-sap_hana_zip_file_name: 
+sap_hana_zip_file_name: ""
 sap_hana_bundle_file_name: IMDB_SERVER20_047_0-80002031.SAR
 sap_hana_sapcar_file_name: SAPCAR_1320-80000935.EXE
-sap_hostagent_file_name: saphostagentrpm_44-20009394.rpm
+sap_hostagent_rpm_file_name: saphostagentrpm_44-20009394.rpm
+sap_hostagent_rpm_remote_path: "/hana/shared/software"
 sap_install_files_bucket: nw-ansible
 sap_hana_data_partition_name: hanadata
 sap_hana_backup_partition_name: hanabackup
@@ -10,9 +11,22 @@ sap_hana_data_mountpoint: /hana/data
 sap_hana_log_mountpoint: /hana/log
 sap_hana_usr_mountpoint: /usr/sap
 sap_hana_backup_mountpoint: /hanabackup
-sap_hostagent_rpm_remote_path: "/hana/shared/software"
+sap_hana_backup_file_name: "/{{ sap_hana_backup_partition_name }}/data/pre_ha_config"
 sap_hana_monitoring_user: hanahamu
 sap_hana_user_store_key: HANAHAUSK
+# sap_hana_password is required unless all of the other passwords are set.
+# It defaults to an empty string for those cases where all the other passwords are
+# set, to avoid an undefined variable error.
+sap_hana_password: ''
+sap_hana_ase_user_password: '{{ sap_hana_password }}'
+sap_hana_db_system_password: '{{ sap_hana_password }}'
+sap_hana_common_master_password: '{{ sap_hana_password }}'
+sap_hana_root_password: '{{ sap_hana_password }}'
+sap_hana_sapadm_password: '{{ sap_hana_password }}'
+sap_hana_sidadm_password: '{{ sap_hana_password }}'
+sap_hana_hsr_operation_mode: logreplay
+sap_hana_hsr_replication_mode: syncmem
+
 sap_hana_disks_defaults:
   - { name: data, partition_path : hanadata }
   - { name: backup, partition_path : hanabackup }

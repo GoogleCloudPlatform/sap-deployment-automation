@@ -62,7 +62,7 @@
   - role: base
   - role: storage-bkup
     vars:
-      swapon: True     
+      swapon: True
       subnet_cidr: '{{ terraform.outputs.subnet_cidr.value }}'
       disks:
         - { name: swap, partition_path : swap }
@@ -74,22 +74,17 @@
       nfs_private_ip: 10.0.10.181
       mountpa:
         usrsap: /usr/sap
-        sapmnt: /sapmnt                  
+        sapmnt: /sapmnt
   - role: nw-pre
-    vars: 
+    vars:
       nw_bucket: "{{ bucket }}"
-      folder: "{{ path }}"        
-  - role: aas   
-    vars:    
-      sap_deployment_product_id: "{{ sap_aas_deployment_product_id }}"
-      sap_deployment_password: "{{ sap_deployment_password }}"
-      sap_hana_password: "{{ sap_hana_password }}"
-      sap_deployment_sapcar_path: "{{ sap_deployment_sapcar_path }}"
-      sap_nw_sid: "{{ sap_nw_sid }}" 
+      folder: "{{ path }}"
+  - role: aas
+    vars:
+      sap_nw_product_id: "{{ sap_aas_deployment_product_id }}"
       template: "{{ template }}"
-      sap_sapinst_package_kernel: "{{ sap_sapinst_package_kernel }}" 
-      sap_deployment_software_path: "{{ sap_deployment_software_path }}"
-      sap_sapinst_package_client: "{{ sap_sapinst_package_client }}"
+      sap_nw_sapinst_package_kernel: "{{ sap_nw_sapinst_package_kernel }}"
+      sap_nw_software_path: "{{ sap_nw_software_path }}"
       sap_deployment_as_instanceNumber: "{{ sap_deployment_as_instanceNumber }}"
 # Virtual host name of the primary application server instance
-      sap_deployment_AS_virtualhostname: '{{ terraform.outputs.app_instance_name.value }}'     
+      sap_deployment_AS_virtualhostname: '{{ terraform.outputs.app_instance_name.value }}'

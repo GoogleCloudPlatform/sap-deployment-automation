@@ -24,12 +24,8 @@
   - ip: "{{ sap_nw_ascs_ilb_ip }}"
     names:
     - "{{ sap_nw_ascs_dns }}"
-    - "{{ sap_nw_ascs_virtualhostname }}"
+    - "{{ sap_nw_ascs_virtual_host }}"
   - ip: "{{ sap_nw_ers_ilb_ip }}"
     names:
     - "{{ sap_nw_ers_dns }}"
-    - "{{ sap_nw_ers_virtualhostname }}"
-  - ip: "{{ sap_nw_db_ilb_ip }}"
-    names:
-    - "{{ sap_nw_db_dns }}"
-    - "{{ sap_nw_db_virtualhostname }}"    
+    - "{{ sap_nw_ers_virtual_host }}"

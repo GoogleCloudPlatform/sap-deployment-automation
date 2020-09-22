@@ -16,7 +16,7 @@
   shell: |
     cat /root/.deploy/hana_passwords.xml | ./hdblcm --action=add_hosts --addhosts={{ item.split('/')[10] }} --root_user=root --listen_interface=global --read_password_from_stdin=xml -b
   args:
-    chdir: "{{ sap_hana_shared_mountpoint }}/{{ sap_hana_deployment_hana_sid }}/hdblcm/"
-    creates: "/usr/sap/{{ sap_hana_deployment_hana_sid }}/SYS/profile/{{ sap_hana_deployment_hana_sid }}_HDB{{ sap_hana_deployment_hana_instance_number }}_{{ item.split('/')[10] }}"
+    chdir: "{{ sap_hana_shared_mountpoint }}/{{ sap_hana_sid }}/hdblcm/"
+    creates: "/usr/sap/{{ sap_hana_sid }}/SYS/profile/{{ sap_hana_sid }}_HDB{{ sap_hana_instance_number }}_{{ item.split('/')[10] }}"
   with_items:
     - "{{ sap_hana_worker_node_names }}"

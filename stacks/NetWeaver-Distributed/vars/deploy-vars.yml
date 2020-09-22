@@ -1,47 +1,25 @@
 ---
-sap_project_id: albatross-duncanl-sandbox-2
-sap_gce_ssh_pub_key: ~/.ssh/id_rsa.pub
-sap_gce_ssh_priv_key: ~/.ssh/id_rsa
-sap_state_bucket: nw-code-ansible
-sap_ascs_instance_name: s-ascsss
-sap_pas_instance_name: s-passs
-sap_instance_type: n1-standard-8
+# Required
+sap_project_id:
+sap_tf_state_bucket:
+sap_tf_state_bucket_prefix:
+sap_hana_instance_name:
+sap_ascs_instance_name:
+sap_pas_instance_name:
+sap_subnetwork:
+sap_hana_password:
+sap_nw_password:
+sap_hana_service_account_email:
+sap_nw_service_account_email:
+
+# Optional
+sap_hana_instance_type: n1-highmem-32
+sap_nw_instance_type: n1-standard-8
 sap_source_image_family: sles-12-sp3-sap
 sap_source_image_project: suse-sap-cloud
-gce_ssh_pub_key_file: '{{ playbook_dir }}/ssh-key.pub'
-sap_region: us-central1
 sap_zone: us-central1-a
-sap_subnetwork: app2
-sap_subnetwork_project_id: albatross-duncanl-sandbox-2
-sap_boot_disk_size: '30'
-sap_gce_ssh_user: sushma
-usr_sap_size: '50'
-sap_mnt_size: '50'
-disk_type: "pd-standard"
-boot_disk_type: pd-ssd
-swap_size: '28'
+sap_hana_instance_number: '00'
+sap_hana_sid: ABC
+sap_nw_sid: XYZ
+sap_hana_install_files_bucket: nw-ansible
 sap_nw_install_files_bucket: nw-code-ansible
-sap_ascs_deployment_product_id: "NW_ABAP_ASCS:NW750.HDB.ABAP"
-template: inifile.params.distribution.j2
-ascs_sid: "SL3"
-sap_deployment_sapcar_path: /sapmnt/Software/SWPM1.0      
-sap_deployment_ascs_instance_nr: "03"
-sap_archives_downloadbasket: /sapmnt/Software/Kernel_Files 
-sap_db_deployment_product_id: "NW_ABAP_DB:NW750.HDB.ABAP"
-sap_deployment_db_host: "wplsaphana"
-sap_deployment_db_sid: "SL1"
-sap_deployment_hana_instance_nr: "00"   
-sap_sapinst_package_kernel: /sapmnt/Software/Kernel_Files  
-sap_sapinst_package_load: /sapmnt/Software/NW75  
-sap_sapinst_package_client: /sapmnt/Software/HANA_CLIENT  
-sap_nw_sid: "SL3" 
-sap_pas_deployment_product_id: "NW_ABAP_CI:NW750.HDB.ABAP"
-sap_deployment_password: "Google123"
-sap_hana_password: "Google123"
-sap_deployment_igs_path: /sapmnt/Software/Kernel_Files
-sap_deployment_igs_file_name: igsexe_4-80003187.sar
-sap_deployment_igs_helper_path: /sapmnt/Software/Kernel_Files
-sap_deployment_igs_helper_file_name: igshelper_17-10010245.sar
-sap_deployment_software_path: /sapmnt/Software/Kernel_Files
-sap_deployment_ci_instance_ciinstanceNumber: "02"
-sap_ci_instance_cimsport: "3601"

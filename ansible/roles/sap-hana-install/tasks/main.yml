@@ -59,9 +59,9 @@
   register: sap_hana_deployment_register_hdblcm_stat
   failed_when: not sap_hana_deployment_register_hdblcm_stat.stat.exists
 
-- name: Check if another instance of HANA DB is running with sid "{{ sap_hana_deployment_hana_sid }}"
+- name: Check if another instance of HANA DB is running with sid "{{ sap_hana_sid }}"
   stat:
-    path: "/hana/shared/{{ sap_hana_deployment_hana_sid }}"
+    path: "/hana/shared/{{ sap_hana_sid }}"
   register: hana_db_running
 
 - name: Install SAP HANA

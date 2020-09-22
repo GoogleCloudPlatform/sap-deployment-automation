@@ -1,9 +1,15 @@
+output "hana_instance_name" {
+  description = "Name of HANA instance"
+  value       = module.hana.instance_name
+}
+
 output "ascs_instance_name" {
-  description = "Name of Netweaver instance"
+  description = "Name of Netweaver ASCS instance"
   value       = module.ascs.instance_name
 }
+
 output "pas_instance_name" {
-  description = "Name of Netweaver instance"
+  description = "Name of Netweaver PAS instance"
   value       = module.pas.instance_name
 }
 
@@ -22,10 +28,6 @@ output "pas_address" {
   value       = module.pas.instance_external_ip
 }
 
-output "sap_image_family" {
-  value = contains([element(split("-", var.linux_image_family), 0)], "rhel") ? "RedHat" : "Suse"
-}
-
 output "subnet_cidr" {
   value = data.google_compute_subnetwork.subnetwork.ip_cidr_range
 }
@@ -39,12 +41,43 @@ output "pas_private_ip" {
   description = "instance private IP"
   value       = module.pas.instance_internal_ip
 }
+
 output "nfs_private_ip" {
   description = "instance private IP"
   value       = module.ascs.instance_internal_ip
 }
+
+output "hana_attached_disks_data" {
+  value = module.hana.instance_attached_disks_data
+}
+
+output "hana_attached_disks_backup" {
+  value = module.hana.instance_attached_disks_backup
+}
+
+output "hana_data_size" {
+  value = local.hana_data_size
+}
+
+output "hana_shared_size" {
+  value = local.hana_shared_size
+}
+
+output "hana_log_size" {
+  value = local.hana_log_size
+}
+
+output "hana_usr_size" {
+  value = local.hana_usr_size
+}
+
+output "hana_backup_size" {
+  value = local.hana_backup_size
+}
+
 output "inventory" {
   value = {
+    hana = [module.hana.address],
     ascs = [module.ascs.instance_internal_ip],
     pas = [module.pas.instance_internal_ip],
     nodes = [

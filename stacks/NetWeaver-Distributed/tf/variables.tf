@@ -15,107 +15,133 @@
  */
 variable "project_id" {
   description = "The ID of the project in which the resources will be deployed."
-  default     = "albatross-duncanl-sandbox-2"
 }
 
 variable "zone" {
   description = "The zone that the instance should be created in."
-  default     = "us-central1-a"
 }
 
-variable "region" {
-  description = "Region to deploy the resources. Should be in the same region as the zone."
-  default     = "us-central1"
+variable "sap_hana_instance_name" {
+  description = "A unique name for the HANA instance. Changing this forces a new resource to be created."
 }
-
-# variable "instance_name" {
-#   description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
-#   default = "sap-nw"
-# }
 
 variable "sap_pas_instance_name" {
-  description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
-  default     = "wplsapps"
+  description = "A unique name for the PAS instance. Changing this forces a new resource to be created."
 }
 
 variable "sap_ascs_instance_name" {
-  description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
-  default     = "wplsapas"
+  description = "A unique name for the ASCS instance. Changing this forces a new resource to be created."
 }
 
-variable "instance_type" {
+variable "sap_hana_instance_type" {
   description = "The GCE instance/machine type."
-  default     = "n1-standard-8"
 }
 
-variable "linux_image_family" {
+variable "sap_nw_instance_type" {
+  description = "The GCE instance/machine type."
+}
+
+variable "source_image_family" {
   description = "GCE image family."
-  default     = "sles-12-sp3-sap"
 }
 
-variable "linux_image_project" {
+variable "source_image_project" {
   description = "Project name containing the linux image."
-  default     = "suse-sap-cloud"
 }
 
-variable "autodelete_disk" {
+variable "sap_hana_autodelete_boot_disk" {
   description = "Whether the disk will be auto-deleted when the instance is deleted."
-  default     = "false"
 }
 
-variable "usr_sap_size" {
+variable "sap_nw_autodelete_boot_disk" {
+  description = "Whether the disk will be auto-deleted when the instance is deleted."
+}
+
+variable "sap_nw_usrsap_disk_size" {
   description = "USR SAP size"
 }
 
-variable "sap_mnt_size" {
+variable "sap_nw_sapmnt_disk_size" {
   description = "SAP mount size"
 }
 
-variable "swap_size" {
+variable "sap_nw_swap_disk_size" {
   description = "SWAP Size"
 }
 
-variable "disk_type" {
+variable "sap_hana_boot_disk_size" {
   description = "The GCE data disk type. May be set to pd-standard (for PD HDD) or pd-ssd."
 }
 
-variable "boot_disk_size" {
-  description = "Root disk size in GB."
-  default     = 30
+variable "sap_hana_boot_disk_type" {
+  description = "The GCE data disk type. May be set to pd-standard (for PD HDD) or pd-ssd."
 }
 
+variable "sap_nw_boot_disk_size" {
+  description = "Root disk size in GB."
+}
 
-variable "boot_disk_type" {
+variable "sap_nw_additional_disk_type" {
   description = "The GCE boot disk type. May be set to pd-standard (for PD HDD) or pd-ssd."
+}
+
+variable "sap_nw_boot_disk_type" {
+  description = "The GCE boot disk type. May be set to pd-standard (for PD HDD) or pd-ssd."
+}
+
+variable "sap_hana_service_account_email" {
+}
+
+variable "sap_nw_service_account_email" {
 }
 
 variable "subnetwork" {
   description = "The name or self_link of the subnetwork where the isntance will be deployed. The subnetwork must exist in the same region this instance will be created in."
-  default     = "app2"
 }
 
 variable "subnetwork_project" {
   description = "subnetwork project"
-  default     = "albatross-duncanl-sandbox-2"
+  default     = ""
 }
 
-variable "network_tags" {
+variable "sap_hostagent_rpm_file_name" {
+  description = "SAP Host agent filename"
+  default     = "saphostagentrpm_44-20009394.rpm"
+}
+
+variable "sap_hana_bundle_file_name" {
+  description = "SAP Hana deployment bundle filename"
+  default     = "IMDB_SERVER20_047_0-80002031.SAR"
+}
+
+variable "sap_hana_sapcar_file_name" {
+  description = "SAPCAR filename"
+  default     = "SAPCAR_1320-80000935.EXE"
+}
+
+variable "sap_hana_install_files_bucket" {
+}
+
+variable "sap_hana_network_tags" {
   type        = list
   description = "List of network tags to attach to the instance."
   default     = []
 }
 
-
-
-variable "sap_deployment_debug" {
-  description = "Debug flag for Netweaver deployment."
-  default     = "false"
+variable "sap_nw_network_tags" {
+  type        = list
+  description = "List of network tags to attach to the instance."
+  default     = []
 }
 
-variable "public_ip" {
+variable "sap_hana_use_public_ip" {
   description = "Determines whether a public IP address is added to your VM instance."
-  default     = "false"
 }
+
+variable "sap_nw_use_public_ip" {
+  description = "Determines whether a public IP address is added to your VM instance."
+}
+
 variable "gce_ssh_user" {
   description = "SSH user name to connect to your instance."
   default     = "sushma"
@@ -123,10 +149,4 @@ variable "gce_ssh_user" {
 
 variable "gce_ssh_pub_key_file" {
   description = "Path to the public SSH key you want to bake into the instance."
-  default     = "~/.ssh/id_rsa.pub"
-}
-
-variable "gce_ssh_priv_key_file" {
-  description = "Path to the private SSH key, used to access the instance."
-  default     = "~/.ssh/id_rsa"
 }

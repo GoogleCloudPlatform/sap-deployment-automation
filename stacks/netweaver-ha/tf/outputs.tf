@@ -37,3 +37,19 @@ output "inventory" {
 output "subnet_cidr" {
   value = data.google_compute_subnetwork.subnetwork.ip_cidr_range
 }
+
+output "usr_sap_size" {
+  value = var.usr_sap_size
+}
+
+output "swap_size" {
+  value = var.swap_size
+}
+
+output "ascs_health_check_port" {
+  value = var.ascs_health_check_port
+}
+
+output "ers_health_check_port" {
+  value = var.ers_health_check_port
+}

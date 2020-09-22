@@ -19,9 +19,6 @@
 - name: Include SAP hostagent install role
   include_role:
     name: sap-hostagent
-  vars:
-    sap_hostagent_rpm_remote_path: "{{ sap_hostagent_rpm_remote_path }}"
-    sap_hostagent_rpm_file_name:  "{{ sap_hostagent_file_name }}"
 
 - name: Include sap pre-configure role
   include_role:

@@ -13,13 +13,13 @@ HDB_Schema_Check_Dialogs.schemaName = SAPABAP1
 # The password of the database schema.
 HDB_Schema_Check_Dialogs.schemaPassword = {{ sap_hana_password }}
 
-NW_HDB_getDBInfo.dbhost = {{ sap_deployment_db_host }}
-NW_HDB_getDBInfo.dbsid = {{ sap_deployment_db_sid }} 
-NW_HDB_getDBInfo.instanceNumber = {{ sap_deployment_hana_instance_nr }}
-archives.downloadBasket = {{ sap_deployment_software_path }}  
-SAPINST.CD.PACKAGE.KERNEL = {{ sap_deployment_software_path }}
-SAPINST.CD.PACKAGE.LOAD = {{ sap_sapinst_package_load }}
-SAPINST.CD.PACKAGE.RDBMS = {{ sap_sapinst_package_client }} 
+NW_HDB_getDBInfo.dbhost = {{ sap_hana_instance_name }}
+NW_HDB_getDBInfo.dbsid = {{ sap_hana_sid }} 
+NW_HDB_getDBInfo.instanceNumber = {{ sap_hana_instance_number }}
+archives.downloadBasket = {{ sap_nw_software_path }}  
+SAPINST.CD.PACKAGE.KERNEL = {{ sap_nw_software_path }}
+SAPINST.CD.PACKAGE.LOAD = {{ sap_nw_sapinst_package_load }}
+SAPINST.CD.PACKAGE.RDBMS = {{ sap_nw_sapinst_package_client }} 
 
 # Specify whether Software Provisioning Manager is to validate the schema name. The schema name must only contain numbers and capital letters. It  must not start with '_' . It cannot be 'SYS' or 'SYSTEM'.
 # HDB_Schema_Check_Dialogs.validateSchemaName = true
@@ -46,19 +46,19 @@ SAPINST.CD.PACKAGE.RDBMS = {{ sap_sapinst_package_client }}
 # NW_CI_Instance.ascsInstanceNumber = 
 
 # Standard system with AS ABAP only: Virtual host name for the ASCS instance. Leave empty for default.
-NW_CI_Instance.ascsVirtualHostname = {{ sap_deployment_ci_ascsvirtualhostname }}
+NW_CI_Instance.ascsVirtualHostname = {{ sap_nw_ascs_virtual_host }}
 
 # Instance number of the primary application server instance. Leave empty for default.
-NW_CI_Instance.ciInstanceNumber = {{ sap_deployment_ci_instance_ciinstanceNumber }}
+NW_CI_Instance.ciInstanceNumber = {{ sap_nw_ci_instance_number }}
 
 # The ABAP message server port. Leave empty for default.
-NW_CI_Instance.ciMSPort = {{ sap_ci_instance_cimsport }}
+NW_CI_Instance.ciMSPort = {{ sap_nw_ci_ms_port }}
 
 # The internal ABAP message server port. Leave empty for default.
 # NW_CI_Instance.ciMSPortInternal = 
 
 # Virtual host name of the primary application server instance . Leave empty for default.
-NW_CI_Instance.ciVirtualHostname = {{ sap_deployment_ci_civirtualhostname }}
+NW_CI_Instance.ciVirtualHostname = {{ sap_nw_ci_virtual_host }}
 
 # Create file 'prxyinfo(.DAT)' in the global directory, if it does not already exist and set 'gw/prxy_info' in the default profile accordingly.  Default is 'false'.
 # NW_CI_Instance.createGlobalProxyInfoFile = false
@@ -73,7 +73,7 @@ NW_CI_Instance.ciVirtualHostname = {{ sap_deployment_ci_civirtualhostname }}
 # NW_CI_Instance.scsMSPortInternal = 
 
 # Standard system with AS Java only: Virtual host name for the SCS instance. Leave empty for default.
-NW_CI_Instance.scsVirtualHostname = {{ sap_deployment_ci_ascsvirtualhostname }}
+NW_CI_Instance.scsVirtualHostname = {{ sap_nw_ascs_virtual_host }}
 
 # Activate ICF node '/SAP/BC/REST/SLPROTOCOL'
 # NW_CI_Instance_ABAP_Reports.enableActivateICFService = false
@@ -100,7 +100,7 @@ NW_CI_Instance_ABAP_Reports.executeReportsForDepooling = true
 # NW_Delete_Sapinst_Users.removeUsers = false
 
 # Master password
-NW_GetMasterPassword.masterPwd = {{ sap_deployment_password }}
+NW_GetMasterPassword.masterPwd = {{ sap_nw_password }}
 
 # Install the SAP HANA database client in a central or local directory. Possible values are: 'SAPCPE', 'LOCAL'
 # NW_HDB_DBClient.clientPathStrategy = LOCAL
@@ -136,10 +136,10 @@ NW_System.installSAPHostAgent = false
 # NW_Unpack.dbaToolsSar = 
 
 # DEPRECATED, DO NOT USE!
-NW_Unpack.igsExeSar = "{{ sap_deployment_igs_path }}/{{ sap_deployment_igs_file_name }}"
+NW_Unpack.igsExeSar = "{{ sap_nw_igs_path }}/{{ sap_nw_igs_file_name }}"
 
 # DEPRECATED, DO NOT USE!
-NW_Unpack.igsHelperSar = "{{ sap_deployment_igs_helper_path }}/{{ sap_deployment_igs_helper_file_name }}"
+NW_Unpack.igsHelperSar = "{{ sap_nw_igs_helper_path }}/{{ sap_nw_igs_helper_file_name }}"
 
 # DEPRECATED, DO NOT USE!
 # NW_Unpack.sapExeDbSar = 
@@ -229,7 +229,7 @@ nwUsers.sidAdmUID = 1003
 # storageBasedCopy.abapSchemaPassword = 
 
 # Instance number of the SAP HANA Database server
-storageBasedCopy.hdb.instanceNumber = {{ sap_deployment_hana_instance_nr }}
+storageBasedCopy.hdb.instanceNumber = {{ sap_hana_instance_number }}
 
 # Password of user 'SYSTEM' inside the SAP HANA Database Server
 storageBasedCopy.hdb.systemPassword = {{ sap_hana_password }}

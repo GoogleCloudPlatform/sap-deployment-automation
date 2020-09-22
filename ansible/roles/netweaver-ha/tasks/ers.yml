@@ -13,12 +13,12 @@
       - { name: swap, partition_path : swap }
     logvols:
       usrsap:
-        size: "{{ sap_nw_usrsap_disk_size }}"
+        size: "{{ sap_nw_usrsap_disk_size }}G"
         vol: usrsap
         mountpoint: /usr/sap
     swapvols:
       swap:
-        size: "{{ sap_nw_swap_disk_size }}"
+        size: "{{ sap_nw_swap_disk_size }}G"
         vol: swap
         mountpoint: /swap
 - name: include storage primary tasks
@@ -31,33 +31,14 @@
   include_role:
     name: user
   vars:
-    sap_deployment_product_id: "{{ sap_nw_user_product_id }}"
-    template: "{{ sap_nw_ini_template }}"
-    sap_nw_sid: "{{ sap_nw_sid }}"
-    sap_deployment_sapcar_path: "{{ sap_nw_sapcar_path }}"
-    sap_deployment_password: "{{ sap_nw_password }}"
+    sap_nw_product_id: "{{ sap_nw_user_product_id }}"
 - name: include nw primary tasks
   include_role:
     name: ers
   vars:
-    sap_deployment_product_id: "{{ sap_nw_ers_product_id }}"
-    sap_user_deployment_product_id: "{{ sap_nw_user_product_id }}"
-    template: "{{ sap_nw_ini_template }}"
-    sap_nw_sid: "{{ sap_nw_sid }}"
-    sap_deployment_sapcar_path: "{{ sap_nw_sapcar_path }}"
-    sap_deployment_ers_instance_nr: "{{ sap_nw_ers_instance_number }}"
-    sap_sapinst_package_kernel: "{{ sap_nw_sapinst_package_kernel }}"
-    sap_archives_downloadbasket: "{{ sap_nw_archives_downloadbasket }}"
-    sap_deployment_password: "{{ sap_nw_password }}"
-    sap_getFQDN_FQDN: "{{ sap_nw_getFQDN_FQDN }}"
-    sap_deployment_ersVirtualHostname: "{{ sap_nw_ers_virtualhostname }}"
+    sap_nw_product_id: "{{ sap_nw_ers_product_id }}"
 - name: include storage primary tasks
   include_role:
     name: post-deploy
   vars:
-    ascs_sid: "{{ sap_nw_sid }}"
-    sap_deployment_ascs_instance_nr: "{{ sap_nw_ascs_instance_number }}"
-    sap_deployment_ersVirtualHostname: "{{ sap_nw_ers_virtualhostname }}"
-    sap_deployment_ers_instance_nr: "{{ sap_nw_ers_instance_number }}"
-    sap_nw_user: "{{ sap_nw_user }}"
-    sap_deployment_ascsVirtualHostname: "{{ sap_nw_ci_ascsvirtualhostname }}"
+    sap_nw_ascs_sid: "{{ sap_nw_sid }}"

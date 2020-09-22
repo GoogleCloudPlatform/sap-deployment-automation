@@ -13,23 +13,15 @@
     mode: 0777
     recurse: true
 
-- name: Setting fact for nw installer path
-  set_fact:
-    sapinst_path: "{{ sap_deployment_sapcar_path }}"
-
 - name: inifile.params config file
   template:
-    src: "{{ template }}"
+    src: "{{ sap_nw_ini_template }}"
     dest: /usr/sap/inifile_ers.params
 
 - name: installing s4-hana
   command: >-
      ./sapinst SAPINST_INPUT_PARAMETERS_URL=/usr/sap/inifile_ers.params \
-     SAPINST_EXECUTE_PRODUCT_ID={{ sap_deployment_product_id }} \
+     SAPINST_EXECUTE_PRODUCT_ID={{ sap_nw_product_id }} \
      SAPINST_SKIP_DIALOGS=true SAPINST_START_GUISERVER=false
-  register: installnw
   args:
-   chdir: "{{ sapinst_path }}"
-  when: true
-- debug:
-   var: installs4hana
+   chdir: "{{ sap_nw_sapcar_path }}"

@@ -27,7 +27,11 @@ output "address" {
 }
 
 output "public_ip" {
-  value = google_compute_instance.gcp_sap_hana.network_interface[0].access_config[0].nat_ip
+  value = (
+    length(google_compute_instance.gcp_sap_hana.network_interface[0].access_config) != 0 ? (
+      google_compute_instance.gcp_sap_hana.network_interface[0].access_config[0].nat_ip
+    ) : ""
+  )
 }
 
 output "instance_attached_disks_data" {

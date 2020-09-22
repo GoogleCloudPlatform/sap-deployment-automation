@@ -1,1 +1,26 @@
+sap_hana_instance_number: '00'
+
+sap_nw_archives_downloadbasket: /sapmnt/Software/Kernel_Files
+sap_nw_ascs_instance_number: '03'
+sap_nw_ascs_product_id: 'NW_ABAP_ASCS:NW750.HDB.ABAP'
+sap_nw_ascs_sid: SL3
+sap_nw_ci_instance_number: '02'
+sap_nw_ci_ms_port: 3601
+sap_nw_hana_product_id: 'NW_ABAP_DB:NW750.HDB.ABAP'
+sap_nw_igs_file_name: igsexe_4-80003187.sar
+sap_nw_igs_helper_path: /sapmnt/Software/Kernel_Files
+sap_nw_igs_helper_file_name: igshelper_17-10010245.sar
+sap_nw_igs_path: /sapmnt/Software/Kernel_Files
+sap_nw_ini_template: inifile.params.distribution.j2
 sap_nw_install_files_bucket_prefix: nw75/Software
+sap_nw_install_files_dest: /sapmnt/Software
+sap_nw_pas_product_id: 'NW_ABAP_CI:NW750.HDB.ABAP'
+sap_nw_sapcar_path: /sapmnt/Software/SWPM1.0
+sap_nw_sapinst_package_client: /sapmnt/Software/HANA_CLIENT
+sap_nw_sapinst_package_kernel: /sapmnt/Software/Kernel_Files
+sap_nw_sapinst_package_load: /sapmnt/Software/NW75
+sap_nw_sapmnt_disk_size: 50
+sap_nw_software_path: /sapmnt/Software/Kernel_Files
+sap_nw_sid: SL3
+sap_nw_swap_disk_size: 28
+sap_nw_usrsap_disk_size: 50

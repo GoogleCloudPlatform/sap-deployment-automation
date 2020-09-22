@@ -7,22 +7,22 @@
 # Start of User Input parameters
 
 # Database host
-NW_HDB_getDBInfo.dbhost = {{ sap_deployment_db_host }}
+NW_HDB_getDBInfo.dbhost = {{ sap_hana_instance_name }}
 
 # Database system ID
-NW_HDB_getDBInfo.dbsid = {{ sap_deployment_db_sid }} 
+NW_HDB_getDBInfo.dbsid = {{ sap_hana_sid }}
 
 # The instance number of the SAP HANA database server
-NW_HDB_getDBInfo.instanceNumber = {{ sap_deployment_hana_instance_nr }} 
+NW_HDB_getDBInfo.instanceNumber = {{ sap_hana_instance_number }}
 
 # The password of the database schema.
-HDB_Schema_Check_Dialogs.schemaPassword = {{ sap_deployment_password }}
+HDB_Schema_Check_Dialogs.schemaPassword = {{ sap_nw_password }}
 
 # Number of parallel Migration Monitor jobs
-NW_ABAP_Import_Dialog.migmonJobNum = 24 
+NW_ABAP_Import_Dialog.migmonJobNum = 24
 
 # Master password
-NW_GetMasterPassword.masterPwd = {{ sap_deployment_password }}
+NW_GetMasterPassword.masterPwd = {{ sap_nw_password }}
 
 NW_System.installSAPHostAgent = false
 
@@ -33,18 +33,19 @@ NW_HDB_getDBInfo.systemDbPassword = {{ sap_hana_password }}
 NW_HDB_getDBInfo.systemPassword = {{ sap_hana_password }}
 
 # The FQDN of the system
-NW_getFQDN.FQDN = c.albatross-duncanl-sandbox-2.internal  
+# TODO: this needs to be a variable
+NW_getFQDN.FQDN = c.albatross-duncanl-sandbox-2.internal
 
 # Provide  'profile' directory of SAP Netweaver-based system.
 NW_readProfileDir.profileDir = /sapmnt/{{ sap_nw_sid }}/profile
 
-archives.downloadBasket = {{ sap_archives_downloadbasket }}  
+archives.downloadBasket = {{ sap_nw_archives_downloadbasket }}
 
-SAPINST.CD.PACKAGE.KERNEL = {{ sap_sapinst_package_kernel }}  
+SAPINST.CD.PACKAGE.KERNEL = {{ sap_nw_sapinst_package_kernel }}
 
-SAPINST.CD.PACKAGE.LOAD = {{ sap_sapinst_package_load }}  
+SAPINST.CD.PACKAGE.LOAD = {{ sap_nw_sapinst_package_load }}
 
-SAPINST.CD.PACKAGE.RDBMS = {{ sap_sapinst_package_client }}  
+SAPINST.CD.PACKAGE.RDBMS = {{ sap_nw_sapinst_package_client }}
 
 # End of user Input Parameters
 ####################################
@@ -53,7 +54,7 @@ SAPINST.CD.PACKAGE.RDBMS = {{ sap_sapinst_package_client }}
 # Specify whether Software Provisioning Manager is to drop the schema if it exists.
 HDB_Schema_Check_Dialogs.dropSchema = true
 
-# The name of the database schema. changed this parameter per SAP note: 2482103 
+# The name of the database schema. changed this parameter per SAP note: 2482103
 #HDB_Schema_Check_Dialogs.schemaName = SAPABAP1
 NW_HDB_DB.abapSchemaName = SAPABAP1
 
@@ -61,19 +62,19 @@ NW_HDB_DB.abapSchemaName = SAPABAP1
 # HDB_Schema_Check_Dialogs.validateSchemaName = true
 
 # Database hostnames that will be set directly in hdbuserstore without resolving them in HANA. Comma separated. Example (host1,host2)
-# HDB_Userstore.doNotResolveHostnames = 
+# HDB_Userstore.doNotResolveHostnames =
 
 # Specify whether you want to decluster during the import.
-# InitDeclusteringForImport.decluster = 
+# InitDeclusteringForImport.decluster =
 
 # SAP code page. Value for Unicode is: '4103' on little endian (intel), '4102' on big endian. Value for Non-Unicode is: '1100' or country specific.
 NW_ABAP_Import_Dialog.dbCodepage = 4103
 
 # ABAP schema name
-# NW_HDB_DB.abapSchemaName = 
+# NW_HDB_DB.abapSchemaName =
 
 # Password of the ABAP schema user
-# NW_HDB_DB.abapSchemaPassword = 
+# NW_HDB_DB.abapSchemaPassword =
 
 # Install the SAP HANA database client in a central or local directory. Possible values are: 'SAPCPE', 'LOCAL'
 NW_HDB_DBClient.clientPathStrategy = SAPCPE
@@ -82,19 +83,19 @@ NW_HDB_DBClient.clientPathStrategy = SAPCPE
 # NW_HDB_getDBInfo.createTenant = false
 
 # Name of the 'SystemDB' tenant in an SAP HANA MultiDB Server. Default value is 'SystemDB'.
-# NW_HDB_getDBInfo.systemDbSid = 
+# NW_HDB_getDBInfo.systemDbSid =
 
 # Password of user 'SYSTEM' inside the SAP HANA database server from a backup
-# NW_HDB_getDBInfo.systemPasswordBackup = 
+# NW_HDB_getDBInfo.systemPasswordBackup =
 
 # A dedicated OS group for the tenant database, required for SAP HANA multitenant database containers with high isolation level.
-# NW_HDB_getDBInfo.tenantOsGroup = 
+# NW_HDB_getDBInfo.tenantOsGroup =
 
 # A dedicated OS user for the tenant database, required for SAP HANA multitenant database containers with high isolation level.
-# NW_HDB_getDBInfo.tenantOsUser = 
+# NW_HDB_getDBInfo.tenantOsUser =
 
 # SAP INTERNAL USE ONLY
-# NW_adaptProfile.templateFiles = 
+# NW_adaptProfile.templateFiles =
 
 # Specify whether you want to set FQDN for the system.
 # NW_getFQDN.setFQDN = true
@@ -103,7 +104,7 @@ NW_HDB_DBClient.clientPathStrategy = SAPCPE
 NW_getLoadType.loadType = SAP
 
 # ABAP system is Unicode (true|false), only needed if it cannot be determined from the system.
-# NW_getUnicode.isUnicode = 
+# NW_getUnicode.isUnicode =
 
 # Enter the path of the existing 'profile' directory.
 # NW_readProfileDir.profilesAvailable = true
@@ -118,7 +119,7 @@ hanadb.landscape.reorg.useParameterFile = DONOTUSEFILE
 hdb.create.dbacockpit.user = true
 
 # The password of the '<sapsid>adm' user
-# nwUsers.sidadmPassword = 
+# nwUsers.sidadmPassword =
 
 # ABAP schema password
-# storageBasedCopy.abapSchemaPassword = 
+# storageBasedCopy.abapSchemaPassword =

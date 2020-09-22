@@ -5,5 +5,5 @@
     path: "/tmp/{{ item }}"
     state: absent
   loop:
-    - SSFS_{{ sap_hana_deployment_hana_sid }}.DAT
-    - SSFS_{{ sap_hana_deployment_hana_sid }}.KEY
+    - SSFS_{{ sap_hana_sid }}.DAT
+    - SSFS_{{ sap_hana_sid }}.KEY

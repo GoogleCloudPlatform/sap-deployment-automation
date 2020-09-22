@@ -1,0 +1,47 @@
+sap_domain: '{{ ansible_domain }}'
+sap_nw_ascs_dns: '{{ sap_nw_ascs_virtual_host }}.{{ sap_domain }}'
+sap_nw_ers_dns: '{{ sap_nw_ers_virtual_host }}.{{ sap_domain }}'
+
+sap_nw_create_nfs_source_dirs: true
+
+sap_nw_sapinst_package_client: /sapmnt/Software/HANA_CLIENT
+sap_nw_sapinst_package_load: /sapmnt/Software/S4HANA_Export
+sap_nw_sapinst_package_kernel: /sapmnt/Software/Kernel_Files
+sap_nw_sapcar_path: /sapmnt/Software/SWPM1.0
+sap_nw_install_files_bucket_prefix: nw75/Software
+sap_nw_install_files_dest: /sapmnt/Software
+sap_nw_archives_downloadbasket: /sapmnt/Software/Kernel_Files
+sap_nw_ascs_instance_number: '06'
+sap_nw_ers_instance_number: '16'
+sap_nw_db_product_id: 'NW_ABAP_DB:S4HANA1709.CORE.HDB.ABAPHA'
+sap_nw_pas_product_id: 'NW_ABAP_CI:S4HANA1709.CORE.HDB.ABAPHA'
+sap_nw_ascs_product_id: 'NW_ABAP_ASCS:S4HANA1709.CORE.HDB.ABAPHA'
+sap_nw_ers_product_id: 'NW_ERS:S4HANA1709.CORE.HDB.ABAPHA'
+sap_nw_user_product_id: 'NW_Users_Create:GENERIC.SYB.PD'
+sap_nw_igs_path: /sapmnt/Software/Kernel_Files
+sap_nw_igs_file_name: igsexe_4-80003187.sar
+sap_nw_igs_helper_path: /sapmnt/Software/Kernel_Files
+sap_nw_igs_helper_file_name: igshelper_17-10010245.sar
+sap_nw_software_path: /sapmnt/Software/Kernel_Files
+sap_nw_ci_instance_number: '06'
+sap_nw_ci_ms_port: '3906'
+sap_nw_sid: 'SL6'
+sap_nw_user: '{{ sap_nw_sid | lower }}adm'
+sap_nw_ascs_sid: '{{ sap_nw_sid }}'
+sap_nw_ascs_virtual_host: '{{ sap_nw_ascs_instance_name }}'
+sap_nw_ers_virtual_host: '{{ sap_nw_ers_instance_name }}'
+sap_nw_pas_virtual_host: '{{ sap_nw_pas_instance_name }}'
+sap_nw_ini_template: inifile.params.ha.j2
+
+sap_nw_ascs_nfs_mount_key: 'ASCS{{ sap_nw_ascs_instance_number }}'
+sap_nw_ascs_nfs_mount_value: '/usr/sap/{{ sap_nw_sid }}/ASCS{{ sap_nw_ascs_instance_number }}'
+sap_nw_ers_nfs_mount_key: 'ERS{{ sap_nw_ers_instance_number }}'
+sap_nw_ers_nfs_mount_value: '/usr/sap/{{ sap_nw_sid }}/ERS{{ sap_nw_ers_instance_number }}'
+# This templating syntax is a hack to be able to use variables as dictionary keys.
+sap_nw_nfsvols: '{{ {
+  "sapmnt": "/sapmnt",
+  "trans": "/usr/sap/trans",
+  "software": "/software",
+  sap_nw_ascs_nfs_mount_key: sap_nw_ascs_nfs_mount_value,
+  sap_nw_ers_nfs_mount_key: sap_nw_ers_nfs_mount_value
+} }}'

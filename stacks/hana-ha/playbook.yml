@@ -18,7 +18,7 @@
         network: '{{ sap_network }}'
         subnetwork: '{{ sap_subnetwork }}'
         service_account_email: '{{ sap_hana_service_account_email }}'
-        subnetwork_project: '{{ sap_subnetwork_project_id | default(sap_hana_project_id) }}'
+        subnetwork_project: '{{ sap_subnetwork_project_id | default(sap_project_id) }}'
         zone_a: '{{ sap_hana_primary_instance_zone | default("us-central1-a") }}'
         zone_b: '{{ sap_hana_secondary_instance_zone | default("us-central1-b") }}'
         instance_type: '{{ sap_hana_instance_type | default("n1-highmem-32") }}'
