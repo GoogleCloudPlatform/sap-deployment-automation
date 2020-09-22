@@ -1,0 +1,27 @@
+---
+- name: deleting the line from /sapmnt/SL2/profile/SL2_ASCS03_gcpsapascs
+  lineinfile:
+    path: /sapmnt/{{ ascs_sid }}/profile/{{ ascs_sid }}_ASCS{{ sap_deployment_ascs_instance_nr }}_{{ sap_deployment_ascsVirtualHostname }}
+    line: "Restart_Program_01 = local $(_EN) pf=$(_PF)"
+    state: absent
+#    with_items:
+#      - 'Restart_Program_01 = local $(_EN) pf=$(_PF)'
+- name: Adding line from /sapmnt/SL2/profile/SL2_ASCS03_gcpsapascs
+  lineinfile:
+    path: /sapmnt/{{ ascs_sid }}/profile/{{ ascs_sid }}_ASCS{{ sap_deployment_ascs_instance_nr }}_{{ sap_deployment_ascsVirtualHostname }}
+    line: "{{ item }}"
+    state: present
+  with_items:
+    - 'Start_Program_01 = local $(_EN) pf=$(_PF)'
+    - '# Add the following lines'
+    - 'service/halib = $(DIR_CT_RUN)/saphascriptco.so'
+    - 'service/halib_cluster_connector = /usr/bin/sap-suse-cluster-connector'
+    - '# Add the keep alive parameter'
+    - 'enque/encni/set_so_keepalive = true'
+- name: Adding line from /usr/sap/sapservices
+  lineinfile:
+    path: /usr/sap/sapservices
+    line: "{{ item }}"
+    state: present
+  with_items:
+    - 'LD_LIBRARY_PATH=/usr/sap/{{ ascs_sid }}/ERS{{ sap_deployment_ers_instance_nr }}/exe:$LD_LIBRARY_PATH; export LD_LIBRARY_PATH; /usr/sap/{{ ascs_sid }}/ERS{{ sap_deployment_ers_instance_nr }}/exe/sapstartsrv pf=/usr/sap/{{ ascs_sid }}/ERS{{ sap_deployment_ers_instance_nr }}/profile/{{ ascs_sid }}_ERS{{ sap_deployment_ers_instance_nr }}_{{ sap_deployment_ersVirtualHostname }} -D -u {{ sap_nw_user }}adm'

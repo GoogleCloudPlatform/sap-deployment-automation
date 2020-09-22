@@ -1,0 +1,72 @@
+---
+sap_project_id: albatross-duncanl-sandbox-2
+sap_gce_ssh_priv_key_file: ~/.ssh/id_rsa
+sap_state_bucket: nw-code-ansible
+sap_ascs_instance_name: ascs-ha
+sap_pas_instance_name: pas-ha
+sap_ers_instance_name: ers-ha
+sap_nw_instance_type: n1-standard-8
+sap_source_image_family: sles-12-sp3-sap
+sap_source_image_project: suse-sap-cloud
+sap_gce_ssh_pub_key_file: ~/.ssh/id_rsa.pub
+sap_region: us-central1
+sap_zone: us-central1-a
+sap_nw_ascs_ilb_ip: '{{ terraform.outputs.ascs_ilb_ip.value }}'
+sap_nw_ers_ilb_ip: '{{ terraform.outputs.ers_ilb_ip.value }}'
+sap_nw_ascs_instance: '{{ terraform.outputs.ascs_instance_name.value }}'
+sap_nw_ers_instance: '{{ terraform.outputs.ers_instance_name.value }}'
+sap_nw_pas_instance: '{{ terraform.outputs.pas_instance_name.value }}'
+sap_nw_ers_private_ip: '{{ terraform.outputs.ers_instance_ip.value }}'
+sap_nw_ascs_private_ip: '{{ terraform.outputs.ascs_instance_ip.value }}'
+sap_nw_ascs_virtualhostname: "ascstest"
+sap_nw_ascs_health_check_port: "6666"
+sap_nw_ers_health_check_port: "6666"
+sap_nw_ascs_dns: "ascstest.c.albatross-duncanl-sandbox-2.internal"
+sap_nw_ers_dns: "erstest.c.albatross-duncanl-sandbox-2.internal"
+sap_subnetwork: app2
+sap_subnetwork_project_id: albatross-duncanl-sandbox-2
+sap_nw_boot_disk_size: '30'
+sap_gce_ssh_user: sushma
+sap_nw_usrsap_disk_size: '90G'
+sap_nw_additional_disk_type: "pd-standard"
+sap_nw_boot_disk_type: pd-ssd
+sap_nw_nfsvols:
+  sapmnt: /sapmnt
+  trans: /usr/sap/trans
+  ASCS06: /usr/sap/SL6/ASCS06
+  ERS16: /usr/sap/SL6/ERS16
+  software: /software
+sap_nw_nfs_src: 10.48.202.242:/sapmount/s6hana
+sap_nw_swap_disk_size: '28G'
+sap_nw_install_files_bucket: "nw-code-ansible"
+sap_nw_install_files_bucket_prefix: "nw-code-ansible-new/Software" 
+sap_nw_ascs_product_id: "NW_ABAP_ASCS:S4HANA1709.CORE.HDB.ABAPHA"
+sap_nw_ers_product_id: "NW_ERS:S4HANA1709.CORE.HDB.ABAPHA"
+sap_nw_user_product_id: "NW_Users_Create:GENERIC.SYB.PD"
+sap_nw_getFQDN_FQDN: c.albatross-duncanl-sandbox-2.internal
+sap_nw_ini_template: inifile.params.ha.j2
+sap_nw_sapcar_path: /sapmnt/Software/SWPM1.0      
+sap_nw_ascs_instance_number: "06"
+sap_nw_ers_instance_number: "16"
+sap_nw_ers_virtualhostname: "erstest"
+sap_nw_ci_ascsvirtualhostname: "ascstest"
+sap_nw_archives_downloadbasket: /sapmnt/Software/Kernel_Files 
+sap_nw_db_product_id: "NW_ABAP_DB:S4HANA1709.CORE.HDB.ABAPHA"
+sap_hana_instance_name: "saphanasles-bg-delete"
+sap_hana_sid: "SL1"
+sap_hana_instance_number: "00"   
+sap_nw_sapinst_package_kernel: /sapmnt/Software/Kernel_Files  
+sap_nw_sapinst_package_load: /sapmnt/Software/S4HANA_Export
+sap_nw_sapinst_package_client: /sapmnt/Software/HANA_CLIENT  
+sap_nw_sid: "SL6" 
+sap_nw_user: "sl6"
+sap_nw_pas_product_id: "NW_ABAP_CI:S4HANA1709.CORE.HDB.ABAPHA"
+sap_nw_password: Google123
+sap_hana_password: Google123
+sap_nw_igs_path: /sapmnt/Software/Kernel_Files
+sap_nw_igs_file_name: igsexe_4-80003187.sar
+sap_nw_igs_helper_path: /sapmnt/Software/Kernel_Files
+sap_nw_igs_helper_file_name: igshelper_17-10010245.sar
+sap_nw_software_path: /sapmnt/Software/Kernel_Files
+sap_nw_ci_instance_ciinstanceNumber: "06"
+sap_nw_ci_instance_cimsport: "3906"
