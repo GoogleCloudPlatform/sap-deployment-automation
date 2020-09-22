@@ -1,13 +1,15 @@
 ---
-- name: Create a software directory
+- name: Ensure destination directory is present
   file:
-    path: /sapmnt/Software
+    path: '{{ sap_nw_install_files_dest }}'
+    mode: 0755
     state: directory
-    mode: '0775'
-- name: Copy netweaver binaries from GC
-  shell: |
-    gsutil -m cp -r gs://{{ nw_bucket }}/{{ folder }}/{{ item }} /sapmnt/Software
-  with_items: "{{ storage }}"
-    environment:
-    CLOUDSDK_PYTHON: "{{ cloudsdk_python_export_path }}"
 
+- name: Copy netweaver binaries from GC
+  command: >-
+    gsutil -m rsync -r
+    gs://{{ sap_nw_install_files_bucket }}/{{ sap_nw_install_files_bucket_prefix }}/{{ item }}
+    {{ sap_nw_install_files_dest }}
+  with_items: "{{ storage }}"
+  environment:
+    CLOUDSDK_PYTHON: '{{ cloudsdk_python_export_path }}'

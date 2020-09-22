@@ -37,3 +37,6 @@
     name: nw
   vars: 
     sap_nw_product_id: "{{ sap_nw_pas_product_id }}"
+    sap_nw_installed_files:
+    - '/sapmnt/{{ sap_nw_ascs_sid }}/profile/{{ sap_nw_ascs_sid }}_D{{ sap_nw_ci_instance_number }}_{{ sap_nw_pas_virtual_host }}'
+    - '/usr/sap/{{ sap_nw_ascs_sid }}/D{{ sap_nw_ci_instance_number }}/exe/R3load'

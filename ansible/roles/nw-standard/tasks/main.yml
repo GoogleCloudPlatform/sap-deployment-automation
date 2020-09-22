@@ -36,3 +36,7 @@
 - name: include nw primary tasks
   include_role:
     name: nw
+  vars:
+    sap_nw_installed_files:
+    - /usr/sap/hostctrl/exe/sapcontrol
+    - /sapmnt/{{ sap_nw_sid }}/profile/{{ sap_nw_sid }}_D{{ sap_nw_pas_instance_number }}_{{ sap_nw_instance_name }}

@@ -23,6 +23,13 @@
   template:
     src: "{{ sap_nw_ini_template }}"
     dest: /usr/sap/inifile_ascs.params  
+- name: check for files created by ascs installer
+  stat:
+    path: '{{ item }}'
+  loop:
+  - '/usr/sap/{{ sap_nw_ascs_sid }}/ASCS{{ sap_nw_ascs_instance_number }}/exe/sapcontrol'
+  - '/sapmnt/{{ sap_nw_ascs_sid }}/profile/{{ sap_nw_ascs_sid }}_ASCS{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}'
+  register: ascs_installed_files
 - name: installing ascs
   command: >- 
      ./sapinst SAPINST_USE_HOSTNAME={{ sap_nw_ascs_virtual_host }} \
@@ -31,3 +38,4 @@
      SAPINST_SKIP_DIALOGS=true SAPINST_START_GUISERVER=false
   args:
     chdir: "{{ sap_nw_sapcar_path }}"
+  when: false in ascs_installed_files.results | map(attribute="stat") | map(attribute="exists") | list

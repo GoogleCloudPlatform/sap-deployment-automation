@@ -17,6 +17,14 @@
   template:
     src: "{{ sap_nw_ini_template }}"
     dest: /usr/sap/inifile_db.params
+
+- name: check for files created by db installer
+  stat:
+    path: '{{ item }}'
+  loop:
+  - /home/{{ sap_nw_ascs_sid | lower }}adm/.hdb/{{ sap_nw_pas_virtual_host }}
+  - /sapmnt/{{ sap_nw_ascs_sid }}/exe/uc/linuxx86_64/R3load
+  register: db_installed_files
     
 - name: installing s4-hana 
   command: >- 
@@ -26,3 +34,4 @@
   register: installnw
   args:
     chdir: "{{ sap_nw_sapcar_path }}"
+  when: false in db_installed_files.results | map(attribute="stat") | map(attribute="exists") | list

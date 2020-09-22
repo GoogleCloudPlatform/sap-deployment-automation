@@ -17,6 +17,12 @@
   template:
     src: "{{ sap_nw_ini_template }}"
     dest: /usr/sap/inifile_nw.params
+
+- name: check for files created by nw installer
+  stat:
+    path: '{{ item }}'
+  loop: '{{ sap_nw_installed_files }}'
+  register: stat_sap_nw_installed_files
     
 - name: installing s4-hana 
   command: >- 
@@ -26,3 +32,4 @@
   register: installnw
   args:
     chdir: "{{ sap_nw_sapcar_path }}"
+  when: false in stat_sap_nw_installed_files.results | map(attribute="stat") | map(attribute="exists") | list

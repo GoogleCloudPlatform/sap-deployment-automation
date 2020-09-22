@@ -18,6 +18,14 @@
     src: "{{ sap_nw_ini_template }}"
     dest: /usr/sap/inifile_ers.params
 
+- name: check for files created by ers installer
+  stat:
+    path: '{{ item }}'
+  loop:
+  - '/usr/sap/{{ sap_nw_sid }}/ERS{{ sap_nw_ers_instance_number }}/exe/sapcontrol'
+  - '/usr/sap/hostctrl/exe/saphostexec'
+  register: ers_installed_files
+
 - name: installing s4-hana
   command: >-
      ./sapinst SAPINST_INPUT_PARAMETERS_URL=/usr/sap/inifile_ers.params \
@@ -25,3 +33,4 @@
      SAPINST_SKIP_DIALOGS=true SAPINST_START_GUISERVER=false
   args:
    chdir: "{{ sap_nw_sapcar_path }}"
+  when: false in ers_installed_files.results | map(attribute="stat") | map(attribute="exists") | list
