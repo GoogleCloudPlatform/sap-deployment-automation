@@ -76,7 +76,7 @@ variable "network" {
 
 variable "subnetwork_project" {
   description = "The name or self_link of the subnetwork project where the isntance will be deployed. The subnetwork must exist in the same region this instance will be created in."
-  default     = "albatross-duncanl-sandbox-2"
+  default     = ""
 }
 
 variable "network_tags" {

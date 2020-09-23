@@ -23,22 +23,6 @@
     - kernel.numa_balancing
   when: ansible_facts['distribution'] == "SLES_SAP"
     
-- name: uninstalling package python 3.4
-  package:
-    name: "python3"
-    state: absent
-  when: ansible_facts['distribution'] == "SLES_SAP"
-
-- name: removing cached python libraries
-  file:
-    path: "{{ item }}"
-    state: absent
-  loop:
-    - /usr/lib64/python3.4
-    - /etc/profile.d/python.sh
-    - /etc/profile.d/python.csh
-  when: ansible_facts['distribution'] == "SLES_SAP"
-
 - name: ssh config
   replace:
     path: /etc/ssh/sshd_config

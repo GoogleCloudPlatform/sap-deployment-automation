@@ -1,3 +1,5 @@
 ---
 - name: Copy netweaver binaries from GC
   command: "gsutil {{ gsutil_opts }} cp -r gs://{{ nw_bucket }}/{{ folder }} /sapmnt"
+  environment:
+    CLOUDSDK_PYTHON: /usr/bin/python
