@@ -85,3 +85,42 @@ variable "gce_ssh_priv_key_file" {
   description = "Path to the private SSH key, used to access the instance."
   default     = "~/.ssh/id_rsa"
 }
+variable "instance_type" {
+  description = "The GCE instance/machine type."
+  default     = "n1-standard-8"
+}
+
+variable "source_image_family" {
+  description = "GCE linux image family."
+  default     = "sles-12-sp3-sap"
+}
+
+variable "source_image_project" {
+  description = "Project name containing the linux image."
+  default     = "suse-sap-cloud"
+}
+variable "boot_disk_size" {
+  description = "Root disk size in GB"
+  default     = 30
+}
+
+variable "usr_sap_size" {
+  description = "Persistent disk size in GB"
+  default     = 100
+}
+
+variable "swap_size" {
+  description = "Persistent disk size in GB."
+  default     = 30
+}
+
+variable "service_account_email" {
+  description = "Email of service account to attach to the instance."
+  default     = "terraform-managed-sa@albatross-duncanl-sandbox-2.iam.gserviceaccount.com"
+}
+
+variable "subnetwork_project" {
+  description = "The name or self_link of the subnetwork project where the isntance will be deployed. The subnetwork must exist in the same region this instance will be created in."
+  default     = "albatross-duncanl-sandbox-2"
+}
+

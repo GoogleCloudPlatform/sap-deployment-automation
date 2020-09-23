@@ -9,6 +9,7 @@ sap_nw_instance_type: n1-standard-8
 sap_source_image_family: sles-12-sp3-sap
 sap_source_image_project: suse-sap-cloud
 sap_gce_ssh_pub_key_file: ~/.ssh/id_rsa.pub
+sap_nw_service_account_email: "terraform-managed-sa@albatross-duncanl-sandbox-2.iam.gserviceaccount.com"
 sap_region: us-central1
 sap_zone: us-central1-a
 sap_nw_ascs_ilb_ip: '{{ terraform.outputs.ascs_ilb_ip.value }}'

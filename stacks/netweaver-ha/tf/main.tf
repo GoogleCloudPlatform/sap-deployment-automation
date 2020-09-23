@@ -22,7 +22,16 @@ module "gcp_netweaver_ascs" {
   instance_name          = var.ascs_instance_name
   zone                   = var.ascs_zone
   ssh_user               = var.gce_ssh_user 
-  public_key_path        = var.gce_ssh_pub_key_file 
+  public_key_path        = var.gce_ssh_pub_key_file
+  subnetwork             = var.subnetwork
+  subnetwork_project     = var.subnetwork_project
+  source_image_family    = var.source_image_family
+  source_image_project   = var.source_image_project
+  usr_sap_size           = var.usr_sap_size
+  swap_size              = var.swap_size
+  instance_type          = var.instance_type
+  boot_disk_size         = var.boot_disk_size
+  service_account_email  = var.service_account_email 
 }
 
 module "gcp_netweaver_ers" {
@@ -31,6 +40,15 @@ module "gcp_netweaver_ers" {
   zone                   = var.ers_zone
   ssh_user               = var.gce_ssh_user
   public_key_path        = var.gce_ssh_pub_key_file 
+  subnetwork             = var.subnetwork
+  subnetwork_project     = var.subnetwork_project
+  source_image_family    = var.source_image_family
+  source_image_project   = var.source_image_project
+  usr_sap_size           = var.usr_sap_size
+  swap_size              = var.swap_size
+  instance_type          = var.instance_type
+  boot_disk_size         = var.boot_disk_size
+  service_account_email  = var.service_account_email
 }
 
 module "gcp_netweaver_pas" {
@@ -38,7 +56,16 @@ module "gcp_netweaver_pas" {
   instance_name          = var.pas_instance_name
   zone                   = var.pas_zone
   ssh_user               = var.gce_ssh_user 
-  public_key_path        = var.gce_ssh_pub_key_file  
+  public_key_path        = var.gce_ssh_pub_key_file 
+  subnetwork             = var.subnetwork
+  subnetwork_project     = var.subnetwork_project
+  source_image_family    = var.source_image_family
+  source_image_project   = var.source_image_project
+  usr_sap_size           = var.usr_sap_size
+  swap_size              = var.swap_size
+  instance_type          = var.instance_type
+  boot_disk_size         = var.boot_disk_size
+  service_account_email  = var.service_account_email 
 }
 
 module "sap_ascs_ilb" {
@@ -96,5 +123,5 @@ module "sap_ers_ilb" {
 data "google_compute_subnetwork" "subnetwork" {
   name   = var.subnetwork
   region = var.region
-  project = var.project_id
+  project = var.subnetwork_project == "" ? var.project_id : var.subnetwork_project
 }
