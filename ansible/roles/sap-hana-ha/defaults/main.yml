@@ -1,3 +1,4 @@
+sap_hana_zip_file_name: 
 sap_hana_bundle_file_name: IMDB_SERVER20_047_0-80002031.SAR
 sap_hana_sapcar_file_name: SAPCAR_1320-80000935.EXE
 sap_hostagent_file_name: saphostagentrpm_44-20009394.rpm
@@ -9,6 +10,7 @@ sap_hana_data_mountpoint: /hana/data
 sap_hana_log_mountpoint: /hana/log
 sap_hana_usr_mountpoint: /usr/sap
 sap_hana_backup_mountpoint: /hanabackup
+sap_hostagent_rpm_remote_path: "/hana/shared/software"
 sap_hana_monitoring_user: hanahamu
 sap_hana_user_store_key: HANAHAUSK
 sap_hana_disks_defaults:

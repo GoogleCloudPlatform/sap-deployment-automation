@@ -14,11 +14,6 @@
     sap_use_lb and ansible_os_family == 'RedHat'
 
 - block:
-  - name: ensure socat is installed
-    zypper:
-      name: socat
-    when: sap_use_lb
-
   - name: ensure directories are present
     file:
       path: '{{ item }}'

@@ -11,6 +11,8 @@
     gsutil cp gs://{{ sap_install_files_bucket }}/{{ item }} /hana/shared/software
   args:
     creates: "/hana/shared/software/{{ item }}"
+  environment:
+    CLOUDSDK_PYTHON: /usr/bin/python2.7
   with_items:
     - "{{ sap_hostagent_file_name }}"
     - "{{ sap_hana_bundle_file_name }}"

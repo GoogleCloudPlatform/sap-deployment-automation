@@ -1,5 +1,5 @@
 ---
-sap_gcloud_path: /root/DIRECTORY/google-cloud-sdk/bin/gcloud
+sap_gcloud_path: /usr/bin/gcloud
 sap_cluster_name: hacluster
 sap_cluster_user: hacluster
 sap_cluster_user_password: linux

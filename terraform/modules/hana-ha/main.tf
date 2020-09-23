@@ -84,7 +84,7 @@ resource "google_compute_disk" "gcp_sap_hana_data_primary" {
 
   # Add the disk_encryption_key block only if a pd_kms_key was provided
   dynamic "disk_encryption_key" {
-    for_each = var.pd_kms_key != null ? [""] : []
+    for_each = var.pd_kms_key != "" ? [""] : []
     content {
       kms_key_self_link = var.pd_kms_key
     }
@@ -101,7 +101,7 @@ resource "google_compute_disk" "gcp_sap_hana_backup_primary" {
 
   # Add the disk_encryption_key block only if a pd_kms_key was provided
   dynamic "disk_encryption_key" {
-    for_each = var.pd_kms_key != null ? [""] : []
+    for_each = var.pd_kms_key != "" ? [""] : []
     content {
       kms_key_self_link = var.pd_kms_key
     }
@@ -117,7 +117,7 @@ resource "google_compute_disk" "gcp_sap_hana_data_secondary" {
 
   # Add the disk_encryption_key block only if a pd_kms_key was provided
   dynamic "disk_encryption_key" {
-    for_each = var.pd_kms_key != null ? [""] : []
+    for_each = var.pd_kms_key != "" ? [""] : []
     content {
       kms_key_self_link = var.pd_kms_key
     }
@@ -134,7 +134,7 @@ resource "google_compute_disk" "gcp_sap_hana_backup_secondary" {
 
   # Add the disk_encryption_key block only if a pd_kms_key was provided
   dynamic "disk_encryption_key" {
-    for_each = var.pd_kms_key != null ? [""] : []
+    for_each = var.pd_kms_key != "" ? [""] : []
     content {
       kms_key_self_link = var.pd_kms_key
     }

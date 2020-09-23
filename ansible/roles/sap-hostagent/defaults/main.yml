@@ -16,7 +16,3 @@ ansible_become: true
 
 # SSL Variables
 sap_hostagent_config_ssl: False
-
-sap_hostagent_rpm_file_name: '{{ sap_hostagent_file_name }}'
-
-sap_hostagent_rpm_remote_path: /hana/shared/software

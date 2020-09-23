@@ -51,7 +51,7 @@
       args:
         creates: /hana/shared/software/DATA_UNITS/HDB_SERVER_LINUX_X86_64/hdblcm
       when:
-        - not(( sap_hana_deployment_zip_file_name is none ) or (sap_hana_deployment_zip_file_name | trim == ''))
+        - not(( sap_hana_zip_file_name is none ) or (sap_hana_zip_file_name | trim == ''))
 
 - name: Check availability of "/hana/shared/software/SAP_HANA_DATABASE/hdblcm"
   stat:

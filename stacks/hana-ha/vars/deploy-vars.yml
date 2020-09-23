@@ -65,3 +65,4 @@ sap_hana_data_mountpoint: /hana/data
 sap_hana_log_mountpoint: /hana/log
 sap_hana_usr_mountpoint: /usr/sap
 sap_hana_backup_mountpoint: /hanabackup
+sap_use_lb: true
