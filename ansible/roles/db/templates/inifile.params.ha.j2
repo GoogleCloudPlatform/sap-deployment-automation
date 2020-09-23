@@ -33,7 +33,7 @@ NW_HDB_getDBInfo.systemDbPassword = {{ sap_hana_password }}
 NW_HDB_getDBInfo.systemPassword = {{ sap_hana_password }}
 
 # The FQDN of the system
-NW_getFQDN.FQDN = c.albatross-duncanl-sandbox-2.internal  
+NW_getFQDN.FQDN = {{ sap_domain | default(ansible_domain) }}
 
 # Provide  'profile' directory of SAP Netweaver-based system.
 NW_readProfileDir.profileDir = /sapmnt/{{ sap_nw_sid }}/profile

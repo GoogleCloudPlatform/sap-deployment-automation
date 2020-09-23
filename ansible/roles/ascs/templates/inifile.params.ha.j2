@@ -14,7 +14,7 @@ NW_GetSidNoProfiles.sid = {{ sap_nw_ascs_sid }}
 NW_SCS_Instance.instanceNumber = {{ sap_nw_ascs_instance_number }}
 
 # The FQDN of the system
-NW_getFQDN.FQDN = c.albatross-duncanl-sandbox-2.internal
+NW_getFQDN.FQDN = {{ sap_domain | default(ansible_domain) }}
 
 # Master password
 NW_GetMasterPassword.masterPwd = {{ sap_nw_password }}
