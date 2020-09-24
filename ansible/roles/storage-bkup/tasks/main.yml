@@ -103,21 +103,32 @@
       when: swap_entry_count.stdout == "0"
   when: (swapon == True) and (swapvols is defined)
 
-- name: "Configure exports"
-  template:
-    src: "nfs_exports.j2"
-    dest: "/etc/exports"
-    owner: "root"
-    group: "root"
-    mode: "0644"
-  when: (nfs_mount == True) and (nfs_mount is defined)
+- block:
+  - name: Start NFS service if Redhat
+    service:
+      name: nfs
+      state: started
+      enabled: yes
+    when: ansible_os_family == "RedHat"
+  - name: Start NFS service if Suse
+    service:
+      name: nfsserver
+      state: started
+      enabled: yes
+    when: ansible_os_family == "Suse"
+  - name: "Configure NFS exports"
+    template:
+      src: "nfs_exports.j2"
+      dest: "/etc/exports"
+      owner: "root"
+      group: "root"
+      mode: "0644"
+    register: configure_nfs_exports
+  - name: Reload NFS exports
+    command: "exportfs -r"
+    when: configure_nfs_exports is changed
+  when: nfs_mount | default(false)
 
-#  when: nfs_mount == True
-
-- name: reload nfsd
-  command: "exportfs -r"
-  when: (nfs_mount == True) and (nfs_mount is defined)
-#  when: nfs_mount == True
 - name: mount path creation
   file:
     path: "{{ item.value }}"
