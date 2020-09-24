@@ -1,6 +1,6 @@
 ---
 sap_project_id: albatross-duncanl-sandbox-2
-sap_gce_ssh_priv_key_file: ~/.ssh/id_rsa
+sap_ssh_priv_key: ~/.ssh/id_rsa
 sap_state_bucket: nw-code-ansible
 sap_ascs_instance_name: ascs-ha
 sap_pas_instance_name: pas-ha
@@ -30,7 +30,7 @@ sap_nw_ers_dns: "erstest.c.albatross-duncanl-sandbox-2.internal"
 sap_subnetwork: app2
 sap_subnetwork_project_id: albatross-duncanl-sandbox-2
 sap_nw_boot_disk_size: '30'
-sap_gce_ssh_user: sushma
+sap_ssh_user: sushma
 sap_nw_usrsap_disk_size: '90G'
 sap_nw_additional_disk_type: "pd-standard"
 sap_nw_boot_disk_type: pd-ssd
