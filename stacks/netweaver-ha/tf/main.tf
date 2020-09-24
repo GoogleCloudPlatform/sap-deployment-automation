@@ -79,7 +79,7 @@ module "sap_ascs_ilb" {
   target_tags  = ["target-tag"]
   ports        = var.ports 
   all_ports    = var.all_ports
-  health_check = local.health_check
+  health_check = local.ascs_health_check
   backends = [
     {
         group       = module.gcp_netweaver_ascs.primary_umig_group_link
@@ -105,7 +105,7 @@ module "sap_ers_ilb" {
   target_tags  = ["target-tag"]
   ports        = var.ports
   all_ports    = var.all_ports
-  health_check = local.health_check
+  health_check = local.ers_health_check
   backends = [
     {
        group       = module.gcp_netweaver_ers.primary_umig_group_link

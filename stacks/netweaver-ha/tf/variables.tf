@@ -25,6 +25,13 @@ variable "project_id" {
   description = "The ID of the project in which the resources will be deployed."
   default     = "albatross-duncanl-sandbox-2"
 }
+variable "ers_healthcheck_port" {
+  description = "ers health check port."
+}
+
+variable "ascs_healthcheck_port" {
+  description = "ascs health check port"
+}
 
 variable "region" {
   description = "Region to deploy the resources. Should be in the same region as the zone."

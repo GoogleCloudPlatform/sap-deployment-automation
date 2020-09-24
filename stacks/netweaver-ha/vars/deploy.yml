@@ -21,7 +21,7 @@ sap_nw_ers_private_ip: '{{ terraform.outputs.ers_instance_ip.value }}'
 sap_nw_ascs_private_ip: '{{ terraform.outputs.ascs_instance_ip.value }}'
 sap_nw_ascs_virtualhostname: "ascstest"
 sap_nw_ascs_health_check_port: "6666"
-sap_nw_ers_health_check_port: "6666"
+sap_nw_ers_health_check_port: "6667"
 sap_nw_ascs_dns: "ascstest.c.albatross-duncanl-sandbox-2.internal"
 sap_nw_ers_dns: "erstest.c.albatross-duncanl-sandbox-2.internal"
 sap_subnetwork: app2

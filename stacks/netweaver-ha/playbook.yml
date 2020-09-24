@@ -15,6 +15,8 @@
         ascs_zone: '{{ sap_zone }}'
         ers_zone: '{{ sap_zone }}'
         pas_zone: '{{ sap_zone }}'
+        ascs_healthcheck_port: '{{ sap_nw_ascs_health_check_port }}'
+        ers_healthcheck_port: '{{ sap_nw_ers_health_check_port }}'
         region: '{{ sap_region }}'
         instance_type: '{{ sap_nw_instance_type }}'
         source_image_family: '{{ sap_source_image_family }}'
