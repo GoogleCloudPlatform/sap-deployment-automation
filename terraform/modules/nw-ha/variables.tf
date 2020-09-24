@@ -1,6 +1,6 @@
 variable "project_id" {
   description = "The ID of the project in which the resources will be deployed."
-  default     = "albatross-duncanl-sandbox-2"
+  default     = ""
 }
 
 variable "zone" {
@@ -66,12 +66,12 @@ variable "service_account_email" {
 
 variable "subnetwork" {
   description = "The name or self_link of the subnetwork where the isntance will be deployed. The subnetwork must exist in the same region this instance will be created in."
-  default     = "app2"
+  default     = ""
 }
 
 variable "network" {
   description = "The name or self_link of the network where the isntance will be deployed. The network must exist in the same region this instance will be created in."
-  default     = "netweaver"
+  default     = ""
 }
 
 variable "subnetwork_project" {

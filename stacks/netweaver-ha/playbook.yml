@@ -21,6 +21,7 @@
         instance_type: '{{ sap_nw_instance_type }}'
         source_image_family: '{{ sap_source_image_family }}'
         source_image_project: '{{ sap_source_image_project }}'
+        network: '{{ sap_network }}'
         subnetwork_project: '{{ sap_subnetwork_project_id }}'
         boot_disk_size: '{{ sap_nw_boot_disk_size }}'
         service_account_email: '{{ sap_nw_service_account_email }}'
