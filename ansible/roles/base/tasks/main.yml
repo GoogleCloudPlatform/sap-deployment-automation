@@ -9,5 +9,6 @@
     - '{{ ansible_os_family }}.yml'
 
 - import_tasks: gcp.yml
+  when: ansible_os_family == 'Suse'
+
 - import_tasks: os.yml
-...
