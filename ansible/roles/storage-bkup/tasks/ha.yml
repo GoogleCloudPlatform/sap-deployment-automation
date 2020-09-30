@@ -1,4 +1,40 @@
 ---
+- name: read /etc/fstab
+  slurp:
+    path: /etc/fstab
+  register: etc_fstab_file
+  changed_when: false
+  when: sap_nw_create_nfs_source_dirs
+
+- block:
+  - name: mount NFS share
+    mount:
+      fstab: /tmp/fstab
+      fstype: nfs
+      path: /mnt
+      src: "{{ nfs_src }}"
+      state: mounted
+  - name: make directories on NFS share
+    file:
+      path: "/mnt/{{ sap_nw_sid }}/{{ item.key }}"
+      mode: 0755
+      state: directory
+    with_dict: "{{ nfsvols }}"
+  always:
+  - name: unmount NFS share
+    mount:
+      fstab: /tmp/fstab
+      fstype: nfs
+      path: /mnt
+      src: "{{ nfs_src }}"
+      state: unmounted
+  - name: remove temporary fstab
+    file:
+      path: /tmp/fstab
+      state: absent
+  when: |
+    sap_nw_create_nfs_source_dirs and nfs_src not in etc_fstab_file.content | b64decode
+
 - name: mount path creation for NFS
   file:
     path: "{{ item.value }}"
