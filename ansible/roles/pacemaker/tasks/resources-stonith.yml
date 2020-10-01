@@ -21,7 +21,7 @@
       pcs stonith create STONITH-{{ item.instance }} fence_gce
       port={{ item.instance }}
       zone={{ item.zone }}
-      project={{ project_id }}
+      project={{ sap_project_id }}
     loop:
     - instance: '{{ sap_primary_instance }}'
       zone: '{{ sap_primary_zone }}'

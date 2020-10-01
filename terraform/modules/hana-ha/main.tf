@@ -53,7 +53,7 @@ module "sap_hana_umig_primary" {
   source             = "../terraform-google-vm//modules/umig"
   project_id         = var.project_id
   region             = local.region
-  zone               = var.zone_a
+  zone               = var.primary_zone
   subnetwork         = var.subnetwork
   subnetwork_project = var.subnetwork_project
   static_ips         = [google_compute_address.gcp_sap_hana_intip_primary.address]
@@ -66,7 +66,7 @@ module "sap_hana_umig_secondary" {
   source             = "../terraform-google-vm//modules/umig"
   project_id         = var.project_id
   region             = local.region
-  zone               = var.zone_b
+  zone               = var.secondary_zone
   subnetwork         = var.subnetwork
   subnetwork_project = var.subnetwork_project
   static_ips         = [google_compute_address.gcp_sap_hana_intip_secondary.address]
@@ -79,7 +79,7 @@ resource "google_compute_disk" "gcp_sap_hana_data_primary" {
   project = var.project_id
   name    = "${var.instance_name}-primary-data"
   type    = "pd-ssd"
-  zone    = var.zone_a
+  zone    = var.primary_zone
   size    = local.pd_ssd_size
 
   # Add the disk_encryption_key block only if a pd_kms_key was provided
@@ -96,7 +96,7 @@ resource "google_compute_disk" "gcp_sap_hana_backup_primary" {
   name    = "${var.instance_name}-primary-backup"
   count   = tobool(var.create_backup_volume) == true ? 1 : 0
   type    = "pd-standard"
-  zone    = var.zone_a
+  zone    = var.primary_zone
   size    = local.pd_hdd_size
 
   # Add the disk_encryption_key block only if a pd_kms_key was provided
@@ -112,7 +112,7 @@ resource "google_compute_disk" "gcp_sap_hana_data_secondary" {
   project = var.project_id
   name    = "${var.instance_name}-secondary-data"
   type    = "pd-ssd"
-  zone    = var.zone_b
+  zone    = var.secondary_zone
   size    = local.pd_ssd_size
 
   # Add the disk_encryption_key block only if a pd_kms_key was provided
@@ -129,7 +129,7 @@ resource "google_compute_disk" "gcp_sap_hana_backup_secondary" {
   name    = "${var.instance_name}-secondary-backup"
   count   = tobool(var.create_backup_volume) == true ? 1 : 0
   type    = "pd-standard"
-  zone    = var.zone_b
+  zone    = var.secondary_zone
   size    = local.pd_hdd_size
 
   # Add the disk_encryption_key block only if a pd_kms_key was provided
@@ -146,7 +146,7 @@ resource "google_compute_attached_disk" "primary_data" {
   instance    = element(split("/", element(tolist(module.sap_hana_umig_primary.instances_self_links), 0)), 10)
   device_name = "${element(split("/", element(tolist(module.sap_hana_umig_primary.instances_self_links), 0)), 10)}-data"
   project     = var.project_id
-  zone        = var.zone_a
+  zone        = var.primary_zone
 }
 
 resource "google_compute_attached_disk" "primary_backup" {
@@ -155,7 +155,7 @@ resource "google_compute_attached_disk" "primary_backup" {
   instance    = element(split("/", element(tolist(module.sap_hana_umig_primary.instances_self_links), 0)), 10)
   device_name = "${element(split("/", element(tolist(module.sap_hana_umig_primary.instances_self_links), 0)), 10)}-backup"
   project     = var.project_id
-  zone        = var.zone_a
+  zone        = var.primary_zone
 }
 
 resource "google_compute_attached_disk" "secondary_data" {
@@ -163,7 +163,7 @@ resource "google_compute_attached_disk" "secondary_data" {
   instance    = element(split("/", element(tolist(module.sap_hana_umig_secondary.instances_self_links), 0)), 10)
   device_name = "${element(split("/", element(tolist(module.sap_hana_umig_secondary.instances_self_links), 0)), 10)}-data"
   project     = var.project_id
-  zone        = var.zone_b
+  zone        = var.secondary_zone
 }
 
 resource "google_compute_attached_disk" "secondary_backup" {
@@ -172,7 +172,7 @@ resource "google_compute_attached_disk" "secondary_backup" {
   instance    = element(split("/", element(tolist(module.sap_hana_umig_secondary.instances_self_links), 0)), 10)
   device_name = "${element(split("/", element(tolist(module.sap_hana_umig_secondary.instances_self_links), 0)), 10)}-backup"
   project     = var.project_id
-  zone        = var.zone_b
+  zone        = var.secondary_zone
 }
 
 resource "google_compute_firewall" "hana_healthcheck_firewall_rule" {

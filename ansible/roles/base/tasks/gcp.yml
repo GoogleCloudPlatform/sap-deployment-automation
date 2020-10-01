@@ -3,9 +3,15 @@
   stat:
     path: '/usr/bin/{{ item }}'
   loop:
-    - gsutil
-    - gsutil
+  - gcloud
+  - gsutil
   register: stat_google_cloud_sdk
+
+- name: Ensure {{ gcloud_install_dir }}/google-cloud-sdk is not already present
+  file:
+    path: '{{ gcloud_install_dir }}/google-cloud-sdk'
+    state: absent
+  when: false in stat_google_cloud_sdk.results | map(attribute="stat") | map(attribute="exists") | list
 
 - name: Downloading google cloud sdk script
   get_url: url=https://dl.google.com/dl/cloudsdk/channels/rapid/install_google_cloud_sdk.bash dest=/tmp/install_google_cloud_sdk.bash
@@ -22,6 +28,6 @@
   when: false in stat_google_cloud_sdk.results | map(attribute="stat") | map(attribute="exists") | list
 
 - name: updating alternatives
-  command: "update-alternatives --install /usr/bin/{{ item.item }} {{ item.item }} /usr/local/google-cloud-sdk/bin/{{ item.item }} 1 --force"
+  command: "update-alternatives --install /usr/bin/{{ item.item }} {{ item.item }} {{ gcloud_install_dir }}/google-cloud-sdk/bin/{{ item.item }} 1 --force"
   loop: '{{ stat_google_cloud_sdk.results }}'
   when: not item.stat.exists

@@ -5,8 +5,8 @@ module "hana_ha" {
   instance_name         = var.instance_name
   instance_type         = var.instance_type
   project_id            = var.project_id
-  zone_a                = var.zone_a
-  zone_b                = var.zone_b
+  primary_zone          = var.primary_zone
+  secondary_zone        = var.secondary_zone
   gce_ssh_user          = var.gce_ssh_user
   gce_ssh_pub_key_file  = var.gce_ssh_pub_key_file
   service_account_email = var.service_account_email

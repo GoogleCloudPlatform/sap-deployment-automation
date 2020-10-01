@@ -49,11 +49,8 @@
     name: pacemaker
     tasks_from: resources-stonith
   vars:
-    project_id: '{{ sap_project_id }}'
     sap_primary_instance: '{{ sap_hana_primary_instance_name }}'
     sap_secondary_instance: '{{ sap_hana_secondary_instance_name }}'
-    sap_primary_zone: '{{ sap_hana_primary_instance_zone }}'
-    sap_secondary_zone: '{{ sap_hana_secondary_instance_zone }}'
   when: is_primary
 
 - name: include pacemaker resources-vip tasks
@@ -61,7 +58,7 @@
     name: pacemaker
     tasks_from: resources-vip
   vars:
-    sap_vip: '{{ sap_hana_ilb_ip }}'
+    sap_vip: '{{ sap_hana_vip }}'
     sap_vip_purpose: primary
     sap_primary_instance: '{{ sap_hana_primary_instance_name }}'
     sap_secondary_instance: '{{ sap_hana_secondary_instance_name }}'

@@ -7,14 +7,14 @@ output "instance_name" {
   value       = module.hana_ha.instance_name
 }
 
-output "zone_a" {
+output "primary_zone" {
   description = "Primary Compute Engine instance deployment zone"
-  value       = module.hana_ha.zone_a
+  value       = module.hana_ha.primary_zone
 }
 
-output "zone_b" {
+output "secondary_zone" {
   description = "Secondary Compute Engine instance deployment zone"
-  value       = module.hana_ha.zone_b
+  value       = module.hana_ha.secondary_zone
 }
 
 output "instances_self_links_primary" {

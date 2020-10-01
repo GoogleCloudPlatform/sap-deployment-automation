@@ -7,14 +7,14 @@ output "instance_name" {
   value       = var.instance_name
 }
 
-output "zone_a" {
+output "primary_zone" {
   description = "Primary Compute Engine instance deployment zone"
-  value       = var.zone_a
+  value       = var.primary_zone
 }
 
-output "zone_b" {
+output "secondary_zone" {
   description = "Secondary Compute Engine instance deployment zone"
-  value       = var.zone_b
+  value       = var.secondary_zone
 }
 
 output "instances_self_links_primary" {

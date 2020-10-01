@@ -13,7 +13,7 @@
   when: is_ers
 - name: selecting nodes machines
   set_fact:
-    is_nodes: '{{ ansible_default_ipv4.address in terraform.outputs.inventory.value["nodes"] }}'
+    is_nodes: '{{ ansible_default_ipv4.address in terraform.outputs.inventory.value["nw_nodes"] }}'
 - name: include nodes Tasks
   include_tasks: '{{ role_path }}/tasks/nodes.yml'
   when: is_nodes

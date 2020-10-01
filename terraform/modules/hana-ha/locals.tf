@@ -70,5 +70,5 @@ locals {
     host                = ""
   }
 
-  region = join("-", slice(split("-", var.zone_a), 0, 2))
+  region = join("-", slice(split("-", var.primary_zone), 0, 2))
 }

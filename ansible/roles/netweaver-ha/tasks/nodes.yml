@@ -6,6 +6,4 @@
     sap_gcloud_path: /usr/local/google-cloud-sdk/bin/gcloud
     sap_primary_instance: '{{ sap_nw_ascs_instance_name }}'
     sap_primary_instance_ip: '{{ sap_nw_ascs_private_ip }}'
-    sap_primary_zone: '{{ sap_ascs_zone }}'
     sap_secondary_instance: '{{ sap_nw_ers_instance_name }}'
-    sap_secondary_zone: '{{ sap_ers_zone }}'

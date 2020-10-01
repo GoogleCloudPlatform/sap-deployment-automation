@@ -1,6 +1,4 @@
 sap_domain: '{{ ansible_domain }}'
-sap_nw_ascs_dns: '{{ sap_nw_ascs_virtual_host }}.{{ sap_domain }}'
-sap_nw_ers_dns: '{{ sap_nw_ers_virtual_host }}.{{ sap_domain }}'
 
 sap_nw_create_nfs_source_dirs: true
 

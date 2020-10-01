@@ -2,11 +2,11 @@ variable "project_id" {
   description = "The ID of the project in which the resources will be deployed."
 }
 
-variable "zone_a" {
+variable "primary_zone" {
   description = "The zone that the instance should be created in."
 }
 
-variable "zone_b" {
+variable "secondary_zone" {
   description = "The zone that the instance should be created in."
 }
 
@@ -39,7 +39,7 @@ variable "boot_disk_type" {
 }
 
 variable "create_backup_volume" {
-  description = "The zone that the instance should be created in."
+  description = "Whether or not to create a backup volume."
 }
 
 variable "service_account_email" {
