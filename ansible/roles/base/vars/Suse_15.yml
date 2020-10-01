@@ -1,0 +1,13 @@
+gcloud_install_dir: /usr/local
+package_list:
+  - libopenssl0_9_8
+  - joe
+  - tuned
+  - krb5-32bit
+  - unrar
+  - numactl
+  - sap-suse-cluster-connector
+  - socat
+  - libgcc_s1
+  - libstdc++6
+  - libatomic1
