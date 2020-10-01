@@ -22,6 +22,7 @@ module "gcp_netweaver_ascs" {
   instance_name         = var.ascs_instance_name
   zone                  = var.ascs_zone
   ssh_user              = var.gce_ssh_user
+  project_id            = var.project_id
   public_key_path       = var.gce_ssh_pub_key_file
   subnetwork            = var.subnetwork
   subnetwork_project    = var.subnetwork_project
@@ -38,6 +39,7 @@ module "gcp_netweaver_ers" {
   source                = "../../../terraform/modules/nw-ha"
   instance_name         = var.ers_instance_name
   zone                  = var.ers_zone
+  project_id            = var.project_id
   ssh_user              = var.gce_ssh_user
   public_key_path       = var.gce_ssh_pub_key_file
   subnetwork            = var.subnetwork
@@ -55,6 +57,7 @@ module "gcp_netweaver_pas" {
   source                = "../../../terraform/modules/nw-ha"
   instance_name         = var.pas_instance_name
   zone                  = var.pas_zone
+  project_id            = var.project_id
   ssh_user              = var.gce_ssh_user
   public_key_path       = var.gce_ssh_pub_key_file
   subnetwork            = var.subnetwork
