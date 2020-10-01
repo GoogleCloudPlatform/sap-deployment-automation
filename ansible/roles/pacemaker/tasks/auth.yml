@@ -34,6 +34,12 @@
     ansible_os_family == 'RedHat'
 
 - block:
+  - name: Create /root/.ssh if not exist
+    file:
+      path: /root/.ssh
+      state: directory
+      mode: '0700'
+
   - name: stat shared ssh private key
     stat:
       path: /root/.ssh/id_rsa

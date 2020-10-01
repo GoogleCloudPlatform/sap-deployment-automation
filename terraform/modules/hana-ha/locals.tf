@@ -55,11 +55,6 @@ locals {
   pd_ssd_size      = max(lookup(local.pd_ssd_map, var.instance_type), (local.hana_log_size + local.hana_data_size + local.hana_shared_size + local.hana_usr_size))
   pd_hdd_size      = local.hana_backup_size
 
-  named_ports = [{
-    name = "hana-health-check-port"
-    port = 60000
-  }]
-
   health_check = {
     type                = "tcp"
     check_interval_sec  = 10

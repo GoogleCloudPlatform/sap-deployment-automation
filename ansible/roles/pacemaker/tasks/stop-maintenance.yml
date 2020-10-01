@@ -17,7 +17,7 @@
     changed_when: false
 
   - name: disable maintenance mode
-    command: crm configure property maintenance-mode=false
+    shell: yes | crm configure property maintenance-mode=false 
     when: |
       maintenance_mode_status.stdout == 'true'
   when: |

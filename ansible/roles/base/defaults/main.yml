@@ -1,4 +1,4 @@
 ---
 
-package_retries_cnt: 10
+package_retries_cnt: 50
 package_retries_delay: 10

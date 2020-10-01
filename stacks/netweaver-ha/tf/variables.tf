@@ -1,24 +1,24 @@
 variable "netweaver_sid" {
   description = "The SID for NetWeaver"
-  default = "SL2"
+  default     = "SL2"
 }
 
 variable "ascs_instance_number" {
   description = "The instance number for the ASCS installation"
-  default = "03"
+  default     = "03"
 }
 
 variable "ers_instance_number" {
   description = "The instance number for the ERS installation"
-  default = "13"
+  default     = "13"
 }
 
 variable "ports" {
- default  = null
+  default = null
 }
 
 variable "all_ports" {
- default = true
+  default = true
 }
 
 variable "project_id" {

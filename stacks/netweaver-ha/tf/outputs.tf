@@ -7,15 +7,15 @@ output "ers_instance_ip" {
 }
 
 output "ascs_instance_name" {
-   value = module.gcp_netweaver_ascs.primary_instance_name
+  value = module.gcp_netweaver_ascs.primary_instance_name
 }
 
 output "pas_instance_name" {
-   value = module.gcp_netweaver_pas.primary_instance_name
+  value = module.gcp_netweaver_pas.primary_instance_name
 }
 
 output "ers_instance_name" {
-   value = module.gcp_netweaver_ers.primary_instance_name
+  value = module.gcp_netweaver_ers.primary_instance_name
 }
 
 output "pas_instance_ip" {
@@ -27,7 +27,7 @@ output "ascs_ilb_ip" {
 }
 
 output "ers_ilb_ip" {
- value = module.sap_ers_ilb.ip_address
+  value = module.sap_ers_ilb.ip_address
 }
 
 output "inventory" {

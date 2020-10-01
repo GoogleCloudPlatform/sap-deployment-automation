@@ -1,0 +1,9 @@
+---
+
+- name: Delete ssfs keys stored in /tmp
+  file: 
+    path: "/tmp/{{ item }}"
+    state: absent
+  loop:
+    - SSFS_{{ sap_hana_deployment_hana_sid }}.DAT
+    - SSFS_{{ sap_hana_deployment_hana_sid }}.KEY

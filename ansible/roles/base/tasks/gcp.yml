@@ -23,5 +23,5 @@
   loop:
     - "gsutil"
     - "gcloud"
-  when: ansible_facts['distribution'] == "SLES_SAP" and gcloud_exists.stat.isdir is not defined
-...
+  when: ansible_os_family == 'Suse'
+... 

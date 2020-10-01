@@ -118,7 +118,7 @@ variable "pd_kms_key" {
 
 variable "public_key_path" {
   description = ""
-  default = "~/.ssh/id_rsa.pub"
+  default     = "~/.ssh/id_rsa.pub"
 }
 
 variable "ssh_user" {

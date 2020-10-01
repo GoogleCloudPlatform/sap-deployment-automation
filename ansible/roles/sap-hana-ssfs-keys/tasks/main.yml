@@ -23,3 +23,4 @@
     - { path: '/usr/sap/{{ sap_hana_deployment_hana_sid }}/SYS/global/security/rsecssfs/key/', file: 'SSFS_{{ sap_hana_deployment_hana_sid }}.KEY', mode: '0640' }
   when:
     - '"-sec" in "{{ ansible_hostname }}"'
+  notify: "Delete ssfs keys stored in /tmp"
