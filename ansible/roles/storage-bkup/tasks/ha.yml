@@ -8,7 +8,7 @@
   mount:
     path: "{{ item.value }}"
     fstype: "nfs"
-    src: "{{ nfs_src }}/{{ item.key }}"
+    src: "{{ item.key }}"
     state: mounted
   with_dict: "{{ nfsvols }}"
   tags:
@@ -29,3 +29,7 @@
     names:
     - "{{ sap_nw_ers_dns }}"
     - "{{ sap_nw_ers_virtualhostname }}"
+  - ip: "{{ sap_nw_db_ilb_ip }}"
+    names:
+    - "{{ sap_nw_db_dns }}"
+    - "{{ sap_nw_db_virtualhostname }}"    

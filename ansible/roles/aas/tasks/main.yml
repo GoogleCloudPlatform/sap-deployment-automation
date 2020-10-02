@@ -1,22 +1,15 @@
 ---
-- name: Copy binaries to mount folder
-  copy:
-    src: /opt/Software
-    dest: /sapmnt/
-    remote_src: yes
-    
-- name: permissions to home 
-  file:
-    path: /tmp/sapinst_instdir
-    state: directory
-    mode: 0775
-    recurse: true
-
 - name: changing permissions
   file:
-    path: /sapmnt/Software
+    path: /sapmnt
     state: directory
-    mode: 0775
+    mode: 0777
+    recurse: true
+- name: changing permissions
+  file:
+    path: /usr/sap
+    state: directory
+    mode: 0777
     recurse: true
 
 - name: Setting fact for nw installer path

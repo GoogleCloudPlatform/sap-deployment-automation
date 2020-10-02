@@ -1,16 +1,16 @@
 ---
 - name: permissions to home
   file:
-    path: /tmp/sapinst_instdir
+    path: /usr/sap
     state: directory
-    mode: 0775
+    mode: 0777
     recurse: true
 
 - name: changing permissions
   file:
     path: /sapmnt
     state: directory
-    mode: 0775
+    mode: 0777
     recurse: true
     
 - name: Setting fact for nw installer path

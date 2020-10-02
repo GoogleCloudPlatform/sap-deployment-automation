@@ -1,16 +1,21 @@
 ---
 - name: permissions to home 
   file:
-    path: /tmp/sapinst_instdir
+    path: /usr/sap
     state: directory
-    mode: 0775
+    mode: 0777
     recurse: true
 - name: changing permissions
   file:
     path: /sapmnt
     state: directory
-    mode: 0775
+    mode: 0777
     recurse: true
+- name: Create a software directory
+  file:
+    path: /sapmnt/{{ ascs_sid }}
+    state: directory
+    mode: '0775'    
 - name: Setting fact for nw installer path
   set_fact:
     sapinst_path: "{{ sap_deployment_sapcar_path }}"

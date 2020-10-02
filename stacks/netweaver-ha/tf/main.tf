@@ -22,12 +22,14 @@ module "gcp_netweaver_ascs" {
   instance_name         = var.ascs_instance_name
   zone                  = var.ascs_zone
   ssh_user              = var.gce_ssh_user
+  region                = var.region
   project_id            = var.project_id
   public_key_path       = var.gce_ssh_pub_key_file
   subnetwork            = var.subnetwork
   subnetwork_project    = var.subnetwork_project
   source_image_family   = var.source_image_family
   source_image_project  = var.source_image_project
+  network_tags          = var.network_tags
   usr_sap_size          = var.usr_sap_size
   swap_size             = var.swap_size
   instance_type         = var.instance_type
@@ -40,12 +42,14 @@ module "gcp_netweaver_ers" {
   instance_name         = var.ers_instance_name
   zone                  = var.ers_zone
   project_id            = var.project_id
+  region                = var.region
   ssh_user              = var.gce_ssh_user
   public_key_path       = var.gce_ssh_pub_key_file
   subnetwork            = var.subnetwork
   subnetwork_project    = var.subnetwork_project
   source_image_family   = var.source_image_family
   source_image_project  = var.source_image_project
+  network_tags          = var.network_tags
   usr_sap_size          = var.usr_sap_size
   swap_size             = var.swap_size
   instance_type         = var.instance_type
@@ -58,11 +62,13 @@ module "gcp_netweaver_pas" {
   instance_name         = var.pas_instance_name
   zone                  = var.pas_zone
   project_id            = var.project_id
+  region                = var.region
   ssh_user              = var.gce_ssh_user
   public_key_path       = var.gce_ssh_pub_key_file
   subnetwork            = var.subnetwork
   subnetwork_project    = var.subnetwork_project
   source_image_family   = var.source_image_family
+  network_tags          = var.network_tags
   source_image_project  = var.source_image_project
   usr_sap_size          = var.usr_sap_size
   swap_size             = var.swap_size
@@ -82,17 +88,18 @@ module "sap_ascs_ilb" {
   target_tags  = ["target-tag"]
   ports        = var.ports
   all_ports    = var.all_ports
+  network_project = var.subnetwork_project
   health_check = local.ascs_health_check
   backends = [
     {
       group       = module.gcp_netweaver_ascs.primary_umig_group_link
       description = "Primary instance backend group"
-      failover    = false
+      failover    = true
     },
     {
       group       = module.gcp_netweaver_ers.primary_umig_group_link
       description = "failover instance backend group"
-      failover    = true
+      failover    = false
     }
   ]
 }
@@ -113,12 +120,12 @@ module "sap_ers_ilb" {
     {
       group       = module.gcp_netweaver_ers.primary_umig_group_link
       description = "Primary instance backend group"
-      failover    = false
+      failover    = true
     },
     {
       group       = module.gcp_netweaver_ascs.primary_umig_group_link
       description = "failover instance backend group"
-      failover    = true
+      failover    = false
     }
   ]
 }

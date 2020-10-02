@@ -27,25 +27,14 @@
     tasks_from: ha
   vars:
     nfsvols: "{{ sap_nw_nfsvols }}"
-    nfs_src: "{{ sap_nw_nfs_src }}"
 - name: include nw-pre primary tasks
   include_role:
     name: nw-pre
   vars:
     nw_bucket: "{{ sap_nw_install_files_bucket }}"
     folder: "{{ sap_nw_install_files_bucket_prefix }}"
-- name: changing file permissions
-  file:
-    path: /sapmnt
-    state: directory
-    recurse: true
-    mode: 0777
-- name: changing file permissions
-  file:
-    path: /usr/sap
-    state: directory
-    recurse: true
-    mode: 0777
+    storage: "{{ sap_nw_storage_files }}"
+    cloudsdk_python_export_path: "{{ sap_nw_cloudsdk_python_export_path }}"
 - name: include nw primary tasks
   include_role:
     name: ascs

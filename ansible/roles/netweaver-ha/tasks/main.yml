@@ -5,14 +5,12 @@
 - name: include ASCS Tasks
   include_tasks: '{{ role_path }}/tasks/ascs.yml'
   when: is_ascs
-#  run_once: true
 - name: selecting ERS machines
   set_fact:
     is_ers: '{{ ansible_default_ipv4.address in terraform.outputs.inventory.value["ers"] }}'
 - name: include ERS Tasks
   include_tasks: '{{ role_path }}/tasks/ers.yml'
   when: is_ers
-#  run_once: true
 - name: selecting nodes machines
   set_fact:
     is_nodes: '{{ ansible_default_ipv4.address in terraform.outputs.inventory.value["nodes"] }}'

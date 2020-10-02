@@ -25,6 +25,13 @@ variable "project_id" {
   description = "The ID of the project in which the resources will be deployed."
   default     = ""
 }
+
+variable "network_tags" {
+  type        = list
+  description = "List of network tags to attach to the instance."
+  default     = ["ssh","hana-allow-port","allow-internal"]
+}
+
 variable "ers_healthcheck_port" {
   description = "ers health check port."
 }

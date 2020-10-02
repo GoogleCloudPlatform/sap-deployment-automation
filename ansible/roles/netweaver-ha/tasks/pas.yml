@@ -27,13 +27,6 @@
     tasks_from: ha
   vars:
     nfsvols: "{{ sap_nw_nfsvols }}"
-    nfs_src: "{{ sap_nw_nfs_src }}"
-- name: include nw-pre primary tasks
-  include_role:
-    name: nw-pre  
-  vars: 
-    nw_bucket: "{{ sap_nw_install_files_bucket }}"
-    folder: "{{ sap_nw_install_files_bucket_prefix }}"
 - name: include db primary tasks    
   include_role:
     name: db 

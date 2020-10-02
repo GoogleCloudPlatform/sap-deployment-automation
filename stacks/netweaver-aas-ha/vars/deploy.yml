@@ -1,0 +1,56 @@
+---
+sap_project_id: mercadona-sap-service-1
+sap_ssh_priv_key: ~/.ssh/id_rsa
+sap_ssh_pub_key: ~/.ssh/id_rsa.pub
+sap_state_bucket: mercadona-sap-terraform-state
+sap_aas_instance_name: sapaasha
+sap_network: "vpc-sap-poc-1"
+sap_nw_instance_type: n1-standard-8
+sap_source_image_family: sles-15-sp1-sap
+sap_source_image_project: suse-sap-cloud
+sap_gce_ssh_pub_key_file: ~/.ssh/id_rsa.pub
+sap_nw_service_account_email: "terraform-managed-mercadona-sa@mercadona-sap-service-1.iam.gserviceaccount.com"
+sap_region: europe-west1
+sap_zone: europe-west1-d
+sap_subnetwork: "sub-sap-poc-nw"
+sap_subnetwork_project_id: mercadona-sap-host-1
+sap_nw_boot_disk_size: '30'
+sap_ssh_user: sushma
+sap_nw_usrsap_disk_size: '90G'
+sap_nw_additional_disk_type: "pd-standard"
+sap_nw_boot_disk_type: pd-ssd
+sap_nw_nfsvols:
+  10.166.116.132:/sapmnt: /sapmnt
+  10.166.116.133:/saptrans: /usr/sap/trans
+  10.166.116.131:/ascs: /usr/sap/{{ sap_nw_sid }}/ASCS07
+  10.166.116.130:/ers: /usr/sap/{{ sap_nw_sid }}/ERS17
+sap_nw_swap_disk_size: '28G'
+sap_nw_install_files_bucket: "nw-software"
+sap_nw_install_files_bucket_prefix: "Software"
+sap_nw_storage_files:
+    - HANA_CLIENT
+    - Kernel_Files
+    - SAPCAR
+    - S4HANA_Export
+    - SWPM1.0   
+sap_nw_aas_product_id: "NW_DI:S4HANA1709.CORE.HDB.ABAPHA"
+template: inifile.params.distribution.j2   
+sap_nw_ascs_ilb_ip: 192.168.1.212
+sap_nw_ers_ilb_ip: 192.168.1.211
+sap_nw_db_ilb_ip: 192.168.0.16
+sap_nw_ascs_virtualhostname: sapascs
+sap_nw_ers_virtualhostname: sapers 
+sap_nw_db_virtualhostname: saphana  
+sap_nw_ascs_dns: sapascs.c.mercadona-sap-service-1.internal
+sap_nw_ers_dns: sapers.c.mercadona-sap-service-1.internal
+sap_nw_db_dns: saphana.c.mercadona-sap-service-1.internal
+sap_nw_sapinst_package_kernel: /sapmnt/Software/Kernel_Files  
+sap_nw_sapinst_package_client: /sapmnt/Software/HANA_CLIENT  
+sap_nw_sid: "SL7" 
+sap_nw_sapcar_path: /sapmnt/Software/SWPM1.0 
+sap_nw_password: "Google123"
+sap_nw_software_path: /sapmnt/Software/Kernel_Files
+sap_nw_as_instance_number: "07"
+sap_hana_password: "Google123"
+sap_nw_AS_virtualhostname: '{{ terraform.outputs.app_instance_name.value }}' 
+sap_hana_instance_number: "02" 

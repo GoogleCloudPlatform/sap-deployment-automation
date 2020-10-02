@@ -25,13 +25,12 @@ output "sap_image_family" {
   value = contains([element(split("-", var.source_image_family), 0)], "rhel") ? "RedHat" : "Suse"
 }
 
-
 output "primary_umig_group_link" {
-  value = element(tolist(module.sap_s4hana_umig.self_links), 0)
+  value = length(module.sap_s4hana_umig.self_links) != 0 ? element(tolist(module.sap_s4hana_umig.self_links), 0) : ""
 }
 
 output "primary_instance_name" {
-  value = element(split("/", element(tolist(module.sap_s4hana_umig.instances_self_links), 0)), 10)
+  value = length(module.sap_s4hana_umig.instances_self_links) != 0 ? element(split("/", element(tolist(module.sap_s4hana_umig.instances_self_links), 0)), 10) : ""
 }
 
 output "primary_instance_ip" {

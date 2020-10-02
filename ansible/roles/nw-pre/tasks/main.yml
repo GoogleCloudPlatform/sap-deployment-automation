@@ -1,5 +1,13 @@
 ---
+- name: Create a software directory
+  file:
+    path: /sapmnt/Software
+    state: directory
+    mode: '0775'
 - name: Copy netweaver binaries from GC
-  command: "gsutil {{ gsutil_opts }} cp -r gs://{{ nw_bucket }}/{{ folder }} /sapmnt"
-  environment:
-    CLOUDSDK_PYTHON: /usr/bin/python
+  shell: |
+    gsutil -m cp -r gs://{{ nw_bucket }}/{{ folder }}/{{ item }} /sapmnt/Software
+  with_items: "{{ storage }}"
+    environment:
+    CLOUDSDK_PYTHON: "{{ cloudsdk_python_export_path }}"
+

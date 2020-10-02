@@ -1,0 +1,29 @@
+- name: SAP NW deploy
+  hosts: 127.0.0.1
+  connection: local
+  roles:
+  - role: forminator
+    vars:
+      sap_tf_project_path: './tf'
+      sap_tf_state_bucket_prefix: '{{ sap_aas_instance_name }}'
+      sap_tf_state_bucket: '{{ sap_state_bucket }}'
+      sap_tf_variables:
+        project_id: '{{ sap_project_id }}'
+        aas_instance_name: '{{ sap_aas_instance_name }}'
+        zone: '{{ sap_zone }}'
+        region: '{{ sap_region }}'
+        instance_type: '{{ sap_nw_instance_type }}'
+        source_image_family: '{{ sap_source_image_family }}'
+        source_image_project: '{{ sap_source_image_project }}'
+        subnetwork_project: '{{ sap_subnetwork_project_id }}'
+        boot_disk_size: '{{ sap_nw_boot_disk_size }}'
+        subnetwork: '{{ sap_subnetwork }}'
+        gce_ssh_user: '{{ sap_ssh_user }}'
+        gce_ssh_pub_key_file: '{{ sap_ssh_pub_key }}'
+        service_account_email: '{{ sap_nw_service_account_email }}'
+- name: SAP NW configure
+  hosts: aas
+  become: yes
+  become_user: root  
+  roles:
+  - role: netweaver-aas-ha

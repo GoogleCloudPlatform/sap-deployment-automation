@@ -15,7 +15,7 @@
     - 'Start_Program_01 = local $(_EN) pf=$(_PF)'
     - '# Add the following lines'
     - 'service/halib = $(DIR_CT_RUN)/saphascriptco.so'
-    - 'service/halib_cluster_connector = /usr/bin/sap-suse-cluster-connector'
+    - 'service/halib_cluster_connector = /usr/bin/sap_suse_cluster_connector'
     - '# Add the keep alive parameter'
     - 'enque/encni/set_so_keepalive = true'
 - name: Adding line from /usr/sap/sapservices

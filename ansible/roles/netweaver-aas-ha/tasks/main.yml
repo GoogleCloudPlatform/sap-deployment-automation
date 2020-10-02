@@ -1,0 +1,54 @@
+- name: include base primary tasks
+  include_role:
+    name: base
+- name: include storage primary tasks
+  include_role:
+    name: storage-bkup
+  vars:
+    swapon: True
+    subnet_cidr: '{{ terraform.outputs.subnet_cidr.value }}'
+    disks:
+      - { name: usrsap, partition_path : usrsap }
+      - { name: swap, partition_path : swap }
+    logvols:
+      usrsap:
+        size: "{{ sap_nw_usrsap_disk_size }}"
+        vol: usrsap
+        mountpoint: /usr/sap
+    swapvols:
+      swap:
+        size: "{{ sap_nw_swap_disk_size }}"
+        vol: swap
+        mountpoint: /swap    
+- name: include storage primary tasks
+  include_role:
+    name: storage-bkup
+    tasks_from: ha
+  vars:
+    nfsvols: "{{ sap_nw_nfsvols }}"
+- name: include nw-pre primary tasks
+  include_role:
+    name: nw-pre  
+  vars: 
+    nw_bucket: "{{ sap_nw_install_files_bucket }}"
+    folder: "{{ sap_nw_install_files_bucket_prefix }}"
+    storage: "{{ sap_nw_storage_files }}"
+    cloudsdk_python_export_path: "{{ sap_nw_cloudsdk_python_export_path }}"
+- name: include AAS tasks    
+  include_role:
+    name: aas   
+  vars:    
+    sap_deployment_product_id: "{{ sap_nw_aas_product_id }}"
+    sap_deployment_password: "{{ sap_nw_password }}"
+    sap_hana_password: "{{ sap_hana_password }}"
+    sap_deployment_sapcar_path: "{{ sap_nw_sapcar_path }}"
+    sap_nw_sid: "{{ sap_nw_sid }}" 
+    template: "{{ template }}"
+    sap_sapinst_package_kernel: "{{ sap_nw_sapinst_package_kernel }}" 
+    sap_deployment_software_path: "{{ sap_nw_software_path }}"
+    sap_sapinst_package_client: "{{ sap_nw_sapinst_package_client }}"
+    sap_deployment_as_instanceNumber: "{{ sap_nw_as_instance_number }}"
+    sap_deployment_hana_instance_nr: "{{ sap_hana_instance_number }}"
+# Virtual host name of the primary application server instance
+    sap_deployment_AS_virtualhostname: '{{ sap_nw_AS_virtualhostname }}'     
+

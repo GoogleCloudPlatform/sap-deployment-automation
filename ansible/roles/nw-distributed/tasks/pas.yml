@@ -25,6 +25,8 @@
   vars: 
     nw_bucket: "{{ bucket }}"
     folder: "{{ path }}"
+    storage: "{{ sap_nw_storage_files }}"
+    cloudsdk_python_export_path: "{{ sap_nw_cloudsdk_python_export_path }}"    
 - name: include db primary tasks    
   include_role:
     name: db 

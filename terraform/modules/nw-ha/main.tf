@@ -38,9 +38,9 @@ module "sap_s4hana_template" {
 resource "google_compute_address" "gcp_sap_s4hana_intip_primary" {
   name         = "${var.instance_name}-${var.address_name}"
   address_type = "INTERNAL"
-  subnetwork   = var.subnetwork
+  subnetwork   = "projects/${var.subnetwork_project}/regions/${var.region}/subnetworks/${var.subnetwork}"
   region       = var.region
-  project      = var.subnetwork_project
+  project      = var.project_id
   purpose      = "GCE_ENDPOINT"
 }
 
