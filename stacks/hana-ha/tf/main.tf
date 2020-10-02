@@ -18,7 +18,7 @@ module "hana_ha" {
   boot_disk_size        = tonumber(var.boot_disk_size)
   boot_disk_type        = var.boot_disk_type
   autodelete_disk       = tobool(var.autodelete_disk)
-  network_tags          = var.network_tags
+  network_tags          = yamldecode(var.network_tags)
   target_size           = tonumber(var.target_size)
   pd_kms_key            = var.pd_kms_key
   create_backup_volume  = var.create_backup_volume
