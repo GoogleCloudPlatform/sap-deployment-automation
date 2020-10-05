@@ -18,7 +18,7 @@
     changed_when: false
 
   - name: enable maintenance mode
-    command: crm configure property maintenance-mode=true
+    shell: yes | crm configure property maintenance-mode=true
     when: |
       maintenance_mode_status.stdout == 'false'
   when: |
