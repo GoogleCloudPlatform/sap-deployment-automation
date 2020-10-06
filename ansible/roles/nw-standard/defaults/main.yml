@@ -5,6 +5,12 @@ sap_nw_sapmnt_disk_size: 50
 sap_nw_swap_disk_size: 28
 sap_nw_install_files_bucket_prefix: nw75/Software
 sap_nw_install_files_dest: /sapmnt/Software
+sap_nw_install_files:
+- HANA_CLIENT
+- Kernel_Files
+- SAPCAR
+- NW75
+- SWPM1.0
 sap_nw_product_id: "NW_ABAP_OneHost:NW750.HDB.ABAP"
 sap_nw_template: "inifile.params.standard.j2"
 sap_nw_sapinst_package_kernel: /sapmnt/Software/Kernel_Files

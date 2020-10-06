@@ -14,6 +14,12 @@ sap_nw_igs_path: /sapmnt/Software/Kernel_Files
 sap_nw_ini_template: inifile.params.distribution.j2
 sap_nw_install_files_bucket_prefix: nw75/Software
 sap_nw_install_files_dest: /sapmnt/Software
+sap_nw_install_files:
+- HANA_CLIENT
+- Kernel_Files
+- SAPCAR
+- NW75
+- SWPM1.0
 sap_nw_pas_product_id: 'NW_ABAP_CI:NW750.HDB.ABAP'
 sap_nw_sapcar_path: /sapmnt/Software/SWPM1.0
 sap_nw_sapinst_package_client: /sapmnt/Software/HANA_CLIENT

@@ -1,82 +1,88 @@
 ---
-sap_project_id: albatross-duncanl-sandbox-2
-sap_ssh_priv_key: ~/.ssh/id_rsa
-sap_state_bucket: nw-code-ansible
-sap_ascs_instance_name: ascs-ha
-sap_pas_instance_name: pas-ha
-sap_network: netweaver
-sap_ers_instance_name: ers-ha
-sap_nw_instance_type: n1-standard-8
-sap_source_image_family: sles-12-sp3-sap
-sap_source_image_project: suse-sap-cloud
-sap_gce_ssh_pub_key_file: ~/.ssh/id_rsa.pub
-sap_nw_service_account_email: "terraform-managed-sa@albatross-duncanl-sandbox-2.iam.gserviceaccount.com"
-sap_region: us-central1
-sap_ers_zone: us-central1-a
-sap_ascs_zone: us-central1-a
-sap_zone: us-central1-a
-sap_nw_ascs_ilb_ip: '{{ terraform.outputs.ascs_ilb_ip.value }}'
-sap_nw_ers_ilb_ip: '{{ terraform.outputs.ers_ilb_ip.value }}'
-sap_nw_ascs_instance: '{{ terraform.outputs.ascs_instance_name.value }}'
-sap_nw_ers_instance: '{{ terraform.outputs.ers_instance_name.value }}'
-sap_nw_pas_instance: '{{ terraform.outputs.pas_instance_name.value }}'
-sap_nw_ers_private_ip: '{{ terraform.outputs.ers_instance_ip.value }}'
-sap_nw_ascs_private_ip: '{{ terraform.outputs.ascs_instance_ip.value }}'
-sap_nw_ascs_virtual_host: "ascstest"
-sap_nw_ascs_health_check_port: "6666"
-sap_nw_ers_health_check_port: "6667"
-sap_nw_ascs_dns: "ascstest.c.albatross-duncanl-sandbox-2.internal"
-sap_nw_ers_dns: "erstest.c.albatross-duncanl-sandbox-2.internal"
-sap_nw_db_dns: "hanatest.c.albatross-duncanl-sandbox-2.internal"
-sap_subnetwork: app2
-sap_subnetwork_project_id: albatross-duncanl-sandbox-2
-sap_nw_boot_disk_size: '30'
-sap_ssh_user: sushma
-sap_nw_usrsap_disk_size: '90G'
-sap_nw_additional_disk_type: "pd-standard"
-sap_nw_boot_disk_type: pd-ssd
-sap_nw_nfsvols:
-  sapmnt: /sapmnt
-  trans: /usr/sap/trans
-  ASCS06: /usr/sap/{{ sap_nw_sid }}/ASCS{{ sap_nw_ascs_instance_number }}
-  ERS16: /usr/sap/{{ sap_nw_sid }}/ERS{{ sap_nw_ers_instance_number }}
-  software: /software
-sap_nw_swap_disk_size: '28G'
-sap_nw_install_files_bucket: "nw-code-ansible"
-sap_nw_storage_files:
-    - HANA_CLIENT
-    - Kernel_Files
-    - SAPCAR
-    - S4HANA_Export
-    - SWPM1.0  
-    - S4HANA_installation 
-sap_nw_install_files_bucket_prefix: "nw-code-ansible-new/Software" 
-sap_nw_ascs_product_id: "NW_ABAP_ASCS:S4HANA1709.CORE.HDB.ABAPHA"
-sap_nw_ers_product_id: "NW_ERS:S4HANA1709.CORE.HDB.ABAPHA"
-sap_nw_user_product_id: "NW_Users_Create:GENERIC.SYB.PD"
-sap_nw_ini_template: inifile.params.ha.j2
-sap_nw_sapcar_path: /sapmnt/Software/SWPM1.0      
-sap_nw_ascs_instance_number: "06"
-sap_nw_ers_instance_number: "16"
-sap_nw_ers_virtual_host: "erstest"
-sap_nw_ascs_virtual_host: "ascstest"
-sap_nw_archives_downloadbasket: /sapmnt/Software/Kernel_Files 
-sap_nw_db_product_id: "NW_ABAP_DB:S4HANA1709.CORE.HDB.ABAPHA"
-sap_hana_instance_name: "saphanasles-bg-delete"
-sap_hana_sid: "SL1"
-sap_hana_instance_number: "00"   
-sap_nw_sapinst_package_kernel: /sapmnt/Software/Kernel_Files  
-sap_nw_sapinst_package_load: /sapmnt/Software/S4HANA_Export
-sap_nw_sapinst_package_client: /sapmnt/Software/HANA_CLIENT  
-sap_nw_sid: "SL6" 
-sap_nw_user: "sl6"
-sap_nw_pas_product_id: "NW_ABAP_CI:S4HANA1709.CORE.HDB.ABAPHA"
-sap_nw_password: Google123
-sap_hana_password: Google123
-sap_nw_igs_path: /sapmnt/Software/Kernel_Files
-sap_nw_igs_file_name: igsexe_4-80003187.sar
-sap_nw_igs_helper_path: /sapmnt/Software/Kernel_Files
-sap_nw_igs_helper_file_name: igshelper_17-10010245.sar
-sap_nw_software_path: /sapmnt/Software/Kernel_Files
-sap_nw_ci_instance_number: "06"
-sap_nw_ci_ms_port: "3906"
+
+# Required variables
+
+# Terraform state bucket.
+sap_tf_state_bucket:
+# Prefix for state file in Terraform state bucket.
+sap_tf_state_bucket_prefix:
+
+# Names for machine instances.
+sap_hana_instance_name:
+sap_ascs_instance_name:
+sap_ers_instance_name:
+sap_pas_instance_name:
+
+# Name given to HANA, ASCS, and ERS VIPs.
+sap_hana_virtual_host:
+sap_nw_ascs_virtual_host:
+sap_nw_ers_virtual_host:
+
+# Bucket containing installation files for HANA.
+sap_hana_install_files_bucket:
+
+# Bucket containing installation files for NetWeaver.
+sap_nw_install_files_bucket:
+
+# Project where resources are created.
+sap_project_id:
+
+# Subnetwork for network interfaces.
+sap_subnetwork:
+
+# Password for HANA.
+sap_hana_password:
+# Password for NetWeaver.
+sap_nw_password:
+
+# Service account emails for HANA and NetWeaver instances.
+sap_hana_service_account_email:
+sap_nw_service_account_email:
+
+# For NFS, define one of sap_nw_nfs_src or sap_nw_nfsvols, not both.
+#
+# NFS using one server, for example when using Cloud FileStore.
+# sap_nw_nfs_src: 10.10.10.10:/sap
+#
+# Multiple NFS servers may be used if sap_nw_nfsvols is set, for use with
+# NetApp Cloud Volumes or to give more control over mounts.
+# sap_nw_nfsvols:
+#   10.10.10.10:/sapmnt: /sapmnt
+#   10.10.10.11:/trans: /usr/sap/trans
+#   10.10.10.12:/ascs: /usr/sap/{{ sap_nw_sid }}/ASCS{{ sap_nw_ascs_instance_number }}
+#   10.10.10.13:/ers: /usr/sap/{{ sap_nw_sid }}/ERS{{ sap_nw_ers_instance_number }}
+
+# Optional variables.
+
+# sap_source_image_family: sles-12-sp5-sap
+# sap_source_image_project: suse-sap-cloud
+
+# Zone for HANA primary, ASCS, and PAS.
+# sap_primary_zone: us-central1-a
+# Zone for HANA secondary and ERS.
+# sap_secondary_zone: us-central1-b
+
+# Delete boot disks automatically.
+# sap_hana_autodelete_boot_disk: 'false'
+# sap_nw_autodelete_boot_disk: 'false'
+
+# sap_hana_instance_type: n1-highmem-32
+# sap_nw_instance_type: n1-standard-8
+
+# Bucket prefix for files in sap_nw_install_files_bucket.
+# sap_nw_install_files_bucket_prefix: nw75/Software
+
+# Create source directories on NFS server, only if sap_nw_nfs_src is set.
+# sap_nw_create_nfs_source_dirs: true
+
+# SIDs for HANA and NetWeaver.
+# sap_hana_sid: SL1
+# sap_nw_sid: SL6
+
+# Instance numbers for HANA and NetWeaver. Note that these must be quoted strings.
+# sap_hana_instance_number: '00'
+# sap_nw_ascs_instance_number: '06'
+# sap_nw_ers_instance_number: '16'
+
+# Define sap_subnetwork_project_id if using a shared VPC.
+# sap_subnetwork_project_id:

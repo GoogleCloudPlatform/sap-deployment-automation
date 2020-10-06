@@ -1,15 +1,21 @@
 ---
+- name: Export cloudsdk python path
+  set_fact:
+    cloudsdk_python_export_path: /usr/bin/python3
+  when: ansible_os_family == 'Suse' and ansible_distribution_major_version == '15'
+
 - name: Ensure destination directory is present
   file:
-    path: '{{ sap_nw_install_files_dest }}'
+    path: '{{ sap_nw_install_files_dest }}/{{ item }}'
     mode: 0755
     state: directory
+  with_items: "{{ sap_nw_install_files }}"
 
 - name: Copy netweaver binaries from GC
   command: >-
     gsutil -m rsync -r
     gs://{{ sap_nw_install_files_bucket }}/{{ sap_nw_install_files_bucket_prefix }}/{{ item }}
-    {{ sap_nw_install_files_dest }}
-  with_items: "{{ storage }}"
+    {{ sap_nw_install_files_dest }}/{{ item }}
+  with_items: "{{ sap_nw_install_files }}"
   environment:
     CLOUDSDK_PYTHON: '{{ cloudsdk_python_export_path }}'

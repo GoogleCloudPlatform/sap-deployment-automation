@@ -25,16 +25,9 @@
   include_role:
     name: storage-bkup
     tasks_from: ha
-  vars:
-    nfsvols: "{{ sap_nw_nfsvols }}"
 - name: include nw-pre primary tasks
   include_role:
     name: nw-pre
-  vars:
-    nw_bucket: "{{ sap_nw_install_files_bucket }}"
-    folder: "{{ sap_nw_install_files_bucket_prefix }}"
-    storage: "{{ sap_nw_storage_files }}"
-    cloudsdk_python_export_path: "{{ sap_nw_cloudsdk_python_export_path }}"
 - name: include nw primary tasks
   include_role:
     name: ascs

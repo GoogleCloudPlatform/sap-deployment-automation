@@ -38,7 +38,7 @@
     sap_hana_secondary_instance_name: '{{ terraform.outputs.secondary_instance_name.value }}'
     sap_hana_primary_instance_ip: '{{ terraform.outputs.primary_instance_ip.value }}'
     sap_hana_secondary_instance_ip: '{{ terraform.outputs.secondary_instance_ip.value }}'
-    sap_hana_ilb_ip: '{{ terraform.outputs.hana_ilb_ip.value }}'
+    sap_hana_vip: '{{ terraform.outputs.hana_ilb_ip.value }}'
     sap_hana_health_check_port: '{{ terraform.outputs.health_check_port.value }}'
     sap_hana_shared_size: '{{ terraform.outputs.hana_shared_size.value }}G'
     sap_hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
