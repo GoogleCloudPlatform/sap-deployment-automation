@@ -3,7 +3,7 @@ sap_hana_instance_number: '00'
 sap_nw_archives_downloadbasket: /sapmnt/Software/Kernel_Files
 sap_nw_ascs_instance_number: '03'
 sap_nw_ascs_product_id: 'NW_ABAP_ASCS:NW750.HDB.ABAP'
-sap_nw_ascs_sid: SL3
+sap_nw_ascs_sid: '{{ sap_nw_sid }}'
 sap_nw_ci_instance_number: '02'
 sap_nw_ci_ms_port: 3601
 sap_nw_hana_product_id: 'NW_ABAP_DB:NW750.HDB.ABAP'

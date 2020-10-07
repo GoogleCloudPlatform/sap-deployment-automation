@@ -13,7 +13,7 @@
 
 - name: Download HANA install files
   shell: |
-    gsutil cp gs://{{ sap_install_files_bucket }}/{{ item }} /hana/shared/software
+    gsutil cp gs://{{ sap_hana_install_files_bucket }}/{{ item }} /hana/shared/software
   args:
     creates: "/hana/shared/software/{{ item }}"
   environment:

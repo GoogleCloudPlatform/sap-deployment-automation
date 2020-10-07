@@ -11,7 +11,7 @@ sap_hana_zone: us-central1-a
 sap_hana_subnetwork: app2
 sap_hana_boot_disk_size: 30
 sap_hana_gce_ssh_user: balaguduru
-sap_install_files_bucket: nw-ansible
+sap_hana_install_files_bucket: nw-ansible
 instance_count_worker: 1
 create_backup_volume: "true"
 sap_hostagent_rpm_file_name: saphostagentrpm_44-20009394.rpm

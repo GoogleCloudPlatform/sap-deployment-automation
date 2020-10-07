@@ -3,7 +3,7 @@ sap_hana_bundle_file_name: IMDB_SERVER20_047_0-80002031.SAR
 sap_hana_sapcar_file_name: SAPCAR_1320-80000935.EXE
 sap_hostagent_rpm_file_name: saphostagentrpm_44-20009394.rpm
 sap_hostagent_rpm_remote_path: "/hana/shared/software"
-sap_install_files_bucket: nw-ansible
+sap_hana_install_files_bucket: nw-ansible
 sap_hana_data_partition_name: hanadata
 sap_hana_backup_partition_name: hanabackup
 sap_hana_shared_mountpoint: /hana/shared
