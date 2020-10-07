@@ -10,7 +10,6 @@ module "hana_ha" {
   gce_ssh_user          = var.gce_ssh_user
   gce_ssh_pub_key_file  = var.gce_ssh_pub_key_file
   service_account_email = var.service_account_email
-  network               = var.network
   subnetwork            = var.subnetwork
   subnetwork_project    = local.subnetwork_project
   source_image_family   = var.source_image_family

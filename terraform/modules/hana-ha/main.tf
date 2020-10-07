@@ -178,7 +178,7 @@ resource "google_compute_attached_disk" "secondary_backup" {
 resource "google_compute_firewall" "hana_healthcheck_firewall_rule" {
   name          = "${var.instance_name}-hc-rule"
   project       = var.subnetwork_project
-  network       = var.network
+  network       = local.network
   source_ranges = ["35.191.0.0/16", "130.211.0.0/22"]
 
   allow {
@@ -190,7 +190,7 @@ module "sap_hana_ilb" {
   source          = "../terraform-google-lb-internal"
   project         = var.project_id
   region          = local.region
-  network         = var.network
+  network         = local.network
   network_project = var.subnetwork_project
   subnetwork      = var.subnetwork
   name            = "${var.instance_name}-ilb"
@@ -212,4 +212,10 @@ module "sap_hana_ilb" {
       failover    = true
     },
   ]
+}
+
+data "google_compute_subnetwork" "subnetwork" {
+  name    = var.subnetwork
+  region  = local.region
+  project = var.subnetwork_project
 }

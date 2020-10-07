@@ -15,7 +15,6 @@
         project_id: '{{ sap_project_id }}'
         source_image_family: '{{ sap_source_image_family }}'
         source_image_project: '{{ sap_source_image_project }}'
-        network: '{{ sap_network }}'
         subnetwork: '{{ sap_subnetwork }}'
         service_account_email: '{{ sap_hana_service_account_email }}'
         subnetwork_project: '{{ sap_subnetwork_project_id | default(sap_project_id) }}'

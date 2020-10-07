@@ -50,10 +50,6 @@ variable "subnetwork" {
   description = "The name or self_link of the subnetwork where the isntance will be deployed. The subnetwork must exist in the same region this instance will be created in."
 }
 
-variable "network" {
-  description = "The name or self_link of the network where the isntance will be deployed. The network must exist in the same region this instance will be created in."
-}
-
 variable "subnetwork_project" {
   description = "The name or self_link of the subnetwork project where the isntance will be deployed. The subnetwork must exist in the same region this instance will be created in."
 }

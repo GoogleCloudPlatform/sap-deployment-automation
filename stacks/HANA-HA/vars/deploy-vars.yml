@@ -12,7 +12,6 @@ sap_tf_state_bucket_prefix: hana-ha
 sap_project_id: albatross-duncanl-sandbox-2
 sap_source_image_family: rhel-7-7-sap-ha
 sap_source_image_project: rhel-sap-cloud
-sap_network: netweaver
 sap_subnetwork_project_id: '{{ sap_project_id }}'
 sap_subnetwork: app2
 
