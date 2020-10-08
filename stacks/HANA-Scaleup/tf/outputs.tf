@@ -36,21 +36,8 @@ output "hana_backup_size" {
   value = module.hana_scaleup.hana_backup_size
 }
 
-<<<<<<< HEAD
-output "sap_hostagent_rpm_file_name" {
-  value = var.sap_hostagent_rpm_file_name
-}
-
-output "sap_hana_bundle_file_name" {
-  value = var.sap_hana_bundle_file_name
-}
-
-output "sap_hana_sapcar_file_name" {
-  value = var.sap_hana_sapcar_file_name
-=======
 output "sap_image_family" {
   value = contains([element(split("-", var.source_image_family), 0)], "rhel") ? "RedHat" : "Suse"
->>>>>>> Refactored hana scaleup code
 }
 
 output "inventory" {

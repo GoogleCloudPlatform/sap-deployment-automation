@@ -1,7 +1,7 @@
 provider "google" {}
 
 module "hana_scaleup" {
-  source                = "../../../terraform/modules/hana"
+  source                = "../../../terraform/modules/hana-scaleup"
   instance_name         = var.instance_name
   instance_type         = var.instance_type
   project_id            = var.project_id
