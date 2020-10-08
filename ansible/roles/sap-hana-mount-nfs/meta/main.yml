@@ -1,0 +1,6 @@
+galaxy_info:
+  author: Bala Guduru
+  description: NFS mount SAP Hana vol
+  min_ansible_version: 2.9
+  galaxy_tags: []
+dependencies: []
