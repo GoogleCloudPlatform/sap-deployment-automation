@@ -8,9 +8,9 @@
   include_role:
     name: storage
   vars:
-    disks: "{{ sap_hana_disks | default(sap_hana_disks_defaults) }}"
-    logvols: "{{ sap_hana_logvols | default(sap_hana_logvols_defaults) }}"
-    swapon: "{{ sap_hana_swapon | default(false) }}"
+    disks: "{{ sap_hana_disks }}"
+    logvols: "{{ sap_hana_logvols }}"
+    swapon: "{{ sap_hana_swapon }}"
 
 - name: Include hana packages download role
   include_role:
@@ -28,6 +28,11 @@
 - name: Include sap hana pre-configure role
   include_role:
     name: sap-hana-preconfigure
+  when: ansible_os_family == "RedHat"
+
+- name: Include sap hana pre-configure role
+  include_role:
+    name: sap-hana-preconfigure-new
   when: ansible_os_family == "RedHat"
 
 - name: Include sap hana install role

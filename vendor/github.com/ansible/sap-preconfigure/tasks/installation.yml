@@ -1,0 +1,103 @@
+---
+# tasks file for sap-preconfigure: installation
+
+- name: Ensure required package groups are installed
+  package:
+    state: present
+    name: "{{ __sap_preconfigure_packagegroups }}"
+
+- name: Ensure required packages are installed
+  package:
+    state: present
+    name: "{{ __sap_preconfigure_packages }}"
+  register: sap_preconfigure_register_groupinstall
+
+- name: Ensure minimum packages are installed
+  block:
+  - name: Gather package facts
+    package_facts:
+
+  - set_fact:
+      reqpkgs: "{{ __sap_preconfigure_min_pkgs }}"
+
+  - debug:
+      var: reqpkgs
+
+  - set_fact:
+      sap_preconfigure_fact_minpkglist: |-
+        {% set ns = namespace() %}
+        {% set ns.pkgs = [] %}
+        {% for reqpkg in reqpkgs %}
+        {%   if not reqpkg[0] in ansible_facts.packages %}
+        {%     set _ = ns.pkgs.append(reqpkg | join('-')) %}
+        {%   else %}
+        {%     set pkg = ansible_facts.packages[reqpkg[0]][-1] %}
+        {%     set verrel = pkg.version ~ '-' ~ pkg.release %}
+        {%     if reqpkg[1].replace (".el", ".0.0.") is version(verrel.replace (".el", ".0.0."), '>', strict=false) %}
+        {%       set _ = ns.pkgs.append(reqpkg | join('-')) %}
+        {%     else %}
+        {%       set _ = "pkg already installed with same or later version" %}
+        {%     endif %}
+        {%   endif %}
+        {% endfor %}
+        {{ ns.pkgs }}
+
+  - debug: var=sap_preconfigure_fact_minpkglist
+
+  - name: Install minimum packages if required
+    yum:
+      name: "{{ sap_preconfigure_fact_minpkglist }}"
+      state: present
+    when: not ( sap_preconfigure_fact_minpkglist == [ "" ] )
+
+  when:
+    - sap_preconfigure_min_package_check|bool
+    - not( (__sap_preconfigure_min_pkgs is undefined) or (__sap_preconfigure_min_pkgs is none) or (__sap_preconfigure_min_pkgs | trim == '') )
+
+- name: Ensure system is updated to the latest patchlevel
+  package:
+    state: latest
+    name: "*"
+  when: sap_preconfigure_update
+  register: sap_preconfigure_register_packageinstall
+
+- set_fact:
+    needs_restarting_command: "needs-restarting -r"
+  when:
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution_major_version == '7'
+
+- set_fact:
+    needs_restarting_command: "yum needs-restarting -r"
+  when:
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution_major_version == '8'
+    - ansible_distribution_version != '8.0'
+
+- set_fact:
+    needs_restarting_command: "_IKRNL=$(rpm -q --last kernel | awk 'NR==1{sub(/kernel-/,\"\"); print $1}'); _CKRNL=$(uname -r); if [ ${_IKRNL} != ${_CKRNL} ]; then exit 1; else exit 0; fi"
+  when:
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution_version == '8.0'
+
+- debug:
+    var: needs_restarting_command
+
+- name: Check if system needs to be restarted
+  shell: "{{ needs_restarting_command }}"
+  register: needs_restarting_result
+  ignore_errors: true
+  changed_when: false
+  args:
+    warn: false
+  check_mode: false
+
+- debug:
+    var: needs_restarting_result
+
+- name: Call Reboot handler if necessary
+  command: /bin/true
+  notify: "Reboot handler"
+  when: needs_restarting_result.rc == 1
+
+...

@@ -49,5 +49,5 @@ output "hana_attached_disks_data" {
 }
 
 output "hana_attached_disks_backup" {
-  value = module.hana_scaleup.instance_attached_disks_backup
+  value = element(module.hana_scaleup.instance_attached_disks_backup, 0)
 }

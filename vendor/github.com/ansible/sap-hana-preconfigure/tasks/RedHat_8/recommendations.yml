@@ -1,0 +1,51 @@
+---
+
+## Most of this is described in SAP Note 2009879
+
+## TODO: Next task should be moved to sap-deploy, or sap-hostagent install !
+- name: ensure sapsys group and sapadm user are created
+  block:
+    - name: ensure sapsys group exists
+      group:
+        name: sapsys
+        gid: "{{ sap_sapsys_gid }}"
+    - name: ensure sapadm user exists
+      user:
+        name: sapadm
+        update_password: on_create
+        uid: "{{ sap_sapadm_uid }}"
+        group: sapsys
+        password: "{{ sap_sapadm_pw_clear|password_hash('sha512') }}"
+  when:
+    - sap_sapsys_gid is defined
+    - sap_sapadm_uid is defined
+    - sap_sapadm_pw_clear is defined
+
+### Firewall Settings can only be done if SAP instance ID is known, 
+### otherwise disable firewall
+### TODO: Set proper firewall rules if SID/instance number is known
+
+# - name: Ensure firewall is disabled when instance ID unknown # already in sap-preconfigure
+#   service: name=firewalld state=stopped enabled=no
+#   ignore_errors: True
+
+### TODO: instead of disabling kdump, linux system-role-kdump should be used / included here
+#         to configure kdump in proper way
+#         This is currently in research
+# - name: disable kdump # already in 2777782.yml, step 1
+#   service: name=kdump state=stopped enabled=no
+#   ignore_errors: True
+
+# Disable abrt service # already in 2777782.yml, step 1
+# - name: disable abrt
+#   service: name=abrtd state=stopped enabled=no
+#   ignore_errors: True
+# - name: disable abrt-ccpp
+#   service: name=abrt-ccpp state=stopped enabled=no
+#   ignore_errors: True
+
+### Disable tempfile handling, otherwise things are gone after reboot
+#     already in sap-preconfigure, sapnote/2772999/10-configure-systemd-tmpfiles.yml
+# - name: disable temp file handling for SAP applications
+#   copy: src=etc/tmpfiles.d/sap.conf dest=/etc/tmpfiles.d/sap.conf
+...

@@ -1,0 +1,183 @@
+---
+
+##########################################################################################
+# 
+# NOTE: THE installation part will completely fail, 
+# - if the system is not connected to proper copied RedHat Repositories 
+#   (no group definition available)
+# - is disconnected with no repos configured at all
+#
+##########################################################################################
+
+- block:
+# repos required for SAP HANA on RHEL 7 and RHEL 8:
+  - set_fact:
+      __sap_hana_preconfigure_required_repos: "{{ lookup('vars','sap_hana_preconfigure_req_repos_RedHat_' +
+      ansible_distribution_major_version|string + '_' + ansible_architecture|string) }}"
+
+  - name: Enable E4S repositories
+    rhsm_repository:
+      name: "{{ __sap_hana_preconfigure_required_repos }}"
+      state: present
+
+  when: sap_hana_preconfigure_enable_sap_hana_repos
+
+- name: Detect if the minor RHEL release is set
+  shell: subscription-manager release --show | awk '{print $NF}'
+  register: subscription_manager_release_result
+  changed_when: false
+  when:
+    - sap_hana_preconfigure_set_minor_release
+
+- name: Set the minor RHEL release
+  shell: subscription-manager release --set="{{ ansible_distribution_version }}"
+  when:
+    - sap_hana_preconfigure_set_minor_release
+    - subscription_manager_release_result.stdout != ansible_distribution_version
+
+- name: Ensure required packages are installed
+  package:
+    state: present
+    name: "{{ __sap_hana_preconfigure_packages }}"
+  register: sap_hana_preconfigure_register_groupinstall
+
+- name: Get status of installed packages
+  yum:
+    name: "{{ __sap_hana_preconfigure_packages }}"
+  register: result
+  ignore_errors: True
+  changed_when: false
+
+- debug:
+    var: result.results
+
+- name: Ensure system is updated to the latest patchlevel
+  package:
+    state: latest
+    name: "*"
+  when: sap_hana_preconfigure_update|bool
+
+### If this task fails, you need to enable the IBM PowerTools repository
+### see https://www14.software.ibm.com/support/customercare/sas/f/lopdiags/home.html for details
+
+- name: Install the ibm-power-repo package
+  yum:
+    name: "{{ sap_hana_preconfigure_ibm_power_repo_url }}"
+    state: present
+    disable_gpg_check: True
+  when:
+    - ansible_architecture == "ppc64le"
+    - sap_hana_preconfigure_add_ibm_power_repo|d(true)
+
+- name: Accept the license for the IBM tools
+  shell: |
+    MORE=+1000 /opt/ibm/lop/configure <<-EOF
+    y
+    EOF
+  when:
+    - ansible_architecture == "ppc64le"
+    - sap_hana_preconfigure_add_ibm_power_repo|d(true)
+
+- name: Install IBM tools
+  package:
+    state: latest
+    name: "{{ __sap_hana_preconfigure_required_ppc64le }}"
+  when: ansible_architecture == "ppc64le"
+
+- name: Get status of installed IBM tools
+  yum:
+    name: "{{ __sap_hana_preconfigure_required_ppc64le }}"
+  register: ibm_result
+  ignore_errors: True
+  changed_when: false
+  when: ansible_architecture == "ppc64le"
+
+- debug:
+    var: ibm_result.results
+  when: ansible_architecture == "ppc64le"
+
+- name: Ensure minimum packages are installed
+  block:
+  - name: Gather package facts
+    package_facts:
+
+  - set_fact:
+      reqpkgs: "{{ __sap_hana_preconfigure_min_pkgs }}"
+
+  - debug:
+      var: reqpkgs
+
+  - set_fact:
+      sap_hana_preconfigure_fact_minpkglist: |-
+        {% set ns = namespace() %}
+        {% set ns.pkgs = [] %}
+        {% for reqpkg in reqpkgs %}
+        {%   if not reqpkg[0] in ansible_facts.packages %}
+        {%     set _ = ns.pkgs.append(reqpkg | join('-')) %}
+        {%   else %}
+        {%     set pkg = ansible_facts.packages[reqpkg[0]][-1] %}
+        {%     set verrel = pkg.version ~ '-' ~ pkg.release %}
+        {%     if reqpkg[1].replace (".el", ".0.0.") is version(verrel.replace (".el", ".0.0."), '>', strict=false) %}
+        {%       set _ = ns.pkgs.append(reqpkg | join('-')) %}
+        {%     else %}
+        {%       set _ = "pkg already installed with same or later version" %}
+        {%     endif %}
+        {%   endif %}
+        {% endfor %}
+        {{ ns.pkgs }}
+
+  - debug: var=sap_hana_preconfigure_fact_minpkglist
+
+#    yum:
+  - name: Install minimum packages if required
+    package:
+      name: "{{ sap_hana_preconfigure_fact_minpkglist }}"
+      state: present
+    when: sap_hana_preconfigure_fact_minpkglist | d([])
+#    when: not ( sap_hana_preconfigure_fact_minpkglist == [ "" ] )
+
+  when:
+    - sap_hana_preconfigure_min_package_check|bool
+    - __sap_hana_preconfigure_min_pkgs | d([])
+#    - not( (__sap_hana_preconfigure_min_pkgs is undefined) or (__sap_hana_preconfigure_min_pkgs is none) or (__sap_hana_preconfigure_min_pkgs | trim == '') ) 
+
+- set_fact:
+    needs_restarting_command: "needs-restarting -r"
+  when:
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution_major_version == '7'
+
+- set_fact:
+    needs_restarting_command: "yum needs-restarting -r"
+  when:
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution_major_version == '8'
+    - ansible_distribution_version != '8.0'
+
+- set_fact:
+    needs_restarting_command: "_IKRNL=$(rpm -q --last kernel | awk 'NR==1{sub(/kernel-/,\"\"); print $1}'); _CKRNL=$(uname -r); if [ ${_IKRNL} != ${_CKRNL} ]; then exit 1; else exit 0; fi"
+  when:
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution_version == '8.0'
+
+- debug:
+    var: needs_restarting_command
+
+- name: Check if system needs to be restarted
+  shell: "{{ needs_restarting_command }}"
+  register: needs_restarting_result
+  ignore_errors: true
+  changed_when: false
+  args:
+    warn: false
+  check_mode: false
+
+- debug:
+    var: needs_restarting_result
+
+- name: Call Reboot handler if necessary
+  command: /bin/true
+  notify: "Reboot handler"
+  when: needs_restarting_result.rc == 1
+
+...

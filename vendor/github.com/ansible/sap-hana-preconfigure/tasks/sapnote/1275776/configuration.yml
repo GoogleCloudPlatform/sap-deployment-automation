@@ -1,0 +1,24 @@
+---
+
+- name: 1275776 - Configuration
+  command: tuned-adm profile sapconf
+
+- name: 1275776 - Tips & Advice (start sapconf)
+  service:
+    name: sapconf
+    enabled: true
+    state: started
+
+- name: "1275776 - Configuration saptune"
+  command: "saptune daemon start"
+
+- name: "1275776 - Configuration saptune sap note 1275776"
+  command: "saptune note apply 1275776"
+
+- name: "1275776 - Configuration saptune sap note 1984787"
+  command: "saptune note apply 1984787"
+
+- name: "1275776 - Configuration saptune sap note 2205917"
+  command: "saptune note apply 2205917"
+
+...

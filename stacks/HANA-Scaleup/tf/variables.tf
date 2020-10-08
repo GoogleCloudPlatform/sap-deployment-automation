@@ -2,7 +2,7 @@ variable "instance_name" {
   description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
 }
 
-variable "sap_hana_instance_type" {
+variable "instance_type" {
   description = "The GCE instance/machine type."
 }
 

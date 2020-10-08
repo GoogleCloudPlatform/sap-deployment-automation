@@ -1,0 +1,43 @@
+---
+
+## This creates the SAP Users in case you define them in your playbook
+## This has been done for providers who want to create the SAP users before handing 
+## over the image to clients
+- name: ensure sapadm group and sapadm user is created
+  block:
+    - name: ensure sapdm user exists
+      group:
+        name: sapsys
+        gid: "{{ sap_sapsys_gid }}"
+    - name: ensure sapadm user exists
+      user:
+        name: sapadm
+        uid: "{{ sap_sapadm_uid }}"
+        group: sapsys
+        password: "{{ sap_sapadm_pw_clear|password_hash('sha512') }}"
+  when:
+    - sap_sapsys_gid is defined
+    - sap_sapadm_uid is defined
+    - sap_sapadm_pw_clear is defined
+
+### Disable tempfile handling, otherwise things are gone after reboot
+#     already in sap-preconfigure, sapnote/2002167/06-additional-notes-for-installing-sap-systems.yml
+# - name: disable temp file handling for SAP applications
+#   copy: src=etc/tmpfiles.d/sap.conf dest=/etc/tmpfiles.d/sap.conf
+
+### Set by HANA installer
+# - name: increase file handles to at least 32800 for sapsys group
+#   pam_limits: 
+#     dest: /etc/security/limits.d/99-sapsys.conf
+#     domain: "@sapsys" 
+#     limit_item: nofile 
+#     limit_type: "{{ line_item }}" 
+#     value: 32800
+#     use_max: yes
+#   with_items:
+#     - soft
+#     - hard
+#   loop_control:
+#     loop_var: line_item
+
+...

@@ -1,0 +1,16 @@
+---
+
+- name: include os specific vars
+  include_vars: '{{ item }}'
+  with_first_found:
+    - '{{ ansible_distribution }}_{{ ansible_distribution_version }}.yml'
+    - '{{ ansible_distribution }}_{{ ansible_distribution_major_version }}.yml'
+    - '{{ ansible_os_family }}.yml'
+
+- include_tasks: '{{ ansible_distribution }}/installation.yml'
+  when: sap_hana_preconfigure_config_all|d(true) or sap_hana_preconfigure_installation|d(false)
+
+- include_tasks: '{{ ansible_distribution }}/configuration.yml'
+  when: sap_hana_preconfigure_config_all|d(true) or sap_hana_preconfigure_configuration|d(false)
+
+...

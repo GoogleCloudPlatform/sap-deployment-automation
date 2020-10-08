@@ -2,22 +2,12 @@ sap_hana_zip_file_name: ""
 sap_hana_bundle_file_name: IMDB_SERVER20_047_0-80002031.SAR
 sap_hana_sapcar_file_name: SAPCAR_1320-80000935.EXE
 sap_hostagent_rpm_file_name: saphostagentrpm_44-20009394.rpm
-
-sap_hana_backup_size_default: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
-sap_hana_data_size_default: '{{ terraform.outputs.hana_data_size.value }}G'
-sap_hana_log_size_default: '{{ terraform.outputs.hana_log_size.value }}G'
-sap_hana_shared_size_default: '{{ terraform.outputs.hana_shared_size.value }}G'
-sap_hana_usr_size_default: '{{ terraform.outputs.hana_usr_size.value }}G'
-
-sap_hana_disks_defaults:
-  - { name: data, partition_path : hanadata }
-  - { name: backup, partition_path : hanabackup }
-
 sap_hana_swapon: false
 
 sap_hana_disks:
-  - { name: data, partition_path : "{{ sap_hana_data_partition_name }}"}
-  - { name: backup, partition_path : "{{ sap_hana_backup_partition_name }}"}
+  - { name: '{{ terraform.outputs.hana_attached_disks_data.value }}', partition_path : "{{ sap_hana_data_partition_name }}" }
+  - { name: '{{ terraform.outputs.hana_attached_disks_backup.value }}', partition_path : "{{ sap_hana_backup_partition_name }}" }
+
 sap_hana_logvols:
   shared:
     size: "{{ sap_hana_shared_size }}"

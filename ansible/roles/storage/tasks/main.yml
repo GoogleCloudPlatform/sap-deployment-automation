@@ -2,7 +2,7 @@
 
 - name: Verifying disks attached to system
   stat:
-    path: "/dev/disk/by-id/google-{{ ansible_hostname }}-{{ item.name }}"
+    path: "/dev/disk/by-id/google-{{ item.name }}"
   with_items: "{{ disks }}"
   register: diskpath
   tags:
