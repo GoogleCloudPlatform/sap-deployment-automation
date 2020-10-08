@@ -55,6 +55,16 @@
   when: false in stat_ssh_key_files_exists
 
 - block:
+  - name: create a tempdir for terraform variables
+    tempfile:
+      state: directory
+    register: terraform_tempdir
+    changed_when: false
+  - name: write terraform variables to a file
+    copy:
+      dest: '{{ terraform_tempdir.path }}/vars.tf.json'
+      content: '{{ sap_tf_variables_defaults | combine(sap_tf_variables) | to_json }}'
+    changed_when: false
   - name: deploy infrastructure with terraform
     terraform:
       backend_config:
@@ -63,14 +73,17 @@
       force_init: true
       project_path: '{{ sap_tf_project_path }}'
       state: '{{ sap_state }}'
-      variables: '{{ sap_tf_variables_defaults | combine(sap_tf_variables) }}'
+      variables_file: '{{ terraform_tempdir.path }}/vars.tf.json'
     register: terraform
   always:
-  - name: clean up terraform state directory
+  - name: clean up terraform directories
     file:
-      path: '{{ sap_tf_project_path }}/.terraform'
+      path: '{{ item }}'
       state: absent
     changed_when: terraform is changed
+    loop:
+    - '{{ sap_tf_project_path }}/.terraform'
+    - '{{ terraform_tempdir.path }}'
 
 - name: flatten inventory map into a list of maps
   # Convert { "abc": ["10.10.10.10", "10.10.10.11"], "xyz": ["10.10.10.12"] } into:
