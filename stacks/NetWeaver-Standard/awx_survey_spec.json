@@ -3,20 +3,38 @@
   "name": "parameters",
   "spec": [
     {
-      "question_name": "Instance name",
-      "question_description": "This is a base name from which cloud resources are named, and should be unique to avoid conflicts with other instances.",
+      "question_name": "Terraform state bucket",
+      "question_description": "This is the bucket where Terraform state is stored.",
       "required": true,
       "type": "text",
-      "variable": "sap_instance_name",
+      "variable": "sap_tf_state_bucket",
       "min": 1,
       "max": 1024
     },
     {
-      "question_name": "Terraform state bucket",
-      "question_description": "This is the bucket where Terraform state is stored. It will be stored in a path derived from the instance name.",
+      "question_name": "Terraform state bucket prefix",
+      "question_description": "This the state file prefix in the Terraform state bucket. Choose a unique name to avoid clashes with other state files.",
       "required": true,
       "type": "text",
-      "variable": "sap_state_bucket",
+      "variable": "sap_tf_state_bucket_prefix",
+      "min": 1,
+      "max": 1024
+    },
+    {
+      "question_name": "HANA instance name",
+      "question_description": "This is the name of the HANA instance.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_hana_instance_name",
+      "min": 1,
+      "max": 1024
+    },
+    {
+      "question_name": "NetWeaver instance name",
+      "question_description": "This is the name of the NetWeaver instance.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_nw_instance_name",
       "min": 1,
       "max": 1024
     },

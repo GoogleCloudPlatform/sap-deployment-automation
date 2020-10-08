@@ -3,20 +3,29 @@
   "name": "parameters",
   "spec": [
     {
+      "question_name": "Terraform state bucket",
+      "question_description": "This is the bucket where Terraform state is stored.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_tf_state_bucket",
+      "min": 1,
+      "max": 1024
+    },
+    {
+      "question_name": "Terraform state bucket prefix",
+      "question_description": "This the state file prefix in the Terraform state bucket. Choose a unique name to avoid clashes with other state files.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_tf_state_bucket_prefix",
+      "min": 1,
+      "max": 1024
+    },
+    {
       "question_name": "Instance name",
       "question_description": "This is a base name from which cloud resources are named, and should be unique to avoid conflicts with other instances.",
       "required": true,
       "type": "text",
       "variable": "sap_hana_instance_name",
-      "min": 1,
-      "max": 1024
-    },
-    {
-      "question_name": "Terraform state bucket",
-      "question_description": "This is the bucket where Terraform state is stored. It will be stored in a path derived from the instance name.",
-      "required": true,
-      "type": "text",
-      "variable": "sap_hana_state_bucket",
       "min": 1,
       "max": 1024
     },
@@ -35,16 +44,16 @@
       "question_description": "Family of the image used to create machines.",
       "required": true,
       "type": "multiplechoice",
-      "variable": "sap_hana_source_image_family",
+      "variable": "sap_source_image_family",
       "default": "rhel-7-7-sap-ha",
-      "choices": ["rhel-7-4-sap", "rhel-7-6-sap-ha", "rhel-7-7-sap-ha", "sles-12-sp3-bg"]
+      "choices": ["rhel-7-4-sap", "rhel-7-6-sap-ha", "rhel-7-7-sap-ha", "rhel-8-1-sap-ha", "sles-12-sp3-bg"]
     },
     {
       "question_name": "Image project",
       "question_description": "Project of the image used to create machines.",
       "required": true,
       "type": "multiplechoice",
-      "variable": "sap_hana_source_image_project",
+      "variable": "sap_source_image_project",
       "default": "rhel-sap-cloud",
       "choices": ["rhel-sap-cloud", "suse-sap-cloud", "albatross-duncanl-sandbox-2"]
     },
@@ -62,7 +71,7 @@
       "question_description": "This is the ID of the project in which cloud resources are created.",
       "required": true,
       "type": "text",
-      "variable": "sap_hana_project_id",
+      "variable": "sap_project_id",
       "min": 1,
       "max": 1024
     },
@@ -71,7 +80,7 @@
       "question_description": "This is the subnetwork for the machine instance network interfaces.",
       "required": true,
       "type": "text",
-      "variable": "sap_hana_subnetwork",
+      "variable": "sap_subnetwork",
       "min": 1,
       "max": 1024
     },
@@ -80,7 +89,7 @@
       "question_description": "This is the project of the subnetwork for the machine instance network interfaces. If left blank, it will default to the Project ID.",
       "required": false,
       "type": "text",
-      "variable": "sap_hana_subnetwork_project_id",
+      "variable": "sap_subnetwork_project_id",
       "min": 0,
       "max": 1024,
       "default": ""
@@ -129,7 +138,7 @@
       "question_description": "This is the zone of the region in which cloud resources will be created.",
       "required": true,
       "type": "multiplechoice",
-      "variable": "sap_hana_zone",
+      "variable": "sap_zone",
       "min": 1,
       "max": 30,
       "default": "us-central1-a",
