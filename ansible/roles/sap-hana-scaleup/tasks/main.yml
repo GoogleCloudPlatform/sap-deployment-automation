@@ -1,16 +1,20 @@
 ---
 
+- name: Include base role
+  include_role:
+    name: base
+
 - name: Include storage role
   include_role:
-    name: storage-delete
+    name: storage
   vars:
     disks: "{{ sap_hana_disks | default(sap_hana_disks_defaults) }}"
     logvols: "{{ sap_hana_logvols | default(sap_hana_logvols_defaults) }}"
     swapon: "{{ sap_hana_swapon | default(false) }}"
 
-- name: Include common role
+- name: Include hana packages download role
   include_role:
-    name: common-delete
+    name: sap-hana-download-packages
 
 - name: Include SAP hostagent install role
   include_role:

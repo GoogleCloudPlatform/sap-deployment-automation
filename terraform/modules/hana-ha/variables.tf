@@ -39,8 +39,7 @@ variable "boot_disk_type" {
 }
 
 variable "create_backup_volume" {
-  type        = bool
-  description = "Whether or not to create a backup volume."
+  description = "Create backup SAP volume"
 }
 
 variable "service_account_email" {
