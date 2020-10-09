@@ -1,0 +1,18 @@
+---
+
+- debug:
+    msg: "imported RedHat/generic/disable-selinux.yml"
+
+- name: Disable SELinux
+  selinux:
+    state: disabled
+    policy: targeted
+
+- name: Check for SELinux
+  command: getenforce
+  changed_when: false
+  register: getenforce_result
+- debug:
+    var: getenforce_result.stdout_lines
+
+...

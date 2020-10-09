@@ -1,0 +1,32 @@
+---
+
+# vars file for sap-preconfigure
+
+__sap_preconfigure_sapnotes:
+  - "2772999"
+
+__sap_preconfigure_packagegroups_x86_64:
+  - "@server"
+
+__sap_preconfigure_packagegroups_ppc64le:
+  - "@server"
+
+__sap_preconfigure_packagegroups_s390x:
+  - "@server"
+
+__sap_preconfigure_packagegroups: "{{ lookup('vars','__sap_preconfigure_packagegroups_' + ansible_architecture|string ) }}"
+
+__sap_preconfigure_packages:
+  - uuidd
+  - libnsl
+  - tcsh
+  - psmisc
+  - nfs-utils
+  - bind-utils
+
+# SAP notes 2772999 (setup) and 2812427 (kernel):
+__sap_preconfigure_min_pkgs:
+  - [ 'setup' , '2.12.2-2.el8_0.1' ]
+  - [ 'kernel' , '4.18.0-80.15.1.el8_0' ]
+
+...

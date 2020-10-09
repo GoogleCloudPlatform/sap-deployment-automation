@@ -1,0 +1,19 @@
+---
+# tasks file for sap-preconfigure: configuration
+
+- debug:
+    msg: "imported RedHat/generic/configure-uuidd.yml"
+
+- name: Enable and start service uuidd
+  systemd:
+    name: uuidd
+    enabled: yes
+    state: started
+
+- name: Enable and start service uuidd.socket
+  systemd:
+    name: uuidd.socket
+    enabled: yes
+    state: started
+
+...

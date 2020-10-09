@@ -1,0 +1,18 @@
+---
+# tasks file for sap-preconfigure: configuration
+
+- debug:
+    msg: "imported RedHat/generic/configure-selinux.yml"
+
+- name: Set SELinux State
+  selinux:
+    state: "{{ sap_preconfigure_selinux_state }}"
+    policy: targeted
+  register: selinux_result
+
+- name: Call Reboot handler if necessary
+  command: /bin/true
+  notify: "Reboot handler"
+  when: selinux_result.reboot_required == true
+
+...

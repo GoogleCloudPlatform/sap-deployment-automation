@@ -1,0 +1,19 @@
+---
+
+- debug:
+    msg: "imported RedHat/generic/disable-coredumps.yml"
+
+- name: disable core file creation for all users
+  pam_limits:
+    dest: /etc/security/limits.d/99-sap.conf
+    domain: "*"
+    limit_item: core
+    limit_type: "{{ line_item }}"
+    value: '0'
+  with_items:
+    - hard
+    - soft
+  loop_control:
+    loop_var: line_item
+
+...

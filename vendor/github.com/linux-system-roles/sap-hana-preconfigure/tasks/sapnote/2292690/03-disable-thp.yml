@@ -1,0 +1,8 @@
+---
+
+# can be configured by tuned profile sap-hana, entry "transparent_hugepages=never"
+- debug:
+    msg: "SAP note 2292690 Step 3: Disable Transparent Hugepages (THP)"
+- import_tasks: ../../RedHat/generic/disable-thp.yml
+
+...

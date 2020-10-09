@@ -1,0 +1,7 @@
+---
+# OS RELEASE: RHEL 6.5
+#
+- fail:
+    msg: "RHEL 6.5 is out of maintenance.\nPlease upgrade to RHEL 6.7 at least"
+
+...

@@ -1,0 +1,12 @@
+---
+# tasks file for sap-preconfigure: configuration
+
+# 03-configure-hostname.yml
+- debug:
+    msg: "SAP note 2772999 Step 3: Configure Hostname"
+
+- import_tasks: ../../RedHat/generic/configure-hostname.yml
+- import_tasks: ../../RedHat/generic/configure-etc-hosts.yml
+- import_tasks: ../../RedHat/generic/check-dns-name-resolution.yml
+
+...

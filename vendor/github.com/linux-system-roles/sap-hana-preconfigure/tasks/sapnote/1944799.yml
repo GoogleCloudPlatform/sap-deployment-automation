@@ -1,0 +1,70 @@
+---
+# S12 first test implementation
+- name: Install package group Minimal
+  zypper:
+    type: pattern
+    name: Minimal
+    state: latest
+- name: Install package group base
+  zypper:
+    type: pattern
+    name: base
+    state: latest
+- name: Install package group sap-hana
+  zypper:
+    type: pattern
+    name: sap-hana
+    state: latest
+- name: Install recommended packages
+  zypper:
+    type: package
+    state: latest
+    name: "{{ item }}"
+  with_items:
+    - uuidd
+    - libuuid1
+    - libgtk-2_0-0
+    - java-1_7_1-ibm
+    - libicu52_1
+    - ntp
+    - sudo
+    - rsyslog
+    - tcsh
+    - libssh2-1
+    - expect
+    - autoyast2-installation
+    - yast2
+    - bing
+    - bonnie
+    - libcairo2
+    - mlocate
+    - graphviz
+    - iftop
+    - krb5-client
+    - nfs-client
+    - sensors
+    - xfsprogs
+    - libnuma1
+    - libgcc_s1
+    - libstdc++6
+    - multipath-tools
+    - libaio1
+    - libopenssl0_9_8
+    - libopenssl1_0_0
+    - glibc
+    - libaudit1
+    - cyrus-sasl
+    - libkeyutils1
+    - krb5
+    - libcom_err2
+    - libevent-2_0-5
+    - libldap-2_4-2
+    - libltdl7
+    - pam
+    - libz1
+- name: saptune solution apply HANA
+  command: saptune solution apply HANA
+- name: saptune daemon start
+  command: saptune daemon start
+
+...

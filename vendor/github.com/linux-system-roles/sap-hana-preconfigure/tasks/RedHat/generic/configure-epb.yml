@@ -1,0 +1,53 @@
+---
+
+- debug:
+    msg: "imported RedHat/generic/configure-epb.yml"
+
+# can be configured by tuned profile sap-hana, entry "energy_perf_bias=performance"
+#   in included tuned profile throughput-performance
+- block:
+    - name: Check if system supports Intel's performance bias setting
+      command: bash -lc "LC_ALL=C cpupower info | head -1 | awk '{print $2, $3, $4}'"
+      check_mode: no
+      register: command_check_result
+      ignore_errors: true
+      changed_when: false
+    - debug:
+        var: command_check_result.stdout_lines, command_check_result.stderr_lines
+
+    - name: Change EPB if possible
+      block:
+        - name: Create file /etc/init.d/boot.local if it does not exist
+          file:
+            path: /etc/init.d/boot.local
+            state: touch
+            mode: 0755
+
+        - name: Configure EPB at boot time
+          lineinfile:
+            dest: /etc/init.d/boot.local
+            line: "cpupower set -b 0"
+
+        - name: Configure EPB on the running system
+          command: bash -lc "cpupower set -b 0"
+          register: command_result
+        - debug:
+            var: command_result.stdout_lines, command_result.stderr_lines
+
+        - name: Get status of EPB
+          command: bash -lc "cpupower info -b"
+          register: command_result
+          ignore_errors: true
+          changed_when: false
+        - debug:
+            var: command_result.stdout_lines, command_result.stderr_lines
+
+      when:
+       - command_check_result.stdout != 'does not support'
+
+  when:
+    - ansible_architecture == 'x86_64'
+    - ansible_os_family == 'RedHat'
+    - not sap_hana_preconfigure_use_tuned_where_possible
+
+...

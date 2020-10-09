@@ -1,0 +1,41 @@
+---
+
+# required SAP Notes for RHEL 6.7
+
+__sap_hana_preconfigure_sapnotes:
+  - "2235581"
+  - "2009879"
+  - "2247020"
+  - "2382421"
+
+#__sap_hana_preconfigure_min_pkgs:
+#  - kernel-3.10.0-693.11.6.el7
+#  - tuned-profiles-sap-hana-2.8.0-5.el7_4.2
+#when: ansible_distribution_version == "7.4"
+
+__sap_hana_preconfigure_packages:
+# SAP NOTE 2009879
+  - chrony
+  - xfsprogs
+  - libaio
+
+# Network related kernel parameters as set in SAP Note 2382421:
+# The following parameter does not work when communicating with hosts behind NAT firewall:
+#  - { name: net.ipv4.tcp_tw_reuse, value: 1 }
+# Tune these for low latency system replication:
+#   net.ipv4.tcp_wmem and net.ipv4.tcp_rmem
+
+__sap_hana_preconfigure_kernel_parameters_default:
+  - { name: net.core.somaxconn, value: 4096 }
+  - { name: net.ipv4.tcp_max_syn_backlog, value: 8192}
+  - { name: net.ipv4.ip_local_port_range, value: "40000 61000" }
+  - { name: net.ipv4.tcp_timestamps, value: 1 }
+  - { name: net.ipv4.tcp_tw_recycle, value: 1 }
+  - { name: net.ipv4.tcp_slow_start_after_idle, value: 0 }
+  - { name: net.ipv4.tcp_syn_retries, value: 8 }
+# Not sure about these .... they were in the old script and not set in tuned
+#  - { name: kernel.shmmni, value: 65536 } - Invalid argument, the value not supported
+  - { name: kernel.msgmni, value: 32768 }
+  - { name: kernel.sysrq, value: 1 }
+
+...

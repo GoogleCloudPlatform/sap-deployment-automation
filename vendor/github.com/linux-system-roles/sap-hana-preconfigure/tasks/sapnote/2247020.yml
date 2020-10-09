@@ -1,0 +1,7 @@
+---
+# OS RELEASE: RHEL 6.7
+
+- fail:
+    msg: "RHEL 6.7 is not implemented yet"
+
+...

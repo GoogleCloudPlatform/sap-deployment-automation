@@ -1,0 +1,36 @@
+---
+# tasks file for sap-preconfigure: configuration
+
+# 09-configure-process-resource-limits.yml
+- debug:
+    msg: "SAP note 2772999 Step 9: Configure Process Resource Limits"
+
+- name: Set the hard and soft limit for the max number of open files per process (nofile) to 65536 for group sapsys
+  pam_limits:
+    dest: /etc/security/limits.d/99-sap.conf
+    domain: "@sapsys"
+    limit_item: nofile
+    limit_type: "{{ line_item }}"
+    value: "65536"
+  with_items:
+    - hard
+    - soft
+  loop_control:
+    loop_var: line_item
+
+- name: Set the hard and soft limit for the max number of open files per process (nofile) to 65536 for the database group
+  pam_limits:
+    dest: /etc/security/limits.d/99-sap.conf
+    domain: "@{{ sap_preconfigure_db_group_name }}"
+    limit_item: nofile
+    limit_type: "{{ line_item }}"
+    value: "65536"
+  with_items:
+    - hard
+    - soft
+  loop_control:
+    loop_var: line_item
+  when:
+    - sap_preconfigure_db_group_name is defined
+
+...

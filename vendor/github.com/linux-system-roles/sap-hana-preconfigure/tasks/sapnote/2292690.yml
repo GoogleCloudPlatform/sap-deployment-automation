@@ -1,0 +1,35 @@
+---
+# tasks file for sap-hana-preconfigure configuration
+
+- import_tasks: 2292690/01-configure-tuned.yml
+  when: sap_hana_preconfigure_config_all|d(true) or sap_hana_preconfigure_2292690_01|d(false)
+
+- import_tasks: 2292690/02-turn-off-auto-numa-balancing.yml
+  when: sap_hana_preconfigure_config_all|d(true) or sap_hana_preconfigure_2292690_02|d(false)
+
+- import_tasks: 2292690/03-disable-thp.yml
+  when: sap_hana_preconfigure_config_all|d(true) or sap_hana_preconfigure_2292690_03|d(false)
+
+- import_tasks: 2292690/04-configure-c-states-for-lower-latency.yml
+  when: sap_hana_preconfigure_config_all|d(true) or sap_hana_preconfigure_2292690_04|d(false)
+
+- import_tasks: 2292690/05-configure-cpu-governor.yml
+  when: sap_hana_preconfigure_config_all|d(true) or sap_hana_preconfigure_2292690_05|d(false)
+
+- import_tasks: 2292690/06-configure-epb.yml
+  when: sap_hana_preconfigure_config_all|d(true) or sap_hana_preconfigure_2292690_06|d(false)
+
+- import_tasks: 2292690/07-disable-ksm.yml
+  when: sap_hana_preconfigure_config_all|d(true) or sap_hana_preconfigure_2292690_07|d(false)
+
+# We can skip the following task as it is already part of role sap-preconfigure:
+#- import_tasks: 2292690/08-disable-selinux.yml
+#  when: sap_hana_preconfigure_config_all|d(true) or sap_hana_preconfigure_2292690_08|d(false)
+
+- import_tasks: 2292690/09-check-etc-sudoers.yml
+  when: sap_hana_preconfigure_config_all|d(true) or sap_hana_preconfigure_2292690_09|d(false)
+
+- import_tasks: 2292690/10-ibm-energyscale.yml
+  when: sap_hana_preconfigure_config_all|d(true) or sap_hana_preconfigure_2292690_10|d(false)
+
+...
