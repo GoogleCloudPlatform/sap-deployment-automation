@@ -1,9 +1,9 @@
 variable "ports" {
- default  = null
+  default = null
 }
 
 variable "all_ports" {
- default = true
+  default = true
 }
 
 variable "project_id" {

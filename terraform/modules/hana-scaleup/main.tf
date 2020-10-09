@@ -1,5 +1,11 @@
 provider "google" {}
 
+data "google_compute_subnetwork" "subnetwork" {
+  name    = var.subnetwork
+  region  = local.region
+  project = local.subnetwork_project
+}
+
 module "sap_hana_template" {
   source       = "../terraform-google-vm//modules/instance_template"
   name_prefix  = "${var.instance_name}-instance-template"
@@ -21,7 +27,7 @@ module "sap_hana_template" {
   }
 
   subnetwork           = var.subnetwork
-  subnetwork_project   = var.subnetwork_project
+  subnetwork_project   = local.subnetwork_project
   tags                 = var.network_tags
   can_ip_forward       = true
   source_image_family  = var.source_image_family
@@ -34,7 +40,7 @@ module "sap_hana_template" {
 resource "google_compute_address" "gcp_sap_hana_intip" {
   name         = "${var.instance_name}-int"
   address_type = "INTERNAL"
-  subnetwork   = "projects/${var.subnetwork_project}/regions/${local.region}/subnetworks/${var.subnetwork}"
+  subnetwork   = "projects/${local.subnetwork_project}/regions/${local.region}/subnetworks/${var.subnetwork}"
   region       = local.region
   project      = var.project_id
   purpose      = "GCE_ENDPOINT"
@@ -46,7 +52,7 @@ module "sap_hana_scaleup" {
   region             = local.region
   zone               = var.zone
   subnetwork         = var.subnetwork
-  subnetwork_project = var.subnetwork_project
+  subnetwork_project = local.subnetwork_project
   static_ips         = google_compute_address.gcp_sap_hana_intip.*.address
   hostname           = var.instance_name
   instance_template  = module.sap_hana_template.self_link

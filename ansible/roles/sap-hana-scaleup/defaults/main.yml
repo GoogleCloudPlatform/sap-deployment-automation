@@ -1,8 +1,34 @@
+sap_hana_install_files_bucket: nw-ansible
 sap_hana_zip_file_name: ""
 sap_hana_bundle_file_name: IMDB_SERVER20_047_0-80002031.SAR
 sap_hana_sapcar_file_name: SAPCAR_1320-80000935.EXE
 sap_hostagent_rpm_file_name: saphostagentrpm_44-20009394.rpm
+sap_hana_data_partition_name: hanadata
+sap_hana_backup_partition_name: hanabackup
+sap_hana_shared_mountpoint: /hana/shared
+sap_hana_data_mountpoint: /hana/data
+sap_hana_log_mountpoint: /hana/log
+sap_hana_usr_mountpoint: /usr/sap
+sap_hana_backup_mountpoint: /hanabackup
+sap_hostagent_rpm_remote_path: "/hana/shared/software"
+sap_hana_sid: BG1
+sap_hana_instance_number: "00"
+sap_preconfigure_modify_etc_hosts: true
+sap_domain: automation.local
+sap_hana_env_type: development
+sap_hana_mem_restrict: "n"
+sap_hana_system_restart: "y"
 sap_hana_swapon: false
+# sap_hana_password is required unless all of the other passwords are set.
+# It defaults to an empty string for those cases where all the other passwords are
+# set, to avoid an undefined variable error.
+sap_hana_password: ''
+sap_hana_ase_user_password: '{{ sap_hana_password }}'
+sap_hana_db_system_password: '{{ sap_hana_password }}'
+sap_hana_common_master_password: '{{ sap_hana_password }}'
+sap_hana_root_password: '{{ sap_hana_password }}'
+sap_hana_sapadm_password: '{{ sap_hana_password }}'
+sap_hana_sidadm_password: '{{ sap_hana_password }}'
 
 sap_hana_disks:
   - { name: '{{ terraform.outputs.hana_attached_disks_data.value }}', partition_path : "{{ sap_hana_data_partition_name }}" }

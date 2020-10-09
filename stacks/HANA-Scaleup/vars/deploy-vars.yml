@@ -1,27 +1,22 @@
 ---
 
-# Ansible/Terraform common vars for hana and netweaver (optional)
+# Terraform common vars for hana and netweaver (optional)
+sap_instance_zone: us-central1-a
 
-sap_ssh_user: ansible
-sap_ssh_pub_key: ~/.ssh/id_rsa.pub
-sap_ssh_priv_key: ~/.ssh/id_rsa
-
-# Ansible/Terraform common vars for hana and netweaver (required)
-sap_hana_state_bucket: sap-terraform-state-bg
-sap_hana_state_bucket_prefix: hana-ha
-sap_hana_project_id: albatross-duncanl-sandbox-2
-sap_hana_source_image_family: rhel-7-7-sap-ha
-sap_hana_source_image_project: rhel-sap-cloud
-sap_hana_network: netweaver
-sap_hana_subnetwork_project_id: '{{ sap_project_id }}'
-sap_hana_subnetwork: app2
+# Terraform common vars for hana and netweaver (required)
+sap_project_id: albatross-duncanl-sandbox-2
+sap_source_image_family: rhel-7-7-sap-ha
+sap_source_image_project: rhel-sap-cloud
+sap_subnetwork_project_id: '{{ sap_project_id }}'
+sap_subnetwork: app2
 
 # Terraform hana variables (required)
 sap_hana_instance_name: hanslbg
 sap_hana_service_account_email: terraform-managed-sa@albatross-duncanl-sandbox-2.iam.gserviceaccount.com
+sap_hana_state_bucket: sap-terraform-state-bg
+sap_hana_state_bucket_prefix: hana-ha
 
 # Terraform hana variables (optional)
-sap_hana_instance_zone: us-central1-a
 sap_hana_instance_type: n1-highmem-32
 sap_hana_autodelete_boot_disk: "true"
 sap_hana_boot_disk_size: 30
@@ -30,33 +25,5 @@ sap_hana_network_tags: ["allow-ssh", "allow-hana-ports-tcp-icmp-udp-0-65535"]
 sap_hana_pd_kms_key: null
 sap_hana_create_backup_volume: "true"
 
-# Ansible variables (required)
-sap_hana_install_files_bucket: nw-ansible
-sap_hostagent_rpm_file_name: saphostagentrpm_44-20009394.rpm
-sap_hana_bundle_file_name: IMDB_SERVER20_047_0-80002031.SAR
-sap_hana_sapcar_file_name: SAPCAR_1320-80000935.EXE
-sap_hana_sid: RH1
-sap_hana_instance_number: "00"
-sap_hana_db_system_password: Google123
-sap_hostagent_rpm_remote_path: "/hana/shared/software"
-sap_preconfigure_modify_etc_hosts: true
-sap_domain: automation.local
-sap_hana_root_password: Google123
-sap_hana_sapadm_password: Google123
-sap_hana_env_type: development
-sap_hana_mem_restrict: "n"
-sap_hana_common_master_password: Google123
-sap_hana_ase_user_password: Google123
-sap_hana_sidadm_password: Google123
-sap_hana_system_restart: "y"
-
-# Ansible variables (optional)
-sap_hana_data_partition_name: hanadata
-sap_hana_backup_partition_name: hanabackup
-sap_hana_shared_mountpoint: /hana/shared
-sap_hana_data_mountpoint: /hana/data
-sap_hana_log_mountpoint: /hana/log
-sap_hana_usr_mountpoint: /usr/sap
-sap_hana_backup_mountpoint: /hanabackup
-sap_use_lb: true
-
+# Ansible hana variables (required)
+sap_hana_password: Google123

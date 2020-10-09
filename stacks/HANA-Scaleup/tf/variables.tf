@@ -26,10 +26,6 @@ variable "service_account_email" {
   description = "Email of service account to attach to the instance."
 }
 
-variable "network" {
-  description = "The name or self_link of the network where the isntance will be deployed. The network must exist in the same region this instance will be created in."
-}
-
 variable "subnetwork" {
   description = "The name or self_link of the subnetwork where the isntance will be deployed. The subnetwork must exist in the same region this instance will be created in."
 }

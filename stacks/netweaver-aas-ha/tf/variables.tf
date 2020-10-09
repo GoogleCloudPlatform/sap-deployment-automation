@@ -66,16 +66,16 @@ variable "autodelete_disk" {
 
 variable "swap_size" {
   description = "SWAP Size"
-  default = "30"
+  default     = "30"
 }
 variable "usr_sap_size" {
   description = "SWAP Size"
-  default = "100"
+  default     = "100"
 }
 
 variable "disk_type" {
   description = "The GCE data disk type. May be set to pd-standard (for PD HDD) or pd-ssd."
-  default = "pd-standard" 
+  default     = "pd-standard"
 }
 
 variable "boot_disk_size" {
@@ -86,7 +86,7 @@ variable "boot_disk_size" {
 
 variable "boot_disk_type" {
   description = "The GCE boot disk type. May be set to pd-standard (for PD HDD) or pd-ssd."
-  default = "pd-ssd"
+  default     = "pd-ssd"
 }
 
 variable "subnetwork" {

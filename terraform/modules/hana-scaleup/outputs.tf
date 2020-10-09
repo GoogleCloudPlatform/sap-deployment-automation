@@ -8,7 +8,7 @@ output "zone" {
 }
 
 output "instances_self_links" {
-  value       = module.sap_hana_scaleup.instances_self_links
+  value = module.sap_hana_scaleup.instances_self_links
 }
 
 output "address" {

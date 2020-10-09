@@ -31,15 +31,15 @@ output "ers_instance_ip" {
 }
 
 output "ascs_instance_name" {
-   value = module.netweaver_ascs.primary_instance_name
+  value = module.netweaver_ascs.primary_instance_name
 }
 
 output "pas_instance_name" {
-   value = module.netweaver_pas.primary_instance_name
+  value = module.netweaver_pas.primary_instance_name
 }
 
 output "ers_instance_name" {
-   value = module.netweaver_ers.primary_instance_name
+  value = module.netweaver_ers.primary_instance_name
 }
 
 output "pas_instance_ip" {
@@ -51,16 +51,16 @@ output "ascs_ilb_ip" {
 }
 
 output "ers_ilb_ip" {
- value = module.ers_ilb.ip_address
+  value = module.ers_ilb.ip_address
 }
 
 output "inventory" {
   value = {
-    hana = [module.hana_ha.primary_instance_ip, module.hana_ha.secondary_instance_ip],
-    ascs = [module.netweaver_ascs.primary_instance_ip],
-    ers = [module.netweaver_ers.primary_instance_ip],
+    hana     = [module.hana_ha.primary_instance_ip, module.hana_ha.secondary_instance_ip],
+    ascs     = [module.netweaver_ascs.primary_instance_ip],
+    ers      = [module.netweaver_ers.primary_instance_ip],
     nw_nodes = [module.netweaver_ascs.primary_instance_ip, module.netweaver_ers.primary_instance_ip],
-    pas = [module.netweaver_pas.primary_instance_ip],
+    pas      = [module.netweaver_pas.primary_instance_ip],
   }
 }
 

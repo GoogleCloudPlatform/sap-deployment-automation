@@ -113,7 +113,7 @@ resource "google_compute_instance" "gcp_nw" {
   }
 
   metadata = {
-    ssh-keys               = "${var.ssh_user}:${file("${var.public_key_path}")}"
+    ssh-keys = "${var.ssh_user}:${file("${var.public_key_path}")}"
   }
 
   lifecycle {

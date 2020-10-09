@@ -70,7 +70,7 @@ locals {
     host                = ""
   }
 
-  network_parts         = split("/", data.google_compute_subnetwork.subnetwork.network)
-  network               = element(local.network_parts, length(local.network_parts) - 1)
-  region                = join("-", slice(split("-", var.primary_zone), 0, 2))
+  network_parts = split("/", data.google_compute_subnetwork.subnetwork.network)
+  network       = element(local.network_parts, length(local.network_parts) - 1)
+  region        = join("-", slice(split("-", var.primary_zone), 0, 2))
 }

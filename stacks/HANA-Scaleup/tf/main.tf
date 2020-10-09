@@ -9,9 +9,8 @@ module "hana_scaleup" {
   gce_ssh_user          = var.gce_ssh_user
   gce_ssh_pub_key_file  = var.gce_ssh_pub_key_file
   service_account_email = var.service_account_email
-  network               = var.network
   subnetwork            = var.subnetwork
-  subnetwork_project    = local.subnetwork_project
+  subnetwork_project    = var.subnetwork_project
   source_image_family   = var.source_image_family
   source_image_project  = var.source_image_project
   boot_disk_size        = tonumber(var.boot_disk_size)
