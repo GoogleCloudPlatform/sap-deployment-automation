@@ -65,7 +65,7 @@
       dest: '{{ terraform_tempdir.path }}/vars.tf.json'
       content: '{{ sap_tf_variables_defaults | combine(sap_tf_variables) | to_json }}'
     changed_when: false
-  - name: deploy infrastructure with terraform
+  - name: apply terraform
     terraform:
       backend_config:
         bucket: '{{ sap_tf_state_bucket }}'
@@ -84,6 +84,10 @@
     loop:
     - '{{ sap_tf_project_path }}/.terraform'
     - '{{ terraform_tempdir.path }}'
+
+# No need to continue if `terraform destroy` was run.
+- meta: end_play
+  when: sap_state == 'absent'
 
 - name: flatten inventory map into a list of maps
   # Convert { "abc": ["10.10.10.10", "10.10.10.11"], "xyz": ["10.10.10.12"] } into:
