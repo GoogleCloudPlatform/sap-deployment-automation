@@ -2,7 +2,7 @@ locals {
   access_config      = var.assign_public_ip ? [{
     nat_ip           = null
     network_tier     = "PREMIUM"
-  }] : null
+  }] : []
 
   subnetwork_project_id = var.subnetwork_project_id != "" ? var.subnetwork_project_id : var.project_id
 }
