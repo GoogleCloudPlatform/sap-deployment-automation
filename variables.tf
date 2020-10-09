@@ -37,18 +37,6 @@ variable "subnetwork_project_id" {
   default        = ""
 }
 
-variable "service_account" {
-  type           = object({
-    email        = string
-    scopes       = list(string)
-  })
-  description    = "Service account assigned to instance."
-  default        = {
-    email        = ""
-    scopes       = ["cloud-platform"]
-  }
-}
-
 variable "source_image_family" {
   type           = string
   description    = "Family of disk source image."
