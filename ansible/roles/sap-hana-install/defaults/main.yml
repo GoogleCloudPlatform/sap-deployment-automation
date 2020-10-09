@@ -1,59 +1,17 @@
 ---
-# replace with download URL for SAPCAR
-url_sapcar: https://storage.cloud.google.com/nw-ansible/SAPCAR_1320-80000935.EXE
-
-# replace with download URL for HDB server
-url_hdbserver: https://storage.cloud.google.com/nw-ansible/IMDB_SERVER20_047_0-80002031.SAR
-
-url_timeout: 30
-url_retries_cnt: 10
-url_retries_delay: 10
-
-# Global Default variables
-# Adapt to your default settings
-
-# Target host path and file name for the bundle installation file
-sap_hana_deployment_bundle_path:
-
-# Target host path and file name for the zip installation file
-sap_hana_deployment_zip_path:
-
-# Target host path and file name for the sapcar installation file
-sap_hana_deployment_sapcar_path:
-
-# if the previous variables are undefined because you do not want to provide a bundle
-# you can define sap_hana_installdir variable, which points to the directory containing hdblcm
-# the role sap-hana-mediacheck can be used to define this variable
-sap_hana_installdir:
-
-# Target host path and file name for the license file
-sap_hana_deployment_license_path:
-sap_hana_deployment_license_file_name:
-
-# Pass some extra arguments to the hdblcm cli, e.g.  --ignore=<check1>[,<check2>]...
-# Specifies failing preequisite checks that the SAP HANA platform lifecycle management tools should ignore.
-sap_hana_deployment_hdblcm_extraargs:
-
 # Response variables for unattended installation config file
 
+sap_hana_deployment_hdblcm_extraargs:
 sap_hana_deployment_deploy_hostagent: 'n'
 sap_hana_deployment_apply_license: false
 sap_hana_deployment_hana_install_path: '/hana/shared'
 sap_hana_deployment_use_master_password: 'n'
-sap_hana_root_password: '{{ sap_hana_password }}'
-sap_hana_sapadm_password: '{{ sap_hana_password }}'
-sap_hana_sid:
-sap_hana_instance_number:
 sap_hana_hana_env_type: 'custom'
 sap_hana_hana_mem_restrict: 'n'
 sap_hana_deployment_hana_max_mem:
 sap_hana_deployment_certificates_hostmap:
-sap_hana_common_master_password: '{{ sap_hana_password }}'
-sap_hana_sidadm_password: '{{ sap_hana_password }}'
 sap_hana_deployment_hana_userid:
 sap_hana_deployment_hana_groupid:
-sap_hana_db_system_password: '{{ sap_hana_password }}'
-sap_hana_system_restart: 'y'
 sap_hana_deployment_create_initial_tenant:
 sap_hana_deployment_hostname:
 sap_hana_deployment_xs_install: 'n'
@@ -72,4 +30,3 @@ sap_hana_deployment_lss_user:
 sap_hana_deployment_lss_group:
 sap_hana_deployment_lss_user_password:
 sap_hana_deployment_lss_backup_password:
-sap_hana_ase_user_password: '{{ sap_hana_password }}'

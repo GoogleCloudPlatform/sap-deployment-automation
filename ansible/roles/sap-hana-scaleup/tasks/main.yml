@@ -30,11 +30,6 @@
     name: sap-hana-preconfigure
   when: ansible_os_family == "RedHat"
 
-- name: Include sap hana pre-configure role
-  include_role:
-    name: sap-hana-preconfigure-new
-  when: ansible_os_family == "RedHat"
-
 - name: Include sap hana install role
   include_role:
     name: sap-hana-install
