@@ -51,7 +51,7 @@ output "ascs_ilb_ip" {
 }
 
 output "ers_ilb_ip" {
-  value = local.ilb_required == "false" ? google_compute_address.gcp_sap_s4hana_alias_ip[0].address : module.ers_ilb.ip_address
+  value = local.ilb_required == "false" ? join("",google_compute_address.gcp_sap_s4hana_alias_ip.*.address) : module.ers_ilb.ip_address
 }
 
 output "inventory" {
