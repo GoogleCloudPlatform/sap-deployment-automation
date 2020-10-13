@@ -161,7 +161,7 @@ data "google_compute_subnetwork" "subnetwork" {
 }
 
 resource "google_compute_address" "gcp_sap_s4hana_alias_ip" {
-  count        = local.ilb_required == "false" ? 1 : 0
+  count        = local.ilb_required == false ? 1 : 0
   name         = "${var.ers_instance_name}-ip"
   address_type = "INTERNAL"
   subnetwork   = var.subnetwork
