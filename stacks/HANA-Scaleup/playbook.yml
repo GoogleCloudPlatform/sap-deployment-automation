@@ -6,8 +6,8 @@
   roles:
   - role: forminator
     vars:
-      sap_tf_state_bucket: '{{ sap_hana_state_bucket }}'
-      sap_tf_state_bucket_prefix: '{{ sap_hana_state_bucket_prefix }}'
+      sap_tf_state_bucket: '{{ sap_tf_state_bucket }}'
+      sap_tf_state_bucket_prefix: '{{ sap_tf_state_bucket_prefix }}'
       sap_tf_project_path: ./tf
       sap_state: '{{ state | default("present") }}'
       sap_tf_variables:

@@ -9,12 +9,12 @@ sap_source_image_family: rhel-7-7-sap-ha
 sap_source_image_project: rhel-sap-cloud
 sap_subnetwork_project_id: '{{ sap_project_id }}'
 sap_subnetwork: app2
+sap_tf_state_bucket: sap-terraform-state-bg
+sap_tf_state_bucket_prefix: hanslbg
 
 # Terraform hana variables (required)
 sap_hana_instance_name: hanslbg
 sap_hana_service_account_email: terraform-managed-sa@albatross-duncanl-sandbox-2.iam.gserviceaccount.com
-sap_hana_state_bucket: sap-terraform-state-bg
-sap_hana_state_bucket_prefix: hana-scaleup
 
 # Terraform hana variables (optional)
 sap_hana_instance_type: n1-highmem-32
