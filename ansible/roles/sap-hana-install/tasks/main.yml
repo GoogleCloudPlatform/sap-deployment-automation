@@ -44,7 +44,7 @@
         - not(( sap_hana_bundle_file_name is none ) or (sap_hana_bundle_file_name | trim == ''))
     - name: Extract ZIP Archive
       unarchive:
-        src: 51053787.ZIP
+        src: "{{ sap_hana_zip_file_name }}"
         dest: /hana/shared/software
         remote_src: yes
       register: sap_hana_deployment_register_extractzip
