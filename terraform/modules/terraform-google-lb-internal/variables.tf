@@ -132,3 +132,9 @@ variable "service_label" {
   type        = string
 }
 
+variable "ilb_required" {
+  type = string
+  description = "flag to create resources"
+  default = "true"
+}
+

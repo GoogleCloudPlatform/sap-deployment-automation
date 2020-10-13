@@ -34,6 +34,7 @@
   include_role:
     name: ers
   vars:
+    sap_use_alias: true 
     sap_nw_product_id: "{{ sap_nw_ers_product_id }}"
 - name: include storage primary tasks
   include_role:

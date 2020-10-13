@@ -12,6 +12,11 @@
     state: directory
     mode: 0777
     recurse: true
+    
+- name: create gcp-vpc-move-vip resource
+  command: >-
+     ip addr add {{ sap_nw_ers_vip }} dev eth0
+  when: sap_use_alias is defined and ansible_os_family == 'RedHat'    
 
 - name: inifile.params config file
   template:

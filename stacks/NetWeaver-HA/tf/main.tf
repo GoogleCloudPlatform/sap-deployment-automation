@@ -132,6 +132,7 @@ module "ers_ilb" {
   network_project = local.subnetwork_project
   region          = local.region
   network         = local.network
+  ilb_required    = local.ilb_required
   subnetwork      = var.subnetwork
   name            = "${var.ers_instance_name}-ilb"
   source_tags     = ["soure-tag"]
@@ -157,4 +158,14 @@ data "google_compute_subnetwork" "subnetwork" {
   name    = var.subnetwork
   region  = local.region
   project = local.subnetwork_project
+}
+
+resource "google_compute_address" "gcp_sap_s4hana_alias_ip" {
+  count        = local.ilb_required == "false" ? 1 : 0
+  name         = "${var.ers_instance_name}-ip"
+  address_type = "INTERNAL"
+  subnetwork   = var.subnetwork
+  region       = local.region
+  project      = var.project_id
+  purpose      = "GCE_ENDPOINT"
 }

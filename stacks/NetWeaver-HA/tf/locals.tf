@@ -27,6 +27,7 @@ locals {
     request_path        = "/"
     host                = ""
   }
+  ilb_required       = var.source_image_project == "rhel-sap-cloud" ? "false" : "true"
   region             = join("-", slice(split("-", var.primary_zone), 0, 2))
   subnetwork_project = var.subnetwork_project == "" ? var.project_id : var.subnetwork_project
   network_parts      = split("/", data.google_compute_subnetwork.subnetwork.network)
