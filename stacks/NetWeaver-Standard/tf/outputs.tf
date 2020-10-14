@@ -4,23 +4,23 @@ output "hana_instance_name" {
 }
 
 output "hana_data_size" {
-  value = local.hana_data_size
+  value = module.gcp_hana.hana_data_size
 }
 
 output "hana_shared_size" {
-  value = local.hana_shared_size
+  value = module.gcp_hana.hana_shared_size
 }
 
 output "hana_log_size" {
-  value = local.hana_log_size
+  value = module.gcp_hana.hana_log_size
 }
 
 output "hana_usr_size" {
-  value = local.hana_usr_size
+  value = module.gcp_hana.hana_usr_size
 }
 
 output "hana_backup_size" {
-  value = local.hana_backup_size
+  value = module.gcp_hana.hana_backup_size
 }
 
 output "hana_attached_disks_data" {
@@ -28,7 +28,7 @@ output "hana_attached_disks_data" {
 }
 
 output "hana_attached_disks_backup" {
-  value = module.gcp_hana.instance_attached_disks_backup
+  value = join("", module.gcp_hana.instance_attached_disks_backup)
 }
 
 output "inventory" {

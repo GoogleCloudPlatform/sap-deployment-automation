@@ -27,7 +27,6 @@ module "hana_ha" {
   gce_ssh_user          = var.gce_ssh_user
   gce_ssh_pub_key_file  = var.gce_ssh_pub_key_file
   service_account_email = var.hana_service_account_email
-  network               = local.network
   subnetwork            = var.subnetwork
   subnetwork_project    = local.subnetwork_project
   source_image_family   = var.source_image_family
@@ -57,6 +56,7 @@ module "netweaver_ascs" {
   instance_type         = var.nw_instance_type
   boot_disk_size        = var.nw_boot_disk_size
   autodelete_disk       = var.nw_autodelete_boot_disk
+  network_tags          = var.nw_network_tags
   service_account_email = var.nw_service_account_email
 }
 
@@ -77,6 +77,7 @@ module "netweaver_ers" {
   instance_type         = var.nw_instance_type
   boot_disk_size        = var.nw_boot_disk_size
   autodelete_disk       = var.nw_autodelete_boot_disk
+  network_tags          = var.nw_network_tags
   service_account_email = var.nw_service_account_email
 }
 
@@ -96,6 +97,8 @@ module "netweaver_pas" {
   swap_size             = var.nw_swap_disk_size
   instance_type         = var.nw_instance_type
   boot_disk_size        = var.nw_boot_disk_size
+  autodelete_disk       = var.nw_autodelete_boot_disk
+  network_tags          = var.nw_network_tags
   service_account_email = var.nw_service_account_email
 }
 

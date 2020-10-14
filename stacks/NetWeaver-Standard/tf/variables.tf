@@ -72,6 +72,14 @@ variable "sap_hana_boot_disk_type" {
   default     = "pd-ssd"
 }
 
+variable "sap_hana_pd_kms_key" {
+  description = "Customer managed encryption key to use in persistent disks. If none provided, a Google managed key will be used.."
+}
+
+variable "sap_hana_create_backup_volume" {
+  description = "Create backup SAP volume"
+}
+
 variable "sap_nw_boot_disk_size" {
   description = "Root disk size in GB for NetWeaver."
   default     = 30
@@ -130,10 +138,6 @@ variable "sap_nw_network_tags" {
   type        = list
   description = "List of network tags to attach to the instance."
   default     = []
-}
-
-variable "sap_hana_use_public_ip" {
-  description = "Determines whether a public IP address is added to your VM instance."
 }
 
 variable "sap_nw_use_public_ip" {
