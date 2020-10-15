@@ -138,8 +138,8 @@
     vars:
       sap_hana_root_password: Google123
       sap_hana_sapadm_password: Google123
-      sap_hana_hana_env_type: development
-      sap_hana_hana_mem_restrict: "n"
+      sap_hana_env_type: development
+      sap_hana_mem_restrict: "n"
       sap_hana_common_master_password: Google123
       sap_hana_ase_user_password: Google123
       sap_hana_sidadm_password: Google123

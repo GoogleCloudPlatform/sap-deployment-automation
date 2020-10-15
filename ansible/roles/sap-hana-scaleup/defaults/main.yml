@@ -22,7 +22,6 @@ sap_preconfigure_modify_etc_hosts: true
 sap_domain: automation.local
 sap_hana_env_type: development
 sap_hana_mem_restrict: "n"
-sap_hana_system_restart: "y"
 sap_hana_swapon: false
 # sap_hana_password is required unless all of the other passwords are set.
 # It defaults to an empty string for those cases where all the other passwords are

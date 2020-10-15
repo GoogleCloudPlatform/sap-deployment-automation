@@ -92,7 +92,7 @@ number={{ sap_hana_instance_number }}
 workergroup=default
 
 # System Usage ( Default: custom; Valid values: production | test | development | custom )
-system_usage={{ sap_hana_hana_env_type }}
+system_usage={{ sap_hana_env_type }}
 
 # Location of Data Volumes ( Default: /hana/data/${sid} )
 datapath=/hana/data/{{ sap_hana_sid }}
@@ -107,7 +107,7 @@ pmempath=/hana/pmem/{{ sap_hana_sid }}
 custom_cfg=
 
 # Restrict maximum memory allocation?
-restrict_max_mem={{ sap_hana_hana_mem_restrict }}
+restrict_max_mem={{ sap_hana_mem_restrict }}
 
 # Maximum Memory Allocation in MB
 max_mem={{ sap_hana_deployment_hana_max_mem }}
