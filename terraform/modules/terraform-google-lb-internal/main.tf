@@ -28,6 +28,7 @@ data "google_compute_subnetwork" "network" {
 }
 
 resource "google_compute_forwarding_rule" "default" {
+  count                 = var.ilb_required == true ? 1 : 0
   project               = var.project
   name                  = var.name
   region                = var.region
@@ -35,7 +36,7 @@ resource "google_compute_forwarding_rule" "default" {
   subnetwork            = data.google_compute_subnetwork.network.self_link
   allow_global_access   = var.global_access
   load_balancing_scheme = "INTERNAL"
-  backend_service       = google_compute_region_backend_service.default.self_link
+  backend_service       = google_compute_region_backend_service.default[0].self_link
   ip_address            = var.ip_address
   ip_protocol           = var.ip_protocol
   ports                 = var.ports
@@ -44,6 +45,7 @@ resource "google_compute_forwarding_rule" "default" {
 }
 
 resource "google_compute_region_backend_service" "default" {
+  count            = var.ilb_required == true ? 1 : 0
   project          = var.project
   name             = var.health_check["type"] == "tcp" ? "${var.name}-with-tcp-hc" : "${var.name}-with-http-hc"
   region           = var.region
@@ -62,7 +64,7 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_health_check" "tcp" {
-  count   = var.health_check["type"] == "tcp" ? 1 : 0
+  count   = var.health_check["type"] == "tcp" && var.ilb_required == true ? 1 : 0
   project = var.project
   name    = "${var.name}-hc-tcp"
 
@@ -81,7 +83,7 @@ resource "google_compute_health_check" "tcp" {
 }
 
 resource "google_compute_health_check" "http" {
-  count   = var.health_check["type"] == "http" ? 1 : 0
+  count   = var.health_check["type"] == "http" && var.ilb_required == true ? 1 : 0
   project = var.project
   name    = "${var.name}-hc-http"
 
@@ -101,6 +103,7 @@ resource "google_compute_health_check" "http" {
 }
 
 resource "google_compute_firewall" "default-ilb-fw" {
+  count   = var.ilb_required == true ? 1 : 0
   project = var.network_project == "" ? var.project : var.network_project
   name    = "${var.name}-ilb-fw"
   network = data.google_compute_network.network.name
@@ -118,6 +121,7 @@ resource "google_compute_firewall" "default-ilb-fw" {
 }
 
 resource "google_compute_firewall" "default-hc" {
+  count   = var.ilb_required == true ? 1 : 0
   project = var.network_project == "" ? var.project : var.network_project
   name    = "${var.name}-hc"
   network = data.google_compute_network.network.name
