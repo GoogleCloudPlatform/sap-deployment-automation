@@ -13,8 +13,8 @@
 
 - name: Download install files
   shell: |
-    gsutil cp -r 
-    gs://{{ sap_install_files_bucket_path }}/{{ item }} 
+    gsutil -m rsync -x '^(?!{{ item }}).*' -r
+    gs://{{ sap_install_files_bucket_path }}/
     {{ sap_hostagent_rpm_remote_path }}
   args:
     creates: "{{ sap_hostagent_rpm_remote_path }}/{{ item }}"
