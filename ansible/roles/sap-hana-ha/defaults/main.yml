@@ -34,10 +34,6 @@ sap_hana_sidadm_password: '{{ sap_hana_password }}'
 sap_hana_hsr_operation_mode: logreplay
 sap_hana_hsr_replication_mode: syncmem
 
-sap_hana_disks_defaults:
-  - { name: data, partition_path : hanadata }
-  - { name: backup, partition_path : hanabackup }
-
 sap_hana_swapon: false
 
 sap_hana_disks:

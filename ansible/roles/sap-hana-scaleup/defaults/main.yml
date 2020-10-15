@@ -36,8 +36,8 @@ sap_hana_sapadm_password: '{{ sap_hana_password }}'
 sap_hana_sidadm_password: '{{ sap_hana_password }}'
 
 sap_hana_disks:
-  - { name: '{{ terraform.outputs.hana_attached_disks_data.value }}', partition_path : "{{ sap_hana_data_partition_name }}" }
-  - { name: '{{ terraform.outputs.hana_attached_disks_backup.value }}', partition_path : "{{ sap_hana_backup_partition_name }}" }
+  - { name: data, partition_path : "{{ sap_hana_data_partition_name }}"}
+  - { name: backup, partition_path : "{{ sap_hana_backup_partition_name }}"}
 
 sap_hana_logvols:
   shared:
