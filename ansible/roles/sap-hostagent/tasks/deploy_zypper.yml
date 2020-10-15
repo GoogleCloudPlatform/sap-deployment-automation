@@ -26,3 +26,31 @@
   until: rpm_is_installed is succeeded
   retries: 30
   delay: 10
+
+#Remove sapadm user and sapsys group created by the yum hostagent install command from above
+- name: Get sapadm user running processes
+  shell: "ps -ef | grep -v grep | grep -w sapadm | awk '{print $2}'"
+  register: running_processes
+
+- name: Force kill stuck processes
+  shell: "kill -9 {{ item }}"
+  with_items: "{{ running_processes.stdout_lines }}"
+
+- name: Remove the user "sapadm"
+  user:
+    name: sapadm
+    state: absent
+    remove: yes
+  run_once: true
+
+- name: check if "sapsys" group is empty
+  shell: |
+    lid -g sapsys
+  register: sapsys_group
+  ignore_errors: yes
+
+- name: Remove the group "sapsys"
+  group:
+    name: sapsys
+    state: absent
+  when: sapsys_group.stdout == ""

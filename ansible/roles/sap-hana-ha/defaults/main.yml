@@ -1,9 +1,12 @@
-sap_hana_zip_file_name: ""
-sap_hana_bundle_file_name: IMDB_SERVER20_047_0-80002031.SAR
+sap_install_files_bucket_path: nw-ansible
+sap_hana_install_file_name: 51*
 sap_hana_sapcar_file_name: SAPCAR_1320-80000935.EXE
 sap_hostagent_rpm_file_name: saphostagentrpm_44-20009394.rpm
+sap_download_packages:
+  - "{{ sap_hana_install_file_name }}"
+  - "{{ sap_hana_sapcar_file_name }}"
+  - "{{ sap_hostagent_rpm_file_name }}"
 sap_hostagent_rpm_remote_path: "/hana/shared/software"
-sap_hana_install_files_bucket: nw-ansible
 sap_hana_data_partition_name: hanadata
 sap_hana_backup_partition_name: hanabackup
 sap_hana_shared_mountpoint: /hana/shared
@@ -11,6 +14,10 @@ sap_hana_data_mountpoint: /hana/data
 sap_hana_log_mountpoint: /hana/log
 sap_hana_usr_mountpoint: /usr/sap
 sap_hana_backup_mountpoint: /hanabackup
+sap_hana_sid: BG1
+sap_sapsys_gid: 2626
+sap_hana_system_uid: 2525
+sap_hana_instance_number: "00"
 sap_hana_backup_file_name: "/{{ sap_hana_backup_partition_name }}/data/pre_ha_config"
 sap_hana_monitoring_user: hanahamu
 sap_hana_user_store_key: HANAHAUSK

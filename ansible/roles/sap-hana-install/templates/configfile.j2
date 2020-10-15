@@ -122,16 +122,16 @@ master_password={{ sap_hana_common_master_password }}
 password={{ sap_hana_sidadm_password }}
 
 # System Administrator Home Directory ( Default: /usr/sap/${sid}/home )
-home=/usr/sap/{{ sap_hana_sid }}/home
+home=/usr/sap/{{ sap_hana_sid | lower }}adm/home
 
 # System Administrator Login Shell ( Default: /bin/sh )
 shell=/bin/sh
 
 # System Administrator User ID
-userid={{ sap_hana_deployment_hana_userid }}
+userid={{ sap_hana_system_uid }}
 
 # ID of User Group (sapsys)
-groupid={{ sap_hana_deployment_hana_groupid }}
+groupid={{ sap_sapsys_gid }}
 
 # Database User (SYSTEM) Password
 system_user_password={{ sap_hana_db_system_password }}

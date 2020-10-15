@@ -6,29 +6,24 @@
   when: ansible_os_family == 'Suse' and ansible_distribution_major_version == '15'
 
 # Create software directory to store HANA install files
-- name: Create /hana/shared/software dir
+- name: Create {{ sap_hostagent_rpm_remote_path }} dir
   file:
-    path: /hana/shared/software
+    path: "{{ sap_hostagent_rpm_remote_path }}"
     state: directory
 
-- name: Download HANA install files
+- name: Download install files
   shell: |
-    gsutil cp gs://{{ sap_hana_install_files_bucket }}/{{ item }} /hana/shared/software
+    gsutil cp -r 
+    gs://{{ sap_install_files_bucket_path }}/{{ item }} 
+    {{ sap_hostagent_rpm_remote_path }}
   args:
-    creates: "/hana/shared/software/{{ item }}"
+    creates: "{{ sap_hostagent_rpm_remote_path }}/{{ item }}"
   environment:
     CLOUDSDK_PYTHON: "{{ cloudsdk_python_export_path }}"
-  with_items:
-    - "{{ sap_hostagent_rpm_file_name }}"
-    - "{{ sap_hana_bundle_file_name }}"
-    - "{{ sap_hana_sapcar_file_name }}"
+  with_items: "{{ sap_download_packages }}"
 
 - name: Change SAP install file permissions
   file:
-    path: "/hana/shared/software/{{ item }}"
+    path: "{{ sap_hostagent_rpm_remote_path }}"
     mode: '0775'
-  with_items:
-    - "{{ sap_hostagent_rpm_file_name }}"
-    - "{{ sap_hana_bundle_file_name }}"
-    - "{{ sap_hana_sapcar_file_name }}"
-  
+    recurse: yes
