@@ -43,19 +43,21 @@
       "question_name": "Image family",
       "question_description": "Family of the image used to create machines.",
       "required": true,
-      "type": "multiplechoice",
+      "type": "text",
       "variable": "sap_source_image_family",
-      "default": "rhel-7-7-sap-ha",
-      "choices": ["rhel-7-4-sap", "rhel-7-6-sap-ha", "rhel-7-7-sap-ha", "rhel-8-1-sap-ha", "sles-12-sp3-bg"]
+      "min": 1,
+      "max": 1024,
+      "default": "rhel-7-7-sap-ha"
     },
     {
       "question_name": "Image project",
       "question_description": "Project of the image used to create machines.",
       "required": true,
-      "type": "multiplechoice",
+      "type": "text",
       "variable": "sap_source_image_project",
-      "default": "rhel-sap-cloud",
-      "choices": ["rhel-sap-cloud", "suse-sap-cloud", "albatross-duncanl-sandbox-2"]
+      "min": 1,
+      "max": 1024,
+      "default": "rhel-sap-cloud"
     },
     {
       "question_name": "Instance type",
@@ -131,7 +133,7 @@
       "type": "password",
       "variable": "sap_hana_password",
       "min": 1,
-      "max": 100,
+      "max": 100
     },
     {
       "question_name": "Zone",
