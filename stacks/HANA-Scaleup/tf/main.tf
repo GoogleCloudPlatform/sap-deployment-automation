@@ -13,10 +13,10 @@ module "hana_scaleup" {
   subnetwork_project    = var.subnetwork_project
   source_image_family   = var.source_image_family
   source_image_project  = var.source_image_project
-  boot_disk_size        = tonumber(var.boot_disk_size)
+  boot_disk_size        = var.boot_disk_size
   boot_disk_type        = var.boot_disk_type
-  autodelete_disk       = tobool(var.autodelete_disk)
+  autodelete_disk       = var.autodelete_disk
   network_tags          = var.network_tags
   pd_kms_key            = var.pd_kms_key
-  create_backup_volume  = tobool(var.create_backup_volume)
+  create_backup_volume  = var.create_backup_volume
 }
