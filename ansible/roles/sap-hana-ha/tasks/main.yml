@@ -16,10 +16,6 @@
   include_role:
     name: sap-hana-download-packages
 
-- name: Include SAP hostagent install role
-  include_role:
-    name: sap-hostagent
-
 - name: Include sap pre-configure role
   include_role:
     name: sap-preconfigure
@@ -37,6 +33,10 @@
 - name: Include sap hana start role
   include_role:
     name: sap-hana-start
+
+- name: Include SAP hostagent install role
+  include_role:
+    name: sap-hostagent
 
 - name: Include sap hana ssfs copy keys role
   include_role:
