@@ -72,15 +72,15 @@
       validate_certs: false
   - name: add tower localhost inventory
     tower_inventory:
-      name: localhost
+      name: default
       organization: Default
       tower_host: http://localhost
       tower_username: admin
       tower_password: password
       validate_certs: false
-  - name: add host to tower localhost inventory
+  - name: add localhost to tower default inventory
     tower_host:
-      inventory: localhost
+      inventory: default
       name: localhost
       tower_host: http://localhost
       tower_username: admin
@@ -91,11 +91,11 @@
       src: '{{ awx_project_path }}/stacks/{{ item }}/awx_survey_spec.json'
     register: job_survey_specs
     loop: '{{ job_directories.stdout_lines }}'
-  - name: add tower job templates
+  - name: add quickstart tower job templates
     tower_job_template:
       name: '{{ item.0 }}'
       concurrent_jobs_enabled: true
-      inventory: localhost
+      inventory: default
       job_type: run
       playbook: 'stacks/{{ item.0 }}/playbook.yml'
       project: '{{ awx_project_name }}'
@@ -106,3 +106,20 @@
       tower_password: password
       validate_certs: false
     loop: '{{ job_directories.stdout_lines | zip(job_survey_specs.results | map(attribute="content") | map("b64decode")) | list }}'
+  - name: add expert tower job templates
+    tower_job_template:
+      name: '{{ item }} (Expert Mode)'
+      ask_extra_vars: true
+      ask_inventory: true
+      ask_skip_tags: true
+      ask_tags: true
+      concurrent_jobs_enabled: true
+      inventory: default
+      job_type: run
+      playbook: 'stacks/{{ item }}/playbook.yml'
+      project: '{{ awx_project_name }}'
+      tower_host: http://localhost
+      tower_username: admin
+      tower_password: password
+      validate_certs: false
+    loop: '{{ job_directories.stdout_lines }}'
