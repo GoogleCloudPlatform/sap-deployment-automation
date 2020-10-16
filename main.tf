@@ -3,10 +3,12 @@ locals {
     nat_ip              = null
     network_tier        = "PREMIUM"
   }] : []
+  awx_tag               = "awx"
   iap_range             = "35.235.240.0/20"
   network_parts         = split("/", data.google_compute_subnetwork.subnetwork.network)
   network               = element(local.network_parts, length(local.network_parts) - 1)
   subnetwork_project_id = var.subnetwork_project_id != "" ? var.subnetwork_project_id : var.project_id
+  tags                  = toset(concat([local.awx_tag], var.tags))
 }
 
 data "google_compute_subnetwork" "subnetwork" {
@@ -24,7 +26,7 @@ resource "google_compute_firewall" "allow_iap" {
   }
   project       = local.subnetwork_project_id
   source_ranges = [local.iap_range]
-  target_tags   = var.tags
+  target_tags   = [local.awx_tag]
 }
 
 module "service_account" {
@@ -62,7 +64,7 @@ module "instance_template" {
   source_image_project = var.source_image_project
   subnetwork           = var.subnetwork
   subnetwork_project   = local.subnetwork_project_id
-  tags                 = var.tags
+  tags                 = local.tags
 }
 
 module "compute_instance" {
