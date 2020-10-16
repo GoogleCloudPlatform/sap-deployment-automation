@@ -133,8 +133,8 @@ variable "service_label" {
 }
 
 variable "ilb_required" {
-  type = bool
+  type        = bool
   description = "flag to create resources"
-  default = true
+  default     = true
 }
 
