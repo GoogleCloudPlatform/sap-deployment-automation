@@ -51,6 +51,6 @@ variable "source_image_project" {
 
 variable "tags" {
   type           = list(string)
-  description    = "List of network tags to assign to instance."
+  description    = "List of network tags to assign to instance, in addition to the tag `awx`."
   default        = []
 }
