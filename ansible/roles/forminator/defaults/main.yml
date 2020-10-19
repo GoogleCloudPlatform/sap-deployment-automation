@@ -1,5 +1,10 @@
 ---
 sap_state: present
+sap_cache_dir: '{{ playbook_dir }}/../../.cache'
+sap_tf_version: 0.12.29
+sap_tf_arch: amd64
+sap_tf_archive: terraform_{{ sap_tf_version }}_{{ ansible_system | lower }}_{{ sap_tf_arch }}.zip
+sap_tf_download_url: 'https://releases.hashicorp.com/terraform/{{ sap_tf_version }}/{{ sap_tf_archive }}'
 sap_tf_variables: {}
 sap_tf_variables_defaults:
   gce_ssh_user: '{{ sap_ssh_user }}'

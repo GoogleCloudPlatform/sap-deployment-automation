@@ -1,4 +1,11 @@
 ---
+- name: ensure state bucket exists
+  gcp_storage_bucket:
+    name: '{{ sap_tf_state_bucket }}'
+    auth_kind: application
+    project: '{{ sap_project_id }}'
+  when: sap_state == 'present'
+
 - name: check if ssh key files are present
   stat:
     path: '{{ item }}'
@@ -55,6 +62,43 @@
   when: false in stat_ssh_key_files_exists
 
 - block:
+  - name: check for existing terraform executable
+    command: which terraform
+    register: existing_tf_exec
+    changed_when: false
+    failed_when: false
+  - name: check for existing terraform version
+    command: '{{ existing_tf_exec.stdout }} version'
+    register: existing_tf_version
+    changed_when: false
+    when: existing_tf_exec.rc == 0
+  - name: define if existing terraform version is correct
+    set_fact:
+      existing_tf_version_correct: '{{
+        "stdout_lines" in existing_tf_version and existing_tf_version.stdout_lines and
+        existing_tf_version.stdout_lines[0] == "Terraform v{}".format(sap_tf_version)
+      }}'
+  - name: ensure cache directory exists
+    file:
+      path: '{{ sap_cache_dir }}'
+      state: directory
+    when: not existing_tf_version_correct
+  - name: download and unarchive terraform
+    unarchive:
+      src: '{{ sap_tf_download_url }}'
+      dest: '{{ sap_cache_dir }}'
+      remote_src: true
+    when: not existing_tf_version_correct
+  - name: define terraform executable
+    set_fact:
+      sap_tf_exec: '{{ existing_tf_exec.stdout }}'
+    when: existing_tf_version_correct
+  - name: define terraform executable
+    set_fact:
+      sap_tf_exec: '{{ sap_cache_dir }}/terraform'
+    when: not existing_tf_version_correct
+
+- block:
   - name: create a tempdir for terraform variables
     tempfile:
       state: directory
@@ -70,6 +114,7 @@
       backend_config:
         bucket: '{{ sap_tf_state_bucket }}'
         prefix: '{{ sap_tf_state_bucket_prefix }}'
+      binary_path: '{{ sap_tf_exec }}'
       force_init: true
       project_path: '{{ sap_tf_project_path }}'
       state: '{{ sap_state }}'

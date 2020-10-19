@@ -7,7 +7,7 @@
     "source-image-family": "debian-10",
     "source-image-project-id": "debian-cloud",
     "subnetwork": "",
-    "terraform-version": "0.12.28",
+    "terraform-version": "0.12.29",
     "zone": "us-central1-a"
   },
   "builders": [{
