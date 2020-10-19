@@ -7,8 +7,14 @@ ARCH=${ARCH:-amd64}
 
 fail()
 {
-    printf "${1}\n"
+    printf >&2 "${1}\n"
     exit 1
+}
+
+warn()
+{
+    printf >&2 "${1}\n"
+    return 1
 }
 
 usage()
@@ -30,23 +36,29 @@ retrieve_terraform()
     local os=`uname -s | tr [:upper:] [:lower:]`
     local tf_archive="terraform_${TF_VERSION}_${os}_${ARCH}.zip"
     local url="https://releases.hashicorp.com/terraform/${TF_VERSION}/${tf_archive}"
-    curl -sLO ${url}
+
+    echo >&2 "Downloading Terraform archive ${tf_archive}..."
+    curl -sLOf ${url} || fail "Failed to download Terraform archive ${tf_archive}..."
+
+    echo >&2 "Extracting ${tf_archive} to ./terraform..."
     rm -f ./terraform
-    unzip -qq ${tf_archive} terraform
+    unzip -qq ${tf_archive} terraform || fail "Failed to extract ${tf_archive}..."
     rm -f ${tf_archive}
 }
 
 check_terraform_version()
 {
     local tf_exec=${1}
-    if "${tf_exec}" version | head -n 1 | grep -q "Terraform v${TF_VERSION}"; then
+    local tf_version=`${tf_exec} version | head -n 1`
+    if [ "${tf_version}" = "Terraform v${TF_VERSION}" ]; then
+	echo >&2 "Terraform executable ${tf_exec} version matches v${TF_VERSION}..."
         echo "${tf_exec}"
         return
     fi
-    return 1
+    warn "Terraform executable ${tf_exec} has version ${tf_version}, wanted v${TF_VERSION}..."
 }
 
-find_existing_terraform()
+find_terraform()
 {
     if [ -x ./terraform ]; then
         check_terraform_version ./terraform && return
@@ -57,25 +69,19 @@ find_existing_terraform()
     fi
 }
 
-find_terraform()
-{
-    local tf_exec=`find_existing_terraform`
-    if [ -n "${tf_exec}" ]; then
-	echo "${tf_exec}"
-	return
-    fi
-    retrieve_terraform
-    echo ./terraform
-}
-
 run_terraform()
 {
     local instance_name=${1}
     local project_id=${2}
     local subnetwork=${3}
     local proceed=${4}
+    local destroy=${5}
 
     local tf_exec=`find_terraform`
+    if [ -z "${tf_exec}" ]; then
+	retrieve_terraform
+	tf_exec=./terraform
+    fi
 
     ${tf_exec} init
     ${tf_exec} plan -out plan.out \
@@ -84,10 +90,8 @@ run_terraform()
         -var subnetwork=${subnetwork} ${destroy}
 
     if [ "${proceed}" != 1 ]; then
-        printf "Please review any changes above. Do you wish to proceed? [yN] "
+        printf "Please review any changes above. Do you want to continue (y/N)?  "
         read input
-
-        proceed=0
         echo "${input}" | grep -qE '[Yy]([Ee][Ss])?' && proceed=1
     fi
 
@@ -113,6 +117,7 @@ ensure_auth()
 {
     local credentials=`find_credentials`
     if [ -z "${credentials}" ]; then
+        echo >&2 "Retrieving GCP credentials..."
         gcloud auth application-default login
     fi
     credentials=`find_credentials`
