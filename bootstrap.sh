@@ -118,7 +118,7 @@ ensure_auth()
     local credentials=`find_credentials`
     if [ -z "${credentials}" ]; then
         echo >&2 "Retrieving GCP credentials..."
-        gcloud auth application-default login
+        gcloud --quiet auth application-default login
     fi
     credentials=`find_credentials`
     if [ -z "${credentials}" ]; then
