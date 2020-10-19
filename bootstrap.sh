@@ -98,6 +98,31 @@ run_terraform()
     fi
 }
 
+find_credentials()
+{
+    local credentials_file=application_default_credentials.json
+    for directory in "${HOME}/.config/gcloud" "${CLOUDSDK_CONFIG}"; do
+        if [ -r "${directory}/${credentials_file}" ]; then
+            echo "${directory}/${credentials_file}"
+            return
+        fi
+    done
+}
+
+ensure_auth()
+{
+    local credentials=`find_credentials`
+    if [ -z "${credentials}" ]; then
+        gcloud auth application-default login
+    fi
+    credentials=`find_credentials`
+    if [ -z "${credentials}" ]; then
+       echo >&2 "No GCP credentials found..."
+       return 1
+    fi
+    export GOOGLE_APPLICATION_CREDENTIALS=${credentials}
+}
+
 while getopts "i:p:s:ydh" flag; do
     case ${flag} in
       i) instance_name=${OPTARG}
@@ -119,7 +144,8 @@ done
 [ -n "${project_id}" ]    || usage
 [ -n "${subnetwork}" ]    || usage
 
-which curl  1>/dev/null || fail "curl is required"
-which unzip 1>/dev/null || fail "unzip is required"
+which curl 1>/dev/null    || fail "curl is required"
+which gcloud 1>/dev/null  || fail "gcloud is required"
+which unzip 1>/dev/null   || fail "unzip is required"
 
-run_terraform ${instance_name} ${project_id} ${subnetwork} ${proceed}
+ensure_auth && run_terraform "${instance_name}" "${project_id}" "${subnetwork}" "${proceed}" "${destroy}"
