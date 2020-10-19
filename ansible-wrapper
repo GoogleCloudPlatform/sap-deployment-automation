@@ -1,0 +1,41 @@
+#!/bin/sh
+
+set -e
+
+PYTHON_BASE=${PYTHON_BASE:-`pwd`/.cache/virtualenv}
+
+fail()
+{
+    printf >&2 "${1}\n"
+    exit 1
+}
+
+find_venv()
+{
+    if which python3 1>/dev/null; then
+        python3 -m venv --help >/dev/null 2>&1
+        if [ ${?} -eq 0 ]; then
+            echo 'python3 -m venv'
+            return
+        fi
+    fi
+    which virtualenv
+}
+
+ensure_venv()
+{
+    if [ ! -x ${PYTHON_BASE}/bin/pip ]; then
+        venv=`find_venv`
+        if [ -z "${venv}" ]; then
+            fail "Python 3 with the venv module or Python 2 with virtualenv must be installed..."
+        fi
+        ${venv} --system-site-packages ${PYTHON_BASE}
+    fi
+    if [ ! -f requirements.txt ]; then
+        fail "No requirements.txt found. This must be run from the root of the repository..."
+    fi
+    ${PYTHON_BASE}/bin/pip install -r requirements.txt
+}
+
+ensure_venv
+${PYTHON_BASE}/bin/ansible-playbook ${@}
