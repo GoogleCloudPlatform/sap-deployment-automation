@@ -123,3 +123,6 @@
       tower_password: password
       validate_certs: false
     loop: '{{ job_directories.stdout_lines }}'
+  - name: intentionally exit with error in dev mode to prevent image being created
+    command: 'false'
+    when: dev_mode | bool

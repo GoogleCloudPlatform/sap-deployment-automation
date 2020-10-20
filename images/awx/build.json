@@ -4,6 +4,7 @@
     "image-version": "",
     "keep-inventory-file": "false",
     "project-id": "",
+    "service-account-email": "",
     "source-image-family": "debian-10",
     "source-image-project-id": "debian-cloud",
     "subnetwork": "",
@@ -15,6 +16,7 @@
     "image_name": "sap-awx-{{ user `image-version` }}",
     "image_family": "sap-awx",
     "project_id": "{{ user `project-id` }}",
+    "service_account_email": "{{ user `service-account-email` }}",
     "source_image_family": "{{ user `source-image-family` }}",
     "source_image_project_id": "{{ user `source-image-project-id` }}",
     "subnetwork": "{{ user `subnetwork` }}",
@@ -61,7 +63,8 @@
       "user": "packer",
       "extra_arguments": [
         "-e", "ansible_python_interpreter=/usr/bin/python3",
-        "-e", "git_repo={{ user `git-repo` }}"
+        "-e", "git_repo={{ user `git-repo` }}",
+        "-e", "dev_mode={{ user `keep-inventory-file` }}"
       ]
     },
     {
