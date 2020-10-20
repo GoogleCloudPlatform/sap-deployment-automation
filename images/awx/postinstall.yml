@@ -93,7 +93,7 @@
     loop: '{{ job_directories.stdout_lines }}'
   - name: add quickstart tower job templates
     tower_job_template:
-      name: '{{ item.0 }}'
+      name: 'Quickstart Mode - {{ item.0 }}'
       concurrent_jobs_enabled: true
       inventory: default
       job_type: run
@@ -108,7 +108,7 @@
     loop: '{{ job_directories.stdout_lines | zip(job_survey_specs.results | map(attribute="content") | map("b64decode")) | list }}'
   - name: add expert tower job templates
     tower_job_template:
-      name: '{{ item }} (Expert Mode)'
+      name: 'Expert Mode - {{ item }}'
       ask_extra_vars: true
       ask_inventory: true
       ask_skip_tags: true
