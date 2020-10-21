@@ -6,5 +6,5 @@ sap_instance_zone: us-central1-a
 sap_subnetwork_project_id: '{{ sap_project_id }}'
 sap_subnetwork: app2
 sap_hana_network_tags: ["allow-ssh", "allow-hana-ports-allow-all"]
-sap_service_account_name: sap-common-sa
+sap_service_account_name: "sap-common-sa@{{ sap_project_id }}.iam.gserviceaccount.com"
 sap_nat_create: false

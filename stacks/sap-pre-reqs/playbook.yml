@@ -14,5 +14,5 @@
         subnetwork: '{{ sap_subnetwork }}'
         subnetwork_project: '{{ sap_subnetwork_project_id | default(sap_project_id) }}'
         zone: '{{ sap_instance_zone | default("us-central1-a") }}'
-        sap_service_account_name: '{{ sap_service_account_name | default("") }}'
+        sap_service_account_name: '{{ sap_service_account_name }}'
         nat_create: '{{ sap_nat_create | default(false) }}'

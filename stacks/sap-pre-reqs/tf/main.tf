@@ -8,5 +8,5 @@ module "sap_sa" {
   subnetwork_project       = var.subnetwork_project
   network_tags             = var.network_tags
   nat_create               = var.nat_create
-  sap_service_account_name = var.sap_service_account_name
+  sap_service_account_name = element(split("@", var.sap_service_account_name), 0)
 }
