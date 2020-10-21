@@ -14,7 +14,7 @@ sap_tf_state_bucket_prefix: hanslbg
 
 # Terraform hana variables (required)
 sap_hana_instance_name: hanslbg
-sap_hana_service_account_email: terraform-managed-sa@albatross-duncanl-sandbox-2.iam.gserviceaccount.com
+sap_hana_service_account_email: "sap-common-sa@{{ sap_project_id }}.iam.gserviceaccount.com"
 
 # Terraform hana variables (optional)
 sap_hana_instance_type: n1-highmem-32
