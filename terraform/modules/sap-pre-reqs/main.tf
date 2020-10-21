@@ -8,20 +8,19 @@ data "google_compute_subnetwork" "subnetwork" {
 }
 
 # IAM policy for host project in shared VPC
-data "google_iam_policy" "sap_host_iam_policy" {
-  binding {
-    role = "roles/compute.networkUser"
-    members = [
-      "serviceAccount:${google_service_account.sap_service_account.email}"
-    ]
-  }
-  binding {
-    role = "roles/iam.serviceAccountUser"
 
-    members = [
-      "serviceAccount:${google_service_account.sap_service_account.email}"
-    ]
-  }
+resource "google_project_iam_member" "project_network_user" {
+  count   = var.subnetwork_project != var.project_id ? 1 : 0
+  project = var.subnetwork_project
+  role    = "roles/compute.networkUser"
+  member  = "serviceAccount:${google_service_account.sap_service_account.email}"
+}
+
+resource "google_project_iam_member" "project_sa_user" {
+  count   = var.subnetwork_project != var.project_id ? 1 : 0
+  project = var.subnetwork_project
+  role    = "roles/iam.serviceAccountUser"
+  member  = "serviceAccount:${google_service_account.sap_service_account.email}"
 }
 
 resource "random_id" "server" {
@@ -54,12 +53,6 @@ resource "google_project_iam_member" "sap_sa_iam_mem_service" {
   project = var.project_id
   role    = each.value
   member  = "serviceAccount:${google_service_account.sap_service_account.email}"
-}
-
-resource "google_project_iam_policy" "sap_host_proj_iam_policy" {
-  count       = var.subnetwork_project != var.project_id ? 1 : 0
-  project     = var.subnetwork_project
-  policy_data = data.google_iam_policy.sap_host_iam_policy.policy_data
 }
 
 resource "google_compute_project_metadata" "vm_dns_setting" {
