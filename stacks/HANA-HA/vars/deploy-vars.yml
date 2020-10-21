@@ -26,7 +26,7 @@ sap_hana_instance_type: n1-highmem-32
 sap_hana_autodelete_boot_disk: "true"
 sap_hana_boot_disk_size: 30
 sap_hana_boot_disk_type: pd-ssd
-sap_hana_network_tags: ["allow-ssh", "allow-hana-ports-tcp-icmp-udp-0-65535"]
+sap_hana_network_tags: ["allow-ssh", "allow-hana-ports-allow-all"]
 sap_hana_target_instance_size: 1
 sap_hana_pd_kms_key: null
 sap_hana_create_backup_volume: "true"
