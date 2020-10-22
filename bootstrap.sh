@@ -19,14 +19,15 @@ warn()
 
 usage()
 {
-    msg="Usage: ${0} -i <instance-name> -p <project-id> -s <subnetwork> [-y] [-d] [-h]\n"
+    msg="Usage: ${0} -i <instance-name> -p <project-id> -s <subnetwork> [-P <subnetwork-project-id>] [-y] [-d] [-h]\n"
     msg="${msg}    -i <instance-name>  Name given to AWX instance.\n"
-    msg="${msg}    -p <project-id>     ID of GCP project.\n"
-    msg="${msg}    -s <subnetwork>     Subnetwork in which AWX instance is created.\n"
-    msg="${msg}    -y                  Answer yes to proceed to create or destroy resources.\n"
-    msg="${msg}    -d                  Destroy an instance which was previously\n"
-    msg="${msg}                        created with the same parameters.\n"
-    msg="${msg}    -h                  Help message.\n"
+    msg="${msg}    -p <project-id>            ID of GCP project.\n"
+    msg="${msg}    -s <subnetwork>            Subnetwork in which AWX instance is created.\n"
+    msg="${msg}    -P <subnetwork-project-id> ID of subnetwork project, if using a shared VPC.\n"
+    msg="${msg}    -y                         Answer yes to proceed to create or destroy resources.\n"
+    msg="${msg}    -d                         Destroy an instance which was previously\n"
+    msg="${msg}                               created with the same parameters.\n"
+    msg="${msg}    -h                         Help message.\n"
 
     fail "${msg}"
 }
@@ -74,8 +75,9 @@ run_terraform()
     local instance_name=${1}
     local project_id=${2}
     local subnetwork=${3}
-    local proceed=${4}
-    local destroy=${5}
+    local subnetwork_project_id=${4}
+    local proceed=${5}
+    local destroy=${6}
 
     local tf_exec=`find_terraform`
     if [ -z "${tf_exec}" ]; then
@@ -87,7 +89,9 @@ run_terraform()
     ${tf_exec} plan -out plan.out \
         -var instance_name=${instance_name} \
         -var project_id=${project_id} \
-        -var subnetwork=${subnetwork} ${destroy}
+        -var subnetwork=${subnetwork} \
+        -var subnetwork_project_id=${subnetwork_project_id} \
+        ${destroy}
 
     if [ "${proceed}" != 1 ]; then
         printf "Please review any changes above. Do you want to continue (y/N)?  "
@@ -128,13 +132,15 @@ ensure_auth()
     export GOOGLE_APPLICATION_CREDENTIALS=${credentials}
 }
 
-while getopts "i:p:s:ydh" flag; do
+while getopts "i:p:s:P:ydh" flag; do
     case ${flag} in
       i) instance_name=${OPTARG}
         ;;
       p) project_id=${OPTARG}
         ;;
       s) subnetwork=${OPTARG}
+        ;;
+      P) subnetwork_project_id=${OPTARG}
         ;;
       y) proceed=1
         ;;
@@ -153,4 +159,10 @@ which curl 1>/dev/null    || fail "curl is required"
 which gcloud 1>/dev/null  || fail "gcloud is required"
 which unzip 1>/dev/null   || fail "unzip is required"
 
-ensure_auth && run_terraform "${instance_name}" "${project_id}" "${subnetwork}" "${proceed}" "${destroy}"
+ensure_auth && run_terraform \
+    "${instance_name}" \
+    "${project_id}" \
+    "${subnetwork}" \
+    "${subnetwork_project_id}" \
+    "${proceed}" \
+    "${destroy}"

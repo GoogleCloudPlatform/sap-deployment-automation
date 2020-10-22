@@ -10,6 +10,12 @@ A script called `bootstrap.sh` is provided that downloads and runs Terraform in 
 ./bootstrap.sh -i <instance-name> -p <project-id> -s <subnetwork>
 ```
 
+Add `-P` if running in a shared VPC:
+
+```
+./bootstrap.sh -i <instance-name> -p <project-id> -s <subnetwork> -P <subnetwork-project-id>
+```
+
 ## Example
 
 You can run Terraform directly without the `bootstrap.sh` script. An example is provided below.
