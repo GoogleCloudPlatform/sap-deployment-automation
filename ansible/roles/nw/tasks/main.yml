@@ -31,5 +31,5 @@
      SAPINST_SKIP_DIALOGS=true SAPINST_START_GUISERVER=false
   register: installnw
   args:
-    chdir: "{{ sap_nw_sapcar_path }}"
+    chdir: "{{ sap_product_vars[sap_product_and_version].sap_nw_sapcar_path }}"
   when: false in stat_sap_nw_installed_files.results | map(attribute="stat") | map(attribute="exists") | list

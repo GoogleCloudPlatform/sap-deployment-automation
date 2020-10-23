@@ -1,4 +1,7 @@
 ---
+- name: Define install file name
+  set_fact:
+    sap_hana_install_file_name: '{{ sap_product_vars[sap_product_and_version].sap_hana_install_file_name }}'
 
 - name: Create temporary directory to store the processed template
   tempfile:
@@ -60,7 +63,9 @@
 - name: Install SAP HANA from SAR
   block:
     - name: Extract SAR Archive
-      command: "./{{ sap_hana_sapcar_file_name }} -manifest SIGNATURE.SMF -xvf  {{ sap_hana_install_file_name }}"
+      command: >-
+        ./{{ sap_product_vars[sap_product_and_version].sap_hana_sapcar_file_name }}
+        -manifest SIGNATURE.SMF -xvf {{ sap_hana_install_file_name }}
       args:
         chdir: "{{ sap_hostagent_rpm_remote_path }}"
         creates: "{{ sap_hostagent_rpm_remote_path }}/SAP_HANA_DATABASE/hdblcm"
@@ -90,9 +95,14 @@
 
 - name: Install SAP HANA from ZIP
   block:
+    - name: Identify EXE archive install file
+      find:
+        paths: "{{ sap_hostagent_rpm_remote_path }}"
+        patterns: "*.ZIP"
+      register: zip_install_file
     - name: Extract ZIP Archive
       unarchive:
-        src: "{{ sap_hana_install_file_name }}"
+        src: "{{ zip_install_file.files.0.path }}"
         dest: "{{ sap_hostagent_rpm_remote_path }}"
         remote_src: yes
       register: sap_hana_deployment_register_extractzip

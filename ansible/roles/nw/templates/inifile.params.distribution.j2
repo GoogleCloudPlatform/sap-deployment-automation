@@ -18,7 +18,7 @@ NW_HDB_getDBInfo.dbsid = {{ sap_hana_sid }}
 NW_HDB_getDBInfo.instanceNumber = {{ sap_hana_instance_number }}
 archives.downloadBasket = {{ sap_nw_software_path }}
 SAPINST.CD.PACKAGE.KERNEL = {{ sap_nw_software_path }}
-SAPINST.CD.PACKAGE.LOAD = {{ sap_nw_sapinst_package_load }}
+SAPINST.CD.PACKAGE.LOAD = {{ sap_product_vars[sap_product_and_version].sap_nw_sapinst_package_load }}
 SAPINST.CD.PACKAGE.RDBMS = {{ sap_nw_sapinst_package_client }}
 
 # Specify whether Software Provisioning Manager is to validate the schema name. The schema name must only contain numbers and capital letters. It  must not start with '_' . It cannot be 'SYS' or 'SYSTEM'.
@@ -136,10 +136,10 @@ NW_System.installSAPHostAgent = false
 # NW_Unpack.dbaToolsSar =
 
 # DEPRECATED, DO NOT USE!
-NW_Unpack.igsExeSar = "{{ sap_nw_igs_path }}/{{ sap_nw_igs_file_name }}"
+NW_Unpack.igsExeSar = "{{ sap_nw_igs_path }}/{{ sap_product_vars[sap_product_and_version].sap_nw_igs_file_name }}"
 
 # DEPRECATED, DO NOT USE!
-NW_Unpack.igsHelperSar = "{{ sap_nw_igs_helper_path }}/{{ sap_nw_igs_helper_file_name }}"
+NW_Unpack.igsHelperSar = "{{ sap_nw_igs_helper_path }}/{{ sap_product_vars[sap_product_and_version].sap_nw_igs_helper_file_name }}"
 
 # DEPRECATED, DO NOT USE!
 # NW_Unpack.sapExeDbSar =

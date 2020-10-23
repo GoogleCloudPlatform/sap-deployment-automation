@@ -1,11 +1,14 @@
-sap_install_files_bucket_path: nw-ansible
-sap_hana_install_file_name: 51*
-sap_hana_sapcar_file_name: SAPCAR_1320-80000935.EXE
-sap_hostagent_rpm_file_name: saphostagentrpm_44-20009394.rpm
-sap_download_packages:
-  - "{{ sap_hana_install_file_name }}"
-  - "{{ sap_hana_sapcar_file_name }}"
-  - "{{ sap_hostagent_rpm_file_name }}"
+sap_hana_product_version: 20SPS03
+sap_product_and_version: 'HANA/{{ sap_hana_product_version }}'
+sap_product_vars:
+  'HANA/20SPS03':
+    sap_hana_install_file_name: '51.*\.(rar|exe)'
+    sap_hana_sapcar_file_name: SAPCAR_1320-80000935.EXE
+    sap_hostagent_rpm_file_name: saphostagentrpm_44-20009394.rpm
+  'HANA/20SPS04':
+    sap_hana_install_file_name: '51.*\.ZIP'
+    sap_hana_sapcar_file_name: SAPCAR_1320-80000935.EXE
+    sap_hostagent_rpm_file_name: saphostagentrpm_44-20009394.rpm
 sap_hostagent_rpm_remote_path: "/hana/shared/software"
 sap_hana_data_partition_name: hanadata
 sap_hana_backup_partition_name: hanabackup

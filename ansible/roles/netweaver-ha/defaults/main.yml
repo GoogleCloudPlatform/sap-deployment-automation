@@ -1,28 +1,13 @@
 sap_domain: '{{ ansible_domain }}'
 
 sap_nw_sapinst_package_client: /sapmnt/Software/HANA_CLIENT
-sap_nw_sapinst_package_load: /sapmnt/Software/NW75
 sap_nw_sapinst_package_kernel: /sapmnt/Software/Kernel_Files
-sap_nw_sapcar_path: /sapmnt/Software/SWPM1.0
 sap_nw_install_files_dest: /sapmnt/Software
-sap_nw_install_files:
-- HANA_CLIENT
-- Kernel_Files
-- SAPCAR
-- NW75
-- SWPM1.0
 sap_nw_archives_downloadbasket: /sapmnt/Software/Kernel_Files
 sap_nw_ascs_instance_number: '06'
 sap_nw_ers_instance_number: '16'
-sap_nw_db_product_id: 'NW_ABAP_DB:NW750.HDB.ABAPHA'
-sap_nw_pas_product_id: 'NW_ABAP_CI:NW750.HDB.ABAPHA'
-sap_nw_ascs_product_id: 'NW_ABAP_ASCS:NW750.HDB.ABAPHA'
-sap_nw_ers_product_id: 'NW_ERS:NW750.HDB.ABAPHA'
-sap_nw_user_product_id: 'NW_Users_Create:GENERIC.SYB.PD'
 sap_nw_igs_path: /sapmnt/Software/Kernel_Files
-sap_nw_igs_file_name: igsexe_4-80003187.sar
 sap_nw_igs_helper_path: /sapmnt/Software/Kernel_Files
-sap_nw_igs_helper_file_name: igshelper_17-10010245.sar
 sap_nw_software_path: /sapmnt/Software/Kernel_Files
 sap_nw_ci_instance_number: '06'
 sap_nw_ci_ms_port: '3906'
@@ -57,3 +42,64 @@ sap_nw_nfsvols: '{{ {
   sap_nw_ascs_nfs_mount_src: sap_nw_ascs_nfs_mount_dest,
   sap_nw_ers_nfs_mount_src: sap_nw_ers_nfs_mount_dest
 } }}'
+
+sap_nw_product: 'NetWeaver'
+sap_nw_product_version: '750'
+sap_product_and_version: '{{ sap_nw_product }}/{{ sap_nw_product_version }}'
+# sap_nw_product and sap_nw_product_version must be set to one of the <product>/<version> combos in sap_product_vars.
+sap_product_vars:
+  'NetWeaver/750':
+    sap_nw_db_product_id: 'NW_ABAP_DB:NW750.HDB.ABAPHA'
+    sap_nw_pas_product_id: 'NW_ABAP_CI:NW750.HDB.ABAPHA'
+    sap_nw_ascs_product_id: 'NW_ABAP_ASCS:NW750.HDB.ABAPHA'
+    sap_nw_ers_product_id: 'NW_ERS:NW750.HDB.ABAPHA'
+    sap_nw_user_product_id: 'NW_Users_Create:GENERIC.SYB.PD'
+    sap_nw_igs_file_name: igsexe_4-80003187.sar
+    sap_nw_igs_helper_file_name: igshelper_17-10010245.sar
+    sap_nw_sapcar_path: /sapmnt/Software/SWPM1.0
+    sap_nw_sapinst_package_load: /sapmnt/Software/NW75
+    sap_nw_install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM1.0]
+  'NetWeaver/751':
+    sap_nw_db_product_id: 'NW_ABAP_DB:NW751.HDB.ABAPHA'
+    sap_nw_pas_product_id: 'NW_ABAP_CI:NW751.HDB.ABAPHA'
+    sap_nw_ascs_product_id: 'NW_ABAP_ASCS:NW751.HDB.ABAPHA'
+    sap_nw_ers_product_id: 'NW_ERS:NW751.HDB.ABAPHA'
+    sap_nw_user_product_id: 'NW_Users_Create:GENERIC.SYB.PD'
+    sap_nw_igs_file_name: igsexe_4-80003187.sar
+    sap_nw_igs_helper_file_name: igshelper_17-10010245.sar
+    sap_nw_sapcar_path: /sapmnt/Software/SWPM1.0
+    sap_nw_sapinst_package_load: /sapmnt/Software/NW75
+    sap_nw_install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM1.0]
+  'NetWeaver/752':
+    sap_nw_db_product_id: 'NW_ABAP_DB:NW752.HDB.ABAPHA'
+    sap_nw_pas_product_id: 'NW_ABAP_CI:NW752.HDB.ABAPHA'
+    sap_nw_ascs_product_id: 'NW_ABAP_ASCS:NW752.HDB.ABAPHA'
+    sap_nw_ers_product_id: 'NW_ERS:NW752.HDB.ABAPHA'
+    sap_nw_user_product_id: 'NW_Users_Create:GENERIC.SYB.PD'
+    sap_nw_igs_file_name: igsexe_4-80003187.sar
+    sap_nw_igs_helper_file_name: igshelper_17-10010245.sar
+    sap_nw_sapcar_path: /sapmnt/Software/SWPM1.0
+    sap_nw_sapinst_package_load: /sapmnt/Software/NW75
+    sap_nw_install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM1.0]
+  'S4HANA/1709':
+    sap_nw_db_product_id: 'NW_ABAP_DB:S4HANA1709.CORE.HDB.ABAPHA'
+    sap_nw_pas_product_id: 'NW_ABAP_CI:S4HANA1709.CORE.HDB.ABAPHA'
+    sap_nw_ascs_product_id: 'NW_ABAP_ASCS:S4HANA1709.CORE.HDB.ABAPHA'
+    sap_nw_ers_product_id: 'NW_ERS:S4HANA1709.CORE.HDB.ABAPHA'
+    sap_nw_user_product_id: 'NW_Users_Create:GENERIC.SYB.PD'
+    sap_nw_igs_file_name: igsexe_4-80003187.sar
+    sap_nw_igs_helper_file_name: igshelper_17-10010245.sar
+    sap_nw_sapcar_path: /sapmnt/Software/SWPM1.0
+    sap_nw_sapinst_package_load: /sapmnt/Software/S4HANA_Export
+    sap_nw_install_files: [HANA_CLIENT, Kernel_Files, S4HANA_Export, SWPM1.0]
+  'S4HANA/1809':
+    sap_nw_db_product_id: 'NW_ABAP_DB:S4HANA1809.HDB.ABAPHA'
+    sap_nw_pas_product_id: 'NW_ABAP_CI:S4HANA1809.CORE.HDB.ABAPHA'
+    sap_nw_ascs_product_id: 'NW_ABAP_ASCS:S4HANA1809.CORE.HDB.ABAPHA'
+    sap_nw_ers_product_id: 'NW_DI:S4HANA1809.CORE.HDB.ABAPHA'
+    sap_nw_user_product_id: 'NW_Users_Create:GENERIC.HDB.PD'
+    sap_nw_igs_file_name: igsexe_6-80003187.sar
+    sap_nw_igs_helper_file_name: igshelper_17-10010245.sar
+    sap_nw_sapcar_path: /sapmnt/Software/SWPM20
+    sap_nw_sapinst_package_load: /sapmnt/Software/S4HANA_Export
+    sap_nw_install_files: [Kernel_Files, SWPM20]

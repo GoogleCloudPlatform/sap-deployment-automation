@@ -17,14 +17,26 @@
     state: directory
   when: software_dir.stat.exists == false
 
+- name: Define bucket and prefix
+  set_fact:
+    sap_hana_install_files_bucket_and_prefix: '{{ sap_hana_install_files_bucket }}'
+  when: |
+    '/' in sap_hana_install_files_bucket
+
+- name: Define bucket and prefix
+  set_fact:
+    sap_hana_install_files_bucket_and_prefix: '{{ sap_hana_install_files_bucket }}/{{ sap_product_and_version }}'
+  when: |
+    '/' not in sap_hana_install_files_bucket
+
 - name: Download install files
   shell: |
-    gsutil -m rsync -x '^(?!{{ item }}).*' -r gs://{{ sap_install_files_bucket_path }} {{ sap_hostagent_rpm_remote_path }}
+    gsutil -m rsync -x '^(?!{{ item }}).*' -r gs://{{ sap_hana_install_files_bucket_and_prefix }} {{ sap_hostagent_rpm_remote_path }}
   args:
     creates: "{{ sap_hostagent_rpm_remote_path }}/{{ item }}"
   environment:
     CLOUDSDK_PYTHON: "{{ cloudsdk_python_export_path }}"
-  with_items: "{{ sap_download_packages }}"
+  with_items: "{{ sap_product_vars[sap_product_and_version].values() | list }}"
 
 - name: Change SAP install file permissions
   file:

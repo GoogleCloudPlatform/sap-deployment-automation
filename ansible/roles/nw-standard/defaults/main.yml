@@ -4,24 +4,66 @@ sap_nw_usrsap_disk_size: 50
 sap_nw_sapmnt_disk_size: 50
 sap_nw_swap_disk_size: 28
 sap_nw_install_files_dest: /sapmnt/Software
-sap_nw_install_files:
-- HANA_CLIENT
-- Kernel_Files
-- SAPCAR
-- NW75
-- SWPM1.0
-sap_nw_product_id: "NW_ABAP_OneHost:NW750.HDB.ABAP"
 sap_nw_template: "inifile.params.standard.j2"
 sap_nw_sapinst_package_kernel: /sapmnt/Software/Kernel_Files
-sap_nw_sapcryptofile: SAPEXE_200-80002573.SAR
-sap_nw_igs_file_name: igsexe_4-80003187.sar
-sap_nw_igs_helper_file_name: igshelper_17-10010245.sar
-sap_nw_sapexedbsar: SAPEXEDB_200-80002572.SAR
-sap_nw_sapexesar: SAPEXE_200-80002573.SAR
-sap_nw_sapcar_path: /sapmnt/Software/SWPM1.0
-sap_nw_sapinst_package_load: /sapmnt/Software/NW75
 sap_nw_sapinst_package_client: /sapmnt/Software/HANA_CLIENT
 sap_nw_archives_downloadbasket: /sapmnt/Software/Kernel_Files
 sap_nw_ascs_instance_number: "01"
 sap_nw_pas_instance_number: "02"
 sap_nw_ini_template: inifile.params.standard.j2
+
+sap_nw_product: 'NetWeaver'
+sap_nw_product_version: '750'
+sap_product_and_version: '{{ sap_nw_product }}/{{ sap_nw_product_version }}'
+# sap_nw_product and sap_nw_product_version must be set to one of the <product>/<version> combos in sap_product_vars.
+sap_product_vars:
+  'NetWeaver/750':
+    sap_nw_product_id: 'NW_ABAP_OneHost:NW750.HDB.ABAP'
+    sap_nw_sapcryptofile: SAPEXE_200-80002573.SAR
+    sap_nw_sapexedbsar: SAPEXEDB_200-80002572.SAR
+    sap_nw_sapexesar: SAPEXE_200-80002573.SAR
+    sap_nw_igs_file_name: igsexe_4-80003187.sar
+    sap_nw_igs_helper_file_name: igshelper_17-10010245.sar
+    sap_nw_sapcar_path: /sapmnt/Software/SWPM1.0
+    sap_nw_sapinst_package_load: /sapmnt/Software/NW75
+    sap_nw_install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM1.0]
+  'NetWeaver/751':
+    sap_nw_product_id: 'NW_ABAP_OneHost:NW751.HDB.ABAP'
+    sap_nw_sapcryptofile: SAPEXE_200-80002573.SAR
+    sap_nw_sapexedbsar: SAPEXEDB_200-80002572.SAR
+    sap_nw_sapexesar: SAPEXE_200-80002573.SAR
+    sap_nw_igs_file_name: igsexe_4-80003187.sar
+    sap_nw_igs_helper_file_name: igshelper_17-10010245.sar
+    sap_nw_sapcar_path: /sapmnt/Software/SWPM1.0
+    sap_nw_sapinst_package_load: /sapmnt/Software/NW75
+    sap_nw_install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM1.0]
+  'NetWeaver/752':
+    sap_nw_product_id: 'NW_ABAP_OneHost:NW752.HDB.ABAP'
+    sap_nw_sapcryptofile: SAPEXE_200-80002573.SAR
+    sap_nw_sapexedbsar: SAPEXEDB_200-80002572.SAR
+    sap_nw_sapexesar: SAPEXE_200-80002573.SAR
+    sap_nw_igs_file_name: igsexe_4-80003187.sar
+    sap_nw_igs_helper_file_name: igshelper_17-10010245.sar
+    sap_nw_sapcar_path: /sapmnt/Software/SWPM1.0
+    sap_nw_sapinst_package_load: /sapmnt/Software/NW75
+    sap_nw_install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM1.0]
+  'S4HANA/1709':
+    sap_nw_product_id: 'NW_ABAP_OneHost:S4HANA1709.CORE.HDB.ABAP'
+    sap_nw_sapcryptofile: SAPEXE_200-80002573.SAR
+    sap_nw_sapexedbsar: SAPEXEDB_200-80002572.SAR
+    sap_nw_sapexesar: SAPEXE_200-80002573.SAR
+    sap_nw_igs_file_name: igsexe_4-80003187.sar
+    sap_nw_igs_helper_file_name: igshelper_17-10010245.sar
+    sap_nw_sapcar_path: /sapmnt/Software/SWPM1.0
+    sap_nw_sapinst_package_load: /sapmnt/Software/S4HANA_Export
+    sap_nw_install_files: [HANA_CLIENT, Kernel_Files, S4HANA_Export, SWPM1.0]
+  'S4HANA/1809':
+    sap_nw_product_id: 'NW_ABAP_OneHost:S4HANA1809.CORE.HDB.ABAP'
+    sap_nw_sapcryptofile: SAPEXE_200-80002573.SAR
+    sap_nw_sapexedbsar: SAPEXEDB_300-80003385.SAR
+    sap_nw_sapexesar: SAPEXE_300-80003386.SAR
+    sap_nw_igs_file_name: igsexe_6-80003187.sar
+    sap_nw_igs_helper_file_name: igshelper_17-10010245.sar
+    sap_nw_sapcar_path: /sapmnt/Software/SWPM20
+    sap_nw_sapinst_package_load: /sapmnt/Software/S4HANA_Export
+    sap_nw_install_files: [Kernel_Files, SWPM20]
