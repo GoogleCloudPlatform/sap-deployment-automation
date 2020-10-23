@@ -14,7 +14,7 @@
         source_image_family: '{{ sap_source_image_family }}'
         source_image_project: '{{ sap_source_image_project }}'
         subnetwork: '{{ sap_subnetwork }}'
-        service_account_email: '{{ sap_hana_service_account_email }}'
+        service_account_email: '{{ sap_hana_service_account_email | default("{{ sap_hana_service_account_name }}@{{ sap_project_id }}.iam.gserviceaccount.com") }}'
         subnetwork_project: '{{ sap_subnetwork_project_id | default(sap_project_id) }}'
         primary_zone: '{{ sap_primary_zone | default("us-central1-a") }}'
         secondary_zone: '{{ sap_secondary_zone | default("us-central1-b") }}'

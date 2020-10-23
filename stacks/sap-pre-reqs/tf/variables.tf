@@ -18,8 +18,8 @@ variable "network_tags" {
   description = "List of network tags to attach to the firewall rule."
 }
 
-variable "sap_service_account_name" {
-  description = "SAP service account name."
+variable "sap_service_account_email" {
+  description = "SAP service account email."
 }
 
 variable "nat_create" {

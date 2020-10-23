@@ -9,7 +9,7 @@ sap_nw_instance_type: n1-standard-8
 sap_source_image_family: sles-15-sp1-sap
 sap_source_image_project: suse-sap-cloud
 sap_gce_ssh_pub_key_file: ~/.ssh/id_rsa.pub
-sap_nw_service_account_email: "terraform-managed-mercadona-sa@mercadona-sap-service-1.iam.gserviceaccount.com"
+sap_nw_service_account_name: sap-common-sa
 sap_region: europe-west1
 sap_zone: europe-west1-d
 sap_subnetwork: "sub-sap-poc-nw"

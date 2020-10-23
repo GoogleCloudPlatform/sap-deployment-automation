@@ -97,11 +97,11 @@
       "default": ""
     },
     {
-      "question_name": "Service account email",
-      "question_description": "This is the service account email for the HANA machine instance. If left blank, it will use the instance default.",
+      "question_name": "Service account name",
+      "question_description": "This is the service account name for the HANA machine instance. If left blank, it will use the instance default.",
       "required": false,
       "type": "text",
-      "variable": "sap_hana_service_account_email",
+      "variable": "sap_hana_service_account_name",
       "min": 0,
       "max": 1024,
       "default": ""

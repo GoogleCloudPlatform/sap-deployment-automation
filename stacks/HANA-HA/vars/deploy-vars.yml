@@ -17,7 +17,7 @@ sap_subnetwork: app2
 
 # Terraform hana variables (required)
 sap_hana_instance_name: hanslbg
-sap_hana_service_account_email: "sap-common-sa@{{ sap_project_id }}.iam.gserviceaccount.com"
+sap_hana_service_account_name: sap-common-sa
 
 # Terraform hana variables (optional)
 sap_primary_zone: us-central1-a

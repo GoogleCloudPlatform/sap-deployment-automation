@@ -179,21 +179,21 @@
       "default": ""
     },
     {
-      "question_name": "HANA service account email",
-      "question_description": "This is the service account email for the HANA machine instance.",
+      "question_name": "HANA service account name",
+      "question_description": "This is the service account name for the HANA machine instance.",
       "required": false,
       "type": "text",
-      "variable": "sap_hana_service_account_email",
+      "variable": "sap_hana_service_account_name",
       "min": 0,
       "max": 1024,
       "default": ""
     },
     {
-      "question_name": "NetWeaver service account email",
-      "question_description": "This is the service account email for the NetWeaver machine instance.",
+      "question_name": "NetWeaver service account name",
+      "question_description": "This is the service account name for the NetWeaver machine instance.",
       "required": false,
       "type": "text",
-      "variable": "sap_nw_service_account_email",
+      "variable": "sap_nw_service_account_name",
       "min": 0,
       "max": 1024,
       "default": ""

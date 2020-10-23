@@ -35,9 +35,9 @@ sap_hana_password:
 # Password for NetWeaver.
 sap_nw_password:
 
-# Service account emails for HANA and NetWeaver instances.
-sap_hana_service_account_email:
-sap_nw_service_account_email:
+# Service account names for HANA and NetWeaver instances.
+sap_hana_service_account_name: sap-common-sa
+sap_nw_service_account_name: sap-common-sa
 
 # For NFS, define one of sap_nw_nfs_src or sap_nw_nfsvols, not both.
 #

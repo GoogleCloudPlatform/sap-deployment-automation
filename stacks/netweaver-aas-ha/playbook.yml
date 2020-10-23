@@ -20,7 +20,7 @@
         subnetwork: '{{ sap_subnetwork }}'
         gce_ssh_user: '{{ sap_ssh_user }}'
         gce_ssh_pub_key_file: '{{ sap_ssh_pub_key }}'
-        service_account_email: '{{ sap_nw_service_account_email }}'
+        service_account_email: '{{ sap_nw_service_account_email | default("{{ sap_nw_service_account_name }}@{{ sap_project_id }}.iam.gserviceaccount.com") }}'
 - name: SAP NW configure
   hosts: aas
   become: yes

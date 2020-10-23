@@ -9,8 +9,8 @@ sap_pas_instance_name:
 sap_subnetwork:
 sap_hana_password:
 sap_nw_password:
-sap_hana_service_account_email:
-sap_nw_service_account_email:
+sap_hana_service_account_name: sap-common-sa
+sap_nw_service_account_name: sap-common-sa
 
 # Optional
 sap_hana_instance_type: n1-highmem-32

@@ -11,7 +11,7 @@ sap_zone: us-central1-a
 sap_hana_install_files_bucket:
 sap_hana_instance_name:
 sap_hana_instance_type: n1-highmem-32
-sap_hana_service_account_email:
+sap_hana_service_account_name: sap-common-sa
 sap_hana_sid: ABC
 sap_hana_instance_number: "00"
 sap_hana_password:
@@ -20,5 +20,5 @@ sap_nw_install_files_bucket:
 sap_nw_instance_name:
 sap_nw_instance_type: n1-standard-2
 sap_nw_password:
-sap_nw_service_account_email:
+sap_nw_service_account_name: sap-common-sa
 sap_nw_sid: XYZ
