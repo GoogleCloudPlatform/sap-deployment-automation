@@ -87,10 +87,10 @@ run_terraform()
 
     ${tf_exec} init
     ${tf_exec} plan -out plan.out \
-        -var instance_name=${instance_name} \
-        -var project_id=${project_id} \
-        -var subnetwork=${subnetwork} \
-        -var subnetwork_project_id=${subnetwork_project_id} \
+        -var instance_name="${instance_name}" \
+        -var project_id="${project_id}" \
+        -var subnetwork="${subnetwork}" \
+        -var subnetwork_project_id="${subnetwork_project_id}" \
         ${destroy}
 
     if [ "${proceed}" != 1 ]; then
