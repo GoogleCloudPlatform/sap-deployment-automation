@@ -1,18 +1,18 @@
 ---
 
-- name: SAP HANA deploy
-  hosts: 127.0.0.1
+- hosts: 127.0.0.1
   connection: local
   roles:
   - role: forminator
     vars:
+      sap_ansible_is_push_mode: false
       sap_tf_project_path: ./tf
       sap_state: '{{ state | default("present") }}'
       sap_tf_variables:
         project_id: '{{ sap_project_id }}'
-        network_tags: '{{ sap_hana_network_tags | default([]) }}'
+        network_tags: '{{ sap_network_tags | default([sap_network_tag]) }}'
         subnetwork: '{{ sap_subnetwork }}'
         subnetwork_project: '{{ sap_subnetwork_project_id | default(sap_project_id) }}'
-        zone: '{{ sap_instance_zone | default("us-central1-a") }}'
-        sap_service_account_email: '{{ sap_service_account_email | default(“{}@{}.iam.gserviceaccount.com".format(sap_service_account_name, sap_project_id)) }}'
+        zone: '{{ sap_zone | default("us-central1-a") }}'
+        sap_service_account_email: '{{ sap_service_account_email | default("{}@{}.iam.gserviceaccount.com".format(sap_service_account_name | default("sap-common-sa"), sap_project_id)) }}'
         nat_create: '{{ sap_nat_create | default(false) }}'

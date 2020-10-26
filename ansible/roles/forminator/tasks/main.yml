@@ -14,10 +14,12 @@
   - '{{ sap_ssh_pub_key }}'
   register: stat_ssh_key_files
   changed_when: false
+  when: sap_ansible_is_push_mode
 
 - name: define ssh key file existence
   set_fact:
     stat_ssh_key_files_exists: "{{ stat_ssh_key_files.results | map(attribute='stat') | map(attribute='exists') | list }}"
+  when: sap_ansible_is_push_mode
 
 - block:
   - name: download ssh key files
@@ -59,7 +61,9 @@
       mode: '0600'
     - path: '{{ sap_ssh_pub_key }}'
       mode: '0644'
-  when: false in stat_ssh_key_files_exists
+  when:
+  - sap_ansible_is_push_mode
+  - false in stat_ssh_key_files_exists
 
 - block:
   - name: check for existing terraform executable
@@ -146,6 +150,7 @@
       {{ inventory_hosts | default([]) }} + {% set j = joiner(",") %}
         [{% for host in item.value %}{{ j() }}{ "group": "{{ item.key }}", "host": "{{ host }}" }{% endfor %}]
   with_dict: '{{ terraform.outputs.inventory.value }}'
+  when: sap_ansible_is_push_mode
 
 - name: build inventory
   add_host:
@@ -156,6 +161,7 @@
     groups: '{{ item.group }}'
   loop: '{{ inventory_hosts }}'
   changed_when: false
+  when: sap_ansible_is_push_mode
 
 - name: wait for hosts
   command: >-
@@ -167,3 +173,4 @@
   until: can_ssh is succeeded
   loop: '{{ inventory_hosts }}'
   changed_when: false
+  when: sap_ansible_is_push_mode
