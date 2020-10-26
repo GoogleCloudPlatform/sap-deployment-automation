@@ -38,6 +38,7 @@ resource "google_project_service" "enable_iam" {
   project                    = var.project_id
   service                    = "iam.googleapis.com"
   disable_dependent_services = true
+  disable_on_destroy         = false
 }
 
 resource "google_service_account" "sap_service_account" {
