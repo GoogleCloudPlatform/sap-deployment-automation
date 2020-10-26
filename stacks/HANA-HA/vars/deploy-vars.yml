@@ -16,6 +16,7 @@ sap_subnetwork_project_id: '{{ sap_project_id }}'
 sap_subnetwork: app2
 
 # Terraform hana variables (required)
+# Instance name should be 7 charecters or less
 sap_hana_instance_name: hanslbg
 sap_hana_service_account_name: sap-common-sa
 
