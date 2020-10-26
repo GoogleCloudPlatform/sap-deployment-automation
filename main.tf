@@ -57,7 +57,7 @@ module "service_account" {
 
 module "instance_template" {
   source               = "terraform-google-modules/vm/google//modules/instance_template"
-  version              = "3.0.0"
+  version              = "5.1.0"
 
   access_config        = local.access_config
   machine_type         = var.machine_type
@@ -77,7 +77,7 @@ module "instance_template" {
 
 module "compute_instance" {
   source             = "terraform-google-modules/vm/google//modules/compute_instance"
-  version            = "3.0.0"
+  version            = "5.1.0"
 
   access_config      = local.access_config
   instance_template  = module.instance_template.self_link
