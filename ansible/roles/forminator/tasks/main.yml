@@ -111,7 +111,7 @@
   - name: write terraform variables to a file
     copy:
       dest: '{{ terraform_tempdir.path }}/vars.tf.json'
-      content: '{{ sap_tf_variables_defaults | combine(sap_tf_variables) | to_json }}'
+      content: '{{ sap_tf_variables_defaults if sap_ansible_is_push_mode else {} | combine(sap_tf_variables) | to_json }}'
     changed_when: false
   - name: apply terraform
     terraform:
