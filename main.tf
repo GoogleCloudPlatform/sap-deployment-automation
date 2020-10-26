@@ -29,6 +29,14 @@ resource "google_compute_firewall" "allow_iap" {
   target_tags   = [local.awx_tag]
 }
 
+resource "google_project_iam_member" "shared_vpc_project_iam_member" {
+  count   = local.subnetwork_project_id == var.project_id ? 0 : 1
+
+  project = var.subnetwork_project_id
+  role    = "roles/compute.networkAdmin"
+  member  = "serviceAccount:${module.service_account.email}"
+}
+
 module "service_account" {
   source        = "terraform-google-modules/service-accounts/google"
   version       = "= 3.0.1"
