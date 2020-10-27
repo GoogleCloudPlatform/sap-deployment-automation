@@ -6,13 +6,17 @@ An Ansible role to deploy infrastructure using Terraform.
 
 Terraform must be installed and on the `PATH`.
 
-The Terraform module that is passed in the `sap_tf_project_path` variable must do the following:
+This role operates either in "push mode" or not, as defined by the variable `sap_ansible_is_push_mode`. If the value of this variable is `true`, which is the default, then it is expected that the Terraform module will create machines that Ansible will connect to. In push mode, the role will create an Ansible inventory with ssh keys to use for authentication, then wait for the hosts to be available. If `sap_ansible_is_push_mode` is `false`, then no connection will be made to any machines.
+
+If `sap_ansible_is_push_mode` is `true`, then the Terraform module that is passed in the `sap_tf_project_path` variable _must_ do the following:
 
 1. It must provide an output called `inventory` that is a map structured as `{ abc = [10.10.10.10], xyz = [10.10.10.11, 10.10.10.12] }`, where `abc` and `xyz` are host groups that will be converted into an Ansible inventory.
 
 2. It must receive the variables `gce_ssh_user` and `gce_ssh_pub_key_file`, which will be added to all machine metadata as `ssh-keys = "${var.gce_ssh_user}:${file("${var.gce_ssh_pub_key_file}")}"`.
 
 # Role Variables
+
+`sap_ansible_is_push_mode`: (Optional, type _bool_, default `true`) - Whether or not to operate Ansible in push mode.
 
 `sap_tf_state_bucket`: (Required, type _string_) - A bucket for storing Terraform state. The bucket must already exist.
 
