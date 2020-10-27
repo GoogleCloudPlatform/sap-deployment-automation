@@ -67,7 +67,7 @@
     },
     {
       "question_name": "Service account name",
-      "question_description": "This is the name of the service account for SAP machines to be created. This should be the name before the '@' symobol, not the entire email address.",
+      "question_description": "This is the name of the service account for SAP machines to be created. This should be the name before the '@' symbol, not the entire email address.",
       "required": true,
       "type": "text",
       "variable": "sap_service_account_name",

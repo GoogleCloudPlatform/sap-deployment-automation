@@ -4,7 +4,7 @@
   "spec": [
     {
       "question_name": "Terraform state bucket",
-      "question_description": "This is the bucket where Terraform state is stored.",
+      "question_description": "This is the bucket where Terraform state is stored. If it does not exist yet, it will be created.",
       "required": true,
       "type": "text",
       "variable": "sap_tf_state_bucket",
@@ -90,7 +90,7 @@
     },
     {
       "question_name": "HANA password",
-      "question_description": "This is the password for HANA.",
+      "question_description": "This is the password to be used for HANA database and users.",
       "required": true,
       "type": "password",
       "variable": "sap_hana_password",
@@ -127,13 +127,13 @@
     },
     {
       "question_name": "HANA service account name",
-      "question_description": "This is the service account name for the HANA machine instance.",
+      "question_description": "This is the name of an existing service account for the HANA machine instance. This should be the name before the '@' symbol, not the entire email address.",
       "required": false,
       "type": "text",
       "variable": "sap_hana_service_account_name",
       "min": 0,
       "max": 1024,
-      "default": ""
+      "default": "sap-common-sa"
     },
     {
       "question_name": "Primary zone",
