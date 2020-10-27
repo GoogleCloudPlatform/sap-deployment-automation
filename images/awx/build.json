@@ -21,7 +21,7 @@
     "source_image_project_id": "{{ user `source-image-project-id` }}",
     "subnetwork": "{{ user `subnetwork` }}",
     "ssh_username": "packer",
-    "tags": ["ssh"],
+    "tags": ["ssh", "awx"],
     "use_internal_ip": true,
     "zone": "{{ user `zone` }}"
   }],
