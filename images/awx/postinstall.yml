@@ -78,14 +78,6 @@
       tower_username: admin
       tower_password: password
       validate_certs: false
-  - name: add localhost to tower default inventory
-    tower_host:
-      inventory: default
-      name: localhost
-      tower_host: http://localhost
-      tower_username: admin
-      tower_password: password
-      validate_certs: false
   - name: read tower survey specs
     slurp:
       src: '{{ awx_project_path }}/stacks/{{ item }}/awx_survey_spec.json'
