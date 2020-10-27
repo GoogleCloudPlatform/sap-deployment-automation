@@ -22,26 +22,16 @@
     },
     {
       "question_name": "Instance name",
-      "question_description": "This is the base name of the HANA instance.",
+      "question_description": "This is the name of the HANA instance.",
       "required": true,
       "type": "text",
       "variable": "sap_hana_instance_name",
       "min": 1,
-      "max": 1024
-    },
-    {
-      "question_name": "Installation files bucket",
-      "question_description": "This is the bucket from which installation files will be downloaded.",
-      "required": true,
-      "type": "text",
-      "variable": "sap_hana_install_files_bucket",
-      "min": 1,
-      "max": 1024,
-      "default": "nw-ansible"
+      "max": 13
     },
     {
       "question_name": "Image family",
-      "question_description": "Family of the image used to create machines.",
+      "question_description": "Family of the image used to create machines (rhel-7-4-sap, rhel-7-6-sap-ha, rhel-7-7-sap-ha, sles-12-sp2-sap, sles-12-sp3-sap, sles-12-sp4-sap, sles-12-sp5-sap, sles-15-sap, sles-15-sp1-sap, sles-15-sp2-sap).",
       "required": true,
       "type": "text",
       "variable": "sap_source_image_family",
@@ -51,13 +41,12 @@
     },
     {
       "question_name": "Image project",
-      "question_description": "Project of the image used to create machines.",
+      "question_description": "Project of the image used to create machines. Choose rhel-sap-cloud for 'rhel' images and suse-sap-cloud for 'sles' images.",
       "required": true,
-      "type": "text",
+      "type": "multiplechoice",
       "variable": "sap_source_image_project",
-      "min": 1,
-      "max": 1024,
-      "default": "rhel-sap-cloud"
+      "default": "rhel-sap-cloud",
+      "choices": ["rhel-sap-cloud", "suse-sap-cloud"]
     },
     {
       "question_name": "Instance type",
@@ -69,34 +58,6 @@
       "choices": ["n1-highmem-32", "n1-highmem-64", "n1-highmem-96", "n2-highmem-32", "n2-highmem-48", "n2-highmem-64", "n2-highmem-80", "m1-megamem-96", "m1-ultramem-40", "m1-ultramem-80", "m1-ultramem-160", "m2-ultramem-208", "m2-ultramem-416"]
     },
     {
-      "question_name": "Project ID",
-      "question_description": "This is the ID of the project in which cloud resources are created.",
-      "required": true,
-      "type": "text",
-      "variable": "sap_project_id",
-      "min": 1,
-      "max": 1024
-    },
-    {
-      "question_name": "Subnetwork",
-      "question_description": "This is the subnetwork for the machine instance network interfaces.",
-      "required": true,
-      "type": "text",
-      "variable": "sap_subnetwork",
-      "min": 1,
-      "max": 1024
-    },
-    {
-      "question_name": "Subnetwork project",
-      "question_description": "This is the project of the subnetwork for the machine instance network interfaces. If left blank, it will default to the Project ID.",
-      "required": false,
-      "type": "text",
-      "variable": "sap_subnetwork_project_id",
-      "min": 0,
-      "max": 1024,
-      "default": ""
-    },
-    {
       "question_name": "Service account name",
       "question_description": "This is the name of an existing service account for the HANA machine instance. This should be the name before the '@' symbol, not the entire email address.",
       "required": false,
@@ -105,6 +66,16 @@
       "min": 0,
       "max": 1024,
       "default": "sap-common-sa"
+    },
+    {
+      "question_name": "Installation files bucket",
+      "question_description": "This is the bucket from which installation files will be downloaded.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_hana_install_files_bucket",
+      "min": 1,
+      "max": 1024,
+      "default": "nw-ansible"
     },
     {
       "question_name": "HANA SID",
@@ -134,6 +105,34 @@
       "variable": "sap_hana_password",
       "min": 1,
       "max": 100
+    },
+    {
+      "question_name": "Project ID",
+      "question_description": "This is the ID of the project in which cloud resources are created.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_project_id",
+      "min": 1,
+      "max": 1024
+    },
+    {
+      "question_name": "Subnetwork",
+      "question_description": "This is the subnetwork for the machine instance network interfaces.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_subnetwork",
+      "min": 1,
+      "max": 1024
+    },
+    {
+      "question_name": "Subnetwork project",
+      "question_description": "This is the project of the subnetwork for the machine instance network interfaces. If left blank, it will default to the Project ID.",
+      "required": false,
+      "type": "text",
+      "variable": "sap_subnetwork_project_id",
+      "min": 0,
+      "max": 1024,
+      "default": ""
     },
     {
       "question_name": "Zone",

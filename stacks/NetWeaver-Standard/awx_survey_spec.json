@@ -27,7 +27,7 @@
       "type": "text",
       "variable": "sap_hana_instance_name",
       "min": 1,
-      "max": 1024
+      "max": 13
     },
     {
       "question_name": "NetWeaver instance name",
@@ -36,7 +36,63 @@
       "type": "text",
       "variable": "sap_nw_instance_name",
       "min": 1,
-      "max": 1024
+      "max": 13
+    },
+    {
+      "question_name": "Image family",
+      "question_description": "Family of the image used to create machines (rhel-7-4-sap, rhel-7-6-sap-ha, rhel-7-7-sap-ha, sles-12-sp2-sap, sles-12-sp3-sap, sles-12-sp4-sap, sles-12-sp5-sap, sles-15-sap, sles-15-sp1-sap, sles-15-sp2-sap).",
+      "required": true,
+      "type": "text",
+      "variable": "sap_source_image_family",
+      "default": "rhel-7-7-sap-ha"
+    },
+    {
+      "question_name": "Image project",
+      "question_description": "Project of the image used to create machines. Choose rhel-sap-cloud for 'rhel' images and suse-sap-cloud for 'sles' images.",
+      "required": true,
+      "type": "multiplechoice",
+      "variable": "sap_source_image_project",
+      "default": "rhel-sap-cloud",
+      "choices": ["rhel-sap-cloud", "suse-sap-cloud"]
+    },
+    {
+      "question_name": "HANA instance type",
+      "question_description": "Machine instance type for HANA.",
+      "required": true,
+      "type": "multiplechoice",
+      "variable": "sap_hana_instance_type",
+      "default": "n1-highmem-32",
+      "choices": ["n1-highmem-32", "n1-highmem-64", "n1-highmem-96", "n2-highmem-32", "n2-highmem-48", "n2-highmem-64", "n2-highmem-80", "m1-megamem-96", "m1-ultramem-40", "m1-ultramem-80", "m1-ultramem-160", "m2-ultramem-208", "m2-ultramem-416"]
+    },
+    {
+      "question_name": "NetWeaver instance type",
+      "question_description": "Machine instance type for NetWeaver.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_nw_instance_type",
+      "min": 1,
+      "max": 1024,
+      "default": "n1-standard-2"
+    },
+    {
+      "question_name": "HANA service account name",
+      "question_description": "This is the name of an existing service account for the HANA machine instance. This should be the name before the '@' symbol, not the entire email address.",
+      "required": false,
+      "type": "text",
+      "variable": "sap_hana_service_account_name",
+      "min": 0,
+      "max": 1024,
+      "default": "sap-common-sa"
+    },
+    {
+      "question_name": "NetWeaver service account name",
+      "question_description": "This is the name of an existing service account for the NetWeaver machine instance. This should be the name before the '@' symbol, not the entire email address.",
+      "required": false,
+      "type": "text",
+      "variable": "sap_nw_service_account_name",
+      "min": 0,
+      "max": 1024,
+      "default": "sap-common-sa"
     },
     {
       "question_name": "HANA installation files bucket",
@@ -59,31 +115,6 @@
       "default": "nw-code-ansible"
     },
     {
-      "question_name": "Image family",
-      "question_description": "Family of the image used to create machines.",
-      "required": true,
-      "type": "text",
-      "variable": "sap_source_image_family",
-      "default": "rhel-7-7-sap-ha"
-    },
-    {
-      "question_name": "Image project",
-      "question_description": "Project of the image used to create machines.",
-      "required": true,
-      "type": "text",
-      "variable": "sap_source_image_project",
-      "default": "rhel-sap-cloud"
-    },
-    {
-      "question_name": "HANA instance type",
-      "question_description": "Machine instance type for HANA.",
-      "required": true,
-      "type": "multiplechoice",
-      "variable": "sap_hana_instance_type",
-      "default": "n1-highmem-32",
-      "choices": ["n1-highmem-32", "n1-highmem-64", "n1-highmem-96", "n2-highmem-32", "n2-highmem-48", "n2-highmem-64", "n2-highmem-80", "m1-megamem-96", "m1-ultramem-40", "m1-ultramem-80", "m1-ultramem-160", "m2-ultramem-208", "m2-ultramem-416"]
-    },
-    {
       "question_name": "HANA SID",
       "question_description": "This is the system identifier for HANA. It must be three characters starting with a letter.",
       "required": true,
@@ -92,6 +123,16 @@
       "min": 3,
       "max": 3,
       "default": "ABC"
+    },
+    {
+      "question_name": "NetWeaver SID",
+      "question_description": "This is the system identifier for NetWeaver. It must be three characters starting with a letter.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_nw_sid",
+      "min": 3,
+      "max": 3,
+      "default": "XYZ"
     },
     {
       "question_name": "HANA instance number",
@@ -111,26 +152,6 @@
       "variable": "sap_hana_password",
       "min": 8,
       "max": 100
-    },
-    {
-      "question_name": "NetWeaver instance type",
-      "question_description": "Machine instance type for NetWeaver.",
-      "required": true,
-      "type": "text",
-      "variable": "sap_nw_instance_type",
-      "min": 1,
-      "max": 1024,
-      "default": "n1-standard-2"
-    },
-    {
-      "question_name": "NetWeaver SID",
-      "question_description": "This is the system identifier for NetWeaver. It must be three characters starting with a letter.",
-      "required": true,
-      "type": "text",
-      "variable": "sap_nw_sid",
-      "min": 3,
-      "max": 3,
-      "default": "XYZ"
     },
     {
       "question_name": "NetWeaver password",
@@ -168,26 +189,6 @@
       "min": 0,
       "max": 1024,
       "default": ""
-    },
-    {
-      "question_name": "HANA service account name",
-      "question_description": "This is the name of an existing service account for the HANA machine instance. This should be the name before the '@' symbol, not the entire email address.",
-      "required": false,
-      "type": "text",
-      "variable": "sap_hana_service_account_name",
-      "min": 0,
-      "max": 1024,
-      "default": "sap-common-sa"
-    },
-    {
-      "question_name": "NetWeaver service account name",
-      "question_description": "This is the name of an existing service account for the NetWeaver machine instance. This should be the name before the '@' symbol, not the entire email address.",
-      "required": false,
-      "type": "text",
-      "variable": "sap_nw_service_account_name",
-      "min": 0,
-      "max": 1024,
-      "default": "sap-common-sa"
     },
     {
       "question_name": "Zone",
