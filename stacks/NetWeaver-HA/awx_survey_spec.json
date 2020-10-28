@@ -157,7 +157,7 @@
       "variable": "sap_nw_install_files_bucket",
       "min": 1,
       "max": 1024,
-      "default": "nw-code-ansible"
+      "default": "nw-code-ansible/nw75/Software"
     },
     {
       "question_name": "HANA SID",
