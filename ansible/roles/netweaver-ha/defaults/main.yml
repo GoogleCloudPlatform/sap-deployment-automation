@@ -4,7 +4,6 @@ sap_nw_sapinst_package_client: /sapmnt/Software/HANA_CLIENT
 sap_nw_sapinst_package_load: /sapmnt/Software/NW75
 sap_nw_sapinst_package_kernel: /sapmnt/Software/Kernel_Files
 sap_nw_sapcar_path: /sapmnt/Software/SWPM1.0
-sap_nw_install_files_bucket_prefix: nw75/Software
 sap_nw_install_files_dest: /sapmnt/Software
 sap_nw_install_files:
 - HANA_CLIENT

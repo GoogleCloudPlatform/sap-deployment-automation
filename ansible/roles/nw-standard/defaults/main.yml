@@ -3,7 +3,6 @@
 sap_nw_usrsap_disk_size: 50
 sap_nw_sapmnt_disk_size: 50
 sap_nw_swap_disk_size: 28
-sap_nw_install_files_bucket_prefix: nw75/Software
 sap_nw_install_files_dest: /sapmnt/Software
 sap_nw_install_files:
 - HANA_CLIENT

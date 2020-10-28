@@ -14,8 +14,7 @@
 - name: Copy netweaver binaries from GC
   command: >-
     gsutil -m rsync -r
-    gs://{{ sap_nw_install_files_bucket }}/{{ sap_nw_install_files_bucket_prefix }}/{{ item }}
-    {{ sap_nw_install_files_dest }}/{{ item }}
+    gs://{{ sap_nw_install_files_bucket }}/{{ item }} {{ sap_nw_install_files_dest }}/{{ item }}
   with_items: "{{ sap_nw_install_files }}"
   environment:
     CLOUDSDK_PYTHON: '{{ cloudsdk_python_export_path }}'
