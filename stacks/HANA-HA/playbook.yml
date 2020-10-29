@@ -25,7 +25,7 @@
         network_tags: '{{ sap_hana_network_tags | default([]) }}'
         target_size: '{{ sap_hana_target_instance_size | default(1) }}'
         pd_kms_key: '{{ sap_hana_pd_kms_key | default(None) }}'
-        create_backup_volume: '{{ sap_hana_create_backup_volume | default("true") }}'
+        create_backup_volume: '{{ sap_hana_create_backup_volume | default(true) }}'
 
 - name: SAP HANA configure on both primay and secondary
   hosts: hana

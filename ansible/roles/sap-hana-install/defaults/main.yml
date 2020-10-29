@@ -4,12 +4,9 @@
 sap_hana_deployment_hdblcm_extraargs:
 sap_hana_deployment_deploy_hostagent: 'n'
 sap_hana_deployment_apply_license: false
-sap_hana_deployment_hana_install_path: '/hana/shared'
 sap_hana_deployment_use_master_password: 'n'
 sap_hana_deployment_hana_max_mem:
 sap_hana_deployment_certificates_hostmap:
-sap_hana_deployment_hana_userid:
-sap_hana_deployment_hana_groupid:
 sap_hana_deployment_create_initial_tenant:
 sap_hana_deployment_hostname:
 sap_hana_deployment_xs_install: 'n'
@@ -28,6 +25,4 @@ sap_hana_deployment_lss_user:
 sap_hana_deployment_lss_group:
 sap_hana_deployment_lss_user_password:
 sap_hana_deployment_lss_backup_password:
-sap_hana_env_type: 'custom'
-sap_hana_mem_restrict: 'n'
 sap_hana_system_restart: "y"

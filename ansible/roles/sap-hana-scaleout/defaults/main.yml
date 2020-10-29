@@ -1,0 +1,90 @@
+sap_install_files_bucket_path: nw-ansible
+sap_hana_install_file_name: 51*
+sap_hana_sapcar_file_name: SAPCAR_1320-80000935.EXE
+sap_hostagent_rpm_file_name: saphostagentrpm_44-20009394.rpm
+sap_download_packages:
+  - "{{ sap_hana_install_file_name }}"
+  - "{{ sap_hana_sapcar_file_name }}"
+  - "{{ sap_hostagent_rpm_file_name }}"
+sap_hostagent_rpm_remote_path: "/hana/shared/software"
+sap_hana_data_partition_name: hanadata
+sap_hana_backup_partition_name: hanabackup
+sap_hana_shared_mountpoint: /hana/shared
+sap_hana_data_mountpoint: /hana/data
+sap_hana_log_mountpoint: /hana/log
+sap_hana_usr_mountpoint: /usr/sap
+sap_hana_backup_mountpoint: /hanabackup
+sap_hana_sid: BG1
+sap_sapsys_gid: 2626
+sap_hana_system_uid: 2525
+sap_hana_instance_number: "00"
+sap_preconfigure_modify_etc_hosts: true
+sap_domain: automation.local
+sap_hana_env_type: development
+sap_hana_mem_restrict: "n"
+sap_hana_swapon: false
+sap_hana_ini_file: global.ini
+sap_hana_ini_section: persistence
+sap_hana_ini_setting: basepath_shared
+sap_hana_ini_value: "no"
+# sap_hana_password is required unless all of the other passwords are set.
+# It defaults to an empty string for those cases where all the other passwords are
+# set, to avoid an undefined variable error.
+sap_hana_password: ''
+sap_hana_ase_user_password: '{{ sap_hana_password }}'
+sap_hana_db_system_password: '{{ sap_hana_password }}'
+sap_hana_common_master_password: '{{ sap_hana_password }}'
+sap_hana_root_password: '{{ sap_hana_password }}'
+sap_hana_sapadm_password: '{{ sap_hana_password }}'
+sap_hana_sidadm_password: '{{ sap_hana_password }}'
+
+sap_hana_swapon: false
+
+sap_hana_disks:
+  - { name: data, partition_path : "{{ sap_hana_data_partition_name }}"}
+  - { name: backup, partition_path : "{{ sap_hana_backup_partition_name }}"}
+sap_hana_logvols:
+  shared:
+    size: "{{ sap_hana_shared_size }}"
+    vol: "{{ sap_hana_data_partition_name }}" 
+    mountpoint: "{{ sap_hana_shared_mountpoint }}"
+    fstype: xfs
+  data:
+    size: "{{ sap_hana_data_size }}"
+    vol: "{{ sap_hana_data_partition_name }}"
+    mountpoint: "{{ sap_hana_data_mountpoint }}"
+    fstype: xfs
+  log:
+    size: "{{ sap_hana_log_size }}"
+    vol: "{{ sap_hana_data_partition_name }}"
+    mountpoint: "{{ sap_hana_log_mountpoint }}"
+    fstype: xfs
+  usr:
+    size: "{{ sap_hana_usr_size }}"
+    vol: "{{ sap_hana_data_partition_name }}"
+    mountpoint: "{{ sap_hana_usr_mountpoint }}"
+    fstype: xfs
+  backup:
+    size: "{{ sap_hana_backup_size}}"
+    vol: "{{ sap_hana_backup_partition_name }}"
+    mountpoint: "{{ sap_hana_backup_mountpoint }}"
+    fstype: xfs
+
+sap_hana_disks_worker:
+  - { name: data, partition_path : "{{ sap_hana_data_partition_name }}"}
+sap_hana_logvols_worker:
+  data:
+    size: "{{ sap_hana_data_size }}"
+    vol: "{{ sap_hana_data_partition_name }}"
+    mountpoint: "{{ sap_hana_data_mountpoint }}"
+    fstype: xfs
+  log:
+    size: "{{ sap_hana_log_size }}"
+    vol: "{{ sap_hana_data_partition_name }}"
+    mountpoint: "{{ sap_hana_log_mountpoint }}"
+    fstype: xfs
+  usr:
+    size: "{{ sap_hana_usr_size }}"
+    vol: "{{ sap_hana_data_partition_name }}"
+    mountpoint: "{{ sap_hana_usr_mountpoint }}"
+    fstype: xfs

@@ -3,268 +3,76 @@
 - name: SAP HANA deploy
   hosts: 127.0.0.1
   connection: local
-  tasks:
-  - name: Deploy SAP HANA infrastructure
-    terraform:
-      project_path: ./infra
-      force_init: true
-      state: present
-      backend_config:
-        bucket: '{{ sap_hana_state_bucket }}'
-        prefix: '{{ sap_hana_state_bucket_prefix | default(sap_hana_instance_name) }}'
-      variables:
+  roles:
+  - role: forminator
+    vars:
+      sap_tf_project_path: ./tf
+      sap_state: '{{ state | default("present") }}'
+      sap_tf_variables:
         instance_name: '{{ sap_hana_instance_name }}'
-        source_image_family: '{{ sap_hana_source_image_family }}'
-        source_image_project: '{{ sap_hana_source_image_project }}'
-        region: '{{ sap_hana_region }}'
-        zone: '{{ sap_hana_zone }}'
-        create_backup_volume: '{{ create_backup_volume }}'
-        instance_count_worker: '{{ instance_count_worker }}'
-        subnetwork: '{{ sap_hana_subnetwork }}'
-        boot_disk_size: '{{ sap_hana_boot_disk_size }}'
-        gce_ssh_user: '{{ sap_hana_gce_ssh_user }}'
-        gce_ssh_pub_key_file: '{{ sap_hana_gce_ssh_pub_key }}'
-        run_provisioner: 'false'
-    register: terraform
-  - name: Copy ssh public key
-    copy:
-      dest: '{{ playbook_dir }}/ssh-key.pub'
-      src: '{{ sap_hana_gce_ssh_pub_key }}'
-  - name: Copy ssh private key
-    copy:
-      dest: '{{ playbook_dir }}/ssh-key'
-      src: '{{ sap_hana_gce_ssh_priv_key }}'
-      mode: '0600'
-  - name: Build master inventory
-    add_host:
-      name: '{{ item }}'
-      ansible_user: '{{ sap_hana_gce_ssh_user }}'
-      ansible_ssh_private_key_file: '{{ playbook_dir }}/ssh-key'
-      terraform: '{{ terraform }}'
-      groups:
-        - hana-master
-    changed_when: false
-    with_items:
-      - '{{ terraform.outputs.address_master.value }}'
-  - name: Build worker inventory
-    add_host:
-      name: '{{ item }}'
-      ansible_user: '{{ sap_hana_gce_ssh_user }}'
-      ansible_ssh_private_key_file: '{{ playbook_dir }}/ssh-key'
-      terraform: '{{ terraform }}'
-      groups:
-        - hana-worker
-    changed_when: false
-    with_items:
-      - '{{ terraform.outputs.address_worker.value }}'
-  - name: Wait for hosts
-    shell: |-
-      ssh -i {{ playbook_dir }}/ssh-key \
-        -o StrictHostKeyChecking=no \
-        {{ sap_hana_gce_ssh_user }}@{{ item }} \
-        exit
-    register: can_ssh
-    retries: 12
-    delay: 10
-    until: can_ssh is succeeded
-    with_items:
-      - '{{ terraform.outputs.address_master.value }}'
-      - '{{ terraform.outputs.address_worker.value }}'
+        project_id: '{{ sap_project_id }}'
+        source_image_family: '{{ sap_source_image_family }}'
+        source_image_project: '{{ sap_source_image_project }}'
+        subnetwork: '{{ sap_subnetwork }}'
+        service_account_email: '{{ sap_hana_service_account_email }}'
+        subnetwork_project: '{{ sap_subnetwork_project_id | default(sap_project_id) }}'
+        zone: '{{ sap_instance_zone | default("us-central1-a") }}'
+        instance_type: '{{ sap_hana_instance_type | default("n1-highmem-32") }}'
+        autodelete_disk: '{{ sap_hana_autodelete_boot_disk | default(true) }}'
+        boot_disk_size: '{{ sap_hana_boot_disk_size | default(30) }}'
+        boot_disk_type: '{{ sap_hana_boot_disk_type | default("pd-ssd") }}'
+        network_tags: '{{ sap_hana_network_tags | default([]) }}'
+        pd_kms_key: '{{ sap_hana_pd_kms_key | default(None) }}'
+        create_backup_volume: '{{ sap_hana_create_backup_volume | default(true) }}'
+        instance_count_worker: '{{ sap_instance_count_worker | default(1) }}'
 
-- name: SAP HANA configure on master
+- name: SAP HANA scaleout configure
   hosts: hana-master
   become: yes
   vars:
-    sap_image_family: '{{ terraform.outputs.sap_image_family.value }}'
-    sap_hana_instance_zone: '{{ terraform.outputs.zone_a.value }}'
-    sap_hana_project_id: '{{ terraform.outputs.project_id.value }}'
+    sap_hana_master_instance_name: '{{ terraform.outputs.master_instance_name.value }}'
+    sap_hana_master_instance_ip: '{{ terraform.outputs.address_master.value }}'
+    sap_hana_worker_instance_ip: '{{ terraform.outputs.address_worker.value }}'
     sap_hana_worker_node_names: '{{ terraform.outputs.instances_self_links_worker.value }}'
+    sap_hana_instance_zone: '{{ terraform.outputs.zone_a.value }}'
+    sap_hana_shared_size: '{{ terraform.outputs.hana_shared_size.value }}G'
+    sap_hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
+    sap_hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
+    sap_hana_usr_size: '{{ terraform.outputs.hana_usr_size.value }}G'
+    sap_hana_backup_size: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
   roles:
-  - role: base
+  - role: sap-hana-scaleout
   
-  - role: sap-hana-download-packages
-
-  - role: storage
-    become: true
-    vars:
-      hana_shared_size: '{{ terraform.outputs.hana_shared_size.value }}G'
-      hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
-      hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
-      hana_usr_size: '{{ terraform.outputs.hana_usr_size.value }}G'
-      hana_backup_size: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
-      swapon: false
-      disks:
-        - { name: data, partition_path : "{{ sap_hana_data_partition_name }}"}
-        - { name: backup, partition_path : "{{ sap_hana_backup_partition_name }}"}
-      logvols:
-        shared:
-          size: "{{ hana_shared_size }}"
-          vol: "{{ sap_hana_data_partition_name }}" 
-          mountpoint: "{{ sap_hana_shared_mountpoint }}"
-          fstype: xfs
-        data:
-          size: "{{ hana_data_size }}"
-          vol: "{{ sap_hana_data_partition_name }}"
-          mountpoint: "{{ sap_hana_data_mountpoint }}"
-          fstype: xfs
-        log:
-          size: "{{ hana_log_size }}"
-          vol: "{{ sap_hana_data_partition_name }}"
-          mountpoint: "{{ sap_hana_log_mountpoint }}"
-          fstype: xfs
-        usr:
-          size: "{{ hana_usr_size }}"
-          vol: "{{ sap_hana_data_partition_name }}"
-          mountpoint: "{{ sap_hana_usr_mountpoint }}"
-          fstype: xfs
-        backup:
-          size: "{{ hana_backup_size}}"
-          vol: "{{ sap_hana_backup_partition_name }}"
-          mountpoint: "{{ sap_hana_backup_mountpoint }}"
-          fstype: xfs
-
-  - role: sap-hostagent
-
-  - role: sap-preconfigure
-    vars:
-      sap_preconfigure_modify_etc_hosts: true
-      sap_domain: automation.local
-    when: sap_image_family == "RedHat"
-
-  - role: sap-hana-preconfigure
-    when: sap_image_family == "RedHat"
-
-  - role: sap-hana-install
-    vars:
-      sap_hana_root_password: Google123
-      sap_hana_sapadm_password: Google123
-      sap_hana_env_type: development
-      sap_hana_mem_restrict: "n"
-      sap_hana_common_master_password: Google123
-      sap_hana_ase_user_password: Google123
-      sap_hana_sidadm_password: Google123
-      sap_hana_system_restart: "y"
-  
-  - role: sap-hana-config-nfs
-
-  - role: ssh-keygen
-
-  - role: sap-set-parameters
-    vars:
-      sap_hana_ini_file: global.ini
-      sap_hana_ini_section: persistence
-      sap_hana_ini_setting: basepath_shared
-      sap_hana_ini_value: "no"
-
-  - role: sap-hana-start
-
-- name: SAP HANA configure on worker
+- name: SAP HANA scaleout configure
   hosts: hana-worker
   become: yes
   vars:
     sap_hana_master_instance_name: '{{ terraform.outputs.master_instance_name.value }}'
+    sap_hana_master_instance_ip: '{{ terraform.outputs.address_master.value }}'
+    sap_hana_worker_instance_ip: '{{ terraform.outputs.address_worker.value }}'
+    sap_hana_worker_node_names: '{{ terraform.outputs.instances_self_links_worker.value }}'
+    sap_hana_instance_zone: '{{ terraform.outputs.zone_a.value }}'
+    sap_hana_shared_size: '{{ terraform.outputs.hana_shared_size.value }}G'
+    sap_hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
+    sap_hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
+    sap_hana_usr_size: '{{ terraform.outputs.hana_usr_size.value }}G'
+    sap_hana_backup_size: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
   roles:
-  - role: common
-  
-  - role: copy-ssh-keys
+  - role: sap-hana-scaleout
 
-  - role: storage
-    become: true
-    vars:
-      hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
-      hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
-      hana_usr_size: '{{ terraform.outputs.hana_usr_size.value }}G'
-      swapon: false
-      disks:
-        - { name: data, partition_path : "{{ sap_hana_data_partition_name }}"}
-      logvols:
-        data:
-          size: "{{ hana_data_size }}"
-          vol: "{{ sap_hana_data_partition_name }}"
-          mountpoint: "{{ sap_hana_data_mountpoint }}"
-          fstype: xfs
-        log:
-          size: "{{ hana_log_size }}"
-          vol: "{{ sap_hana_data_partition_name }}"
-          mountpoint: "{{ sap_hana_log_mountpoint }}"
-          fstype: xfs
-        usr:
-          size: "{{ hana_usr_size }}"
-          vol: "{{ sap_hana_data_partition_name }}"
-          mountpoint: "{{ sap_hana_usr_mountpoint }}"
-          fstype: xfs
-  
-  - role: sap-hana-mount-nfs
-
-- name: SAP HANA configure on master
+- name: SAP HANA scaleout configure
   hosts: hana-master
   become: yes
   vars:
-    sap_image_family: '{{ terraform.outputs.sap_image_family.value }}'
-    sap_hana_instance_zone: '{{ terraform.outputs.zone_a.value }}'
-    sap_hana_project_id: '{{ terraform.outputs.project_id.value }}'
+    sap_hana_master_instance_name: '{{ terraform.outputs.master_instance_name.value }}'
+    sap_hana_master_instance_ip: '{{ terraform.outputs.address_master.value }}'
+    sap_hana_worker_instance_ip: '{{ terraform.outputs.address_worker.value }}'
     sap_hana_worker_node_names: '{{ terraform.outputs.instances_self_links_worker.value }}'
+    sap_hana_instance_zone: '{{ terraform.outputs.zone_a.value }}'
+    sap_hana_shared_size: '{{ terraform.outputs.hana_shared_size.value }}G'
+    sap_hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
+    sap_hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
+    sap_hana_usr_size: '{{ terraform.outputs.hana_usr_size.value }}G'
+    sap_hana_backup_size: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
   roles:
-  - role: sap-hana-add-worker-nodes
-
-  - role: sap-hana-stop
-
-  - role: sap-hana-start
-
-
-# Uncomment the below code if the worker node 
-# is not created as part of the automated deployment
-
-
-# - name: SAP HANA configure on worker
-#   hosts: hana-worker
-#   become: yes
-#   vars:
-#     sap_hana_master_instance_name: <worker-node-instance-name>
-#   roles:
-#    - role: common
-
-#   - role: copy-ssh-keys
-
-#   - role: storage
-#     become: true
-#     vars:
-#       hana_data_size: <worker-node-data-vol-size>
-#       hana_log_size: <worker-node-log-vol-size>
-#       hana_usr_size: <worker-node-usr-vol-size>
-#       swapon: false
-#       disks:
-#         - { name: <disk-name>, partition_path : <partition-name> }
-#       logvols:
-#         data:
-#           size: "{{ hana_data_size }}"
-#           vol: <hana-data-lvol-name>
-#           mountpoint: <hana-data-mount-point>
-#           fstype: <file-system-type>
-#         log:
-#           size: "{{ hana_log_size }}"
-#           vol: <hana-data-lvol-name>
-#           mountpoint: <hana-log-mount-point>
-#           fstype: <file-system-type>
-#         usr:
-#           size: "{{ hana_usr_size }}"
-#           vol: <hana-data-lvol-name>
-#           mountpoint: <hana-usr-mount-point>
-#           fstype: <file-system-type>
-  
-#   - role: sap-hana-mount-nfs
-
-# - name: SAP HANA configure on master
-#   hosts: hana-master
-#   become: yes
-#   vars:
-#     sap_image_family: '{{ terraform.outputs.sap_image_family.value }}'
-#     sap_hana_instance_zone: '{{ terraform.outputs.zone_a.value }}'
-#     sap_hana_project_id: '{{ terraform.outputs.project_id.value }}'
-#     sap_hana_worker_node_names: <hana-worker-node-name>
-#   roles:
-#   - role: sap-hana-add-worker-nodes
-
-#   - role: sap-hana-stop
-
-#   - role: sap-hana-start
+  - role: sap-hana-scaleout
