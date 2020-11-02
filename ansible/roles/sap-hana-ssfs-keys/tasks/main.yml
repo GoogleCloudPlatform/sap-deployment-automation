@@ -15,7 +15,7 @@
   copy:
     src: "/tmp/{{ item.file }}"
     dest: "{{ item.path }}{{ item.file }}"
-    owner: "{{ sap_hana_sid | lower }}adm"
+    owner: "{{ sap_hana_user }}"
     group: sapsys
     mode: '{{ item.mode }}'
   loop:

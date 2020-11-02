@@ -18,12 +18,10 @@
 
 - name: Run HDB user creation .sql file
   shell: |
-    source /usr/sap/{{ sap_hana_sid | lower }}adm/home/.sapenv.sh && \
+    source /usr/sap/{{ sap_hana_user }}/home/.sapenv.sh && \
     hdbsql -u system -p {{ sap_hana_db_system_password }} \
     -i {{ sap_hana_instance_number }} \
     -I /root/.deploy/{{ ansible_hostname }}_hdbadduser.sql
   args:
      executable: /bin/bash
-  become: yes
-  #become_user: "{{ sap_hana_sid | lower }}adm"
   register: hdbuser

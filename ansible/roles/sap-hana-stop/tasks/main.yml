@@ -3,4 +3,4 @@
 - name: HANA DB stop
   command: /usr/sap/{{ sap_hana_sid }}/HDB{{ sap_hana_instance_number }}/HDB stop
   become: true
-  become_user: "{{ sap_hana_sid|lower }}adm"
+  become_user: "{{ sap_hana_user }}"

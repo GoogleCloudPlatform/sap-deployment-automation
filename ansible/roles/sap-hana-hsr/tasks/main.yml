@@ -2,13 +2,13 @@
 
 - name: Enable HANA System Replication in the primary node
   shell: |
-      source /usr/sap/{{ sap_hana_sid | lower }}adm/home/.sapenv.sh && \
+      source /usr/sap/{{ sap_hana_user }}/home/.sapenv.sh && \
       /usr/sap/{{ sap_hana_sid | upper }}/HDB{{ sap_hana_instance_number }}/exe/hdbnsutil \
       -sr_enable --name="{{ ansible_hostname }}"
   args:
     executable: /bin/bash
   become: yes
-  become_user: "{{ sap_hana_sid | lower }}adm"
+  become_user: "{{ sap_hana_user }}"
   register: enablesr
   changed_when: "'successfully enabled system as system replication source site' in enablesr.stdout"
   failed_when: |
@@ -22,7 +22,7 @@
   args:
     executable: /bin/bash
   become: yes
-  become_user: "{{ sap_hana_sid | lower }}adm"
+  become_user: "{{ sap_hana_user }}"
   register: stopinstance
   changed_when: "'StopSystem' in stopinstance.stdout"
   when:
@@ -30,7 +30,7 @@
 
 - name: Register secondary node to HANA System Replication
   shell: |
-      source /usr/sap/{{ sap_hana_sid | lower }}adm/home/.sapenv.sh && \
+      source /usr/sap/{{ sap_hana_user }}/home/.sapenv.sh && \
       /usr/sap/{{ sap_hana_sid | upper }}/HDB{{ sap_hana_instance_number }}/exe/hdbnsutil \
       -sr_register --name={{ ansible_hostname }} \
       --remoteHost={{ sap_hana_primary_instance_name }} --remoteInstance={{ sap_hana_instance_number }} \
@@ -38,7 +38,7 @@
   args:
     executable: /bin/bash
   become: yes
-  become_user: "{{ sap_hana_sid | lower }}adm"
+  become_user: "{{ sap_hana_user }}"
   register: registersr
   changed_when: "'adding site' in registersr.stdout"
   when:
@@ -51,7 +51,7 @@
   args:
     executable: /bin/bash
   become: yes
-  become_user: "{{ sap_hana_sid | lower }}adm"
+  become_user: "{{ sap_hana_user }}"
   register: startinstance
   changed_when: "'StartSystem' in startinstance.stdout"
   when:

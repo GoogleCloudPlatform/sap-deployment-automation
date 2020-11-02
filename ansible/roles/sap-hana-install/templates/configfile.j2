@@ -122,7 +122,7 @@ master_password={{ sap_hana_common_master_password }}
 password={{ sap_hana_sidadm_password }}
 
 # System Administrator Home Directory ( Default: /usr/sap/${sid}/home )
-home=/usr/sap/{{ sap_hana_sid | lower }}adm/home
+home=/usr/sap/{{ sap_hana_user }}/home
 
 # System Administrator Login Shell ( Default: /bin/sh )
 shell=/bin/sh

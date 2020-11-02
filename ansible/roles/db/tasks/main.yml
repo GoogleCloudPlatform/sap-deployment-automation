@@ -22,7 +22,7 @@
   stat:
     path: '{{ item }}'
   loop:
-  - /home/{{ sap_nw_ascs_sid | lower }}adm/.hdb/{{ sap_nw_pas_virtual_host }}
+  - /home/{{ sap_nw_user }}/.hdb/{{ sap_nw_pas_virtual_host }}
   - /sapmnt/{{ sap_nw_ascs_sid }}/exe/uc/linuxx86_64/R3load
   register: db_installed_files
     
