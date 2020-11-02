@@ -47,6 +47,7 @@ module "netweaver_ascs" {
   ssh_user              = var.gce_ssh_user
   project_id            = var.project_id
   public_key_path       = var.gce_ssh_pub_key_file
+  region                = local.region
   subnetwork            = var.subnetwork
   subnetwork_project    = local.subnetwork_project
   source_image_family   = var.source_image_family
