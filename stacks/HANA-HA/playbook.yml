@@ -19,7 +19,7 @@
         primary_zone: '{{ sap_primary_zone | default("us-central1-a") }}'
         secondary_zone: '{{ sap_secondary_zone | default("us-central1-b") }}'
         instance_type: '{{ sap_hana_instance_type | default("n1-highmem-32") }}'
-        autodelete_disk: '{{ sap_hana_autodelete_boot_disk | default("true") }}'
+        autodelete_disk: '{{ sap_hana_autodelete_boot_disk | default(true) }}'
         boot_disk_size: '{{ sap_hana_boot_disk_size | default(30) }}'
         boot_disk_type: '{{ sap_hana_boot_disk_type | default("pd-ssd") }}'
         network_tags: '{{ sap_hana_network_tags | default([]) }}'
