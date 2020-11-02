@@ -112,24 +112,6 @@ variable "subnetwork_project" {
   default     = ""
 }
 
-variable "sap_hostagent_rpm_file_name" {
-  description = "SAP Host agent filename"
-  default     = "saphostagentrpm_44-20009394.rpm"
-}
-
-variable "sap_hana_bundle_file_name" {
-  description = "SAP Hana deployment bundle filename"
-  default     = "IMDB_SERVER20_047_0-80002031.SAR"
-}
-
-variable "sap_hana_sapcar_file_name" {
-  description = "SAPCAR filename"
-  default     = "SAPCAR_1320-80000935.EXE"
-}
-
-variable "sap_hana_install_files_bucket" {
-}
-
 variable "sap_hana_network_tags" {
   type        = list
   description = "List of network tags to attach to the instance."
