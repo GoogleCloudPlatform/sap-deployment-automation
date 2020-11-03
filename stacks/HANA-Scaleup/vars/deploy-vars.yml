@@ -1,7 +1,7 @@
 ---
 
 # Terraform common vars for hana and netweaver (optional)
-sap_instance_zone: us-central1-a
+sap_zone: us-central1-a
 
 # Terraform common vars for hana and netweaver (required)
 sap_project_id: albatross-duncanl-sandbox-2
