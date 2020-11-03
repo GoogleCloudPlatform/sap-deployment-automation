@@ -1,0 +1,4 @@
+---
+# This variable isn't really needed here as it is defaulted elsewhere, but the
+# Ansible tower_job_template module doesn't like extra_vars_path to be empty.
+sap_nat_create: false

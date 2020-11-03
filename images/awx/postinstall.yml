@@ -15,11 +15,10 @@
     unarchive:
       src: '{{ playbook_dir }}/sap-iac.tar.gz'
       dest: '{{ awx_project_path }}'
-  - name: define job directories
+  - name: define awx job directories
     shell: |
-      find {{ awx_project_path }}/stacks -name awx_survey_spec.json | awk -F / '{print $(NF-1)}'
-    register: job_directories
-    changed_when: false
+      find {{ awx_project_path }}/stacks/*/awx/* -type d
+    register: awx_job_directories
   - name: wait for tower to initialize
     shell: |
       docker logs awx_task 2>&1 | grep 'Demo Credential, Inventory, and Job Template added'
@@ -80,16 +79,20 @@
       validate_certs: false
   - name: read tower survey specs
     slurp:
-      src: '{{ awx_project_path }}/stacks/{{ item }}/awx_survey_spec.json'
-    register: job_survey_specs
-    loop: '{{ job_directories.stdout_lines }}'
+      src: '{{ item }}/survey_spec.json'
+    register: awx_survey_specs_contents
+    loop: '{{ awx_job_directories.stdout_lines }}'
   - name: add quickstart tower job templates
     tower_job_template:
-      name: 'Quickstart Mode - {{ item.0 }}'
+      name: 'Quickstart Mode - {{ item.0.split("/")[-1] }}'
       concurrent_jobs_enabled: true
+      extra_vars_path: '{{ item.0 }}/extra-vars.yml'
       inventory: default
       job_type: run
-      playbook: 'stacks/{{ item.0 }}/playbook.yml'
+      # Example value of `item.0`: /var/lib/awx/projects/sap-iac/stacks/HANA-HA/awx/HANA-HA.
+      # The value of `playbook` below needs to be relative to /var/lib/awx/projects/sap-iac,
+      # so we need just stacks/HANA-HA to get the playbook directory.
+      playbook: '{{ item.0.split("/")[6:8] | join("/") }}/playbook.yml'
       project: '{{ awx_project_name }}'
       survey_enabled: true
       survey_spec: '{{ item.1 }}'
@@ -97,24 +100,25 @@
       tower_username: admin
       tower_password: password
       validate_certs: false
-    loop: '{{ job_directories.stdout_lines | zip(job_survey_specs.results | map(attribute="content") | map("b64decode")) | list }}'
+    loop: '{{ awx_job_directories.stdout_lines | zip(awx_survey_specs_contents.results | map(attribute="content") | map("b64decode")) | list }}'
   - name: add expert tower job templates
     tower_job_template:
-      name: 'Expert Mode - {{ item }}'
+      name: 'Expert Mode - {{ item.split("/")[-1] }}'
       ask_extra_vars: true
       ask_inventory: true
       ask_skip_tags: true
       ask_tags: true
       concurrent_jobs_enabled: true
+      extra_vars_path: '{{ item }}/extra-vars.yml'
       inventory: default
       job_type: run
-      playbook: 'stacks/{{ item }}/playbook.yml'
+      playbook: '{{ item.split("/")[6:8] | join("/") }}/playbook.yml'
       project: '{{ awx_project_name }}'
       tower_host: http://localhost
       tower_username: admin
       tower_password: password
       validate_certs: false
-    loop: '{{ job_directories.stdout_lines }}'
+    loop: '{{ awx_job_directories.stdout_lines }}'
   - name: intentionally exit with error in dev mode to prevent image being created
     command: 'false'
     when: dev_mode | bool

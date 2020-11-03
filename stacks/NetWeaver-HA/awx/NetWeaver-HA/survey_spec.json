@@ -30,13 +30,65 @@
       "max": 7
     },
     {
+      "question_name": "ASCS instance name",
+      "question_description": "This is the base name of the ASCS instance.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_ascs_instance_name",
+      "min": 1,
+      "max": 10
+    },
+    {
+      "question_name": "ERS instance name",
+      "question_description": "This is the base name of the ERS instance.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_ers_instance_name",
+      "min": 1,
+      "max": 10
+    },
+    {
+      "question_name": "PAS instance name",
+      "question_description": "This is the base name of the PAS instance.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_pas_instance_name",
+      "min": 1,
+      "max": 10
+    },
+    {
+      "question_name": "HANA virtual hostname",
+      "question_description": "This is the hostname for the HANA load balancer IP.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_hana_virtual_host",
+      "min": 1,
+      "max": 13
+    },
+    {
+      "question_name": "ASCS virtual hostname",
+      "question_description": "This is the hostname for the ASCS load balancer IP.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_nw_ascs_virtual_host",
+      "min": 1,
+      "max": 13
+    },
+    {
+      "question_name": "ERS virtual hostname",
+      "question_description": "This is the hostname for the ERS load balancer or alias IP.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_nw_ers_virtual_host",
+      "min": 1,
+      "max": 13
+    },
+    {
       "question_name": "Image family",
       "question_description": "Family of the image used to create machines (rhel-7-4-sap, rhel-7-6-sap-ha, rhel-7-7-sap-ha, sles-12-sp2-sap, sles-12-sp3-sap, sles-12-sp4-sap, sles-12-sp5-sap, sles-15-sap, sles-15-sp1-sap, sles-15-sp2-sap).",
       "required": true,
       "type": "text",
       "variable": "sap_source_image_family",
-      "min": 1,
-      "max": 1024,
       "default": "rhel-7-7-sap-ha"
     },
     {
@@ -58,8 +110,18 @@
       "choices": ["n1-highmem-32", "n1-highmem-64", "n1-highmem-96", "n2-highmem-32", "n2-highmem-48", "n2-highmem-64", "n2-highmem-80", "m1-megamem-96", "m1-ultramem-40", "m1-ultramem-80", "m1-ultramem-160", "m2-ultramem-208", "m2-ultramem-416"]
     },
     {
+      "question_name": "NetWeaver instance type",
+      "question_description": "Machine instance type for NetWeaver.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_nw_instance_type",
+      "min": 1,
+      "max": 1024,
+      "default": "n1-standard-2"
+    },
+    {
       "question_name": "HANA service account name",
-      "question_description": "This is the name of an existing service account for the HANA machine instance. This should be the name before the '@' symbol, not the entire email address.",
+      "question_description": "This is the name of an existing service account for the HANA machine instances. This should be the name before the '@' symbol, not the entire email address.",
       "required": false,
       "type": "text",
       "variable": "sap_hana_service_account_name",
@@ -68,14 +130,52 @@
       "default": "sap-common-sa"
     },
     {
+      "question_name": "NetWeaver service account name",
+      "question_description": "This is the name of an existing service account for the NetWeaver machine instances. This should be the name before the '@' symbol, not the entire email address.",
+      "required": false,
+      "type": "text",
+      "variable": "sap_nw_service_account_name",
+      "min": 0,
+      "max": 1024,
+      "default": "sap-common-sa"
+    },
+    {
       "question_name": "HANA installation files bucket",
-      "question_description": "This is the bucket from which HANA installation files will be downloaded.",
+      "question_description": "This is the bucket from which HANA installation files will be downloaded. You can add folders to the bucket name to define the path in the bucket where the files are located, for example 'xyz-install-files/hana/2.0sps03'.",
       "required": true,
       "type": "text",
       "variable": "sap_hana_install_files_bucket",
       "min": 1,
       "max": 1024,
-      "default": "nw-ansible"
+      "default": "sap-iac"
+    },
+    {
+      "question_name": "NetWeaver installation files bucket",
+      "question_description": "This is the bucket from which HANA installation files will be downloaded. You can add folders to the bucket name to define the path in the bucket where the files are located, for example 'xyz-install-files/nw/750'.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_nw_install_files_bucket",
+      "min": 1,
+      "max": 1024,
+      "default": "sap-iac"
+    },
+    {
+      "question_name": "HANA version",
+      "question_description": "This is the version of HANA to install.",
+      "required": true,
+      "type": "multiplechoice",
+      "variable": "sap_hana_product_version",
+      "default": "20SPS03",
+      "choices": ["20SPS03", "20SPS04"]
+    },
+    {
+      "question_name": "NetWeaver version",
+      "question_description": "This is the version of NetWeaver to install.",
+      "required": true,
+      "type": "multiplechoice",
+      "variable": "sap_nw_product_version",
+      "default": "750",
+      "choices": ["750"]
     },
     {
       "question_name": "HANA SID",
@@ -88,6 +188,16 @@
       "default": "ABC"
     },
     {
+      "question_name": "NetWeaver SID",
+      "question_description": "This is the system identifier for NetWeaver. It must be three characters starting with a letter.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_nw_sid",
+      "min": 3,
+      "max": 3,
+      "default": "XYZ"
+    },
+    {
       "question_name": "HANA instance number",
       "question_description": "This is the instance number for HANA. It must be a two digit number between 00 and 99.",
       "required": true,
@@ -98,6 +208,26 @@
       "default": "00"
     },
     {
+      "question_name": "ASCS instance number",
+      "question_description": "This is the instance number for ASCS. It must be a two digit number between 00 and 99.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_nw_ascs_instance_number",
+      "min": 2,
+      "max": 2,
+      "default": "06"
+    },
+    {
+      "question_name": "ERS instance number",
+      "question_description": "This is the instance number for ERS. It must be a two digit number between 00 and 99.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_nw_ers_instance_number",
+      "min": 2,
+      "max": 2,
+      "default": "16"
+    },
+    {
       "question_name": "HANA password",
       "question_description": "This is the password to be used for HANA database and users.",
       "required": true,
@@ -105,6 +235,24 @@
       "variable": "sap_hana_password",
       "min": 8,
       "max": 100
+    },
+    {
+      "question_name": "NetWeaver password",
+      "question_description": "This is the password for NetWeaver.",
+      "required": true,
+      "type": "password",
+      "variable": "sap_nw_password",
+      "min": 8,
+      "max": 100
+    },
+    {
+      "question_name": "NFS source",
+      "question_description": "This is the IP and path of an existing NFS server, for example 10.10.10.10:/sap.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_nw_nfs_src",
+      "min": 1,
+      "max": 1024
     },
     {
       "question_name": "Project ID",
@@ -136,7 +284,7 @@
     },
     {
       "question_name": "Primary zone",
-      "question_description": "This is the zone of the region in which cloud resources will be created for primary instances.",
+      "question_description": "This is the zone of the region in which cloud resources will be created for primary instances. This includes the HANA primary, ASCS, and PAS instances.",
       "required": true,
       "type": "multiplechoice",
       "variable": "sap_primary_zone",
@@ -147,7 +295,7 @@
     },
     {
       "question_name": "Secondary zone",
-      "question_description": "This is the zone of the region in which cloud resources will be created for secondary instances.",
+      "question_description": "This is the zone of the region in which cloud resources will be created for secondary instances. This includes the HANA secondary and ERS instances.",
       "required": true,
       "type": "multiplechoice",
       "variable": "sap_secondary_zone",
