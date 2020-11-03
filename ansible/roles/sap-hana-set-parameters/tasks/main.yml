@@ -18,7 +18,7 @@
 
 - name: Set parmeters for tenant not defined
   shell: |
-    source /usr/sap/{{ sap_hana_sid }}/home/.sapenv.sh && \
+    source /usr/sap/{{ sap_hana_sid | lower }}adm/home/.sapenv.sh && \
     /usr/sap/{{ sap_hana_sid | upper }}/HDB{{ sap_hana_instance_number }}/exe/hdbsql \
     -d SYSTEMDB -i {{ sap_hana_instance_number }} -u SYSTEM -p {{ sap_hana_db_system_password }} -m <<EOF
     ALTER SYSTEM ALTER CONFIGURATION ('{{ sap_hana_ini_file }}', 'SYSTEM') SET ('{{ sap_hana_ini_section }}','{{ sap_hana_ini_setting }}') = '{{ sap_hana_ini_value }}' with reconfigure;
@@ -32,7 +32,7 @@
 
 - name: Set parmeters for tenant not defined for HANA 2.0 SP0 <
   shell: |
-    source /usr/sap/{{ sap_hana_sid }}/home/.sapenv.sh && \
+    source /usr/sap/{{ sap_hana_sid | lower }}adm/home/.sapenv.sh && \
     /usr/sap/{{ sap_hana_sid | upper }}/HDB{{ sap_hana_instance_number }}/exe/hdbsql \
     -i {{ sap_hana_instance_number }} -u SYSTEM -p {{ sap_hana_db_system_password }} -m <<EOF
     ALTER SYSTEM ALTER CONFIGURATION ('{{ sap_hana_ini_file }}', 'SYSTEM') SET ('{{ sap_hana_ini_section }}','{{ sap_hana_ini_setting }}') = '{{ sap_hana_ini_value }}' with reconfigure;

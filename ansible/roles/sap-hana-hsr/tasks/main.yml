@@ -2,7 +2,7 @@
 
 - name: Enable HANA System Replication in the primary node
   shell: |
-      source /usr/sap/{{ sap_hana_sid }}/home/.sapenv.sh && \
+      source /usr/sap/{{ sap_hana_sid | lower }}adm/home/.sapenv.sh && \
       /usr/sap/{{ sap_hana_sid | upper }}/HDB{{ sap_hana_instance_number }}/exe/hdbnsutil \
       -sr_enable --name="{{ ansible_hostname }}"
   args:
@@ -30,7 +30,7 @@
 
 - name: Register secondary node to HANA System Replication
   shell: |
-      source /usr/sap/{{ sap_hana_sid }}/home/.sapenv.sh && \
+      source /usr/sap/{{ sap_hana_sid | lower }}adm/home/.sapenv.sh && \
       /usr/sap/{{ sap_hana_sid | upper }}/HDB{{ sap_hana_instance_number }}/exe/hdbnsutil \
       -sr_register --name={{ ansible_hostname }} \
       --remoteHost={{ sap_hana_primary_instance_name }} --remoteInstance={{ sap_hana_instance_number }} \

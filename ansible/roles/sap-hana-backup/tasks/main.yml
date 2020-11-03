@@ -2,7 +2,7 @@
 
 - name: Run hana db backup
   shell: |
-    source /usr/sap/{{ sap_hana_sid }}/home/.sapenv.sh && \
+    source /usr/sap/{{ sap_hana_sid | lower }}adm/home/.sapenv.sh && \
     /usr/sap/{{ sap_hana_sid | upper }}/HDB{{ sap_hana_instance_number }}/exe/hdbsql \
     -i {{ sap_hana_instance_number }} -u SYSTEM -p {{ sap_hana_db_system_password }} -d SYSTEMDB -m <<EOF
     BACKUP DATA FOR {{ sap_hana_sid }} USING FILE ('{{ sap_hana_backup_file_name }}');
@@ -18,7 +18,7 @@
 
 - name: Run system db backup
   shell: |
-    source /usr/sap/{{ sap_hana_sid }}/home/.sapenv.sh && \
+    source /usr/sap/{{ sap_hana_sid | lower }}adm/home/.sapenv.sh && \
     /usr/sap/{{ sap_hana_sid | upper }}/HDB{{ sap_hana_instance_number }}/exe/hdbsql \
     -i {{ sap_hana_instance_number }} -u SYSTEM -p {{ sap_hana_db_system_password }} -d SYSTEMDB -m <<EOF
     BACKUP DATA USING FILE ('{{ sap_hana_backup_file_name }}_SYSTEMDB');

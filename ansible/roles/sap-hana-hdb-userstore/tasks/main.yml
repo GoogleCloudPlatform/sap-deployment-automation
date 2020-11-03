@@ -2,7 +2,7 @@
 
 - name: Add HDB user store
   shell: |
-    source /usr/sap/{{ sap_hana_sid }}/home/.sapenv.sh && \
+    source /usr/sap/{{ sap_hana_sid | lower }}adm/home/.sapenv.sh && \
     hdbuserstore SET {{ sap_hana_user_store_key }} \
     localhost:3{{ sap_hana_instance_number }}15 \
     {{ sap_hana_monitoring_user }} {{ sap_hana_db_system_password }}
