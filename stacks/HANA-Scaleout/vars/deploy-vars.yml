@@ -1,7 +1,7 @@
 ---
 
 # Terraform common vars for hana and netweaver (optional)
-sap_instance_zone: us-central1-a
+sap_zone: us-central1-a
 
 # Terraform common vars for hana and netweaver (required)
 sap_project_id: albatross-duncanl-sandbox-2
@@ -15,7 +15,7 @@ sap_tf_state_bucket_prefix: hanslbg
 # Terraform hana variables (required)
 sap_instance_count_worker: 1
 sap_hana_instance_name: hanslbg
-sap_hana_service_account_email: "sap-common-sa@{{ sap_project_id }}.iam.gserviceaccount.com"
+sap_hana_service_account_name: sap-common-sa
 
 # Terraform hana variables (optional)
 sap_hana_instance_type: n1-highmem-32

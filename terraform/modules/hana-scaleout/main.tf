@@ -27,7 +27,7 @@ module "sap_hana_template" {
   }
 
   subnetwork         = var.subnetwork
-  subnetwork_project = var.subnetwork_project
+  subnetwork_project = local.subnetwork_project
   tags               = var.network_tags
   can_ip_forward     = true
   source_image_family  = var.source_image_family
@@ -40,7 +40,7 @@ module "sap_hana_template" {
 resource "google_compute_address" "gcp_sap_hana_intip_master" {
   name         = "${var.instance_name}-int-m"
   address_type = "INTERNAL"
-  subnetwork   = "projects/${var.subnetwork_project}/regions/${local.region}/subnetworks/${var.subnetwork}"
+  subnetwork   = "projects/${local.subnetwork_project}/regions/${local.region}/subnetworks/${var.subnetwork}"
   region       = local.region
   project      = var.project_id
   purpose      = "GCE_ENDPOINT"
@@ -50,7 +50,7 @@ resource "google_compute_address" "gcp_sap_hana_intip_worker" {
   name         = "${var.instance_name}-int-w${format("%01d", count.index + 1)}"
   count        = var.instance_count_worker
   address_type = "INTERNAL"
-  subnetwork   = "projects/${var.subnetwork_project}/regions/${local.region}/subnetworks/${var.subnetwork}"
+  subnetwork   = "projects/${local.subnetwork_project}/regions/${local.region}/subnetworks/${var.subnetwork}"
   region       = local.region
   project      = var.project_id
   purpose      = "GCE_ENDPOINT"
@@ -62,7 +62,7 @@ module "sap_hana_instance_master" {
   region             = local.region
   zone               = var.zone
   subnetwork         = var.subnetwork
-  subnetwork_project = var.subnetwork_project
+  subnetwork_project = local.subnetwork_project
   static_ips         = google_compute_address.gcp_sap_hana_intip_master.*.address
   hostname           = var.instance_name
   instance_template  = module.sap_hana_template.self_link
@@ -74,7 +74,7 @@ module "sap_hana_instance_worker" {
   region             = local.region
   zone               = var.zone
   subnetwork         = var.subnetwork
-  subnetwork_project = var.subnetwork_project
+  subnetwork_project = local.subnetwork_project
   static_ips         = google_compute_address.gcp_sap_hana_intip_worker.*.address
   hostname           = "${var.instance_name}w"
   num_instances      = var.instance_count_worker

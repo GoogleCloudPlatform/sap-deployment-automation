@@ -73,8 +73,8 @@
   include_role:
     name: storage
   vars:
-    disks: "{{ sap_hana_disks }}"
-    logvols: "{{ sap_hana_logvols }}"
+    disks: "{{ sap_hana_disks_worker }}"
+    logvols: "{{ sap_hana_logvols_worker }}"
     swapon: "{{ sap_hana_swapon | default(false) }}"
   when: ansible_hostname | regex_search('([w]\d\d+$)')
 
