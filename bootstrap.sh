@@ -19,11 +19,12 @@ warn()
 
 usage()
 {
-    msg="Usage: ${0} -i <instance-name> -p <project-id> -s <subnetwork> [-P <subnetwork-project-id>] [-y] [-d] [-h]\n"
+    msg="Usage: ${0} -i <instance-name> -p <project-id> -s <subnetwork> [-P <subnetwork-project-id>] [-r <region>] [-y] [-d] [-h]\n"
     msg="${msg}    -i <instance-name>  Name given to AWX instance.\n"
     msg="${msg}    -p <project-id>            ID of GCP project.\n"
     msg="${msg}    -s <subnetwork>            Subnetwork in which AWX instance is created.\n"
     msg="${msg}    -P <subnetwork-project-id> ID of subnetwork project, if using a shared VPC.\n"
+    msg="${msg}    -r <region>                GCP region, defaults to us-central1.\n"
     msg="${msg}    -y                         Answer yes to proceed to create or destroy resources.\n"
     msg="${msg}    -d                         Destroy an instance which was previously\n"
     msg="${msg}                               created with the same parameters.\n"
@@ -76,8 +77,9 @@ run_terraform()
     local project_id=${2}
     local subnetwork=${3}
     local subnetwork_project_id=${4}
-    local proceed=${5}
-    local destroy=${6}
+    local region=${5}
+    local proceed=${6}
+    local destroy=${7}
 
     local tf_exec=`find_terraform`
     if [ -z "${tf_exec}" ]; then
@@ -91,6 +93,7 @@ run_terraform()
         -var project_id="${project_id}" \
         -var subnetwork="${subnetwork}" \
         -var subnetwork_project_id="${subnetwork_project_id}" \
+        -var region="${region}" \
         ${destroy}
 
     if [ "${proceed}" != 1 ]; then
@@ -132,7 +135,7 @@ ensure_auth()
     export GOOGLE_APPLICATION_CREDENTIALS=${credentials}
 }
 
-while getopts "i:p:s:P:ydh" flag; do
+while getopts "i:p:s:P:r:ydh" flag; do
     case ${flag} in
       i) instance_name=${OPTARG}
         ;;
@@ -141,6 +144,8 @@ while getopts "i:p:s:P:ydh" flag; do
       s) subnetwork=${OPTARG}
         ;;
       P) subnetwork_project_id=${OPTARG}
+        ;;
+      r) region=${OPTARG}
         ;;
       y) proceed=1
         ;;
@@ -154,6 +159,7 @@ done
 [ -n "${instance_name}" ] || usage
 [ -n "${project_id}" ]    || usage
 [ -n "${subnetwork}" ]    || usage
+[ -n "${region}" ]        || region="us-central1"
 
 which curl 1>/dev/null    || fail "curl is required"
 which gcloud 1>/dev/null  || fail "gcloud is required"
@@ -164,5 +170,6 @@ ensure_auth && run_terraform \
     "${project_id}" \
     "${subnetwork}" \
     "${subnetwork_project_id}" \
+    "${region}" \
     "${proceed}" \
     "${destroy}"
