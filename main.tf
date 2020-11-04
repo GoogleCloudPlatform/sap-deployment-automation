@@ -1,14 +1,19 @@
 locals {
-  access_config         = var.assign_public_ip ? [{
-    nat_ip              = null
-    network_tier        = "PREMIUM"
+  access_config            = var.assign_public_ip ? [{
+    nat_ip                 = null
+    network_tier           = "PREMIUM"
   }] : []
-  awx_tag               = "awx"
-  iap_range             = "35.235.240.0/20"
-  network_parts         = split("/", data.google_compute_subnetwork.subnetwork.network)
-  network               = element(local.network_parts, length(local.network_parts) - 1)
-  subnetwork_project_id = var.subnetwork_project_id != "" ? var.subnetwork_project_id : var.project_id
-  tags                  = toset(concat([local.awx_tag], var.tags))
+  awx_tag                  = "awx"
+  iap_range                = "35.235.240.0/20"
+  network_parts            = split("/", data.google_compute_subnetwork.subnetwork.network)
+  network                  = element(local.network_parts, length(local.network_parts) - 1)
+  subnetwork_project_id    = var.subnetwork_project_id != "" ? var.subnetwork_project_id : var.project_id
+  subnetwork_project_roles = var.subnetwork_project_id == "" ? toset([]) : toset([
+    "roles/compute.networkAdmin",
+    "roles/compute.securityAdmin",
+    "roles/iam.securityAdmin",
+  ])
+  tags                     = toset(concat([local.awx_tag], var.tags))
 }
 
 data "google_compute_subnetwork" "subnetwork" {
@@ -30,10 +35,10 @@ resource "google_compute_firewall" "allow_iap" {
 }
 
 resource "google_project_iam_member" "shared_vpc_project_iam_member" {
-  count   = local.subnetwork_project_id == var.project_id ? 0 : 1
+  for_each = local.subnetwork_project_roles
 
   project = var.subnetwork_project_id
-  role    = "roles/compute.networkAdmin"
+  role    = each.value
   member  = "serviceAccount:${module.service_account.email}"
 }
 
@@ -50,7 +55,7 @@ module "service_account" {
     "${var.project_id}=>roles/compute.securityAdmin",
     "${var.project_id}=>roles/compute.storageAdmin",
     "${var.project_id}=>roles/storage.admin",
-    "${var.project_id}=>roles/iam.serviceAccountUser",
+    "${var.project_id}=>roles/iam.serviceAccountAdmin",
     "${var.project_id}=>roles/servicenetworking.networksAdmin",
   ]
 }
