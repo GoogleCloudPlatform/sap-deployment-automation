@@ -20,15 +20,15 @@ warn()
 usage()
 {
     msg="Usage: ${0} -i <instance-name> -p <project-id> -s <subnetwork> [-P <subnetwork-project-id>] [-r <region>] [-y] [-d] [-h]\n"
-    msg="${msg}    -i <instance-name>  Name given to AWX instance.\n"
-    msg="${msg}    -p <project-id>            ID of GCP project.\n"
-    msg="${msg}    -s <subnetwork>            Subnetwork in which AWX instance is created.\n"
-    msg="${msg}    -P <subnetwork-project-id> ID of subnetwork project, if using a shared VPC.\n"
-    msg="${msg}    -r <region>                GCP region, defaults to us-central1.\n"
-    msg="${msg}    -y                         Answer yes to proceed to create or destroy resources.\n"
-    msg="${msg}    -d                         Destroy an instance which was previously\n"
-    msg="${msg}                               created with the same parameters.\n"
-    msg="${msg}    -h                         Help message.\n"
+    msg="${msg}    -i <instance-name>         (Required) Name given to AWX instance.\n"
+    msg="${msg}    -p <project-id>            (Required) ID of GCP project.\n"
+    msg="${msg}    -s <subnetwork>            (Required) Subnetwork in which AWX instance is created.\n"
+    msg="${msg}    -P <subnetwork-project-id> (Optional) ID of subnetwork project, if using a shared VPC.\n"
+    msg="${msg}    -r <region>                (Optional) GCP region, defaults to us-central1.\n"
+    msg="${msg}    -y                         (Optional) Answer yes to proceed to create or destroy resources.\n"
+    msg="${msg}    -d                         (Optional) Destroy an instance which was previously\n"
+    msg="${msg}                                          created with the same parameters.\n"
+    msg="${msg}    -h                         (Optional) Help message.\n"
 
     fail "${msg}"
 }
