@@ -74,7 +74,7 @@ resource "google_compute_project_metadata" "vm_dns_setting" {
 # Create firewall rule to allow communication b/w instances in subnet
 resource "google_compute_firewall" "sap_firewall" {
   project       = var.subnetwork_project
-  name          = "hana-allow-${random_id.server.hex}"
+  name          = "sap-allow-all-${random_id.server.hex}"
   network       = local.network
   source_ranges = [data.google_compute_subnetwork.subnetwork.ip_cidr_range]
   target_tags   = var.network_tags

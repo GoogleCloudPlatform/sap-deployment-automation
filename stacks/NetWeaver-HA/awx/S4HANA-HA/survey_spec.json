@@ -283,6 +283,16 @@
       "default": ""
     },
     {
+      "question_name": "Network tag",
+      "question_description": "This is the network tag that will be assigned to instances.",
+      "required": false,
+      "type": "text",
+      "variable": "sap_network_tag",
+      "min": 1,
+      "max": 1024,
+      "default": "sap-allow-all"
+    },
+    {
       "question_name": "Primary zone",
       "question_description": "This is the zone of the region in which cloud resources will be created for primary instances. This includes the HANA primary, ASCS, and PAS instances.",
       "required": true,

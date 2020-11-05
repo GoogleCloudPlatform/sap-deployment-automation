@@ -10,7 +10,7 @@
       sap_state: '{{ state | default("present") }}'
       sap_tf_variables:
         project_id: '{{ sap_project_id }}'
-        network_tags: '{{ sap_network_tags | default([sap_network_tag]) }}'
+        network_tags: '{{ sap_network_tags | default([sap_network_tag | default("sap-allow-all")]) }}'
         subnetwork: '{{ sap_subnetwork }}'
         subnetwork_project: '{{ sap_subnetwork_project_id | default(sap_project_id) }}'
         zone: '{{ sap_zone | default("us-central1-a") }}'

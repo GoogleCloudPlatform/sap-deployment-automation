@@ -50,20 +50,11 @@
     },
     {
       "question_name": "Network tag",
-      "question_description": "This is the network tag for creating a firewall rule.",
+      "question_description": "This is the network tag for creating a firewall rule for instances.",
       "required": true,
       "type": "text",
       "variable": "sap_network_tag",
-      "default": "allow-hana-ports-allow-all"
-    },
-    {
-      "question_name": "Create a NAT Gateway",
-      "question_description": "If set to true, a NAT Gateway for outgoing traffic will be created.",
-      "required": true,
-      "type": "multiplechoice",
-      "variable": "sap_nat_create",
-      "default": "false",
-      "choices": ["true", "false"]
+      "default": "sap-allow-all"
     },
     {
       "question_name": "Service account name",
