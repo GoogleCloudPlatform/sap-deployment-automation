@@ -56,6 +56,7 @@ module "service_account" {
     "${var.project_id}=>roles/compute.storageAdmin",
     "${var.project_id}=>roles/storage.admin",
     "${var.project_id}=>roles/iam.serviceAccountAdmin",
+    "${var.project_id}=>roles/iam.securityAdmin",
     "${var.project_id}=>roles/servicenetworking.networksAdmin",
   ]
 }
