@@ -94,3 +94,15 @@ module "compute_instance" {
   subnetwork         = var.subnetwork
   subnetwork_project = local.subnetwork_project_id
 }
+
+module "cloud_nat" {
+  source  = "terraform-google-modules/cloud-router/google"
+  version = "0.3.0"
+  count   = var.nat_create ? 1 : 0
+
+  name    = "${var.instance_name}-router"
+  nats    = [{name = "${var.instance_name}-nat"}]
+  network = local.network
+  project = local.subnetwork_project_id
+  region  = var.region
+}

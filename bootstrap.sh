@@ -2,7 +2,7 @@
 
 set -e
 
-TF_VERSION=${TF_VERSION:-0.12.29}
+TF_VERSION=${TF_VERSION:-0.13.5}
 ARCH=${ARCH:-amd64}
 
 fail()
@@ -19,12 +19,13 @@ warn()
 
 usage()
 {
-    msg="Usage: ${0} -i <instance-name> -p <project-id> -s <subnetwork> [-P <subnetwork-project-id>] [-r <region>] [-y] [-d] [-h]\n"
+    msg="Usage: ${0} -i <instance-name> -p <project-id> -s <subnetwork> [-P <subnetwork-project-id>] [-r <region>] [-n] [-y] [-d] [-h]\n"
     msg="${msg}    -i <instance-name>         (Required) Name given to AWX instance.\n"
     msg="${msg}    -p <project-id>            (Required) ID of GCP project.\n"
     msg="${msg}    -s <subnetwork>            (Required) Subnetwork in which AWX instance is created.\n"
     msg="${msg}    -P <subnetwork-project-id> (Optional) ID of subnetwork project, if using a shared VPC.\n"
     msg="${msg}    -r <region>                (Optional) GCP region, defaults to us-central1.\n"
+    msg="${msg}    -n                         (Optional) Add a Cloud NAT instance for the subnet, defaults to false.\n"
     msg="${msg}    -y                         (Optional) Answer yes to proceed to create or destroy resources.\n"
     msg="${msg}    -d                         (Optional) Destroy an instance which was previously\n"
     msg="${msg}                                          created with the same parameters.\n"
@@ -78,8 +79,9 @@ run_terraform()
     local subnetwork=${3}
     local subnetwork_project_id=${4}
     local region=${5}
-    local proceed=${6}
-    local destroy=${7}
+    local nat_create=${6}
+    local proceed=${7}
+    local destroy=${8}
 
     local tf_exec=`find_terraform`
     if [ -z "${tf_exec}" ]; then
@@ -94,6 +96,7 @@ run_terraform()
         -var subnetwork="${subnetwork}" \
         -var subnetwork_project_id="${subnetwork_project_id}" \
         -var region="${region}" \
+        -var nat_create="${nat_create}" \
         ${destroy}
 
     if [ "${proceed}" != 1 ]; then
@@ -135,7 +138,7 @@ ensure_auth()
     export GOOGLE_APPLICATION_CREDENTIALS=${credentials}
 }
 
-while getopts "i:p:s:P:r:ydh" flag; do
+while getopts "i:p:s:P:r:nydh" flag; do
     case ${flag} in
       i) instance_name=${OPTARG}
         ;;
@@ -146,6 +149,8 @@ while getopts "i:p:s:P:r:ydh" flag; do
       P) subnetwork_project_id=${OPTARG}
         ;;
       r) region=${OPTARG}
+        ;;
+      n) nat_create=true
         ;;
       y) proceed=1
         ;;
@@ -160,6 +165,7 @@ done
 [ -n "${project_id}" ]    || usage
 [ -n "${subnetwork}" ]    || usage
 [ -n "${region}" ]        || region="us-central1"
+[ -n "${nat_create}" ]    || nat_create=false
 
 which curl 1>/dev/null    || fail "curl is required"
 which gcloud 1>/dev/null  || fail "gcloud is required"
@@ -171,5 +177,6 @@ ensure_auth && run_terraform \
     "${subnetwork}" \
     "${subnetwork_project_id}" \
     "${region}" \
+    "${nat_create}" \
     "${proceed}" \
     "${destroy}"

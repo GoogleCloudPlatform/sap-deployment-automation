@@ -10,6 +10,12 @@ variable "machine_type" {
   default        = "n1-standard-2"
 }
 
+variable "nat_create" {
+  type           = bool
+  description    = "Whether or not to create a Cloud NAT instance."
+  default        = false
+}
+
 variable "instance_name" {
   type           = string
   description    = "Name of instance."
