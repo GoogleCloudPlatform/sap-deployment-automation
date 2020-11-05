@@ -21,6 +21,55 @@
       "max": 1024
     },
     {
+      "question_name": "Project ID",
+      "question_description": "This is the ID of the project in which cloud resources are created.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_project_id",
+      "min": 1,
+      "max": 1024
+    },
+    {
+      "question_name": "Subnetwork",
+      "question_description": "This is the subnetwork for the machine instance network interfaces.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_subnetwork",
+      "min": 1,
+      "max": 1024
+    },
+    {
+      "question_name": "Subnetwork project",
+      "question_description": "This is the project of the subnetwork for the machine instance network interfaces. If left blank, it will default to the Project ID.",
+      "required": false,
+      "type": "text",
+      "variable": "sap_subnetwork_project",
+      "min": 0,
+      "max": 1024,
+      "default": ""
+    },
+    {
+      "question_name": "Network tag",
+      "question_description": "This is the network tag that will be assigned to instances.",
+      "required": false,
+      "type": "text",
+      "variable": "sap_network_tag",
+      "min": 1,
+      "max": 1024,
+      "default": "sap-allow-all"
+    },
+    {
+      "question_name": "Zone",
+      "question_description": "This is the zone of the region in which cloud resources will be created.",
+      "required": true,
+      "type": "multiplechoice",
+      "variable": "sap_zone",
+      "min": 1,
+      "max": 30,
+      "default": "us-central1-a",
+      "choices": ["us-east1-b", "us-east1-c", "us-east1-d", "us-east4-c", "us-east4-b", "us-east4-a", "us-central1-c", "us-central1-a", "us-central1-f", "us-central1-b", "us-west1-b", "us-west1-c", "us-west1-a", "europe-west4-a", "europe-west4-b", "europe-west4-c", "europe-west1-b", "europe-west1-d", "europe-west1-c", "europe-west3-c", "europe-west3-a", "europe-west3-b", "europe-west2-c", "europe-west2-b", "europe-west2-a", "asia-east1-b", "asia-east1-a", "asia-east1-c", "asia-southeast1-b", "asia-southeast1-a", "asia-southeast1-c", "asia-northeast1-b", "asia-northeast1-c", "asia-northeast1-a", "asia-south1-c", "asia-south1-b", "asia-south1-a", "australia-southeast1-b", "australia-southeast1-c", "australia-southeast1-a", "southamerica-east1-b", "southamerica-east1-c", "southamerica-east1-a", "asia-east2-a", "asia-east2-b", "asia-east2-c", "asia-northeast2-a", "asia-northeast2-b", "asia-northeast2-c", "asia-northeast3-a", "asia-northeast3-b", "asia-northeast3-c", "asia-southeast2-a", "asia-southeast2-b", "asia-southeast2-c", "europe-north1-a", "europe-north1-b", "europe-north1-c", "europe-west6-a", "europe-west6-b", "europe-west6-c", "northamerica-northeast1-a", "northamerica-northeast1-b", "northamerica-northeast1-c", "us-west2-a", "us-west2-b", "us-west2-c", "us-west3-a", "us-west3-b", "us-west3-c", "us-west4-a", "us-west4-b", "us-west4-c"]
+    },
+    {
       "question_name": "HANA instance name",
       "question_description": "This is the name of the HANA instance.",
       "required": true,
@@ -179,55 +228,6 @@
       "variable": "sap_nw_password",
       "min": 8,
       "max": 100
-    },
-    {
-      "question_name": "Project ID",
-      "question_description": "This is the ID of the project in which cloud resources are created.",
-      "required": true,
-      "type": "text",
-      "variable": "sap_project_id",
-      "min": 1,
-      "max": 1024
-    },
-    {
-      "question_name": "Subnetwork",
-      "question_description": "This is the subnetwork for the machine instance network interfaces.",
-      "required": true,
-      "type": "text",
-      "variable": "sap_subnetwork",
-      "min": 1,
-      "max": 1024
-    },
-    {
-      "question_name": "Subnetwork project",
-      "question_description": "This is the project of the subnetwork for the machine instance network interfaces. If left blank, it will default to the Project ID.",
-      "required": false,
-      "type": "text",
-      "variable": "sap_subnetwork_project",
-      "min": 0,
-      "max": 1024,
-      "default": ""
-    },
-    {
-      "question_name": "Network tag",
-      "question_description": "This is the network tag that will be assigned to instances.",
-      "required": false,
-      "type": "text",
-      "variable": "sap_network_tag",
-      "min": 1,
-      "max": 1024,
-      "default": "sap-allow-all"
-    },
-    {
-      "question_name": "Zone",
-      "question_description": "This is the zone of the region in which cloud resources will be created.",
-      "required": true,
-      "type": "multiplechoice",
-      "variable": "sap_zone",
-      "min": 1,
-      "max": 30,
-      "default": "us-central1-a",
-      "choices": ["us-east1-b", "us-east1-c", "us-east1-d", "us-east4-c", "us-east4-b", "us-east4-a", "us-central1-c", "us-central1-a", "us-central1-f", "us-central1-b", "us-west1-b", "us-west1-c", "us-west1-a", "europe-west4-a", "europe-west4-b", "europe-west4-c", "europe-west1-b", "europe-west1-d", "europe-west1-c", "europe-west3-c", "europe-west3-a", "europe-west3-b", "europe-west2-c", "europe-west2-b", "europe-west2-a", "asia-east1-b", "asia-east1-a", "asia-east1-c", "asia-southeast1-b", "asia-southeast1-a", "asia-southeast1-c", "asia-northeast1-b", "asia-northeast1-c", "asia-northeast1-a", "asia-south1-c", "asia-south1-b", "asia-south1-a", "australia-southeast1-b", "australia-southeast1-c", "australia-southeast1-a", "southamerica-east1-b", "southamerica-east1-c", "southamerica-east1-a", "asia-east2-a", "asia-east2-b", "asia-east2-c", "asia-northeast2-a", "asia-northeast2-b", "asia-northeast2-c", "asia-northeast3-a", "asia-northeast3-b", "asia-northeast3-c", "asia-southeast2-a", "asia-southeast2-b", "asia-southeast2-c", "europe-north1-a", "europe-north1-b", "europe-north1-c", "europe-west6-a", "europe-west6-b", "europe-west6-c", "northamerica-northeast1-a", "northamerica-northeast1-b", "northamerica-northeast1-c", "us-west2-a", "us-west2-b", "us-west2-c", "us-west3-a", "us-west3-b", "us-west3-c", "us-west4-a", "us-west4-b", "us-west4-c"]
     }
   ]
 }
