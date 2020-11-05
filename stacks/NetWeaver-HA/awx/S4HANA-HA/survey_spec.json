@@ -151,7 +151,7 @@
     },
     {
       "question_name": "S4HANA installation files bucket",
-      "question_description": "This is the bucket from which HANA installation files will be downloaded. You can add folders to the bucket name to define the path in the bucket where the files are located, for example 'xyz-install-files/s4hana/1709'.",
+      "question_description": "This is the bucket from which S4HANA installation files will be downloaded. You can add folders to the bucket name to define the path in the bucket where the files are located, for example 'xyz-install-files/s4hana/1709'.",
       "required": true,
       "type": "text",
       "variable": "sap_nw_install_files_bucket",
