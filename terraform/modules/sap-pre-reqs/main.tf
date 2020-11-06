@@ -10,22 +10,22 @@ data "google_compute_subnetwork" "subnetwork" {
 # IAM policy for host project in shared VPC
 
 resource "google_project_iam_member" "project_net_user" {
-  count   = var.subnetwork_project != var.project_id ? 1 : 0
-  project = var.subnetwork_project
+  count   = local.subnetwork_project != var.project_id ? 1 : 0
+  project = local.subnetwork_project
   role    = "roles/compute.networkUser"
   member  = "serviceAccount:${google_service_account.sap_service_account.email}"
 }
 
 resource "google_project_iam_member" "project_net_admin" {
-  count   = var.subnetwork_project != var.project_id ? 1 : 0
-  project = var.subnetwork_project
+  count   = local.subnetwork_project != var.project_id ? 1 : 0
+  project = local.subnetwork_project
   role    = "roles/compute.networkAdmin"
   member  = "serviceAccount:${google_service_account.sap_service_account.email}"
 }
 
 resource "google_project_iam_member" "project_sec_admin" {
-  count   = var.subnetwork_project != var.project_id ? 1 : 0
-  project = var.subnetwork_project
+  count   = local.subnetwork_project != var.project_id ? 1 : 0
+  project = local.subnetwork_project
   role    = "roles/compute.securityAdmin"
   member  = "serviceAccount:${google_service_account.sap_service_account.email}"
 }
