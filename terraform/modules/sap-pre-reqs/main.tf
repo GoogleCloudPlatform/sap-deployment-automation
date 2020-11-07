@@ -73,7 +73,7 @@ resource "google_compute_project_metadata" "vm_dns_setting" {
 
 # Create firewall rule to allow communication b/w instances in subnet
 resource "google_compute_firewall" "sap_firewall_all" {
-  project       = var.subnetwork_project
+  project       = local.subnetwork_project
   name          = "sap-allow-all-${random_id.server.hex}"
   network       = local.network
   source_ranges = [data.google_compute_subnetwork.subnetwork.ip_cidr_range]
@@ -86,7 +86,7 @@ resource "google_compute_firewall" "sap_firewall_all" {
 
 # Create firewall rule to allow AWX to connect to instances
 resource "google_compute_firewall" "sap_firewall_awx" {
-  project       = var.subnetwork_project
+  project       = local.subnetwork_project
   name          = "sap-allow-awx-ssh-${random_id.server.hex}"
   network       = local.network
   source_tags   = ["awx"]
@@ -101,7 +101,7 @@ resource "google_compute_firewall" "sap_firewall_awx" {
 # Create NAT for outside connectivity
 resource "google_compute_router" "router" {
   count   = var.nat_create == true ? 1 : 0
-  project = var.subnetwork_project != var.project_id ? var.subnetwork_project : var.project_id
+  project = local.subnetwork_project
   name    = "router-${random_id.server.hex}"
   region  = local.region
   network = local.network
@@ -109,7 +109,7 @@ resource "google_compute_router" "router" {
 
 resource "google_compute_router_nat" "nat" {
   count                              = var.nat_create == true ? 1 : 0
-  project                            = var.subnetwork_project != var.project_id ? var.subnetwork_project : var.project_id
+  project                            = local.subnetwork_project
   name                               = "router-nat-${random_id.server.hex}"
   router                             = google_compute_router.router[count.index].name
   region                             = local.region
