@@ -24,7 +24,7 @@ sap_hana_boot_disk_size: 30
 sap_hana_boot_disk_type: pd-ssd
 sap_hana_network_tags: ["sap-allow-all"]
 sap_hana_pd_kms_key: null
-sap_hana_create_backup_volume: "true"
+sap_hana_create_backup_volume: true
 
 # Ansible hana variables (required)
 sap_hana_password: Google123

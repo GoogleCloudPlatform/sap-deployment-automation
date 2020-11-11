@@ -97,3 +97,8 @@
   include_role:
     name: sap-hana-start
   when: not ( ansible_hostname | regex_search('([w]\d\d+$)') ) and ( sap_add_worker_nodes is defined )
+
+- name: Include SAP hana backint role
+  include_role:
+    name: sap-hana-backint
+  when: not ( ansible_hostname | regex_search('([w]\d\d+$)') ) and ( sap_add_worker_nodes is not defined ) and ( backint_install|bool == true )

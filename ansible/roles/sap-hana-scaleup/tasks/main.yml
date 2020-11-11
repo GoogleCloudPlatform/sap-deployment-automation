@@ -37,3 +37,8 @@
 - name: Include SAP hostagent install role
   include_role:
     name: sap-hostagent
+
+- name: Include SAP hana backint role
+  include_role:
+    name: sap-hana-backint
+  when: backint_install|bool == true

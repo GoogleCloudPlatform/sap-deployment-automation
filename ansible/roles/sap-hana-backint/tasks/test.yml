@@ -1,0 +1,15 @@
+---
+- name: Show facts
+  debug:
+    var: ansible_facts.hostname
+- name: Show facts python exe
+  debug:
+    var: ansible_facts.python.executable
+- name: Show facts python version
+  debug:
+    var: ansible_facts.python.version
+- name: Show facts OS family
+  debug:
+    var: ansible_os_family
+# ansible_os_family == "RedHat"
+# ansible_os_family == "Suse"

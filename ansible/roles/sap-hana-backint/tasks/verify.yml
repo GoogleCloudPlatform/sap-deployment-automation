@@ -1,0 +1,12 @@
+---
+# verify.yml
+- name: Show updated parameters
+  command: cat "{{ backint_config_path }}"
+  register: config
+  changed_when: false
+
+- debug: msg="{{ config.stdout }}"
+
+- name: Show facts distro
+  debug:
+    var: ansible_distribution # "RedHat"

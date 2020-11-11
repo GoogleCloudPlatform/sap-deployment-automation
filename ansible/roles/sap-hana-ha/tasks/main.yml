@@ -65,3 +65,8 @@
 - name: Include pacemaker install/config role
   include_role:
     name: pacemaker-hana
+
+- name: Include SAP hana backint role
+  include_role:
+    name: sap-hana-backint
+  when: backint_install|bool == true

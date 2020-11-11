@@ -1,0 +1,32 @@
+# NOTE: setup for real instance:
+# - enable "delegated" driver
+# - configure platform name in ~/.ssh/config, example:
+#   Host test-hana
+#     HostName 108.59.83.6
+#     IdentityFile ~/.ssh/google_compute_engine
+#     User johnmitchell
+#
+# NOTE: setup for fast local container:
+# - enable "docker" driver
+
+---
+dependency:
+  name: galaxy
+
+driver:
+  name: delegated
+  options:
+    managed: False
+    ansible_connection_options:
+      ansible_connection: ssh
+platforms:
+  - name: test-hana
+
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
+lint: |
+  set -e
+  yamllint .
+  ansible-lint -p .
