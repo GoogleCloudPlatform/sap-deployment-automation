@@ -1,0 +1,22 @@
+---
+- name: Download and install Backint
+  block:
+    - name: Download Backint
+      get_url:
+        url: https://storage.googleapis.com/cloudsapdeploy/backint-gcs/install.sh
+        dest: "{{ backint_temp_path }}"
+
+    - name: Install Backint if needed
+      shell:
+        cmd: "SAPSYSTEMNAME={{ sap_hana_sid }} bash {{ backint_temp_path }}" # noqa 301 305
+        creates: "/usr/sap/{{ sap_hana_sid }}/SYS/global/hdb/opt/backint"
+
+    - name: Configure Backint with bucket
+      template:
+        # TODO move to templates/ dir
+        src: files/parameters.txt.j2
+        dest: "{{ backint_config_path }}"
+        mode: "0644"
+
+  become: true
+  become_user: "{{ sap_hana_user }}"

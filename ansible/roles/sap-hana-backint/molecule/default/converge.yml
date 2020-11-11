@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Import sap-hana-backint"
+      import_role:
+        name: "sap-hana-backint"

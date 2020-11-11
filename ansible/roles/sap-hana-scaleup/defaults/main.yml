@@ -1,3 +1,4 @@
+sap_hana_install_files_bucket: sap-iac
 sap_hana_product_version: 20SPS03
 sap_product_and_version: 'HANA/{{ sap_hana_product_version }}'
 sap_product_vars:
@@ -37,6 +38,12 @@ sap_hana_common_master_password: '{{ sap_hana_password }}'
 sap_hana_root_password: '{{ sap_hana_password }}'
 sap_hana_sapadm_password: '{{ sap_hana_password }}'
 sap_hana_sidadm_password: '{{ sap_hana_password }}'
+
+# Backint install vars
+backint_install: true
+backint_temp_path: /tmp/backint-gcs-install.sh
+backint_dir: "/usr/sap/{{ sap_hana_sid }}/SYS/global/hdb/opt/backint"
+backint_config_path: "{{ backint_dir }}/backint-gcs/parameters.txt"
 
 sap_hana_disks:
   - { name: data, partition_path : "{{ sap_hana_data_partition_name }}"}

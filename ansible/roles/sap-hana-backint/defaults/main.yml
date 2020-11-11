@@ -1,0 +1,5 @@
+---
+# defaults file for sap-hana-backint
+# backint_sid: rh1
+# backint_sapsystemname: RH1
+# backint_username: "{{ backint_sid }}adm"

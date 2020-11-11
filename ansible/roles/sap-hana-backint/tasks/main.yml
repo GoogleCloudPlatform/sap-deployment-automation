@@ -1,0 +1,9 @@
+---
+- name: Backint
+  block:
+    - name: Run pre-install tests
+      import_tasks: test.yml
+    - name: Install Backint
+      import_tasks: install-backint.yml
+    - name: Verify Backint
+      import_tasks: verify.yml

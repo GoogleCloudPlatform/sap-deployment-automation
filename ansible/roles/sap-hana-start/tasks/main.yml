@@ -5,5 +5,6 @@
 
 - name: HANA DB start
   command: /usr/sap/{{ sap_hana_sid }}/HDB{{ sap_hana_instance_number }}/HDB start
+  retries: 5
   become: true
   become_user: "{{ sap_hana_user }}"
