@@ -6,6 +6,13 @@
     project: '{{ sap_project_id }}'
   when: sap_state == 'present'
 
+- name: ensure hana backint backup bucket exists
+  gcp_storage_bucket:
+    name: '{{ backint_bucket_name }}'
+    auth_kind: application
+    project: '{{ sap_project_id }}'
+  when: backint_install|bool == true
+
 - name: check if ssh key files are present
   stat:
     path: '{{ item }}'
