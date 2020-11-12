@@ -18,5 +18,5 @@
         dest: "{{ backint_config_path }}"
         mode: "0644"
 
-  become: true
-  become_user: "{{ sap_hana_user }}"
+  # become: true
+  # become_user: "{{ sap_hana_user }}"

@@ -40,7 +40,6 @@ sap_hana_sapadm_password: '{{ sap_hana_password }}'
 sap_hana_sidadm_password: '{{ sap_hana_password }}'
 
 # Backint install vars
-backint_install: true
 backint_temp_path: /tmp/backint-gcs-install.sh
 backint_dir: "/usr/sap/{{ sap_hana_sid }}/SYS/global/hdb/opt/backint"
 backint_config_path: "{{ backint_dir }}/backint-gcs/parameters.txt"
