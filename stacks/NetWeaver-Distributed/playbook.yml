@@ -56,10 +56,7 @@
   roles:
   - role: nw-distributed
     vars:
-      sap_hana_instance_name: '{{ terraform.outputs.hana_instance_name.value }}'
       sap_nw_ascs_virtual_host: '{{ terraform.outputs.ascs_instance_name.value }}'
-      sap_nw_ci_virtual_host: '{{ terraform.outputs.pas_instance_name.value }}'
-      sap_nw_pas_virtual_host: '{{ terraform.outputs.pas_instance_name.value }}'
   tags: [ascs, nw]
 
 - name: SAP NW configure
@@ -68,8 +65,7 @@
   roles:
   - role: nw-distributed 
     vars:
-      sap_hana_instance_name: '{{ terraform.outputs.hana_instance_name.value }}'
+      sap_hana_virtual_host: '{{ terraform.outputs.hana_instance_name.value }}'
       sap_nw_ascs_virtual_host: '{{ terraform.outputs.ascs_instance_name.value }}'
-      sap_nw_ci_virtual_host: '{{ terraform.outputs.pas_instance_name.value }}'
       sap_nw_pas_virtual_host: '{{ terraform.outputs.pas_instance_name.value }}'
   tags: [pas, nw]

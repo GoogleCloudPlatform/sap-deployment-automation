@@ -1,13 +1,69 @@
 ---
-- name: selecting ASCS machines
+- name: define instance groups
   set_fact:
     is_ascs: '{{ ansible_default_ipv4.address in terraform.outputs.inventory.value["ascs"] }}'
-- name: include ASCS Tasks
-  include_tasks: '{{ role_path }}/tasks/ascs.yml'
-  when: is_ascs
-- name: selecting ERS machines
-  set_fact:
     is_ers: '{{ ansible_default_ipv4.address in terraform.outputs.inventory.value["ers"] }}'
-- name: include ERS Tasks
-  include_tasks: '{{ role_path }}/tasks/ers.yml'
+
+- name: define profile for ascs
+  set_fact:
+    sap_profile: /sapmnt/{{ sap_nw_sid }}/profile/{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}
+  when: is_ascs
+
+- name: define profile for ers
+  set_fact:
+    sap_profile: /sapmnt/{{ sap_nw_sid }}/profile/{{ sap_nw_sid }}_ERS{{ sap_nw_ers_instance_number }}_{{ sap_nw_ers_virtual_host }}
+  when: is_ers
+
+- name: modify profile and sapservices for ascs
+  lineinfile:
+    path: '{{ item.path }}'
+    regex: "{{ item.regex | default(omit) }}"
+    backrefs: '{{ "regex" in item }}'
+    line: "{{ item.line | default(omit) }}"
+    state: '{{ item.state }}'
+  with_items:
+  # Change Restart_Program_01 to Start_Program_01 for HA, as pacemaker should manage restarts.
+  - path: '{{ sap_profile }}'
+    regex: '^Res(tart_Program_01 .*$)'
+    line: 'S\1'
+    state: present
+  - path: '{{ sap_profile }}'
+    line: 'service/halib = $(DIR_CT_RUN)/saphascriptco.so'
+    state: present
+  - path: '{{ sap_profile }}'
+    line: 'service/halib_cluster_connector = /usr/bin/sap_suse_cluster_connector'
+    state: present
+  - path: '{{ sap_profile }}'
+    line: 'enque/encni/set_so_keepalive = true'
+    state: present
+  - path: /usr/sap/sapservices
+    line: 'LD_LIBRARY_PATH=/usr/sap/{{ sap_nw_sid }}/ERS{{ sap_nw_ers_instance_number }}/exe:$LD_LIBRARY_PATH; export LD_LIBRARY_PATH; /usr/sap/{{ sap_nw_sid }}/ERS{{ sap_nw_ers_instance_number }}/exe/sapstartsrv pf=/usr/sap/{{ sap_nw_sid }}/ERS{{ sap_nw_ers_instance_number }}/profile/{{ sap_nw_sid }}_ERS{{ sap_nw_ers_instance_number }}_{{ sap_nw_ers_virtual_host }} -D -u {{ sap_nw_user }}'
+    state: present
+  when: is_ascs
+
+- name: modify profile and sapservices for ers
+  lineinfile:
+    path: '{{ item.path }}'
+    regex: "{{ item.regex | default(omit) }}"
+    backrefs: '{{ "regex" in item }}'
+    line: "{{ item.line | default(omit) }}"
+    state: '{{ item.state }}'
+  with_items:
+  # Change Restart_Program_00 to Start_Program_00 for HA, as pacemaker should manage restarts.
+  - path: '{{ sap_profile }}'
+    regex: '^Res(tart_Program_00 .*$)'
+    line: 'S\1'
+    state: present
+  - path: '{{ sap_profile }}'
+    line: 'service/halib = $(DIR_CT_RUN)/saphascriptco.so'
+    state: present
+  - path: '{{ sap_profile }}'
+    line: 'service/halib_cluster_connector = /usr/bin/sap_suse_cluster_connector'
+    state: present
+  - path: '{{ sap_profile }}'
+    line: 'Autostart = 1'
+    state: absent
+  - path: /usr/sap/sapservices
+    line: 'LD_LIBRARY_PATH=/usr/sap/{{ sap_nw_sid }}/ASCS{{ sap_nw_ascs_instance_number }}/exe:$LD_LIBRARY_PATH; export LD_LIBRARY_PATH; /usr/sap/{{ sap_nw_sid }}/ASCS{{ sap_nw_ascs_instance_number }}/exe/sapstartsrv pf=/usr/sap/{{ sap_nw_sid }}/SYS/profile/{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }} -D -u {{ sap_nw_user }}'
+    state: present
   when: is_ers

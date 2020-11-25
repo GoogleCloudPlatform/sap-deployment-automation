@@ -8,13 +8,19 @@
 # Start of User Input parameters
 
 # The SAP system ID <SAPSID> of the system to be installed
-NW_GetSidNoProfiles.sid = {{ sap_nw_ascs_sid }}
+NW_GetSidNoProfiles.sid = {{ sap_nw_sid }}
 
-# The instance number of the (A)SCS instance.  
+# NW_SAPCrypto.SAPCryptoFile =
+
+# NW_Unpack.sapExeSar =
+
+NW_System.installSAPHostAgent = false
+
+# The instance number of the (A)SCS instance.
 NW_SCS_Instance.instanceNumber = {{ sap_nw_ascs_instance_number }}
 
 # The FQDN of the system
-NW_getFQDN.FQDN = {{ sap_domain | default(ansible_domain) }}
+# NW_getFQDN.FQDN =
 
 # Master password
 NW_GetMasterPassword.masterPwd = {{ sap_nw_password }}
@@ -25,15 +31,14 @@ hostAgent.sapAdmPassword = {{ sap_nw_password }}
 # The password of the '<sapsid>adm' user
 nwUsers.sidadmPassword = {{ sap_nw_password }}
 
-# The folder containing all archives 
-archives.downloadBasket = {{ sap_nw_archives_downloadbasket }}
+# The folder containing all archives
+archives.downloadBasket = {{ sap_nw_kernel_files }}
 
-SAPINST.CD.PACKAGE.KERNEL = {{ sap_nw_sapinst_package_kernel }}
+SAPINST.CD.PACKAGE.KERNEL = {{ sap_nw_kernel_files }}
 
 
 # End of user Input Parameters
 ####################################
-
 
 # Specify whether the all operating system users are to be removed from group 'sapinst' after the execution of Software Provisioning Manager has completed.
 NW_Delete_Sapinst_Users.removeUsers = false
@@ -42,13 +47,13 @@ NW_Delete_Sapinst_Users.removeUsers = false
 NW_GetSidNoProfiles.sapmnt = /sapmnt
 
 # Only use this parameter if recommended by SAP - check for reserved SIDs
-NW_GetSidNoProfiles.strictSidCheck = true
+NW_GetSidNoProfiles.strictSidCheck = false
 
 # Specify whether this system is to be a Unicode system.
 NW_GetSidNoProfiles.unicode = true
 
 # Specify whether you want to set FQDN for the system.
-NW_getFQDN.setFQDN = true
+# NW_getFQDN.setFQDN =
 
 # Add gateway process in the ASCS instance
 # NW_SCS_Instance.ascsInstallGateway = false

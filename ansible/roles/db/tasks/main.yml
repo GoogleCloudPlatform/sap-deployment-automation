@@ -13,9 +13,9 @@
     mode: 0777
     recurse: true
 
-- name: inifile.params config file 
+- name: inifile.params config file
   template:
-    src: "{{ sap_nw_ini_template }}"
+    src: inifile.params.j2
     dest: /usr/sap/inifile_db.params
 
 - name: check for files created by db installer
@@ -23,7 +23,7 @@
     path: '{{ item }}'
   loop:
   - /home/{{ sap_nw_user }}/.hdb/{{ sap_nw_pas_virtual_host }}
-  - /sapmnt/{{ sap_nw_ascs_sid }}/exe/uc/linuxx86_64/R3load
+  - /sapmnt/{{ sap_nw_sid }}/exe/uc/linuxx86_64/R3load
   register: db_installed_files
     
 - name: installing s4-hana 

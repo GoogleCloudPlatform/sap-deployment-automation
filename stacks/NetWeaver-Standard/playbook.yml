@@ -56,7 +56,7 @@
   roles:
   - role: nw-standard
     vars:
-      sap_hana_instance_name: '{{ terraform.outputs.inventory.value.hana.0 }}'
+      sap_hana_virtual_host: '{{ terraform.outputs.inventory.value.hana.0 }}'
       sap_nw_ascs_virtual_host: '{{ terraform.outputs.nw_instance_name.value }}'
       sap_nw_pas_virtual_host: '{{ terraform.outputs.nw_instance_name.value }}'
     tags: [nw]

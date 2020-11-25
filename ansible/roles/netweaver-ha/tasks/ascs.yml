@@ -34,9 +34,6 @@
     tasks_from: ha
   vars:
     sap_nw_product_id: "{{ sap_product_vars[sap_product_and_version].sap_nw_ascs_product_id }}"
-    sap_nw_ascs_sid: "{{ sap_nw_sid }}"
 - name: include storage primary tasks
   include_role:
     name: post-deploy
-  vars:
-    sap_nw_ascs_sid: "{{ sap_nw_sid }}" 

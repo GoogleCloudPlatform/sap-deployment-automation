@@ -34,10 +34,8 @@
   include_role:
     name: ers
   vars:
-    sap_use_alias: true 
+    sap_use_alias: '{{ ansible_os_family == "RedHat" }}'
     sap_nw_product_id: "{{ sap_product_vars[sap_product_and_version].sap_nw_ers_product_id }}"
 - name: include storage primary tasks
   include_role:
     name: post-deploy
-  vars:
-    sap_nw_ascs_sid: "{{ sap_nw_sid }}"

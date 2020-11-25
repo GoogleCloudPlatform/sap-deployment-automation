@@ -4,25 +4,14 @@
 #                                                                                                                                                                                                                                            #
 ##############################################################################################################################################################################################################################################
 
-NW_GetSidNoProfiles.sid = {{ sap_nw_sid }}
-NW_getFQDN.FQDN = {{ sap_domain }}
-NW_GetMasterPassword.masterPwd = {{ sap_nw_password }}
-NW_Delete_Sapinst_Users.removeUsers = false
-NW_GetSidNoProfiles.sapmnt = /sapmnt
-NW_GetSidNoProfiles.strictSidCheck = true
-NW_GetSidNoProfiles.unicode = true
-NW_getFQDN.setFQDN = true
-archives.downloadBasket = {{ sap_nw_archives_downloadbasket }}
-SAPINST.CD.PACKAGE.KERNEL = {{ sap_nw_sapinst_package_kernel }}
-
 # Password for the Diagnostics Agent specific <dasid>adm user. Provided value may be encoded.
-# DiagnosticsAgent.dasidAdmPassword = 
+# DiagnosticsAgent.dasidAdmPassword =
 
 # Windows domain in which the Diagnostics Agent users must be created. This is an optional property (Windows only).
-# DiagnosticsAgent.domain = 
+# DiagnosticsAgent.domain =
 
 # Windows only: Password for the Diagnostics Agent specific 'SAPService<DASID>' user.
-# DiagnosticsAgent.sapServiceDASIDPassword = 
+# DiagnosticsAgent.sapServiceDASIDPassword =
 
 # Specify whether the all operating system users are to be removed from group 'sapinst' after the execution of Software Provisioning Manager has completed.
 # NW_Delete_Sapinst_Users.removeUsers = false
@@ -31,51 +20,49 @@ SAPINST.CD.PACKAGE.KERNEL = {{ sap_nw_sapinst_package_kernel }}
 NW_System.installSAPHostAgent = false
 
 # SAP INTERNAL USE ONLY
-# NW_adaptProfile.templateFiles = 
+# NW_adaptProfile.templateFiles =
 
 # The FQDN of the system
-# NW_getFQDN.FQDN = 
+# NW_getFQDN.FQDN =
 
-# Specify whether you want to set FQDN for the system.
-# NW_getFQDN.setFQDN = true
 # Specify whether you want to set FQDN for the system.
 # NW_getFQDN.setFQDN = true
 
 # ABAP system is Unicode (true|false), only needed if it cannot be determined from the system.
-# NW_getUnicode.isUnicode = 
+# NW_getUnicode.isUnicode =
 
 # Provide  'profile' directory of SAP Netweaver-based system.
 NW_readProfileDir.profileDir = /sapmnt/{{ sap_nw_sid }}/profile
 
 # Windows only: The drive to use
-# NW_readProfileDir.sapdrive = 
+# NW_readProfileDir.sapdrive =
 
 # The folder containing all archives that have been downloaded from http://support.sap.com/swdc and are supposed to be used in this procedure
-# archives.downloadBasket = 
+archives.downloadBasket = {{ sap_nw_kernel_files }}
 
 # Windows only: The domain of the SAP Host Agent user
-# hostAgent.domain = 
+# hostAgent.domain =
 
 # Password for the 'sapadm' user of the SAP Host Agent
-# hostAgent.sapAdmPassword = 
+# hostAgent.sapAdmPassword =
 
 # Windows only: The domain of all users of this SAP system. Leave empty for default.
-# nwUsers.sapDomain = 
+# nwUsers.sapDomain =
 
 # Windows only: The password of the 'SAPServiceSID' user
-# nwUsers.sapServiceSIDPassword = 
+# nwUsers.sapServiceSIDPassword =
 
 # UNIX only: The user ID of the 'sapadm' user, leave empty for default. The ID is ignored if the user already exists.
-nwUsers.sapadmUID = 1004
+# nwUsers.sapadmUID =
 
 # UNIX only: The group id of the 'sapsys' group, leave empty for default. The ID is ignored if the group already exists.
-nwUsers.sapsysGID = 1002
+# nwUsers.sapsysGID =
 
 # UNIX only: The user id of the <sapsid>adm user, leave empty for default. The ID is ignored if the user already exists.
-nwUsers.sidAdmUID = 1005
+# nwUsers.sidAdmUID =
 
 # The password of the '<sapsid>adm' user
-# nwUsers.sidadmPassword = 
+nwUsers.sidadmPassword = {{ sap_nw_password }}
 
 # The  instance number of the ERS instance. Leave empty for default.
 nw_instance_ers.ersInstanceNumber = {{ sap_nw_ers_instance_number }}
