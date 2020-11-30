@@ -34,4 +34,4 @@
   include_role:
     name: ascs  
   vars:
-    sap_nw_product_id: "{{ sap_product_vars[sap_product_and_version].sap_nw_ascs_product_id }}"
+    sap_nw_product_id: "{{ sap_product_vars[sap_product_and_version].ascs_product_id }}"

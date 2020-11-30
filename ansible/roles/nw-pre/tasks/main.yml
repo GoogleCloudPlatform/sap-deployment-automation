@@ -9,7 +9,7 @@
     path: '{{ sap_nw_install_files_dest }}/{{ item }}'
     mode: 0755
     state: directory
-  with_items: "{{ sap_product_vars[sap_product_and_version].sap_nw_install_files }}"
+  with_items: "{{ sap_product_vars[sap_product_and_version].install_files }}"
 
 - name: Define bucket and prefix
   set_fact:
@@ -27,6 +27,6 @@
   command: >-
     gsutil -m rsync -r
     gs://{{ sap_nw_install_files_bucket_and_prefix }}/{{ item }} {{ sap_nw_install_files_dest }}/{{ item }}
-  with_items: "{{ sap_product_vars[sap_product_and_version].sap_nw_install_files }}"
+  with_items: "{{ sap_product_vars[sap_product_and_version].install_files }}"
   environment:
     CLOUDSDK_PYTHON: '{{ cloudsdk_python_export_path }}'

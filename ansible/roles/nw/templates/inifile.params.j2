@@ -23,11 +23,11 @@ NW_HDB_getDBInfo.dbsid = {{ sap_hana_sid }}
 
 NW_HDB_getDBInfo.instanceNumber = {{ sap_hana_instance_number }}
 
-SAPINST.CD.PACKAGE.KERNEL = {{ sap_nw_software_path }}
+SAPINST.CD.PACKAGE.KERNEL = {{ sap_nw_kernel_files }}
 
-SAPINST.CD.PACKAGE.LOAD = {{ sap_product_vars[sap_product_and_version].sap_nw_sapinst_package_load }}
+SAPINST.CD.PACKAGE.LOAD = {{ sap_product_vars[sap_product_and_version].load_files }}
 
-SAPINST.CD.PACKAGE.CLIENT = {{ sap_nw_sapinst_package_client }}
+SAPINST.CD.PACKAGE.RDBMS = {{ sap_nw_rdbms_files }}
 
 # Specify whether Software Provisioning Manager is to validate the schema name. The schema name must only contain numbers and capital letters. It  must not start with '_' . It cannot be 'SYS' or 'SYSTEM'.
 # HDB_Schema_Check_Dialogs.validateSchemaName = true
@@ -222,7 +222,7 @@ NW_readProfileDir.profileDir = /sapmnt/{{ sap_nw_sid }}/profile
 # NW_readProfileDir.sapdrive =
 
 # The folder containing all archives that have been downloaded from http://support.sap.com/swdc and are supposed to be used in this procedure
-archives.downloadBasket = {{ sap_nw_software_path }}
+archives.downloadBasket = {{ sap_nw_kernel_files }}
 
 # DBACOCKPIT user is to be created. Default value is 'true'.
 # hdb.create.dbacockpit.user = true
