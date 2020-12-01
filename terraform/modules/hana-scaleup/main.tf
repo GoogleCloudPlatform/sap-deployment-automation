@@ -77,7 +77,7 @@ resource "google_compute_disk" "gcp_sap_hana_data" {
 resource "google_compute_disk" "gcp_sap_hana_backup" {
   project = var.project_id
   name    = "${var.instance_name}-backup"
-  count   = var.create_backup_volume == true ? 1 : 0
+  count   = tobool(var.create_backup_volume) == true ? 1 : 0
   type    = "pd-standard"
   zone    = var.zone
   size    = local.pd_hdd_size
@@ -100,7 +100,7 @@ resource "google_compute_attached_disk" "data" {
 }
 
 resource "google_compute_attached_disk" "backup" {
-  count       = var.create_backup_volume == true ? 1 : 0
+  count       = tobool(var.create_backup_volume) == true ? 1 : 0
   disk        = google_compute_disk.gcp_sap_hana_backup[0].id
   instance    = element(split("/", element(tolist(module.sap_hana_scaleup.instances_self_links), 0)), 10)
   device_name = "${element(split("/", element(tolist(module.sap_hana_scaleup.instances_self_links), 0)), 10)}-backup"
