@@ -48,6 +48,7 @@
   roles:
   - role: sap-hana-ha
     vars:
+      sap_hana_backint_install: '{{ true if sap_hana_backint_bucket_name != '' else false }}'
       sap_hana_primary_instance_name: '{{ terraform.outputs.hana_primary_instance_name.value }}'
       sap_hana_secondary_instance_name: '{{ terraform.outputs.hana_secondary_instance_name.value }}'
       sap_hana_primary_instance_ip: '{{ terraform.outputs.hana_primary_instance_ip.value }}'

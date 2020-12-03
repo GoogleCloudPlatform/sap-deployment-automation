@@ -32,6 +32,7 @@
   hosts: hana
   become: yes
   vars:
+    sap_hana_backint_install: '{{ true if sap_hana_backint_bucket_name != '' else false }}'
     sap_hana_shared_size: '{{ terraform.outputs.hana_shared_size.value }}G'
     sap_hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
     sap_hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'

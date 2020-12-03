@@ -33,6 +33,7 @@
   hosts: hana
   become: yes
   vars:
+    sap_hana_backint_install: '{{ true if sap_hana_backint_bucket_name != '' else false }}'
     sap_hana_primary_instance_name: '{{ terraform.outputs.primary_instance_name.value }}'
     sap_hana_secondary_instance_name: '{{ terraform.outputs.secondary_instance_name.value }}'
     sap_hana_primary_instance_ip: '{{ terraform.outputs.primary_instance_ip.value }}'

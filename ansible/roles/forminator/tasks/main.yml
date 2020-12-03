@@ -11,7 +11,7 @@
     name: '{{ sap_hana_backint_bucket_name }}'
     auth_kind: application
     project: '{{ sap_project_id }}'
-  when: sap_hana_backint_install|bool == true
+  when: backint_install|bool == true
 
 - name: check if ssh key files are present
   stat:
