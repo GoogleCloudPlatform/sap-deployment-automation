@@ -6,8 +6,8 @@
     vars:
       sap_tf_project_path: './tf'
       sap_state: '{{ state | default("present") }}'
-      backint_install: '{{ true if sap_hana_backint_bucket_name != '' else false }}'
-      backint_bucket_name: '{{ sap_hana_backint_bucket_name | default("sap-hana-backint-backup") }}'
+      sap_hana_backint_install: '{{ true if sap_hana_backint_bucket_name != '' else false }}'
+      sap_hana_backint_bucket_name: '{{ sap_hana_backint_bucket_name | default("sap-hana-backint-backup") }}'
       sap_tf_variables:
         ascs_health_check_port: '{{ sap_nw_ascs_health_check_port | default("6666") }}'
         ascs_instance_name: '{{ sap_ascs_instance_name }}'
@@ -49,6 +49,7 @@
   - role: sap-hana-ha
     vars:
       sap_hana_backint_install: '{{ true if sap_hana_backint_bucket_name != '' else false }}'
+      sap_hana_backint_bucket_name: '{{ sap_hana_backint_bucket_name | default("sap-hana-backint-backup") }}'
       sap_hana_primary_instance_name: '{{ terraform.outputs.hana_primary_instance_name.value }}'
       sap_hana_secondary_instance_name: '{{ terraform.outputs.hana_secondary_instance_name.value }}'
       sap_hana_primary_instance_ip: '{{ terraform.outputs.hana_primary_instance_ip.value }}'
