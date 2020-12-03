@@ -23,3 +23,5 @@ sap_hana_sid: ABC
 sap_nw_sid: XYZ
 sap_hana_install_files_bucket: nw-ansible
 sap_nw_install_files_bucket: nw-code-ansible
+sap_hana_backint_install: true
+sap_hana_backint_bucket_name: sap-hana-backint-backup

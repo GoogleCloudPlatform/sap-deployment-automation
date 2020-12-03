@@ -8,7 +8,7 @@
     vars:
       sap_tf_project_path: ./tf
       sap_state: '{{ state | default("present") }}'
-      backint_install: '{{ sap_hana_backint_install | default(true) }}'
+      backint_install: '{{ true if sap_hana_backint_bucket_name != '' else false }}'
       backint_bucket_name: '{{ sap_hana_backint_bucket_name | default("sap-hana-backint-backup") }}'
       sap_tf_variables:
         instance_name: '{{ sap_hana_instance_name }}'

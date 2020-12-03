@@ -6,6 +6,8 @@
     vars:
       sap_state: '{{ state | default("present") }}'
       sap_tf_project_path: './tf'
+      backint_install: '{{ true if sap_hana_backint_bucket_name != '' else false }}'
+      backint_bucket_name: '{{ sap_hana_backint_bucket_name | default("sap-hana-backint-backup") }}'
       sap_tf_variables:
         project_id: '{{ sap_project_id }}'
         sap_ascs_instance_name: '{{ sap_ascs_instance_name }}'

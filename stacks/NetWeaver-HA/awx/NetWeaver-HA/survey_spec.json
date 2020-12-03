@@ -313,6 +313,14 @@
       "variable": "sap_nw_nfs_src",
       "min": 1,
       "max": 1024
+    },
+    {
+      "question_name": "Hana backint backup bucket",
+      "question_description": "This is the bucket where hana backups are stored by backint",
+      "required": true,
+      "type": "text",
+      "variable": "sap_hana_backint_bucket_name",
+      "default": ""
     }
   ]
 }

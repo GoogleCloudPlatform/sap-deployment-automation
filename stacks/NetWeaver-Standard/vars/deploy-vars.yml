@@ -22,3 +22,5 @@ sap_nw_instance_type: n1-standard-2
 sap_nw_password:
 sap_nw_service_account_name: sap-common-sa
 sap_nw_sid: XYZ
+sap_hana_backint_install: true
+sap_hana_backint_bucket_name: sap-hana-backint-backup

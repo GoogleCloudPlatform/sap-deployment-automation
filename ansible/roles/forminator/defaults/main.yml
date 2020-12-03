@@ -13,3 +13,5 @@ sap_ssh_user: ansible
 sap_ssh_pub_key: ~/.ssh/id_rsa.pub
 sap_ssh_priv_key: ~/.ssh/id_rsa
 sap_ansible_is_push_mode: true
+sap_hana_backint_install: false
+sap_hana_backint_bucket_name: sap-hana-backint-backup
