@@ -8,7 +8,7 @@
 
 - name: ensure hana backint backup bucket exists
   gcp_storage_bucket:
-    name: '{{ sap_hana_backint_bucket_name }}'
+    name: '{{ backint_bucket_name }}'
     auth_kind: application
     project: '{{ sap_project_id }}'
   when: backint_install|bool == true
