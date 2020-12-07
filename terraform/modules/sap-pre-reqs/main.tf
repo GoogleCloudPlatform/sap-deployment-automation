@@ -64,11 +64,10 @@ resource "google_project_iam_member" "sap_sa_iam_mem_service" {
   member  = "serviceAccount:${google_service_account.sap_service_account.email}"
 }
 
-resource "google_compute_project_metadata" "vm_dns_setting" {
+resource "google_compute_project_metadata_item" "vm_dns_setting" {
   project = var.project_id
-  metadata = {
-    VmDnsSetting = "ZonalPreferred"
-  }
+  key     = "VmDnsSetting"
+  value   = "ZonalPreferred"
 }
 
 # Create firewall rule to allow communication b/w instances in subnet
