@@ -1,0 +1,26 @@
+---
+
+- name: download HANA Studio
+  win_get_url:
+    url: 'https://storage.cloud.google.com/scripts-for-windows/hanainstall/{{ item }}'
+    dest: 'C:\Program Files\{{ item }}'
+    timeout: "{{ package_url_timeout }}"
+  register: result
+  until: result is succeeded
+  retries: "{{ package_retries_cnt }}"
+  delay: "{{ package_retries_delay }}"
+  with_items:
+    - SAP_HANA_STUDIO.zip
+    - 50148617_6.zip
+    - JavaChrome.exe
+    - unzip_HS.ps1
+
+- name: Get dummy template HANA Studio (we use the defaults, but the install fails otherwise)
+  win_command: hdbinst.exe --dump_configfile_template=default_config
+  args:
+    chdir: C:\Users\{{ bastion_username_windows }}\Downloads\SAP_HANA_STUDIO
+
+- name: Install HANA Studio
+  win_command: hdbinst.exe --b --configfile=default_config
+  args:
+    chdir: C:\Users\{{ bastion_username_windows }}\Downloads\SAP_HANA_STUDIO
