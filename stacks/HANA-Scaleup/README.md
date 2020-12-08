@@ -22,15 +22,25 @@ Terraform module and ansible roles to deploy the SAP HANA Scaleup stack
 * All the variables required for deploying stack are defined in the `vars/deploy-vars.yml` file.
 
 `sap_zone` (required): GCP zone to deploy the sap instances 
+
 `sap_project_id` (required): GCP project-id to deploy the resources
+
 `sap_source_image_family` (required): GCE instances image family
+
 `sap_source_image_project` (required): GCE instances image family project
-`sap_subnetwork_project_id` (required): GCP project-id hosting the subnetwork. When using `shared_vpc` (required): provide the host project-id of the subnetwork.
+
+`sap_subnetwork_project_id` (required): GCP project-id hosting the subnetwork. When using `shared_vpc` provide the host project-id of the subnetwork.
+
 `sap_subnetwork` (required): GCP subnetwork name
+
 `sap_tf_state_bucket` (required): Terraform state bucket name storing the tf state file
+
 `sap_tf_state_bucket_prefix` (required): Terraform state bucket prefix for storing tf state file
+
 `sap_hana_instance_name` (required): GCE instance name
+
 `sap_hana_service_account_name` (required): GCP service account name
+
 `sap_hana_instance_type`: GCE instance type (choose from the below)
 ```hcl
 n1-highmem-32
@@ -48,12 +58,19 @@ m2-ultramem-208
 m2-ultramem-416
 ```
 `sap_hana_autodelete_boot_disk`: Delete boot disk along with the instance
+
 `sap_hana_boot_disk_size`: GCE instance boto disk size
+
 `sap_hana_boot_disk_type`: pd-ssd
+
 `sap_hana_network_tags`: List of network tags to add to the instances
+
 `sap_hana_pd_kms_key`: Customer managed encryption key to use in persistent disks 
+
 `sap_hana_create_backup_volume`: Provision HANA DB backup disk and attach to instance
+
 `sap_hana_backint_install`: Install SAP HANA backint on the HANA nodes
+
 `sap_hana_password`: Common password to use for all HANA user and system authentication
 
 # Example playbook to deploy SAP HANA Scaleup stack
