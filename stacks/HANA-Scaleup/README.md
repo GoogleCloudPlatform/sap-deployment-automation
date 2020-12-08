@@ -4,8 +4,7 @@ Terraform module and ansible roles to deploy the SAP HANA Scaleup stack
 
 # Requirements
 
-1. Terraform must be installed and on the `PATH`.
-2. Ansible version `>= 2.9.2`
+* Ansible version `>= 2.9.2`
 
 # Usage
 
