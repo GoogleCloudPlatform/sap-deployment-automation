@@ -8,8 +8,8 @@
     vars:
       sap_tf_project_path: ./tf
       sap_state: '{{ state | default("present") }}'
-      sap_hana_backint_install: '{{ true if sap_hana_backint_bucket_name != '' else false }}'
-      sap_hana_backint_bucket_name: '{{ sap_hana_backint_bucket_name | default("sap-hana-backint-backup") }}'
+      sap_hana_backint_install: '{{ sap_hana_backint_bucket_name | default("") != "" }}'
+      sap_hana_backint_bucket_name: '{{ sap_hana_backint_bucket_name | default("") }}'
       sap_tf_variables:
         instance_name: '{{ sap_hana_instance_name }}'
         project_id: '{{ sap_project_id }}'
@@ -32,8 +32,8 @@
   hosts: hana
   become: yes
   vars:
-    sap_hana_backint_install: '{{ true if sap_hana_backint_bucket_name != '' else false }}'
-    sap_hana_backint_bucket_name: '{{ sap_hana_backint_bucket_name | default("sap-hana-backint-backup") }}'
+    sap_hana_backint_install: '{{ sap_hana_backint_bucket_name | default("") != "" }}'
+    sap_hana_backint_bucket_name: '{{ sap_hana_backint_bucket_name | default("") }}'
     sap_hana_shared_size: '{{ terraform.outputs.hana_shared_size.value }}G'
     sap_hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
     sap_hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
