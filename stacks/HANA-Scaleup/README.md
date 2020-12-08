@@ -127,6 +127,7 @@ Below is the example playbook to deploy the HANA scaleup stack. Replace the vari
 * The ansible wrapper script will setup the environment along with installing the correct terraform and ansible version required for running the code
 
 * Run the below command by changing into the root folder `sap-iac/` for deploying the SAP HANA scaleup stack
+
 `./ansible-wrapper ./stacks/HANA-Scaleup/playbook.yml --extra-vars '@./stacks/HANA-Scaleup/vars/deploy-vars.yml'`
 
 # Destroy HANA scaleup stack
