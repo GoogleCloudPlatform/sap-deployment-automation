@@ -1,38 +1,52 @@
-Role Name
-=========
+# pacemaker-hana
 
-A brief description of the role goes here.
+This is a role for configuring [Pacemaker](https://clusterlabs.org/pacemaker/), whose tasks are intended to be included in other roles. See the tasks for the `pacemaker-hana` and `pacemaker-netweaver` roles for an example.
 
-Requirements
-------------
+# Requirements
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+A RHEL or Suse instance.
 
-Role Variables
---------------
+# Role Variables
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+`sap_cluster_name` (Optional, default `hacluster`) - Logical name of cluster.
 
-Dependencies
-------------
+`sap_cluster_user` (Optional, default `hacluster`) - The local user created for Pacemaker.
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+`sap_cluster_user_password` (Required) - Password of `sap_cluster_user`.
 
-Example Playbook
-----------------
+`sap_hana_health_check_port` (Optional, default `60000`) - Health check port for HANA.
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+`sap_hana_instance_number` (Required) - HANA instance number.
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+`sap_hana_primary_instance_ip` (Required) - IP address of HANA primary instance.
 
-License
--------
+`sap_hana_primary_instance_name` (Required) - Hostname of HANA primary instance.
 
-BSD
+`sap_hana_secondary_instance_name` (Required) - Hostname of HANA secondary instance.
 
-Author Information
-------------------
+`sap_hana_sid` (Required) - HANA system identifier.
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+`sap_hana_vip` (Required) - IP address of HANA load balancer.
+
+# Example Usage
+
+The following shows inclusion of the `pacemaker-hana` role in another task role.
+
+```
+- name: Include pacemaker install/config role
+  include_role:
+    name: pacemaker-hana
+  vars:
+    sap_cluster_user_password: abcxyz123
+	sap_hana_instance_number: '00'
+	sap_hana_primary_instance_ip: 10.10.10.10
+	sap_hana_primary_instance_hana: hana-pri
+	sap_hana_secondary_instance_ip: 10.10.10.11
+	sap_hana_secondary_instance_name: hana-sec
+	sap_hana_sid: ABC
+	sap_hana_vip: 10.123.123.10
+```
+
+# Author Information
+
+Joseph Wright <joseph.wright@googlecloud.corp-partner.google.com>
