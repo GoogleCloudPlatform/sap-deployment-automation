@@ -4,7 +4,7 @@ Terraform module and ansible roles to deploy the SAP HANA Scaleup stack. This st
 
 # Deployment Architecture
 
-### <img src="images/scaleup.png" width="100px">
+### <img src="images/scaleup.png" width="500px">
 
 # Requirements
 
