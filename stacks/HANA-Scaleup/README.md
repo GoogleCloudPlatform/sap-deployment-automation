@@ -1,6 +1,6 @@
 # SAP HANA installation and configuration using Terraform and Ansible
 
-Terraform module and ansible roles to deploy the SAP HANA Scaleup stack. This stack deploys a single node HANA instance with an option to create multiple nodes at the same time. HANA Scaleup config is performed by a higher ansible role `ansible/roles/sap-hana-scaleup` that in turn calls lower ansible roles to do a specific task as part of the scaleup config.
+Terraform module and ansible roles to deploy the SAP HANA Scaleup stack. This stack deploys a single node HANA instance with an option to create multiple nodes at the same time. All instances are deployed in the same zone. HANA Scaleup config is performed by a higher ansible role `ansible/roles/sap-hana-scaleup` that in turn calls lower ansible roles to do a specific task as part of the scaleup config.
 
 # Deployment Architecture
 
