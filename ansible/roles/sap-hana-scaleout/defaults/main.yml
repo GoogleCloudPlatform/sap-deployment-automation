@@ -52,6 +52,7 @@ backint_config_path: "{{ backint_dir }}/backint-gcs/parameters.txt"
 sap_hana_disks:
   - { name: data, partition_path : "{{ sap_hana_data_partition_name }}"}
   - { name: backup, partition_path : "{{ sap_hana_backup_partition_name }}"}
+
 sap_hana_logvols:
   shared:
     size: "{{ sap_hana_shared_size }}"

@@ -1,11 +1,11 @@
-# sap-hana-scaleup
+# sap-hana-scaleout
 
-A higher level ansible role to install and configure HANA Scaleup.
+A higher level ansible role to install and configure HANA Scaleout.
 
 # Requirements
 
 Ansible version `>= 2.9.2`
-Running GCE instance deployed using the terraform code under `stacks/HANA-Scaleup`
+Running GCE instance deployed using the terraform code under `stacks/HANA-Scaleout`
 
 # Role Variables
 
@@ -20,6 +20,8 @@ Running GCE instance deployed using the terraform code under `stacks/HANA-Scaleu
 `sap_hostagent_rpm_remote_path`: Remote path for storing the SAP install files
 
 `sap_hana_data_partition_name`: HANA data partition name
+
+`sap_hana_create_backup_volume`: Create HANA backup volume
 
 `sap_hana_backup_partition_name`: HANA backup partition name
 
@@ -52,6 +54,14 @@ Running GCE instance deployed using the terraform code under `stacks/HANA-Scaleu
 `sap_hana_mem_restrict`: Restrict HANA memory usage. Options: `yes/no`
 
 `sap_hana_swapon`: Enable swap memory for HANA
+
+`sap_hana_ini_file`: HANA global ini filename
+
+`sap_hana_ini_section`: HANA global ini section value
+
+`sap_hana_ini_setting`: HANA global ini setting value
+
+`sap_hana_ini_value`: HANA global ini value
 
 `sap_hana_password`: Common SAP password to be used for all users
 

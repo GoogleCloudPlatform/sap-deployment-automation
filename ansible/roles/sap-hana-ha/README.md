@@ -1,11 +1,11 @@
-# sap-hana-scaleup
+# sap-hana-ha
 
-A higher level ansible role to install and configure HANA Scaleup.
+A higher level ansible role to install and configure HANA HA.
 
 # Requirements
 
 Ansible version `>= 2.9.2`
-Running GCE instance deployed using the terraform code under `stacks/HANA-Scaleup`
+Running GCE instances deployed using the terraform code under `stacks/HANA-HA`
 
 # Role Variables
 
@@ -53,6 +53,12 @@ Running GCE instance deployed using the terraform code under `stacks/HANA-Scaleu
 
 `sap_hana_swapon`: Enable swap memory for HANA
 
+`sap_hana_backup_file_name`: HANA backup file name
+
+`sap_hana_monitoring_user`: HANA monitoring user name
+
+`sap_hana_user_store_key`: HANA userstore key name
+
 `sap_hana_password`: Common SAP password to be used for all users
 
 `sap_hana_ase_user_password`: HANA ase user password. Defaults to `sap_hana_password`
@@ -66,6 +72,10 @@ Running GCE instance deployed using the terraform code under `stacks/HANA-Scaleu
 `sap_hana_sapadm_password`: HANA sap adm user password. Defaults to `sap_hana_password`
 
 `sap_hana_sidadm_password`: HANA sid adm user password. Defaults to `sap_hana_password`
+
+`sap_hana_hsr_operation_mode`: HANA system replication operation mode
+
+`sap_hana_hsr_replication_mode`: HANA system replication mode
 
 `backint_temp_path`: Temporary location on the system to store the backint install files/script
 

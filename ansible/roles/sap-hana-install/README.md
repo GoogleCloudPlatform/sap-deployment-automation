@@ -1,6 +1,6 @@
-# sap-hana-download-packages
+# sap-hana-install
 
-Ansible role to download SAP install files from a GCS bucket.
+Ansible role to install SAP HANA.
 
 # Requirements
 
@@ -8,7 +8,7 @@ Ansible version `>= 2.9.2`
 
 # Role Variables
 
-`cloudsdk_python_export_path`: GCLOUD SDK python version export path used by gcloud/gsutil commands
+All HANA configuration is defined in the `templates/configfile.j2` file.
 
 # Defaults:
 
