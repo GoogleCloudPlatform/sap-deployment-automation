@@ -9,8 +9,8 @@ sap_linux_image_family: sles-12-sp3-sap
 sap_linux_image_project: suse-sap-cloud
 sap_region: us-central1
 sap_zone: us-central1-a
-sap_subnetwork: app2
-sap_subnetwork_project: albatross-duncanl-sandbox-2
+sap_nw_subnetwork: app2
+sap_nw_subnetwork_project: albatross-duncanl-sandbox-2
 sap_boot_disk_size: 30
 sap_gce_ssh_user: sushma
 usr_sap_size: 140G

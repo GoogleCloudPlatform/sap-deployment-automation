@@ -9,8 +9,8 @@ sap_project_id: albatross-duncanl-sandbox-2
 sap_source_image_family: rhel-7-7-sap-ha
 sap_source_image_project: rhel-sap-cloud
 sap_tf_state_bucket: sap-terraform-state-bg
-sap_subnetwork: app2
-sap_subnetwork_project_id: '{{ sap_project_id }}'
+sap_hana_subnetwork: app2
+sap_hana_subnetwork_project_id: '{{ sap_project_id }}'
 sap_tf_state_bucket_prefix: hanaha
 
 # Terraform hana variables (required)

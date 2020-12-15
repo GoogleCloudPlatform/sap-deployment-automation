@@ -34,7 +34,7 @@
       "question_description": "This is the subnetwork for the machine instance network interfaces.",
       "required": true,
       "type": "text",
-      "variable": "sap_subnetwork",
+      "variable": "sap_hana_subnetwork",
       "min": 1,
       "max": 1024
     },
@@ -43,7 +43,7 @@
       "question_description": "This is the project of the subnetwork for the machine instance network interfaces. If left blank, it will default to the Project ID.",
       "required": false,
       "type": "text",
-      "variable": "sap_subnetwork_project_id",
+      "variable": "sap_hana_subnetwork_project_id",
       "min": 0,
       "max": 1024,
       "default": ""

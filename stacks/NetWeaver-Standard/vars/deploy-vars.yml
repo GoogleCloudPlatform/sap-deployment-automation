@@ -3,7 +3,7 @@
 sap_project_id:
 sap_source_image_family: rhel-7-7-sap-ha
 sap_source_image_project: rhel-sap-cloud
-sap_subnetwork:
+sap_nw_subnetwork:
 sap_tf_state_bucket:
 sap_tf_state_bucket_prefix:
 sap_zone: us-central1-a

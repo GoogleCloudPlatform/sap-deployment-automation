@@ -28,7 +28,7 @@ sap_nw_install_files_bucket:
 sap_project_id:
 
 # Subnetwork for network interfaces.
-sap_subnetwork:
+sap_nw_subnetwork:
 
 # Password for HANA.
 sap_hana_password:
@@ -84,6 +84,6 @@ sap_nw_service_account_name: sap-common-sa
 # sap_nw_ascs_instance_number: '06'
 # sap_nw_ers_instance_number: '16'
 
-# Define sap_subnetwork_project_id if using a shared VPC.
-# sap_subnetwork_project_id:
+# Define sap_nw_subnetwork_project_id if using a shared VPC.
+# sap_nw_subnetwork_project_id:
 sap_hana_backint_install: false

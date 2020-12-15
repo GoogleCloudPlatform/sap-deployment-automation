@@ -33,9 +33,9 @@ Terraform module and ansible roles to deploy the SAP HANA Scaleup stack. This st
 
 `sap_source_image_project` (required): GCE instances image family project
 
-`sap_subnetwork_project_id` (required): GCP project-id hosting the subnetwork. When using `shared_vpc` provide the host project-id of the subnetwork.
+`sap_hana_subnetwork_project_id` (required): GCP project-id hosting the subnetwork. When using `shared_vpc` provide the host project-id of the subnetwork.
 
-`sap_subnetwork` (required): GCP subnetwork name
+`sap_hana_subnetwork` (required): GCP subnetwork name
 
 `sap_tf_state_bucket` (required): Terraform state bucket name storing the tf state file
 

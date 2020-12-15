@@ -6,7 +6,7 @@ sap_tf_state_bucket_prefix:
 sap_hana_instance_name:
 sap_ascs_instance_name:
 sap_pas_instance_name:
-sap_subnetwork:
+sap_nw_subnetwork:
 sap_hana_password:
 sap_nw_password:
 sap_hana_service_account_name: sap-common-sa

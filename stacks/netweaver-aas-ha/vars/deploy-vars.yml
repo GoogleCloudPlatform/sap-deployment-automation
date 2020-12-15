@@ -12,8 +12,8 @@ sap_gce_ssh_pub_key_file: ~/.ssh/id_rsa.pub
 sap_nw_service_account_name: sap-common-sa
 sap_region: europe-west1
 sap_zone: europe-west1-d
-sap_subnetwork: "sub-sap-poc-nw"
-sap_subnetwork_project_id: mercadona-sap-host-1
+sap_nw_subnetwork: "sub-sap-poc-nw"
+sap_nw_subnetwork_project_id: mercadona-sap-host-1
 sap_nw_boot_disk_size: '30'
 sap_ssh_user: sushma
 sap_nw_usrsap_disk_size: '90G'
