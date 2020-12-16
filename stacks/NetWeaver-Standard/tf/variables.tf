@@ -123,18 +123,13 @@ variable "subnetwork_nw" {
   default     = "app2"
 }
 
-variable "subnetwork_project_nw" {
-  description = "The name or self_link of the nw subnetwork project where the isntance will be deployed. The subnetwork must exist in the same region this instance will be created in."
-  default     = ""
-}
-
 variable "subnetwork_hana" {
   description = "The name or self_link of the hana subnetwork where the isntance will be deployed. The subnetwork must exist in the same region this instance will be created in."
   default     = "app2"
 }
 
-variable "subnetwork_project_hana" {
-  description = "The name or self_link of the hana subnetwork project where the isntance will be deployed. The subnetwork must exist in the same region this instance will be created in."
+variable "subnetwork_project" {
+  description = "The name or self_link of the subnetwork project where the isntance will be deployed. The subnetwork must exist in the same region this instance will be created in."
   default     = ""
 }
 

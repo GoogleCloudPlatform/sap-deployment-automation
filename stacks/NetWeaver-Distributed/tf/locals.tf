@@ -55,10 +55,9 @@ locals {
   pd_ssd_size        = max(lookup(local.pd_ssd_map, var.sap_hana_instance_type), (local.hana_log_size + local.hana_data_size + local.hana_shared_size + local.hana_usr_size))
   pd_hdd_size        = local.hana_backup_size
   region             = join("-", slice(split("-", var.zone), 0, 2))
-  subnetwork_project_hana = var.subnetwork_project_hana == "" ? var.project_id : var.subnetwork_project_hana
-  network_parts_hana      = split("/", data.google_compute_subnetwork.subnetwork_hana.network)
-  network_hana            = element(local.network_parts_hana, length(local.network_parts_hana) - 1)
-  subnetwork_project_nw   = var.subnetwork_project_nw == "" ? var.project_id : var.subnetwork_project_nw
-  network_parts_nw        = split("/", data.google_compute_subnetwork.subnetwork_nw.network)
-  network_nw              = element(local.network_parts_nw, length(local.network_parts_nw) - 1)
+  subnetwork_project = var.subnetwork_project == "" ? var.project_id : var.subnetwork_project
+  network_parts_hana = split("/", data.google_compute_subnetwork.subnetwork_hana.network)
+  network_hana       = element(local.network_parts_hana, length(local.network_parts_hana) - 1)
+  network_parts_nw   = split("/", data.google_compute_subnetwork.subnetwork_nw.network)
+  network_nw         = element(local.network_parts_nw, length(local.network_parts_nw) - 1)
 }

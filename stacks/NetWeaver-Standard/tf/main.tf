@@ -8,7 +8,7 @@ module "gcp_hana" {
   gce_ssh_pub_key_file  = var.gce_ssh_pub_key_file
   service_account_email = var.sap_hana_service_account_email
   subnetwork            = var.subnetwork_hana
-  subnetwork_project    = var.subnetwork_project_hana
+  subnetwork_project    = var.subnetwork_project
   source_image_family   = var.source_image_family
   source_image_project  = var.source_image_project
   boot_disk_size        = var.sap_hana_boot_disk_size
@@ -22,7 +22,7 @@ module "gcp_hana" {
 module "gcp_netweaver" {
   source                = "../../../terraform/modules/nw"
   subnetwork            = var.subnetwork_nw
-  subnetwork_project    = var.subnetwork_project_nw
+  subnetwork_project    = var.subnetwork_project
   source_image_family   = var.source_image_family
   source_image_project  = var.source_image_project
   autodelete_disk       = var.sap_nw_autodelete_boot_disk

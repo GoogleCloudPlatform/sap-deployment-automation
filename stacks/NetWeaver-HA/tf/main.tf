@@ -28,7 +28,7 @@ module "hana_ha" {
   gce_ssh_pub_key_file  = var.gce_ssh_pub_key_file
   service_account_email = var.hana_service_account_email
   subnetwork            = var.subnetwork_hana
-  subnetwork_project    = local.subnetwork_project_hana
+  subnetwork_project    = local.subnetwork_project
   source_image_family   = var.source_image_family
   source_image_project  = var.source_image_project
   boot_disk_size        = var.hana_boot_disk_size
@@ -49,7 +49,7 @@ module "netweaver_ascs" {
   public_key_path       = var.gce_ssh_pub_key_file
   region                = local.region
   subnetwork            = var.subnetwork_nw
-  subnetwork_project    = local.subnetwork_project_nw
+  subnetwork_project    = local.subnetwork_project
   source_image_family   = var.source_image_family
   source_image_project  = var.source_image_project
   usr_sap_size          = var.nw_usrsap_disk_size
@@ -70,7 +70,7 @@ module "netweaver_ers" {
   public_key_path       = var.gce_ssh_pub_key_file
   region                = local.region
   subnetwork            = var.subnetwork_nw
-  subnetwork_project    = local.subnetwork_project_nw
+  subnetwork_project    = local.subnetwork_project
   source_image_family   = var.source_image_family
   source_image_project  = var.source_image_project
   usr_sap_size          = var.nw_usrsap_disk_size
@@ -91,7 +91,7 @@ module "netweaver_pas" {
   public_key_path       = var.gce_ssh_pub_key_file
   region                = local.region
   subnetwork            = var.subnetwork_nw
-  subnetwork_project    = local.subnetwork_project_nw
+  subnetwork_project    = local.subnetwork_project
   source_image_family   = var.source_image_family
   source_image_project  = var.source_image_project
   usr_sap_size          = var.nw_usrsap_disk_size
@@ -161,13 +161,13 @@ module "ers_ilb" {
 data "google_compute_subnetwork" "subnetwork_hana" {
   name    = var.subnetwork_hana
   region  = local.region
-  project = local.subnetwork_project_hana
+  project = local.subnetwork_project
 }
 
 data "google_compute_subnetwork" "subnetwork_nw" {
   name    = var.subnetwork_nw
   region  = local.region
-  project = local.subnetwork_project_nw
+  project = local.subnetwork_project
 }
 
 resource "google_compute_address" "gcp_sap_s4hana_alias_ip" {

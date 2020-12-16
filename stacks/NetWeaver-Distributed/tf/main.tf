@@ -28,7 +28,7 @@ module "hana" {
   gce_ssh_pub_key_file  = var.gce_ssh_pub_key_file
   service_account_email = var.sap_hana_service_account_email
   subnetwork            = var.subnetwork_hana
-  subnetwork_project    = var.subnetwork_project_hana
+  subnetwork_project    = local.subnetwork_project
   source_image_family   = var.source_image_family
   source_image_project  = var.source_image_project
   boot_disk_size        = var.sap_hana_boot_disk_size
@@ -42,7 +42,7 @@ module "hana" {
 module "ascs" {
   source                = "../../../terraform/modules/nw"
   subnetwork            = var.subnetwork_nw
-  subnetwork_project    = var.subnetwork_project_nw
+  subnetwork_project    = local.subnetwork_project
   source_image_family   = var.source_image_family
   source_image_project  = var.source_image_project
   autodelete_disk       = var.sap_nw_autodelete_boot_disk
@@ -66,7 +66,7 @@ module "ascs" {
 module "pas" {
   source                = "../../../terraform/modules/nw"
   subnetwork            = var.subnetwork_nw
-  subnetwork_project    = var.subnetwork_project_nw
+  subnetwork_project    = local.subnetwork_project
   source_image_family   = var.source_image_family
   source_image_project  = var.source_image_project
   autodelete_disk       = "true"
@@ -88,11 +88,11 @@ module "pas" {
 data "google_compute_subnetwork" "subnetwork_hana" {
   name    = var.subnetwork_hana
   region  = local.region
-  project = local.subnetwork_project_hana
+  project = local.subnetwork_project
 }
 
 data "google_compute_subnetwork" "subnetwork_nw" {
   name    = var.subnetwork_nw
   region  = local.region
-  project = local.subnetwork_project_nw
+  project = local.subnetwork_project
 }

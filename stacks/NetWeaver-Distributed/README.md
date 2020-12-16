@@ -76,7 +76,7 @@ Use the same command as for deploying, but add the `state: absent` variable:
 
 `sap_nw_subnetwork`: (Required) - The name of the subnetwork used for machines and load balancers.
 
-`sap_nw_subnetwork_project_id`: (Optional, default `''`) - The name of the subnetwork project, if using a shared VPC. If not given, `sap_project_id` will be used.
+`sap_subnetwork_project_id`: (Optional, default `''`) - The name of the subnetwork project, if using a shared VPC. If not given, `sap_project_id` will be used.
 
 `sap_tf_state_bucket`: (Required) - The GCS bucket where Terraform state is stored. If it does not exist, it will be created. Note that the name must be unique, as there can only be one bucket with a given name (it gets a global DNS name). If there is a permissions error when creating this bucket, it is likely that one already exists in another project with the same name.
 

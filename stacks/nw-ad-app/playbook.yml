@@ -29,7 +29,7 @@
         region: '{{ sap_region }}'
         zone: '{{ sap_zone }}'
         subnetwork: '{{ sap_nw_subnetwork }}'
-        subnetwork_project: '{{ sap_nw_subnetwork_project }}'
+        subnetwork_project: '{{ sap_subnetwork_project }}'
         boot_disk_size: '{{ sap_boot_disk_size }}'
         ssh_user: '{{ sap_gce_ssh_user }}'
         public_key_path: '{{ playbook_dir }}/ssh-key.pub'

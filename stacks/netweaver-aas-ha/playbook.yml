@@ -15,7 +15,7 @@
         instance_type: '{{ sap_nw_instance_type }}'
         source_image_family: '{{ sap_source_image_family }}'
         source_image_project: '{{ sap_source_image_project }}'
-        subnetwork_project: '{{ sap_nw_subnetwork_project_id }}'
+        subnetwork_project: '{{ sap_subnetwork_project_id }}'
         boot_disk_size: '{{ sap_nw_boot_disk_size }}'
         subnetwork: '{{ sap_nw_subnetwork }}'
         gce_ssh_user: '{{ sap_ssh_user }}'
