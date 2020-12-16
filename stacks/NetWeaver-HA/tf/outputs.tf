@@ -65,11 +65,11 @@ output "inventory" {
 }
 
 output "subnet_cidr_hana" {
-  value = data.google_compute_subnetwork_hana.subnetwork.ip_cidr_range
+  value = data.google_compute_subnetwork.subnetwork_hana.ip_cidr_range
 }
 
 output "subnet_cidr_nw" {
-  value = data.google_compute_subnetwork_nw.subnetwork.ip_cidr_range
+  value = data.google_compute_subnetwork.subnetwork_nw.ip_cidr_range
 }
 
 output "hana_data_size" {
