@@ -27,8 +27,8 @@ module "hana_ha" {
   gce_ssh_user          = var.gce_ssh_user
   gce_ssh_pub_key_file  = var.gce_ssh_pub_key_file
   service_account_email = var.hana_service_account_email
-  subnetwork            = var.subnetwork
-  subnetwork_project    = local.subnetwork_project
+  subnetwork            = var.subnetwork_hana
+  subnetwork_project    = local.subnetwork_project_hana
   source_image_family   = var.source_image_family
   source_image_project  = var.source_image_project
   boot_disk_size        = var.hana_boot_disk_size
@@ -48,8 +48,8 @@ module "netweaver_ascs" {
   project_id            = var.project_id
   public_key_path       = var.gce_ssh_pub_key_file
   region                = local.region
-  subnetwork            = var.subnetwork
-  subnetwork_project    = local.subnetwork_project
+  subnetwork            = var.subnetwork_nw
+  subnetwork_project    = local.subnetwork_project_nw
   source_image_family   = var.source_image_family
   source_image_project  = var.source_image_project
   usr_sap_size          = var.nw_usrsap_disk_size
@@ -69,8 +69,8 @@ module "netweaver_ers" {
   ssh_user              = var.gce_ssh_user
   public_key_path       = var.gce_ssh_pub_key_file
   region                = local.region
-  subnetwork            = var.subnetwork
-  subnetwork_project    = local.subnetwork_project
+  subnetwork            = var.subnetwork_nw
+  subnetwork_project    = local.subnetwork_project_nw
   source_image_family   = var.source_image_family
   source_image_project  = var.source_image_project
   usr_sap_size          = var.nw_usrsap_disk_size
@@ -90,8 +90,8 @@ module "netweaver_pas" {
   ssh_user              = var.gce_ssh_user
   public_key_path       = var.gce_ssh_pub_key_file
   region                = local.region
-  subnetwork            = var.subnetwork
-  subnetwork_project    = local.subnetwork_project
+  subnetwork            = var.subnetwork_nw
+  subnetwork_project    = local.subnetwork_project_nw
   source_image_family   = var.source_image_family
   source_image_project  = var.source_image_project
   usr_sap_size          = var.nw_usrsap_disk_size
@@ -108,8 +108,8 @@ module "ascs_ilb" {
   project         = var.project_id
   network_project = local.subnetwork_project
   region          = local.region
-  network         = local.network
-  subnetwork      = var.subnetwork
+  network         = local.network_nw
+  subnetwork      = var.subnetwork_nw
   name            = "${var.ascs_instance_name}-ilb"
   source_tags     = ["soure-tag"]
   target_tags     = ["target-tag"]
@@ -135,9 +135,9 @@ module "ers_ilb" {
   project         = var.project_id
   network_project = local.subnetwork_project
   region          = local.region
-  network         = local.network
+  network         = local.network_nw
   ilb_required    = local.ilb_required
-  subnetwork      = var.subnetwork
+  subnetwork      = var.subnetwork_nw
   name            = "${var.ers_instance_name}-ilb"
   source_tags     = ["soure-tag"]
   target_tags     = ["target-tag"]
@@ -158,17 +158,23 @@ module "ers_ilb" {
   ]
 }
 
-data "google_compute_subnetwork" "subnetwork" {
-  name    = var.subnetwork
+data "google_compute_subnetwork" "subnetwork_hana" {
+  name    = var.subnetwork_hana
   region  = local.region
-  project = local.subnetwork_project
+  project = local.subnetwork_project_hana
+}
+
+data "google_compute_subnetwork" "subnetwork_nw" {
+  name    = var.subnetwork_nw
+  region  = local.region
+  project = local.subnetwork_project_nw
 }
 
 resource "google_compute_address" "gcp_sap_s4hana_alias_ip" {
   count        = local.ilb_required == false ? 1 : 0
   name         = "${var.ers_instance_name}-ip"
   address_type = "INTERNAL"
-  subnetwork   = var.subnetwork
+  subnetwork   = var.subnetwork_nw
   region       = local.region
   project      = var.project_id
   purpose      = "GCE_ENDPOINT"

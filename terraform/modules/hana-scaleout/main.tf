@@ -26,15 +26,15 @@ module "sap_hana_template" {
     app = "hana"
   }
 
-  subnetwork         = var.subnetwork
-  subnetwork_project = local.subnetwork_project
-  tags               = var.network_tags
-  can_ip_forward     = true
+  subnetwork           = var.subnetwork
+  subnetwork_project   = local.subnetwork_project
+  tags                 = var.network_tags
+  can_ip_forward       = true
   source_image_family  = var.source_image_family
   source_image_project = var.source_image_project
-  disk_size_gb = var.boot_disk_size
-  disk_type    = var.boot_disk_type
-  auto_delete  = var.autodelete_disk
+  disk_size_gb         = var.boot_disk_size
+  disk_type            = var.boot_disk_type
+  auto_delete          = var.autodelete_disk
 }
 
 resource "google_compute_address" "gcp_sap_hana_intip_master" {

@@ -85,11 +85,11 @@ resource "google_compute_firewall" "sap_firewall_all" {
 
 # Create firewall rule to allow AWX to connect to instances
 resource "google_compute_firewall" "sap_firewall_awx" {
-  project       = local.subnetwork_project
-  name          = "sap-allow-awx-ssh-${random_id.server.hex}"
-  network       = local.network
-  source_tags   = ["awx"]
-  target_tags   = var.network_tags
+  project     = local.subnetwork_project
+  name        = "sap-allow-awx-ssh-${random_id.server.hex}"
+  network     = local.network
+  source_tags = ["awx"]
+  target_tags = var.network_tags
 
   allow {
     protocol = "tcp"

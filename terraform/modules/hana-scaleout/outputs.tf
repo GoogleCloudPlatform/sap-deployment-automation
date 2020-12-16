@@ -3,15 +3,15 @@ output "project_id" {
 }
 
 output "instances_self_links_master" {
-  value       = module.sap_hana_instance_master.instances_self_links
+  value = module.sap_hana_instance_master.instances_self_links
 }
 
 output "instances_self_links_worker" {
-  value       = flatten(module.sap_hana_instance_worker.*.instances_self_links)
+  value = flatten(module.sap_hana_instance_worker.*.instances_self_links)
 }
 
 output "master_instance_name" {
-  value       = element(split("/", element(tolist(module.sap_hana_instance_master.instances_self_links), 0)), 10)
+  value = element(split("/", element(tolist(module.sap_hana_instance_master.instances_self_links), 0)), 10)
 }
 
 output "address_master" {
@@ -55,7 +55,7 @@ output "hana_backup_size" {
 }
 
 output "inventory" {
-  value = { 
+  value = {
     hana-master = flatten([google_compute_address.gcp_sap_hana_intip_master.*.address])
     hana-worker = flatten([google_compute_address.gcp_sap_hana_intip_worker.*.address])
   }

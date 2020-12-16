@@ -28,8 +28,12 @@ output "pas_address" {
   value       = module.pas.instance_external_ip
 }
 
-output "subnet_cidr" {
-  value = data.google_compute_subnetwork.subnetwork.ip_cidr_range
+output "subnet_cidr_hana" {
+  value = data.google_compute_subnetwork_hana.subnetwork.ip_cidr_range
+}
+
+output "subnet_cidr_nw" {
+  value = data.google_compute_subnetwork_nw.subnetwork.ip_cidr_range
 }
 
 output "ascs_private_ip" {

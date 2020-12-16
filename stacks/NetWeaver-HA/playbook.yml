@@ -36,8 +36,10 @@
         project_id: '{{ sap_project_id }}'
         source_image_family: '{{ sap_source_image_family }}'
         source_image_project: '{{ sap_source_image_project }}'
-        subnetwork: '{{ sap_nw_subnetwork }}'
-        subnetwork_project: '{{ sap_nw_subnetwork_project_id | default("") }}'
+        subnetwork_nw: '{{ sap_nw_subnetwork }}'
+        subnetwork_project_nw: '{{ sap_nw_subnetwork_project_id | default("") }}'
+        subnetwork_hana: '{{ sap_hana_subnetwork }}'
+        subnetwork_project_hana: '{{ sap_hana_subnetwork_project_id | default("") }}'
         primary_zone: '{{ sap_primary_zone }}'
         secondary_zone: '{{ sap_secondary_zone }}'
     tags: [hana, nw, ascs, ers, pas]

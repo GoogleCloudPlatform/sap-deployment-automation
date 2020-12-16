@@ -27,8 +27,11 @@ sap_nw_install_files_bucket:
 # Project where resources are created.
 sap_project_id:
 
-# Subnetwork for network interfaces.
+# Subnetwork for nw network interfaces.
 sap_nw_subnetwork:
+
+# Subnetwork for hana network interfaces.
+sap_hana_subnetwork:
 
 # Password for HANA.
 sap_hana_password:
