@@ -7,7 +7,7 @@ sap_zone: us-central1-a
 sap_project_id: albatross-duncanl-sandbox-2
 sap_source_image_family: rhel-7-7-sap-ha
 sap_source_image_project: rhel-sap-cloud
-sap_hana_subnetwork_project_id: '{{ sap_project_id }}'
+sap_subnetwork_project_id: '{{ sap_project_id }}'
 sap_hana_subnetwork: app2
 sap_tf_state_bucket: sap-terraform-state-bg
 sap_tf_state_bucket_prefix: hanslbg

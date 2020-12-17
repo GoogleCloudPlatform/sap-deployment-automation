@@ -6,7 +6,7 @@
     name: storage-bkup
   vars:
     swapon: True
-    subnet_cidr: '{{ terraform.outputs.subnet_cidr.value }}'
+    subnet_cidr: '{{ terraform.outputs.subnet_cidr_nw.value }}'
     disks:
       - { name: usrsap, partition_path : usrsap }
       - { name: swap, partition_path : swap }

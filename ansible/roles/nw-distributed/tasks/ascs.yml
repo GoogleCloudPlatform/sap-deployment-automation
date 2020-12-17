@@ -8,7 +8,7 @@
   vars:
     swapon: True
     nfs_mount: True
-    subnet_cidr: '{{ terraform.outputs.subnet_cidr.value }}'
+    subnet_cidr: '{{ terraform.outputs.subnet_cidr_nw.value }}'
     disks:
       - { name: sapmnt, partition_path : sapmnt }
       - { name: usrsap, partition_path : usrsap }

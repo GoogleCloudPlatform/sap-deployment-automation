@@ -35,7 +35,7 @@ Terraform module and ansible roles to deploy the SAP HANA HA stack. This stack d
 
 `sap_source_image_project` (required): GCE instances image family project
 
-`sap_hana_subnetwork_project_id` (required): GCP project-id hosting the subnetwork. When using `shared_vpc` provide the host project-id of the subnetwork.
+`sap_subnetwork_project_id` (required): GCP project-id hosting the subnetwork. When using `shared_vpc` provide the host project-id of the subnetwork.
 
 `sap_hana_subnetwork` (required): GCP subnetwork name
 
