@@ -6,8 +6,6 @@ module "hana_bastion" {
   instance_type         = var.instance_type
   project_id            = var.project_id
   zone                  = var.zone
-  gce_ssh_user          = var.gce_ssh_user
-  gce_ssh_pub_key_file  = var.gce_ssh_pub_key_file
   service_account_email = var.service_account_email
   subnetwork            = var.subnetwork
   subnetwork_project    = var.subnetwork_project

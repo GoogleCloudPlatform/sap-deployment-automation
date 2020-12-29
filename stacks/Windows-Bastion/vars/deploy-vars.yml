@@ -4,16 +4,16 @@
 sap_zone: us-central1-a
 
 # Terraform common vars for hana and netweaver (required)
-sap_project_id: albatross-duncanl-sandbox-2
+sap_project_id: sap-iac-test
 sap_source_image_family: windows-2019
 sap_source_image_project: windows-cloud
 sap_subnetwork_project_id: '{{ sap_project_id }}'
-sap_subnetwork: app2
+sap_subnetwork: default
 sap_tf_state_bucket: sap-terraform-state-bg
 sap_tf_state_bucket_prefix: hanastudio
 
 # Terraform hana variables (required)
-sap_hana_instance_name: hanstbg
+sap_hana_instance_name: sap-hanstbg
 sap_hana_service_account_name: sap-common-sa
 
 # Terraform hana variables (optional)

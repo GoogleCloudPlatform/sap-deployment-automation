@@ -13,8 +13,10 @@ module "hana_bastion_template" {
   project_id   = var.project_id
   region       = local.region
 
+ 
   metadata = {
-    ssh-keys = "${var.gce_ssh_user}:${file("${var.gce_ssh_pub_key_file}")}"
+    #windows-startup-script-url = "gs://win-scripts-test/install-sap-hana-logon-v1.ps1"
+    windows-startup-script-ps1 = file("${path.module}/install-sap-hana-logon-v2.ps1")
   }
 
   service_account = {
@@ -29,7 +31,7 @@ module "hana_bastion_template" {
   subnetwork           = var.subnetwork
   subnetwork_project   = local.subnetwork_project
   tags                 = var.network_tags
-  can_ip_forward       = true
+  can_ip_forward       = false #true
   source_image_family  = var.source_image_family
   source_image_project = var.source_image_project
   disk_size_gb         = var.boot_disk_size

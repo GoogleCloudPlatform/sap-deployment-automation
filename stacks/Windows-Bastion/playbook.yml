@@ -7,6 +7,7 @@
   - role: forminator
     vars:
       sap_tf_project_path: ./tf
+      sap_ansible_is_push_mode: false
       sap_state: '{{ state | default("present") }}'
       sap_tf_variables:
         instance_name: '{{ sap_hana_instance_name }}'

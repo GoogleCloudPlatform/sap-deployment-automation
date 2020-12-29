@@ -14,14 +14,6 @@ variable "zone" {
   description = "The zone that the instance should be created in."
 }
 
-variable "gce_ssh_user" {
-  description = "GCE ssh user"
-}
-
-variable "gce_ssh_pub_key_file" {
-  description = "GCE ssh user pub key file name"
-}
-
 variable "service_account_email" {
   description = "Email of service account to attach to the instance."
 }
