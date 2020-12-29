@@ -51,8 +51,8 @@
   hosts: hana-worker
   become: yes
   vars:
-    sap_hana_backint_install: '{{ true if sap_hana_backint_bucket_name != '' else false }}'
-    sap_hana_backint_bucket_name: '{{ sap_hana_backint_bucket_name | default("sap-hana-backint-backup") }}'
+    sap_hana_backint_install: '{{ sap_hana_backint_bucket_name | default("") != "" }}'
+    sap_hana_backint_bucket_name: '{{ sap_hana_backint_bucket_name | default("") }}'
     sap_hana_master_instance_name: '{{ terraform.outputs.master_instance_name.value }}'
     sap_hana_master_instance_ip: '{{ terraform.outputs.address_master.value }}'
     sap_hana_worker_instance_ip: '{{ terraform.outputs.address_worker.value }}'
@@ -69,8 +69,8 @@
   hosts: hana-master
   become: yes
   vars:
-    sap_hana_backint_install: '{{ true if sap_hana_backint_bucket_name != '' else false }}'
-    sap_hana_backint_bucket_name: '{{ sap_hana_backint_bucket_name | default("sap-hana-backint-backup") }}'
+    sap_hana_backint_install: '{{ sap_hana_backint_bucket_name | default("") != "" }}'
+    sap_hana_backint_bucket_name: '{{ sap_hana_backint_bucket_name | default("") }}'
     sap_hana_master_instance_name: '{{ terraform.outputs.master_instance_name.value }}'
     sap_hana_master_instance_ip: '{{ terraform.outputs.address_master.value }}'
     sap_hana_worker_instance_ip: '{{ terraform.outputs.address_worker.value }}'
