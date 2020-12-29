@@ -1,0 +1,9 @@
+- name: include sapcontrol tasks
+  include_tasks:
+    file: sapcontrol.yml
+
+- name: include pacemaker tasks
+  include_tasks:
+    file: pacemaker.yml
+  when:
+  - sap_has_pacemaker | bool

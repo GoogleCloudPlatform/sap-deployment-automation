@@ -27,6 +27,7 @@
         pd_kms_key: '{{ sap_hana_pd_kms_key | default(None) }}'
         create_backup_volume: '{{ sap_hana_create_backup_volume | default(true) }}'
         instance_count_worker: '{{ sap_instance_count_worker | default(1) }}'
+  tags: [assertions]
 
 - name: SAP HANA scaleout master configure
   hosts: hana-master
@@ -82,3 +83,15 @@
     sap_add_worker_nodes: true
   roles:
   - role: sap-hana-scaleout
+
+- name: Run assertions
+  hosts: hana
+  become: yes
+  tasks:
+  - include_role:
+      name: sap-hana-scaleout
+      tasks_from: assertions
+    vars:
+      sap_hana_master_instance_name: '{{ terraform.outputs.master_instance_name.value }}'
+      sap_hana_instances: '{{ [terraform.outputs.master_instance_name.value] + terraform.outputs.worker_instance_names.value }}'
+  tags: [assertions]

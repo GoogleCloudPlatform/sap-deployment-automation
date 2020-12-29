@@ -28,6 +28,7 @@
         target_size: '{{ sap_hana_target_instance_size | default(1) }}'
         pd_kms_key: '{{ sap_hana_pd_kms_key | default(None) }}'
         create_backup_volume: '{{ sap_hana_create_backup_volume | default(true) }}'
+    tags: [assertions]
 
 - name: SAP HANA configure on both primay and secondary
   hosts: hana
@@ -48,3 +49,15 @@
     sap_hana_backup_size: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
   roles:
   - role: sap-hana-ha
+
+- name: Run assertions
+  hosts: hana
+  become: yes
+  tasks:
+  - include_role:
+      name: sap-hana-ha
+      tasks_from: assertions
+    vars:
+      sap_hana_primary_instance_name: '{{ terraform.outputs.primary_instance_name.value }}'
+      sap_hana_secondary_instance_name: '{{ terraform.outputs.secondary_instance_name.value }}'
+  tags: [assertions]

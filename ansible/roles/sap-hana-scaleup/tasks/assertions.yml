@@ -1,0 +1,82 @@
+- name: define if system is ha
+  set_fact:
+    # sap-assertions role requires sap_is_ha variable
+    sap_is_ha: '{{ sap_hana_primary_instance_name is defined and sap_hana_secondary_instance_name is defined }}'
+
+- name: define instance name
+  set_fact:
+    sap_instance_name: '{{ sap_hana_instance_name }}'
+  when:
+  - not sap_is_ha
+  - ansible_hostname == sap_hana_instance_name
+
+- name: define instance name for primary when ha
+  set_fact:
+    sap_instance_name: '{{ sap_hana_primary_instance_name }}'
+  when:
+  - sap_is_ha
+  - ansible_hostname == sap_hana_primary_instance_name
+
+- name: define instance name for secondary when ha
+  set_fact:
+    sap_instance_name: '{{ sap_hana_secondary_instance_name }}'
+  when:
+  - sap_is_ha
+  - ansible_hostname == sap_hana_secondary_instance_name
+
+- name: define pacemaker expected status when ha
+  set_fact:
+    # sap-assertions role requires sap_expected_pacemaker_status variable
+    sap_expected_pacemaker_status:
+    - 2 nodes configured
+    - 8 resources configured
+    - 'Online: [ {{ sap_hana_primary_instance_name }} {{ sap_hana_secondary_instance_name }} ]'
+    # Note strings below contain tabs
+    - 'STONITH-{{ sap_hana_primary_instance_name }}	(stonith:fence_gce):	Started {{ sap_hana_secondary_instance_name }}'
+    - 'STONITH-{{ sap_hana_secondary_instance_name }}	(stonith:fence_gce):	Started {{ sap_hana_primary_instance_name }}'
+    - 'rsc_vip_int-primary	(ocf::heartbeat:IPaddr2):	Started {{ sap_hana_primary_instance_name }}'
+    - 'rsc_healthcheck-primary	(service:haproxy):	Started {{ sap_hana_primary_instance_name }}'
+    - 'Masters: [ {{ sap_hana_primary_instance_name }} ]'
+    - 'Slaves: [ {{ sap_hana_secondary_instance_name }} ]'
+    - 'corosync: active/enabled'
+    - 'pacemaker: active/enabled'
+    - 'pcsd: active/enabled'
+  when:
+  - sap_is_ha
+  - ansible_os_family == 'RedHat'
+
+- name: define pacemaker expected status when ha
+  set_fact:
+    # sap-assertions role requires sap_expected_pacemaker_status variable
+    sap_expected_pacemaker_status:
+    - 2 nodes configured
+    - 8 resource instances configured
+    - 'Online: [ {{ sap_hana_primary_instance_name }} {{ sap_hana_secondary_instance_name }} ]'
+    # Note strings below contain tabs
+    - 'STONITH-{{ sap_hana_primary_instance_name }}	(stonith:external/gcpstonith):	Started {{ sap_hana_secondary_instance_name }}'
+    - 'STONITH-{{ sap_hana_secondary_instance_name }}	(stonith:external/gcpstonith):	Started {{ sap_hana_primary_instance_name }}'
+    - 'rsc_vip_int-primary	(ocf::heartbeat:IPaddr2):	Started {{ sap_hana_primary_instance_name }}'
+    - 'rsc_healthcheck-primary	(ocf::heartbeat:anything):	Started {{ sap_hana_primary_instance_name }}'
+    - 'Started: [ {{ sap_hana_primary_instance_name }} {{ sap_hana_secondary_instance_name }} ]'
+    - 'Masters: [ {{ sap_hana_primary_instance_name }} ]'
+    - 'Slaves: [ {{ sap_hana_secondary_instance_name }} ]'
+  when:
+  - sap_is_ha
+  - ansible_os_family == 'Suse'
+
+- name: include sap assertions role
+  include_role:
+    name: sap-assertions
+  vars:
+    sap_become_user: '{{ sap_hana_user }}'
+    sap_expected_processes:
+    - hdbdaemon, HDB Daemon, GREEN, Running
+    - hdbcompileserver, HDB Compileserver, GREEN, Running
+    - hdbindexserver, HDB Indexserver-{{ sap_hana_sid }}, GREEN, Running
+    - hdbnameserver, HDB Nameserver, GREEN, Running
+    - hdbpreprocessor, HDB Preprocessor, GREEN, Running
+    - hdbwebdispatcher, HDB Web Dispatcher, GREEN, Running
+    - hdbxsengine, HDB XSEngine-{{ sap_hana_sid }}, GREEN, Running
+    sap_instances:
+    - '{{ sap_instance_name }}, {{ sap_hana_instance_number | int }}, 5{{ sap_hana_instance_number }}13, 5{{ sap_hana_instance_number }}14, 0.3, HDB|HDB_WORKER, GREEN'
+    sap_instance_number: '{{ sap_hana_instance_number }}'

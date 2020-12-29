@@ -1,0 +1,3 @@
+sap_has_pacemaker: false
+sap_pacemaker_retries: 0
+sap_sapcontrol_retries: 0

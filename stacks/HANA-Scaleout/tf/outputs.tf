@@ -14,6 +14,10 @@ output "master_instance_name" {
   value = module.hana_scaleout.master_instance_name
 }
 
+output "worker_instance_names" {
+  value = module.hana_scaleout.worker_instance_names
+}
+
 output "address_master" {
   value = module.hana_scaleout.address_master
 }

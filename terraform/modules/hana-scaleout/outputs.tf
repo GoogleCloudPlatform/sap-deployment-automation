@@ -14,6 +14,12 @@ output "master_instance_name" {
   value = element(split("/", element(tolist(module.sap_hana_instance_master.instances_self_links), 0)), 10)
 }
 
+output "worker_instance_names" {
+  value       = [
+    for link in flatten(module.sap_hana_instance_worker.*.instances_self_links) : split("/", link)[10]
+  ]
+}
+
 output "address_master" {
   value = google_compute_address.gcp_sap_hana_intip_master.*.address
 }
@@ -56,7 +62,11 @@ output "hana_backup_size" {
 
 output "inventory" {
   value = {
-    hana-master = flatten([google_compute_address.gcp_sap_hana_intip_master.*.address])
-    hana-worker = flatten([google_compute_address.gcp_sap_hana_intip_worker.*.address])
+    hana = concat(
+      google_compute_address.gcp_sap_hana_intip_master.*.address,
+      google_compute_address.gcp_sap_hana_intip_worker.*.address,
+    )
+    hana-master = google_compute_address.gcp_sap_hana_intip_master.*.address
+    hana-worker = google_compute_address.gcp_sap_hana_intip_worker.*.address
   }
 }

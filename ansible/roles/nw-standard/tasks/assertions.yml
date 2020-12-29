@@ -1,0 +1,14 @@
+- name: include sap assertions role
+  include_role:
+    name: sap-assertions
+  vars:
+    sap_become_user: '{{ sap_nw_user }}'
+    sap_expected_processes:
+    - disp+work, Dispatcher, GREEN, Running
+    - igswd_mt, IGS Watchdog, GREEN, Running
+    - gwrd, Gateway, GREEN, Running
+    - icman, ICM, GREEN, Running
+    sap_instances:
+    - '{{ sap_nw_instance_name }}, 0, 50013, 50014, 1, MESSAGESERVER|ENQUE, GREEN'
+    - '{{ sap_nw_instance_name }}, {{ sap_nw_pas_instance_number | int }}, 5{{ sap_nw_pas_instance_number }}13, 5{{ sap_nw_pas_instance_number }}14, 3, ABAP|GATEWAY|ICMAN|IGS, GREEN'
+    sap_instance_number: '{{ sap_nw_pas_instance_number }}'

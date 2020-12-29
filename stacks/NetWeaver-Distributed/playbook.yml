@@ -38,7 +38,7 @@
         subnetwork_hana: '{{ sap_hana_subnetwork }}'
         subnetwork_project: '{{ sap_subnetwork_project_id | default("") }}'
         zone: '{{ sap_zone }}'
-  tags: [hana, ascs, pas, nw]
+  tags: [hana, ascs, pas, nw, assertions]
 
 - name: SAP HANA configure
   hosts: hana
@@ -74,3 +74,24 @@
       sap_nw_ascs_virtual_host: '{{ terraform.outputs.ascs_instance_name.value }}'
       sap_nw_pas_virtual_host: '{{ terraform.outputs.pas_instance_name.value }}'
   tags: [pas, nw]
+
+- name: Run assertions on HANA
+  hosts: hana
+  become: yes
+  tasks:
+  - include_role:
+      name: sap-hana-scaleup
+      tasks_from: assertions
+  tags: [hana, assertions]
+
+- name: Run assertions on application servers
+  hosts: nodes
+  become: yes
+  tasks:
+  - include_role:
+      name: nw-distributed
+      tasks_from: assertions
+    vars:
+      sap_nw_ascs_instance_name: '{{ terraform.outputs.ascs_instance_name.value }}'
+      sap_nw_pas_instance_name: '{{ terraform.outputs.pas_instance_name.value }}'
+  tags: [nw, assertions]

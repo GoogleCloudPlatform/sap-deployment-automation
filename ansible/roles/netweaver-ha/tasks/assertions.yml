@@ -1,0 +1,96 @@
+- name: define pacemaker expected status for redhat
+  set_fact:
+    # sap-assertions role requires sap_expected_pacemaker_status variable
+    sap_expected_pacemaker_status:
+    - 2 nodes configured
+    - 8 resources configured
+    - 'Online: [ {{ sap_nw_ascs_instance_name }} {{ sap_nw_ers_instance_name }} ]'
+    # Note strings below contain tabs
+    - 'STONITH-{{ sap_nw_ascs_instance_name }}	(stonith:fence_gce):	Started {{ sap_nw_ers_instance_name }}'
+    - 'STONITH-{{ sap_nw_ers_instance_name }}	(stonith:fence_gce):	Started {{ sap_nw_ascs_instance_name }}'
+    - 'Resource Group: g-ascs'
+    - 'rsc_vip_int-ascs	(ocf::heartbeat:IPaddr2):	Started {{ sap_nw_ascs_instance_name }}'
+    - 'rsc_healthcheck-ascs	(service:haproxy):	Started {{ sap_nw_ascs_instance_name }}'
+    - 'rsc_{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}	(ocf::heartbeat:SAPInstance):	Started {{ sap_nw_ascs_instance_name }}'
+    - 'Resource Group: g-ers'
+    - 'rsc_vip_int-ers	(ocf::heartbeat:IPaddr2):	Started {{ sap_nw_ers_instance_name }}'
+    - 'rsc_vip_gcp-ers	(ocf::heartbeat:gcp-vpc-move-vip):	Started {{ sap_nw_ers_instance_name }}'
+    - 'rsc_{{ sap_nw_sid }}_ERS{{ sap_nw_ers_instance_number }}	(ocf::heartbeat:SAPInstance):	Started {{ sap_nw_ers_instance_name }}'
+    - 'corosync: active/enabled'
+    - 'pacemaker: active/enabled'
+    - 'pcsd: active/enabled'
+  when: ansible_os_family == 'RedHat'
+
+- name: define pacemaker expected status for suse
+  set_fact:
+    sap_expected_pacemaker_status:
+    - 2 nodes configured
+    - 8 resources configured
+    - 'Online: [ {{ sap_nw_ascs_instance_name }} {{ sap_nw_ers_instance_name }} ]'
+    # Note strings below contain tabs
+    - 'STONITH-{{ sap_nw_ascs_instance_name }}	(stonith:external/gcpstonith):	Started {{ sap_nw_ers_instance_name }}'
+    - 'STONITH-{{ sap_nw_ers_instance_name }}	(stonith:external/gcpstonith):	Started {{ sap_nw_ascs_instance_name }}'
+    - 'Resource Group: g-ascs'
+    - 'rsc_vip_int-ascs	(ocf::heartbeat:IPaddr2):	Started {{ sap_nw_ascs_instance_name }}'
+    - 'rsc_healthcheck-ascs	(ocf::heartbeat:anything):	Started {{ sap_nw_ascs_instance_name }}'
+    - 'rsc_{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}	(ocf::heartbeat:SAPInstance):	Started {{ sap_nw_ascs_instance_name }}'
+    - 'Resource Group: g-ers'
+    - 'rsc_vip_int-ers	(ocf::heartbeat:IPaddr2):	Started {{ sap_nw_ers_instance_name }}'
+    - 'rsc_healthcheck-ers	(ocf::heartbeat:anything):	Started {{ sap_nw_ers_instance_name }}'
+    - 'rsc_{{ sap_nw_sid }}_ERS{{ sap_nw_ers_instance_number }}	(ocf::heartbeat:SAPInstance):	Started {{ sap_nw_ers_instance_name }}'
+  when: ansible_os_family == 'Suse'
+
+- name: include sap assertions role for ascs
+  include_role:
+    name: sap-assertions
+  vars:
+    sap_become_user: '{{ sap_nw_user }}'
+    sap_expected_processes:
+    - msg_server, MessageServer, GREEN, Running
+    - enserver, EnqueueServer, GREEN, Running
+    sap_instances:
+    - '{{ sap_nw_pas_instance_name }}, {{ sap_nw_ascs_instance_number | int }}, 5{{ sap_nw_ascs_instance_number }}13, 5{{ sap_nw_ascs_instance_number }}14, 3, ABAP|GATEWAY|ICMAN|IGS, GREEN'
+    - '{{ sap_nw_ascs_virtual_host }}, {{ sap_nw_ascs_instance_number | int }}, 5{{ sap_nw_ascs_instance_number }}13, 5{{ sap_nw_ascs_instance_number }}14, 1, MESSAGESERVER|ENQUE, GRAY'
+    - '{{ sap_nw_ascs_virtual_host }}, {{ sap_nw_ascs_instance_number | int }}, 5{{ sap_nw_ascs_instance_number }}13, 5{{ sap_nw_ascs_instance_number }}14, 1, MESSAGESERVER|ENQUE, GREEN'
+    - '{{ sap_nw_ers_virtual_host }}, {{ sap_nw_ers_instance_number | int }}, 5{{ sap_nw_ers_instance_number }}13, 5{{ sap_nw_ers_instance_number }}14, 0.5, ENQREP, GRAY'
+    - '{{ sap_nw_ers_virtual_host }}, {{ sap_nw_ers_instance_number | int }}, 5{{ sap_nw_ers_instance_number }}13, 5{{ sap_nw_ers_instance_number }}14, 0.5, ENQREP, GREEN'
+    sap_instance_number: '{{ sap_nw_ascs_instance_number }}'
+    sap_has_pacemaker: true
+  when: ansible_hostname == sap_nw_ascs_instance_name
+
+- name: include sap assertions role for ers
+  include_role:
+    name: sap-assertions
+  vars:
+    sap_become_user: '{{ sap_nw_user }}'
+    sap_expected_processes:
+    - enrepserver, EnqueueReplicator, GREEN, Running
+    sap_instances:
+    - '{{ sap_nw_pas_instance_name }}, {{ sap_nw_ascs_instance_number | int }}, 5{{ sap_nw_ascs_instance_number }}13, 5{{ sap_nw_ascs_instance_number }}14, 3, ABAP|GATEWAY|ICMAN|IGS, GREEN'
+    - '{{ sap_nw_ascs_virtual_host }}, {{ sap_nw_ascs_instance_number | int }}, 5{{ sap_nw_ascs_instance_number }}13, 5{{ sap_nw_ascs_instance_number }}14, 1, MESSAGESERVER|ENQUE, GRAY'
+    - '{{ sap_nw_ascs_virtual_host }}, {{ sap_nw_ascs_instance_number | int }}, 5{{ sap_nw_ascs_instance_number }}13, 5{{ sap_nw_ascs_instance_number }}14, 1, MESSAGESERVER|ENQUE, GREEN'
+    - '{{ sap_nw_ers_virtual_host }}, {{ sap_nw_ers_instance_number | int }}, 5{{ sap_nw_ers_instance_number }}13, 5{{ sap_nw_ers_instance_number }}14, 0.5, ENQREP, GRAY'
+    - '{{ sap_nw_ers_virtual_host }}, {{ sap_nw_ers_instance_number | int }}, 5{{ sap_nw_ers_instance_number }}13, 5{{ sap_nw_ers_instance_number }}14, 0.5, ENQREP, GREEN'
+    sap_instance_number: '{{ sap_nw_ers_instance_number }}'
+    sap_has_pacemaker: true
+  when:
+  - ansible_hostname == sap_nw_ers_instance_name
+
+- name: include sap assertions role for pas
+  include_role:
+    name: sap-assertions
+  vars:
+    sap_become_user: '{{ sap_nw_user }}'
+    sap_expected_processes:
+    - disp+work, Dispatcher, GREEN, Running
+    - igswd_mt, IGS Watchdog, GREEN, Running
+    - gwrd, Gateway, GREEN, Running
+    - icman, ICM, GREEN, Running
+    sap_instances:
+    - '{{ sap_nw_pas_instance_name }}, {{ sap_nw_pas_instance_number | int }}, 5{{ sap_nw_pas_instance_number }}13, 5{{ sap_nw_pas_instance_number }}14, 3, ABAP|GATEWAY|ICMAN|IGS, GREEN'
+    - '{{ sap_nw_ascs_virtual_host }}, {{ sap_nw_ascs_instance_number | int }}, 5{{ sap_nw_ascs_instance_number }}13, 5{{ sap_nw_ascs_instance_number }}14, 1, MESSAGESERVER|ENQUE, GRAY'
+    - '{{ sap_nw_ascs_virtual_host }}, {{ sap_nw_ascs_instance_number | int }}, 5{{ sap_nw_ascs_instance_number }}13, 5{{ sap_nw_ascs_instance_number }}14, 1, MESSAGESERVER|ENQUE, GREEN'
+    - '{{ sap_nw_ers_virtual_host }}, {{ sap_nw_ers_instance_number | int }}, 5{{ sap_nw_ers_instance_number }}13, 5{{ sap_nw_ers_instance_number }}14, 0.5, ENQREP, GRAY'
+    - '{{ sap_nw_ers_virtual_host }}, {{ sap_nw_ers_instance_number | int }}, 5{{ sap_nw_ers_instance_number }}13, 5{{ sap_nw_ers_instance_number }}14, 0.5, ENQREP, GREEN'
+    sap_instance_number: '{{ sap_nw_pas_instance_number }}'
+  when: ansible_hostname == sap_nw_pas_instance_name

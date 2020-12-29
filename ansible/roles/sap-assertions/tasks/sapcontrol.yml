@@ -1,0 +1,63 @@
+- block:
+  - name: set retry count
+    set_fact:
+      sap_sapcontrol_retries: '{{ sap_sapcontrol_retries | int + 1 }}'
+
+  - name: get process list
+    shell: |
+      . ${HOME}/.sapenv.sh
+      sapcontrol -nr {{ sap_instance_number }} -function GetProcessList
+    register: sap_process_list
+    become: true
+    become_user: '{{ sap_become_user }}'
+    changed_when: false
+    failed_when: false
+    args:
+      executable: /bin/sh
+
+  - name: print process list
+    debug:
+      msg: '{{ sap_process_list.stdout_lines }}'
+
+  - name: get system instance list
+    shell: |
+      . ${HOME}/.sapenv.sh
+      sapcontrol -nr {{ sap_instance_number }} -function GetSystemInstanceList
+    register: sap_system_instance_list
+    become: true
+    become_user: '{{ sap_become_user }}'
+    changed_when: false
+    failed_when: false
+    args:
+      executable: /bin/sh
+
+  - name: print system instance list
+    debug:
+      msg: '{{ sap_system_instance_list.stdout_lines }}'
+
+  - name: assert that processes are running
+    assert:
+      that:
+      - '{{ item in sap_process_list.stdout }}'
+      msg: >-
+        '{{ item }}' is not in process list
+    loop: '{{ sap_expected_processes }}'
+
+  - name: assert that system instances are running
+    assert:
+      that:
+      - '{{ item in sap_system_instance_list.stdout }}'
+      msg: >-
+        '{{ item }}' is not in system instance list
+    loop: '{{ sap_instances }}'
+
+  rescue:
+  - fail:
+      msg: number of tries exceeded waiting for processes and instances
+    when: sap_sapcontrol_retries | int == 30
+
+  - name: wait for retry
+    wait_for:
+      timeout: 10
+
+  - include_tasks: sapcontrol.yml

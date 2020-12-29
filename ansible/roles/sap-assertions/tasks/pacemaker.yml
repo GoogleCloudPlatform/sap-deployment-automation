@@ -1,0 +1,62 @@
+- name: set retry count
+  set_fact:
+    sap_pacemaker_retries: '{{ sap_pacemaker_retries | int + 1 }}'
+
+- block:
+  - name: get pacemaker status for rhel
+    command: pcs status
+    failed_when: false
+    changed_when: false
+    register: pcs_status
+
+  - name: print pacemaker status for rhel
+    debug:
+      msg: '{{ pcs_status.stdout_lines }}'
+
+  - name: assert that pacemaker is configured and running for rhel
+    assert:
+      that:
+      - '{{ item in pcs_status.stdout }}'
+    loop: '{{ sap_expected_pacemaker_status }}'
+
+  rescue:
+  - fail:
+      msg: number of tries exceeded waiting for pacemaker
+    when: sap_pacemaker_retries | int == 30
+
+  - name: wait for retry
+    wait_for:
+      timeout: 10
+
+  # Recursively include task file as retry on blocks is not supported.
+  - include_tasks: pacemaker.yml
+  when: ansible_os_family == 'RedHat'
+
+- block:
+  - name: get pacemaker status for suse
+    command: crm status
+    failed_when: false
+    changed_when: false
+    register: crm_status
+
+  - name: print pacemaker status for suse
+    debug:
+      msg: '{{ crm_status.stdout_lines }}'
+
+  - name: assert that pacemaker is configured and running for suse
+    assert:
+      that:
+      - '{{ item in crm_status.stdout }}'
+    loop: '{{ sap_expected_pacemaker_status }}'
+
+  rescue:
+  - fail:
+      msg: number of tries exceeded waiting for pacemaker
+    when: sap_pacemaker_retries | int == 30
+
+  - name: wait for retry
+    wait_for:
+      timeout: 10
+
+  - include_tasks: pacemaker.yml
+  when: ansible_os_family == 'Suse'
