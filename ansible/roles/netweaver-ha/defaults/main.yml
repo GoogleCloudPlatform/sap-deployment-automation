@@ -53,6 +53,7 @@ sap_product_vars:
     swpm_path: /sapmnt/Software/SWPM1.0
     load_files: /sapmnt/Software/NW75
     install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM1.0]
+    ensa_version: '1'
   'NetWeaver/751':
     db_product_id: 'NW_ABAP_DB:NW751.HDB.ABAPHA'
     pas_product_id: 'NW_ABAP_CI:NW751.HDB.ABAPHA'
@@ -62,6 +63,7 @@ sap_product_vars:
     swpm_path: /sapmnt/Software/SWPM1.0
     load_files: /sapmnt/Software/NW75
     install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM1.0]
+    ensa_version: '1'
   'NetWeaver/752':
     db_product_id: 'NW_ABAP_DB:NW752.HDB.ABAPHA'
     pas_product_id: 'NW_ABAP_CI:NW752.HDB.ABAPHA'
@@ -71,6 +73,7 @@ sap_product_vars:
     swpm_path: /sapmnt/Software/SWPM1.0
     load_files: /sapmnt/Software/NW75
     install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM1.0]
+    ensa_version: '1'
   'S4HANA/1709':
     db_product_id: 'NW_ABAP_DB:S4HANA1709.CORE.HDB.ABAPHA'
     pas_product_id: 'NW_ABAP_CI:S4HANA1709.CORE.HDB.ABAPHA'
@@ -80,6 +83,7 @@ sap_product_vars:
     swpm_path: /sapmnt/Software/SWPM1.0
     load_files: /sapmnt/Software/S4HANA_Export
     install_files: [HANA_CLIENT, Kernel_Files, S4HANA_Export, SWPM1.0]
+    ensa_version: '1'
   'S4HANA/1809':
     db_product_id: 'NW_ABAP_DB:S4HANA1809.CORE.HDB.ABAPHA'
     pas_product_id: 'NW_ABAP_CI:S4HANA1809.CORE.HDB.ABAPHA'
@@ -89,3 +93,4 @@ sap_product_vars:
     swpm_path: /sapmnt/Software/SWPM2.0
     load_files: /sapmnt/Software/Kernel_Files
     install_files: [Kernel_Files, SWPM2.0]
+    ensa_version: '2'

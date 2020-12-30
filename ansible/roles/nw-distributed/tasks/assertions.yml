@@ -5,7 +5,7 @@
     sap_become_user: '{{ sap_nw_user }}'
     sap_expected_processes:
     - msg_server, MessageServer, GREEN, Running
-    - enserver, EnqueueServer, GREEN, Running
+    - '{{ "enserver, EnqueueServer, GREEN, Running" if sap_product_vars[sap_product_and_version].ensa_version == "1" else "enq_server, Enqueue Server 2, GREEN, Running" }}'
     sap_instances:
     - '{{ sap_nw_ascs_instance_name }}, {{ sap_nw_ascs_instance_number | int }}, 5{{ sap_nw_ascs_instance_number }}13, 5{{ sap_nw_ascs_instance_number }}14, 1, MESSAGESERVER|ENQUE, GREEN'
     - '{{ sap_nw_pas_instance_name }}, {{ sap_nw_pas_instance_number | int }}, 5{{ sap_nw_pas_instance_number }}13, 5{{ sap_nw_pas_instance_number }}14, 3, ABAP|GATEWAY|ICMAN|IGS, GREEN'
