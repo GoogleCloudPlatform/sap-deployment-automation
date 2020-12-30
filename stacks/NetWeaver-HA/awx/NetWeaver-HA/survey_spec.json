@@ -30,8 +30,17 @@
       "max": 1024
     },
     {
-      "question_name": "Subnetwork",
-      "question_description": "This is the subnetwork for the machine instance network interfaces.",
+      "question_name": "HANA subnetwork",
+      "question_description": "This is the subnetwork for the HANA machine instance network interfaces.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_hana_subnetwork",
+      "min": 1,
+      "max": 1024
+    },
+    {
+      "question_name": "NetWeaver subnetwork",
+      "question_description": "This is the subnetwork for the NetWeaver machine instance network interfaces.",
       "required": true,
       "type": "text",
       "variable": "sap_nw_subnetwork",
