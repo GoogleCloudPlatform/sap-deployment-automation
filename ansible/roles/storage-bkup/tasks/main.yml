@@ -129,20 +129,16 @@
     when: configure_nfs_exports is changed
   when: nfs_mount | default(false)
 
-- name: mount path creation
+- name: Creat NFS mount points
   file:
-    path: "{{ item.value }}"
+    path: '{{ item }}'
     state: directory
-  with_dict: "{{ mountpa }}"  
-#  loop: "{{ mountpa|dict2items }}"
-  when: mountpa is defined
+  loop: '{{ nfs_mounts | default([]) }}'
 
-- name: Mounting NFS on clients
+- name: Mount NFS shares
   mount:
-    path: "{{ item.value }}"
-    src: "{{ nfs_private_ip }}:{{ item.value }}"
+    path: '{{ item }}'
+    src: '{{ sap_nfs_private_ip }}:{{ item }}'
     fstype: nfs
     state: mounted
-  with_dict: "{{ mountpa }}"   
-#  loop: "{{ mountpa|dict2items }}"
-  when: mountpa is defined
+  loop: '{{ nfs_mounts | default([]) }}'

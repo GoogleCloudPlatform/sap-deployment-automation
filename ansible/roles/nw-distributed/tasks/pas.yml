@@ -9,16 +9,20 @@
     swapon: True
     subnet_cidr: '{{ terraform.outputs.subnet_cidr_nw.value }}'
     disks:
+      - { name: usrsap, partition_path : usrsap }
       - { name: swap, partition_path : swap }
+    logvols:
+      usrsap:
+        size: "{{ sap_nw_usrsap_disk_size - 1 }}G"
+        vol: usrsap
+        mountpoint: /usr/sap
     swapvols:
       swap:
         size: "{{ sap_nw_swap_disk_size - 1 }}G"
         vol: swap
         mountpoint: /swap
-    nfs_private_ip: '{{ terraform.outputs.nfs_private_ip.value }}'
-    mountpa:
-      usrsap: /usr/sap
-      sapmnt: /sapmnt
+    nfs_mounts:
+    - /sapmnt
 - name: include nw-pre primary tasks
   include_role:
     name: nw-pre  

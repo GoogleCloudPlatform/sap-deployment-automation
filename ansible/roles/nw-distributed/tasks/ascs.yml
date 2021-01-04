@@ -22,6 +22,7 @@
         size: "{{ sap_nw_sapmnt_disk_size - 1 }}G"
         vol: sapmnt
         mountpoint: /sapmnt
+        export: true
     swapvols:
       swap:
         size: "{{ sap_nw_swap_disk_size - 1 }}G"

@@ -71,6 +71,7 @@ module "pas" {
   source_image_project  = var.source_image_project
   autodelete_disk       = "true"
   use_public_ip         = var.sap_nw_use_public_ip
+  usrsap_disk_size      = var.sap_nw_usrsap_disk_size
   swap_disk_size        = var.sap_nw_swap_disk_size
   instance_name         = var.sap_pas_instance_name
   instance_type         = var.sap_nw_instance_type
