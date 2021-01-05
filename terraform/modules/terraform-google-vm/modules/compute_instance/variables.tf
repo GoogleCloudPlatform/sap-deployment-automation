@@ -62,7 +62,7 @@ variable "access_config" {
 
 variable "num_instances" {
   description = "Number of instances to create. This value is ignored if static_ips is provided."
-  default     = ""
+  default     = "1"
 }
 
 variable "instance_template" {

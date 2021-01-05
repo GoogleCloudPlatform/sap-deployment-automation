@@ -1,26 +1,51 @@
 ---
+  - name: Download Javachrome.exe, SAP Hana Studio.zip and SAPGUIWin package
+    ansible.windows.win_get_url:
+      url: https://storage.googleapis.com/win-test-script-sap/{{ item }}
+      dest: C:\Users\{{ gcp_win_user }}\Downloads\
+      #url_timeout: "{{ package_url_timeout }}"
+    register: result
+    until: result is succeeded
+    retries: "{{ package_retries_cnt }}"
+    delay: "{{ package_retries_delay }}"
+    with_items:
+      - JavaChrome.exe
+      - SAPGUIWin.exe
+      - SAP_HANA_STUDIO.zip
 
-- name: download HANA Studio
-  win_get_url:
-    url: 'https://storage.cloud.google.com/scripts-for-windows/hanainstall/{{ item }}'
-    dest: 'C:\Program Files\{{ item }}'
-    timeout: "{{ package_url_timeout }}"
-  register: result
-  until: result is succeeded
-  retries: "{{ package_retries_cnt }}"
-  delay: "{{ package_retries_delay }}"
-  with_items:
-    - SAP_HANA_STUDIO.zip
-    - 50148617_6.zip
-    - JavaChrome.exe
-    - unzip_HS.ps1
+  - name: Unzip SAP_HANA_STUDIO.zip
+    win_unzip:
+      src: C:\Users\{{ gcp_win_user }}\Downloads\SAP_HANA_STUDIO.zip
+      dest: C:\Program Files\
 
-- name: Get dummy template HANA Studio (we use the defaults, but the install fails otherwise)
-  win_command: hdbinst.exe --dump_configfile_template=default_config
-  args:
-    chdir: C:\Users\{{ bastion_username_windows }}\Downloads\SAP_HANA_STUDIO
+  - name: Install JavaChrome
+    win_command: JavaChrome.exe
+    args:
+      chdir: C:\Users\{{ gcp_win_user }}\Downloads\
+    register: output1
+  - debug: var=output1
 
-- name: Install HANA Studio
-  win_command: hdbinst.exe --b --configfile=default_config
-  args:
-    chdir: C:\Users\{{ bastion_username_windows }}\Downloads\SAP_HANA_STUDIO
+  - name: Install SAP Logon
+    win_command: SAPGUIWin.exe /silent
+    args:
+      chdir: C:\Users\{{ gcp_win_user }}\Downloads\
+    register: output2
+  - debug: var=output2
+
+  - name: Create config file with default values
+    win_command: hdbinst.exe --b --dump_configfile_template=config_file
+    args:
+      chdir: C:\Program Files\SAP_HANA_STUDIO\
+
+  - name: Install SAP HANA STUDIO
+    win_command: hdbinst.exe --b --configfile=config_file
+    args:
+      chdir: C:\Program Files\SAP_HANA_STUDIO\
+    register: output3
+  - debug: var=output3
+
+  - name: Create an application shortcut on the desktop
+    community.windows.win_shortcut:
+      src: C:\Program Files\sap\hdbstudio\hdbstudio.exe
+      dest: C:\Users\{{ gcp_win_user }}\Desktop\hdbstudio.lnk
+      icon: C:\Program Files\sap\hdbstudio\hdbstudio.exe,0

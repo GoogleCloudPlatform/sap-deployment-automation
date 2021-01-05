@@ -3,3 +3,5 @@
 package_retries_cnt: 50
 package_retries_delay: 10
 package_url_timeout: 600
+destination_folder: C:\Program Files
+gcp_win_user: Public

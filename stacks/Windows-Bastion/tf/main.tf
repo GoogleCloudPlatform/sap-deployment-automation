@@ -16,4 +16,5 @@ module "hana_bastion" {
   autodelete_disk       = var.autodelete_disk
   network_tags          = var.network_tags
   pd_kms_key            = var.pd_kms_key
+  use_public_ip         = var.use_public_ip
 }
