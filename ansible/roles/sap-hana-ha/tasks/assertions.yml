@@ -13,7 +13,6 @@
     # sap-assertions role requires sap_expected_pacemaker_status variable
     sap_expected_pacemaker_status:
     - 2 nodes configured
-    # - 8 resources configured
     - 8 resources configured
     - 'Online: [ {{ sap_hana_primary_instance_name }} {{ sap_hana_secondary_instance_name }} ]'
     # Note strings below contain tabs
@@ -32,7 +31,7 @@
   set_fact:
     sap_expected_pacemaker_status:
     - 2 nodes configured
-    - 8 resources configured
+    - 8 resource
     - 'Online: [ {{ sap_hana_primary_instance_name }} {{ sap_hana_secondary_instance_name }} ]'
     # Note strings below contain tabs
     - 'STONITH-{{ sap_hana_primary_instance_name }}	(stonith:external/gcpstonith):	Started {{ sap_hana_secondary_instance_name }}'

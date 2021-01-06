@@ -25,7 +25,7 @@
   set_fact:
     sap_expected_pacemaker_status:
     - 2 nodes configured
-    - 8 resources configured
+    - 8 resource
     - 'Online: [ {{ sap_nw_ascs_instance_name }} {{ sap_nw_ers_instance_name }} ]'
     # Note strings below contain tabs
     - 'STONITH-{{ sap_nw_ascs_instance_name }}	(stonith:external/gcpstonith):	Started {{ sap_nw_ers_instance_name }}'
