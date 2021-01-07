@@ -22,10 +22,5 @@ sap_win_autodelete_boot_disk: "true"
 sap_win_boot_disk_size: 50
 sap_win_boot_disk_type: pd-ssd
 sap_win_network_tags: ["sap-allow-all"]
-sap_win_pd_kms_key: null
-sap_hana_use_public_ip: true
-#sap_hana_create_backup_volume: true
-#sap_hana_backint_install: false
-
-# Ansible hana variables (required)
-sap_win_password: Google123
+sap_win_use_public_ip: true
+sap_win_install_files_bucket_folder: "sap-iac/Windows-Bastion"

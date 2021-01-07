@@ -24,9 +24,9 @@ output "instance_name" {
 }
 
 output "address" {
-  value = google_compute_address.gcp_hana_bastion_ip.address
+  value = join("", google_compute_address.gcp_hana_bastion_ip.*.address)
 }
 
 output "instance_ip" {
-  value = google_compute_address.gcp_hana_bastion_ip.address
+  value = join("", google_compute_address.gcp_hana_bastion_ip.*.address)
 }

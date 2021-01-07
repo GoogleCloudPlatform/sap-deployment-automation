@@ -71,16 +71,16 @@
     },
     {
       "question_name": "Instance name",
-      "question_description": "This is the name of the HANA instance.",
+      "question_description": "This is the name of the Windows instance.",
       "required": true,
       "type": "text",
-      "variable": "sap_hana_instance_name",
+      "variable": "sap_win_instance_name",
       "min": 1,
       "max": 13
     },
     {
       "question_name": "Image family",
-      "question_description": "Family of the image used to create machines (rhel-7-4-sap, rhel-7-6-sap-ha, rhel-7-7-sap-ha, sles-12-sp2-sap, sles-12-sp3-sap, sles-12-sp4-sap, sles-12-sp5-sap, sles-15-sap, sles-15-sp1-sap, sles-15-sp2-sap).",
+      "question_description": "Family of the image used to create machines (windows).",
       "required": true,
       "type": "text",
       "variable": "sap_source_image_family",
@@ -90,7 +90,7 @@
     },
     {
       "question_name": "Image project",
-      "question_description": "Project of the image used to create machines. Choose rhel-sap-cloud for 'rhel' images and suse-sap-cloud for 'sles' images.",
+      "question_description": "Project of the image used to create windows machines.",
       "required": true,
       "type": "multiplechoice",
       "variable": "sap_source_image_project",
@@ -99,31 +99,41 @@
     },
     {
       "question_name": "Instance type",
-      "question_description": "Machine instance type for HANA.",
+      "question_description": "Machine instance type for Windows image.",
       "required": true,
       "type": "text",
-      "variable": "sap_hana_instance_type",
+      "variable": "sap_win_instance_type",
       "default": "e2-standard-2"
     },
     {
       "question_name": "Service account name",
-      "question_description": "This is the name of an existing service account for the HANA machine instance. This should be the name before the '@' symbol, not the entire email address.",
+      "question_description": "This is the name of an existing service account for the Windows machine instance. This should be the name before the '@' symbol, not the entire email address.",
       "required": false,
       "type": "text",
-      "variable": "sap_hana_service_account_name",
+      "variable": "sap_win_service_account_name",
       "min": 0,
       "max": 1024,
       "default": "sap-common-sa"
     },
     {
       "question_name": "Installation files bucket",
-      "question_description": "This is the bucket from which HANA installation files will be downloaded. You can add folders to the bucket name to define the path in the bucket where the files are located, for example 'xyz-install-files/hana/2.0sps03'.",
+      "question_description": "This is the bucket and folder from which Windows Sap Hana Studio and Sap Logon installation files will be downloaded. ",
       "required": true,
       "type": "text",
-      "variable": "sap_hana_install_files_bucket",
+      "variable": "sap_win_install_files_bucket_folder",
       "min": 1,
       "max": 1024,
-      "default": "sap-iac"
+      "default": "sap-iac/Windows-Bastion"
+    },
+    {
+      "question_name": "Public IP required for Windows Instance",
+      "question_description": "Boolean variable used to set if a Public IP is need for the Windows Instance",
+      "required": true,
+      "type": "text",
+      "variable": "sap_win_use_public_ip",
+      "min": 1,
+      "max": 1024,
+      "default": "true"
     }
   ]
 }

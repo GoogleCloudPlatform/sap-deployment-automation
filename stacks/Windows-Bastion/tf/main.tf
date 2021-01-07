@@ -13,8 +13,8 @@ module "hana_bastion" {
   source_image_project  = var.source_image_project
   boot_disk_size        = var.boot_disk_size
   boot_disk_type        = var.boot_disk_type
-  autodelete_disk       = var.autodelete_disk
+  autodelete_disk       = true
   network_tags          = var.network_tags
-  pd_kms_key            = var.pd_kms_key
   use_public_ip         = var.use_public_ip
+  install_files_bucket_folder = var.install_files_bucket_folder
 }

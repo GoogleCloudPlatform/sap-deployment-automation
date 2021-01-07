@@ -51,10 +51,10 @@ variable "network_tags" {
   description = "List of network tags to attach to the instance."
 }
 
-variable "pd_kms_key" {
-  description = "Customer managed encryption key to use in persistent disks. If none provided, a Google managed key will be used.."
-}
-
 variable "use_public_ip" {
   description = "Boolean for using Public IP address."
+}
+
+variable "install_files_bucket_folder" {
+  description = "GS bucket folder location for the binaries"
 }

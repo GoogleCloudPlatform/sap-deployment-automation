@@ -42,18 +42,14 @@ variable "boot_disk_type" {
   description = "The GCE boot disk type.Set to pd-standard (for PD HDD)."
 }
 
-variable "autodelete_disk" {
-  description = "Whether the disk will be auto-deleted when the instance is deleted."
-}
-
 variable "network_tags" {
   description = "List of network tags to attach to the instance."
 }
 
-variable "pd_kms_key" {
-  description = "Customer managed encryption key to use in persistent disks. If none provided, a Google managed key will be used.."
-}
-
 variable "use_public_ip" {
   description = "Boolean for using Public IP address."
+}
+
+variable "install_files_bucket_folder" {
+  description = "Location of the GS Bucket Folder"
 }

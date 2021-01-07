@@ -20,7 +20,7 @@ if (!(Test-PATH 'C:\Logs\Chrome_errors.txt')) {
 
 ###################     Common Variable     ###################
 
-$GSBucket = "gs://sap-iac/sap-hana-logon"
+$GSBucket = "gs://" + "${BucketFolder}"
 
 ###################     Check if OpenJDK8U-jre is installed    ###################
 try {

@@ -8,7 +8,7 @@ data "google_compute_subnetwork" "subnetwork" {
 
 locals {
   access_config = {
-    nat_ip       = google_compute_address.gcp_hana_bastion_ip.address
+    nat_ip       = join("", google_compute_address.gcp_hana_bastion_ip.*.address)
     network_tier = "PREMIUM"
   }
 }
@@ -22,8 +22,7 @@ module "hana_bastion_template" {
 
  
   metadata = {
-    #windows-startup-script-url = "gs://win-scripts-test/install-sap-hana-logon-v1.ps1"
-    windows-startup-script-ps1 = file("${path.module}/install-sap-hana-logon.ps1")
+    windows-startup-script-ps1 = templatefile("${path.module}/install-sap-hana-logon.ps1, {BucketFolder = var.install_files_bucket_folder})
   }
 
   service_account = {
@@ -47,14 +46,12 @@ module "hana_bastion_template" {
 }
 
 resource "google_compute_address" "gcp_hana_bastion_ip" {
+  count        = var.use_public_ip ? 1 : 0
   name         = "${var.instance_name}-ip"
-  address_type = var.use_public_ip ? "EXTERNAL" : "INTERNAL"
-  subnetwork   = var.use_public_ip ? null : "projects/${local.subnetwork_project}/regions/${local.region}/subnetworks/${var.subnetwork}"
+  address_type = "EXTERNAL"
   region       = local.region
   project      = var.project_id
-  purpose      = var.use_public_ip ? null : "GCE_ENDPOINT"
 }
-
 
 module "hana_bastion" {
   source             = "../terraform-google-vm//modules/compute_instance"
@@ -63,10 +60,11 @@ module "hana_bastion" {
   zone               = var.zone
   subnetwork         = var.subnetwork
   subnetwork_project = local.subnetwork_project
-  static_ips         = var.use_public_ip ? [] : google_compute_address.gcp_hana_bastion_ip.*.address
+  #static_ips         = var.use_public_ip ? [] : google_compute_address.gcp_hana_bastion_ip.*.address
   hostname           = var.instance_name
   
   access_config      = var.use_public_ip ? [local.access_config] : []
+  num_instances      = 1
 
   instance_template  = module.hana_bastion_template.self_link
 }
