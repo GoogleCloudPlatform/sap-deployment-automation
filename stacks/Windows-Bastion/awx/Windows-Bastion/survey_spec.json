@@ -129,11 +129,10 @@
       "question_name": "Public IP required for Windows Instance",
       "question_description": "Boolean variable used to set if a Public IP is need for the Windows Instance",
       "required": true,
-      "type": "text",
+      "type": "multiplechoice",
       "variable": "sap_win_use_public_ip",
-      "min": 1,
-      "max": 1024,
-      "default": "true"
+      "default": "true",
+      "choices": ["true", "false"]
     }
   ]
 }

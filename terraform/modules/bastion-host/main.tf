@@ -22,7 +22,7 @@ module "hana_bastion_template" {
 
  
   metadata = {
-    windows-startup-script-ps1 = templatefile("${path.module}/install-sap-hana-logon.ps1", {BucketFolder = var.install_files_bucket_folder})
+    windows-startup-script-ps1 = templatefile("${path.module}/install-sap-hana-logon.ps1, {BucketFolder = var.install_files_bucket_folder})
   }
 
   service_account = {
