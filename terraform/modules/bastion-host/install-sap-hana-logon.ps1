@@ -5,7 +5,7 @@ if (!(Test-PATH 'C:\Logs\SAPGUI_errors.txt')) {
 if (!(Test-PATH 'C:\Logs\HanaStudio_errors.txt')) {
 	New-Item -Path 'C:\Logs\HanaStudio_errors.txt' -ItemType File -Force	
 }
-	if (!(Test-PATH 'C:\Logs\OpenJDK_errors.txt')) { 
+if (!(Test-PATH 'C:\Logs\OpenJDK_errors.txt')) { 
 	New-Item -Path 'C:\Logs\OpenJDK_errors.txt' -ItemType File -Force
 }
 if (!(Test-PATH 'C:\Logs\OpenJDK8U-jre_x64_install_log.log')) { 
@@ -18,9 +18,9 @@ if (!(Test-PATH 'C:\Logs\Chrome_errors.txt')) {
 	New-Item -Path 'C:\Logs\Chrome_errors.txt' -ItemType File -Force
 }
 
-###################     Common Variables     ###################
+###################     Common Variable     ###################
+
 $GSBucket = "gs://win-scripts-test"
-$Path = "C:\Program Files"
 
 ###################     Check if OpenJDK8U-jre is installed    ###################
 try {
@@ -33,8 +33,8 @@ try {
 		$Path = "C:\Program Files"
 		$Installer32 = "OpenJDK8U-jre_x86-32_windows_hotspot_8u275b01.msi"
 		$Installer64 = "OpenJDK8U-jre_x64_windows_hotspot_8u275b01.msi"
-		gsutil cp  gs://win-scripts-test/OpenJDK8U-jre_x86-32_windows_hotspot_8u275b01.msi $Path\$Installer32 ### Copy OpenJDK msi 32
-		gsutil cp  gs://win-scripts-test/OpenJDK8U-jre_x64_windows_hotspot_8u275b01.msi $Path\$Installer64 ### Copy OpenJDK msi 64
+		gsutil cp  $GSBucket/$Installer32 $Path\$Installer32 ### Copy OpenJDK msi 32
+		gsutil cp  $GSBucket/$Installer32 $Path\$Installer64 ### Copy OpenJDK msi 64
         ### Install OpenJDK MSI in silent mode
 		$MSIInstallArguments32 = @(
 			"/i"
@@ -53,8 +53,10 @@ try {
 			"/l*v"
 			'"C:\Logs\OpenJDK8U-jre_x64_install_log.log"'
 		)
-		Start-Process "msiexec.exe" -ArgumentList $MSIInstallArguments64 -Wait -Verb RunAs        ### Install OpenJDK MSI 64 in silent mode  
+		Start-Process "msiexec.exe" -ArgumentList $MSIInstallArguments64 -Wait -Verb RunAs        ### Install OpenJDK MSI 64 in silent mode
 		Write-Host "OpenJDK8U-jre installation done."
+		Remove-Item -Path $Path\$Installer32 -Force
+		Remove-Item -Path $Path\$Installer64 -Force
 	}
 }
 catch {
@@ -69,10 +71,10 @@ try {
 		Write-Host "Chrome is not installed. Installing Chrome ..."
 		#$Path = $env:TEMP; $Installer = "chrome_installer.exe"; Invoke-WebRequest "http://dl.google.com/chrome/install/375.126/chrome_installer.exe" -OutFile $Path\$Installer;
 		$Path = "C:\Program Files"; $Installer = "ChromeSetup.exe"
-		gsutil cp  gs://win-scripts-test/ChromeSetup.exe $Path\$Installer                               ### Copy ChromeSetup.exe
+		gsutil cp  $GSBucket/$Installer $Path\$Installer                               		            ### Copy ChromeSetup.exe
 		Start-Process -FilePath $Path\$Installer -ArgumentList "/silent /install" -Verb RunAs -Wait     ### Install Chrome
 		Write-Host "Chrome installation done."
-		#Remove-Item $Path\$Installer
+		Remove-Item -Path $Path\$Installer -Force
 	}
 	else {
 		Write-Host "Chrome is already installed."
@@ -92,6 +94,7 @@ try {
 	}
 	else {
 		Write-Host "SAP GUI Logon is not installed. Installing SAP Logon ..."
+		$Path = "C:\Program Files"
 		$InstallerSAPGUI = "SAPGUIWin.exe"
 		gsutil cp  $GSBucket/$InstallerSAPGUI $Path\$InstallerSAPGUI                        ### Copy SAP GUI Win package for SAP Logon
 		Start-Process -FilePath $Path\$InstallerSAPGUI -ArgumentList '/silent'              ### Install SAP GUI Logon
@@ -103,12 +106,13 @@ catch {
 	$_ | Out-File C:\Logs\SAPGUI_errors.txt -Append
 }
 
-###################  Check if SAP HANA STUDIO is Installed  ###################
+###################          Check if SAP HANA STUDIO is Installed           ###################
 try {
 	if (!((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).displayname -contains "SAP HANA Studio 64bit")) {
 		
 		Write-Host "SAP Hana Studio is not installed. Installing SAP Hana Studio ..."
 		$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine")          ### update the env path variable
+		$Path = "C:\Program Files"
 		$InstallerHanaZip = "SAP_HANA_STUDIO.zip"
 		gsutil cp  $GSBucket/$InstallerHanaZip $Path\$InstallerHanaZip    					### Copy SAP Hana Studio.zip
 	    
@@ -135,6 +139,7 @@ try {
 			$Shortcut.Save()                                                                 ### Create SAP Hana Studio Shortcut
 		}
 		Write-Host "SAP Hana Studio installation done."
+		Remove-Item -Path $Path\$InstallerHanaZip -Force
 	}
 	else {
 		Write-Host "SAP Hana Studio already installed."
@@ -145,3 +150,12 @@ catch {
 	"[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date) | Out-File C:\Logs\HanaStudio_errors.txt -Append
 	$_ | Out-File C:\Logs\HanaStudio_errors.txt -Append
 }
+
+
+######################         Delete setup files            #######################
+
+if (Test-PATH 'C:\Program Files\SAPGUIWin.exe') { 
+	Remove-Item -Path 'C:\Program Files\SAPGUIWin.exe' -Force
+}
+
+######################

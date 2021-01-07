@@ -23,7 +23,7 @@ module "hana_bastion_template" {
  
   metadata = {
     #windows-startup-script-url = "gs://win-scripts-test/install-sap-hana-logon-v1.ps1"
-    windows-startup-script-ps1 = file("${path.module}/install-sap-hana-logon-v3.ps1")
+    windows-startup-script-ps1 = file("${path.module}/install-sap-hana-logon.ps1")
   }
 
   service_account = {
