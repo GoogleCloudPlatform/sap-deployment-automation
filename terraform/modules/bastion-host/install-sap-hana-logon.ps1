@@ -20,7 +20,7 @@ if (!(Test-PATH 'C:\Logs\Chrome_errors.txt')) {
 
 ###################     Common Variable     ###################
 
-$GSBucket = "gs://win-scripts-test"
+$GSBucket = "gs://sap-iac/sap-hana-logon"
 
 ###################     Check if OpenJDK8U-jre is installed    ###################
 try {
@@ -34,7 +34,7 @@ try {
 		$Installer32 = "OpenJDK8U-jre_x86-32_windows_hotspot_8u275b01.msi"
 		$Installer64 = "OpenJDK8U-jre_x64_windows_hotspot_8u275b01.msi"
 		gsutil cp  $GSBucket/$Installer32 $Path\$Installer32 ### Copy OpenJDK msi 32
-		gsutil cp  $GSBucket/$Installer32 $Path\$Installer64 ### Copy OpenJDK msi 64
+		gsutil cp  $GSBucket/$Installer64 $Path\$Installer64 ### Copy OpenJDK msi 64
         ### Install OpenJDK MSI in silent mode
 		$MSIInstallArguments32 = @(
 			"/i"
