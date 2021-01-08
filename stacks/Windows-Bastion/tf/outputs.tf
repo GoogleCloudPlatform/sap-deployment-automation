@@ -16,10 +16,3 @@ output "address" {
   value = module.hana_bastion.address
 }
 
-output "sap_image_family" {
-  value = contains([element(split("-", var.source_image_family), 0)], "rhel") ? "RedHat" : "Suse"
-}
-
-output "inventory" {
-  value = { hana = [module.hana_bastion.address] }
-}
