@@ -3,8 +3,33 @@
 - name: Force all notified handlers to run at this point, not waiting for normal sync points
   meta: flush_handlers
 
-- name: HANA DB start
-  command: /usr/sap/{{ sap_hana_sid }}/HDB{{ sap_hana_instance_number }}/HDB start
-  retries: 5
-  become: true
-  become_user: "{{ sap_hana_user }}"
+- block:
+  - name: increment retries
+    set_fact:
+      sap_hana_start_retries: '{{ sap_hana_start_retries | int + 1 }}'
+
+  - name: HANA DB start
+    command: /usr/sap/{{ sap_hana_sid }}/HDB{{ sap_hana_instance_number }}/HDB start
+    become: true
+    become_user: "{{ sap_hana_user }}"
+
+  rescue:
+  - fail:
+      msg: number of retries exceeded starting HANA
+    when: sap_hana_start_retries | int > 5
+
+  # Sometimes 'HDB start' fails but some processes and lockfiles are still present. In such cases, a
+  # start will fail a second time, so running 'HDB stop' will ensure a clean shutdown before retrying.
+  - name: HANA DB stop
+    command: /usr/sap/{{ sap_hana_sid }}/HDB{{ sap_hana_instance_number }}/HDB stop
+    become: true
+    become_user: "{{ sap_hana_user }}"
+
+  - name: ensure HANA lockfile is removed
+    wait_for:
+      path: /usr/sap/{{ sap_hana_sid }}/HDB{{ sap_hana_instance_number }}/{{ ansible_hostname }}/lock/hdbdaemon@3{{ sap_hana_instance_number }}00.pid
+      state: absent
+      timeout: 120
+
+  # Include self to retry as blocks cannot have retries.
+  - include_tasks: main.yml
