@@ -15,6 +15,8 @@
     enablesr.rc != 0 and 'this site is already enabled' not in enablesr.stdout
   when: |
     '-pri' in ansible_hostname
+  async: 60
+  poll: 2
 
 - name: Ensure HANA instance is stopped in the secondary node
   shell: |
@@ -27,6 +29,8 @@
   changed_when: "'StopSystem' in stopinstance.stdout"
   when:
     - '"-sec" in "{{ ansible_hostname }}"'
+  async: 60
+  poll: 2
 
 - name: Register secondary node to HANA System Replication
   shell: |
@@ -43,6 +47,8 @@
   changed_when: "'adding site' in registersr.stdout"
   when:
     - '"-sec" in "{{ ansible_hostname }}"'
+  async: 60
+  poll: 2
 
 - name: Ensure HANA instance is started in the secondary node
   shell: |
@@ -56,3 +62,5 @@
   changed_when: "'StartSystem' in startinstance.stdout"
   when:
     - '"-sec" in "{{ ansible_hostname }}"'
+  async: 60
+  poll: 2

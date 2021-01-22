@@ -9,3 +9,5 @@
   become: yes
   become_user: "{{ sap_hana_user }}"
   register: hdbuserstore
+  async: 60
+  poll: 2

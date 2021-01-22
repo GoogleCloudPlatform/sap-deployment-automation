@@ -25,3 +25,5 @@
   args:
      executable: /bin/bash
   register: hdbuser
+  async: 60
+  poll: 2
