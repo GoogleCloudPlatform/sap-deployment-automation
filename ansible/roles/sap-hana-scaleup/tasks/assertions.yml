@@ -51,15 +51,14 @@
     sap_expected_pacemaker_status:
     - 2 nodes configured
     - 8 resource instances configured
-    - 'Online: [ {{ sap_hana_primary_instance_name }} {{ sap_hana_secondary_instance_name }} ]'
-    # Note strings below contain tabs
-    - 'STONITH-{{ sap_hana_primary_instance_name }}	(stonith:external/gcpstonith):	Started {{ sap_hana_secondary_instance_name }}'
-    - 'STONITH-{{ sap_hana_secondary_instance_name }}	(stonith:external/gcpstonith):	Started {{ sap_hana_primary_instance_name }}'
-    - 'rsc_vip_int-primary	(ocf::heartbeat:IPaddr2):	Started {{ sap_hana_primary_instance_name }}'
-    - 'rsc_healthcheck-primary	(ocf::heartbeat:anything):	Started {{ sap_hana_primary_instance_name }}'
-    - 'Started: [ {{ sap_hana_primary_instance_name }} {{ sap_hana_secondary_instance_name }} ]'
-    - 'Masters: [ {{ sap_hana_primary_instance_name }} ]'
-    - 'Slaves: [ {{ sap_hana_secondary_instance_name }} ]'
+    - 'Online: \[ {{ sap_hana_primary_instance_name }} {{ sap_hana_secondary_instance_name }} \]'
+    - 'STONITH-{{ sap_hana_primary_instance_name }}[\t\s]+\(stonith:external/gcpstonith\):[\t\s]+Started[\t\s]+{{ sap_hana_secondary_instance_name }}'
+    - 'STONITH-{{ sap_hana_secondary_instance_name }}[\t\s]+\(stonith:external/gcpstonith\):[\t\s]+Started[\t\s]+{{ sap_hana_primary_instance_name }}'
+    - 'rsc_vip_int-primary[\t\s]+\(ocf::heartbeat:IPaddr2\):[\t\s]+Started[\t\s]+{{ sap_hana_primary_instance_name }}'
+    - 'rsc_healthcheck-primary[\t\s]+\(ocf::heartbeat:anything\):[\t\s]+Started[\t\s]+{{ sap_hana_primary_instance_name }}'
+    - 'Started: \[ {{ sap_hana_primary_instance_name }} {{ sap_hana_secondary_instance_name }} \]'
+    - 'Masters: \[ {{ sap_hana_primary_instance_name }} \]'
+    - 'Slaves: \[ {{ sap_hana_secondary_instance_name }} \]'
   when:
   - sap_is_ha
   - ansible_os_family == 'Suse'

@@ -16,7 +16,8 @@
   - name: assert that pacemaker is configured and running for rhel
     assert:
       that:
-      - '{{ item in pcs_status.stdout }}'
+      - '{{ pcs_status.stdout | regex_search(item) != None }}'
+      fail_msg: 'pattern not found in pcs status output: {{ item }}'
     loop: '{{ sap_expected_pacemaker_status }}'
 
   rescue:
@@ -46,7 +47,8 @@
   - name: assert that pacemaker is configured and running for suse
     assert:
       that:
-      - '{{ item in crm_status.stdout }}'
+      - '{{ crm_status.stdout | regex_search(item) != None }}'
+      fail_msg: 'pattern not found in crm status output: {{ item }}'
     loop: '{{ sap_expected_pacemaker_status }}'
 
   rescue:

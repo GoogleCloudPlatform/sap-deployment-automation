@@ -4,18 +4,17 @@
     sap_expected_pacemaker_status:
     - 2 nodes configured
     - 8 resources configured
-    - 'Online: [ {{ sap_nw_ascs_instance_name }} {{ sap_nw_ers_instance_name }} ]'
-    # Note strings below contain tabs
-    - 'STONITH-{{ sap_nw_ascs_instance_name }}	(stonith:fence_gce):	Started {{ sap_nw_ers_instance_name }}'
-    - 'STONITH-{{ sap_nw_ers_instance_name }}	(stonith:fence_gce):	Started {{ sap_nw_ascs_instance_name }}'
+    - 'Online: \[ {{ sap_nw_ascs_instance_name }} {{ sap_nw_ers_instance_name }} \]'
+    - 'STONITH-{{ sap_nw_ascs_instance_name }}[\t\s]+\(stonith:fence_gce\):[\t\s]+Started[\t\s]+{{ sap_nw_ers_instance_name }}'
+    - 'STONITH-{{ sap_nw_ers_instance_name }}[\t\s]+\(stonith:fence_gce\):[\t\s]+Started[\t\s]+{{ sap_nw_ascs_instance_name }}'
     - 'Resource Group: g-ascs'
-    - 'rsc_vip_int-ascs	(ocf::heartbeat:IPaddr2):	Started {{ sap_nw_ascs_instance_name }}'
-    - 'rsc_healthcheck-ascs	(service:haproxy):	Started {{ sap_nw_ascs_instance_name }}'
-    - 'rsc_{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}	(ocf::heartbeat:SAPInstance):	Started {{ sap_nw_ascs_instance_name }}'
-    - 'Resource Group: g-ers'
-    - 'rsc_vip_int-ers	(ocf::heartbeat:IPaddr2):	Started {{ sap_nw_ers_instance_name }}'
-    - 'rsc_vip_gcp-ers	(ocf::heartbeat:gcp-vpc-move-vip):	Started {{ sap_nw_ers_instance_name }}'
-    - 'rsc_{{ sap_nw_sid }}_ERS{{ sap_nw_ers_instance_number }}	(ocf::heartbeat:SAPInstance):	Started {{ sap_nw_ers_instance_name }}'
+    - 'rsc_vip_int-ascs[\t\s]+\(ocf::heartbeat:IPaddr2\):[\t\s]+Started[\t\s]+{{ sap_nw_ascs_instance_name }}'
+    - 'rsc_healthcheck-ascs[\t\s]+\(service:haproxy\):[\t\s]+Started[\t\s]+{{ sap_nw_ascs_instance_name }}'
+    - 'rsc_{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}[\t\s]+\(ocf::heartbeat:SAPInstance\):[\t\s]+Started[\t\s]+{{ sap_nw_ascs_instance_name }}'
+    - 'Resource Group:[\t\s]+g-ers'
+    - 'rsc_vip_int-ers[\t\s]+\(ocf::heartbeat:IPaddr2\):[\t\s]+Started[\t\s]+{{ sap_nw_ers_instance_name }}'
+    - 'rsc_vip_gcp-ers[\t\s]+\(ocf::heartbeat:gcp-vpc-move-vip\):[\t\s]+Started[\t\s]+{{ sap_nw_ers_instance_name }}'
+    - 'rsc_{{ sap_nw_sid }}_ERS{{ sap_nw_ers_instance_number }}[\t\s]+\(ocf::heartbeat:SAPInstance\):[\t\s]+Started[\t\s]+{{ sap_nw_ers_instance_name }}'
     - 'corosync: active/enabled'
     - 'pacemaker: active/enabled'
     - 'pcsd: active/enabled'
@@ -26,18 +25,17 @@
     sap_expected_pacemaker_status:
     - 2 nodes configured
     - 8 resource
-    - 'Online: [ {{ sap_nw_ascs_instance_name }} {{ sap_nw_ers_instance_name }} ]'
-    # Note strings below contain tabs
-    - 'STONITH-{{ sap_nw_ascs_instance_name }}	(stonith:external/gcpstonith):	Started {{ sap_nw_ers_instance_name }}'
-    - 'STONITH-{{ sap_nw_ers_instance_name }}	(stonith:external/gcpstonith):	Started {{ sap_nw_ascs_instance_name }}'
-    - 'Resource Group: g-ascs'
-    - 'rsc_vip_int-ascs	(ocf::heartbeat:IPaddr2):	Started {{ sap_nw_ascs_instance_name }}'
-    - 'rsc_healthcheck-ascs	(ocf::heartbeat:anything):	Started {{ sap_nw_ascs_instance_name }}'
-    - 'rsc_{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}	(ocf::heartbeat:SAPInstance):	Started {{ sap_nw_ascs_instance_name }}'
-    - 'Resource Group: g-ers'
-    - 'rsc_vip_int-ers	(ocf::heartbeat:IPaddr2):	Started {{ sap_nw_ers_instance_name }}'
-    - 'rsc_healthcheck-ers	(ocf::heartbeat:anything):	Started {{ sap_nw_ers_instance_name }}'
-    - 'rsc_{{ sap_nw_sid }}_ERS{{ sap_nw_ers_instance_number }}	(ocf::heartbeat:SAPInstance):	Started {{ sap_nw_ers_instance_name }}'
+    - 'Online: \[ {{ sap_nw_ascs_instance_name }} {{ sap_nw_ers_instance_name }} \]'
+    - 'STONITH-{{ sap_nw_ascs_instance_name }}[\t\s]+\(stonith:external/gcpstonith\):[\t\s]+Started[\t\s]+{{ sap_nw_ers_instance_name }}'
+    - 'STONITH-{{ sap_nw_ers_instance_name }}[\t\s]+\(stonith:external/gcpstonith\):[\t\s]+Started[\t\s]+{{ sap_nw_ascs_instance_name }}'
+    - 'Resource Group:[\t\s]+g-ascs'
+    - 'rsc_vip_int-ascs[\t\s]+\(ocf::heartbeat:IPaddr2\):[\t\s]+Started[\t\s]+{{ sap_nw_ascs_instance_name }}'
+    - 'rsc_healthcheck-ascs[\t\s]+\(ocf::heartbeat:anything\):[\t\s]+Started[\t\s]+{{ sap_nw_ascs_instance_name }}'
+    - 'rsc_{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}[\t\s]+\(ocf::heartbeat:SAPInstance\):[\t\s]+Started[\t\s]+{{ sap_nw_ascs_instance_name }}'
+    - 'Resource Group:[\t\s]+g-ers'
+    - 'rsc_vip_int-ers[\t\s]+\(ocf::heartbeat:IPaddr2\):[\t\s]+Started[\t\s]+{{ sap_nw_ers_instance_name }}'
+    - 'rsc_healthcheck-ers[\t\s]+\(ocf::heartbeat:anything\):[\t\s]+Started[\t\s]+{{ sap_nw_ers_instance_name }}'
+    - 'rsc_{{ sap_nw_sid }}_ERS{{ sap_nw_ers_instance_number }}[\t\s]+\(ocf::heartbeat:SAPInstance\):[\t\s]+Started[\t\s]+{{ sap_nw_ers_instance_name }}'
   when: ansible_os_family == 'Suse'
 
 - name: include sap assertions role for ascs
