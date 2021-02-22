@@ -46,6 +46,11 @@ variable "ers_instance_name" {
 variable "pas_instance_name" {
 }
 
+variable "nw_as_num_instances" {
+  description = "Number of application server (PAS + AAS) instances"
+  default = 1
+}
+
 variable "primary_zone" {
   description = "The zone that the primary instances should be created in."
 }

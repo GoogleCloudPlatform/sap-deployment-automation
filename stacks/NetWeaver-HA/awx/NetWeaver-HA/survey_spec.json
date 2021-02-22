@@ -117,13 +117,21 @@
       "max": 10
     },
     {
-      "question_name": "PAS instance name",
-      "question_description": "This is the base name of the PAS instance.",
+      "question_name": "AS instance name",
+      "question_description": "This is the base name of the application server instances.",
       "required": true,
       "type": "text",
       "variable": "sap_pas_instance_name",
       "min": 1,
       "max": 10
+    },
+    {
+      "question_name": "Number of AS instances",
+      "question_description": "This is the number of application server instances. The first instance is the PAS and additional instances are AAS",
+      "required": false,
+      "type": "integer",
+      "variable": "sap_nw_as_num_instances",
+      "default": 1
     },
     {
       "question_name": "HANA virtual hostname",

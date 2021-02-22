@@ -34,4 +34,5 @@ locals {
   network_hana       = element(local.network_parts_hana, length(local.network_parts_hana) - 1)
   network_parts_nw   = split("/", data.google_compute_subnetwork.subnetwork_nw.network)
   network_nw         = element(local.network_parts_nw, length(local.network_parts_nw) - 1)
+  num_as_instances   = length(module.netweaver_as.instance_ips)
 }

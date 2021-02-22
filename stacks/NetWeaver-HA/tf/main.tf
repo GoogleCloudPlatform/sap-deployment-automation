@@ -82,7 +82,7 @@ module "netweaver_ers" {
   service_account_email = var.nw_service_account_email
 }
 
-module "netweaver_pas" {
+module "netweaver_as" {
   source                = "../../../terraform/modules/nw-ha"
   instance_name         = var.pas_instance_name
   zone                  = var.primary_zone
@@ -101,6 +101,7 @@ module "netweaver_pas" {
   autodelete_disk       = var.nw_autodelete_boot_disk
   network_tags          = var.nw_network_tags
   service_account_email = var.nw_service_account_email
+  target_size           = var.nw_as_num_instances
 }
 
 module "ascs_ilb" {
@@ -118,12 +119,12 @@ module "ascs_ilb" {
   health_check    = local.ascs_health_check
   backends = [
     {
-      group       = module.netweaver_ascs.primary_umig_group_link
+      group       = module.netweaver_ascs.umig_self_link
       description = "Primary instance backend group"
       failover    = false
     },
     {
-      group       = module.netweaver_ers.primary_umig_group_link
+      group       = module.netweaver_ers.umig_self_link
       description = "failover instance backend group"
       failover    = true
     }
@@ -146,12 +147,12 @@ module "ers_ilb" {
   health_check    = local.ers_health_check
   backends = [
     {
-      group       = module.netweaver_ers.primary_umig_group_link
+      group       = module.netweaver_ers.umig_self_link
       description = "Primary instance backend group"
       failover    = false
     },
     {
-      group       = module.netweaver_ascs.primary_umig_group_link
+      group       = module.netweaver_ascs.umig_self_link
       description = "failover instance backend group"
       failover    = true
     }

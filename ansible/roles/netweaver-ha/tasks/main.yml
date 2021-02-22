@@ -27,3 +27,6 @@
 - name: include PAS Tasks
   include_tasks: '{{ role_path }}/tasks/pas.yml'
   when: is_pas
+- name: include AAS Tasks
+  include_tasks: '{{ role_path }}/tasks/aas.yml'
+  when: '{{ ansible_default_ipv4.address in terraform.outputs.inventory.value["aas"] }}'

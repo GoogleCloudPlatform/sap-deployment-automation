@@ -33,6 +33,7 @@
         nw_swap_disk_size: '{{ sap_nw_swap_disk_size | default(28) }}'
         nw_usrsap_disk_size: '{{ sap_nw_usrsap_disk_size | default(50) }}'
         pas_instance_name: '{{ sap_pas_instance_name }}'
+        nw_as_num_instances: '{{ sap_nw_as_num_instances | default(1) }}'
         project_id: '{{ sap_project_id }}'
         source_image_family: '{{ sap_source_image_family }}'
         source_image_project: '{{ sap_source_image_project }}'
@@ -41,7 +42,7 @@
         subnetwork_project: '{{ sap_subnetwork_project_id | default("") }}'
         primary_zone: '{{ sap_primary_zone }}'
         secondary_zone: '{{ sap_secondary_zone }}'
-    tags: [hana, nw, ascs, ers, pas, assertions]
+    tags: [hana, nw, ascs, ers, pas, aas, assertions]
 
 - name: SAP HANA configure
   hosts: hana
@@ -99,6 +100,21 @@
       sap_nw_usrsap_disk_size: '{{ terraform.outputs.nw_usrsap_disk_size.value - 1 }}'
       sap_nw_swap_disk_size: '{{ terraform.outputs.nw_swap_disk_size.value - 1 }}'
     tags: [nw, pas]
+
+- name: SAP AAS configure
+  hosts: aas
+  become: yes
+  become_user: root
+  roles:
+  - role: netweaver-ha
+    vars:
+      sap_hana_vip: '{{ terraform.outputs.hana_ilb_ip.value }}'
+      sap_nw_ascs_vip: '{{ terraform.outputs.ascs_ilb_ip.value }}'
+      sap_nw_ers_vip: '{{ terraform.outputs.ers_ilb_ip.value }}'
+      sap_nw_pas_virtual_host: '{{ terraform.outputs.pas_instance_name.value }}'
+      sap_nw_usrsap_disk_size: '{{ terraform.outputs.nw_usrsap_disk_size.value - 1 }}'
+      sap_nw_swap_disk_size: '{{ terraform.outputs.nw_swap_disk_size.value - 1 }}'
+    tags: [nw, aas]
 
 - name: Run assertions on HANA
   hosts: hana

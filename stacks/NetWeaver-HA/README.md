@@ -56,6 +56,8 @@ Use the same command as for deploying, but add the `state: absent` variable:
 
 `sap_hana_virtual_host`: (Required) - The hostname given to the HANA load balancer, added to `/etc/hosts` of instances.
 
+`sap_nw_as_num_instances`: (Optional, default `1`) - Number of application server instances. The first instance will be the PAS, and additional instances will be AAS.
+
 `sap_nw_ascs_instance_number`: (Optional, default `06`) - Instance number for ASCS. This is a two digit number, but must be in quotes, or it may get converted into single digits, for example `00` without surrounding quotes gets converted to the number `0`.
 
 `sap_nw_ascs_virtual_host`: (Required) - The hostname given to the ASCS load balancer, added to `/etc/hosts` of instances.
@@ -76,7 +78,7 @@ Use the same command as for deploying, but add the `state: absent` variable:
 
 `sap_nw_sid`: (Required) - The System ID for NetWeaver or S4HANA. This is a three character uppercase string which may include digits but must start with a letter.
 
-`sap_pas_instance_name`: (Required) - Base name of PAS instance.
+`sap_pas_instance_name`: (Required) - Base name of application server instances.
 
 `sap_primary_zone`: (Required) - The zone for primary instances, HANA and ASCS and PAS, for example `us-central1-a`.
 

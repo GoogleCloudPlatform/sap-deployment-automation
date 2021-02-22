@@ -23,27 +23,27 @@ output "hana_health_check_port" {
 }
 
 output "ascs_instance_ip" {
-  value = module.netweaver_ascs.primary_instance_ip
+  value = length(module.netweaver_ascs.instance_ips) == 0 ? "" : module.netweaver_ascs.instance_ips[0]
 }
 
 output "ers_instance_ip" {
-  value = module.netweaver_ers.primary_instance_ip
-}
-
-output "ascs_instance_name" {
-  value = module.netweaver_ascs.primary_instance_name
-}
-
-output "pas_instance_name" {
-  value = module.netweaver_pas.primary_instance_name
-}
-
-output "ers_instance_name" {
-  value = module.netweaver_ers.primary_instance_name
+  value = length(module.netweaver_ers.instance_ips) == 0 ? "" : module.netweaver_ers.instance_ips[0]
 }
 
 output "pas_instance_ip" {
-  value = module.netweaver_pas.primary_instance_ip
+  value = length(module.netweaver_as.instance_ips) == 0 ? "" : module.netweaver_as.instance_ips[0]
+}
+
+output "ascs_instance_name" {
+  value = length(module.netweaver_ascs.instance_names) == 0 ? "" : module.netweaver_ascs.instance_names[0]
+}
+
+output "pas_instance_name" {
+  value = length(module.netweaver_as.instance_names) == 0 ? "" : module.netweaver_as.instance_names[0]
+}
+
+output "ers_instance_name" {
+  value = length(module.netweaver_ers.instance_names) == 0 ? "" : module.netweaver_ers.instance_names[0]
 }
 
 output "ascs_ilb_ip" {
@@ -57,10 +57,11 @@ output "ers_ilb_ip" {
 output "inventory" {
   value = {
     hana     = [module.hana_ha.primary_instance_ip, module.hana_ha.secondary_instance_ip],
-    ascs     = [module.netweaver_ascs.primary_instance_ip],
-    ers      = [module.netweaver_ers.primary_instance_ip],
-    nw_nodes = [module.netweaver_ascs.primary_instance_ip, module.netweaver_ers.primary_instance_ip],
-    pas      = [module.netweaver_pas.primary_instance_ip],
+    ascs     = module.netweaver_ascs.instance_ips,
+    ers      = module.netweaver_ers.instance_ips,
+    nw_nodes = concat(module.netweaver_ascs.instance_ips, module.netweaver_ers.instance_ips),
+    pas      = local.num_as_instances == 0 ? [] : [module.netweaver_as.instance_ips[0]],
+    aas      = local.num_as_instances <= 1 ? [] : slice(module.netweaver_as.instance_ips, 1, local.num_as_instances)
   }
 }
 

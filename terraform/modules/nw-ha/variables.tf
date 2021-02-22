@@ -24,13 +24,11 @@ variable "instance_type" {
 }
 
 variable "source_image_family" {
-  description = "GCE linux image family."
-  default     = "sles-12-sp3-sap"
+  description = "Source image family."
 }
 
 variable "source_image_project" {
-  description = "Project name containing the linux image."
-  default     = "suse-sap-cloud"
+  description = "Source image project."
 }
 
 variable "autodelete_disk" {
@@ -61,7 +59,6 @@ variable "swap_size" {
 
 variable "service_account_email" {
   description = "Email of service account to attach to the instance."
-  default     = "terraform-managed-sa@albatross-duncanl-sandbox-2.iam.gserviceaccount.com"
 }
 
 variable "subnetwork" {
@@ -80,34 +77,18 @@ variable "network_tags" {
   default     = []
 }
 
-variable "sap_deployment_debug" {
-  description = "Debug flag for SAP HANA deployment."
-  default     = "false"
-}
-
 variable "post_deployment_script" {
   description = "SAP HANA post deployment script. Must be a gs:// or https:// link to the script."
   default     = ""
 }
 
-variable "address_name" {
-  description = "Name of static IP adress to add to the instance's access config."
-  default     = "sap-s4hana"
-}
-
-variable "run_provisioner" {
-  type        = bool
-  description = "Whether or not to run the Ansible provisioner"
-  default     = true
-}
-
 variable "target_size" {
-  description = "The target number of running instances for the unmanaged instance group. This value should always be explicitly set unless this resource is attached to an autoscaler, in which case it should never be set."
+  description = "The target number of running instances for the unmanaged instance group."
   default     = 1
 }
 
 variable "pd_kms_key" {
-  description = "Customer managed encryption key to use in persistent disks. If none provided, a Google managed key will be used.."
+  description = "Customer managed encryption key to use in persistent disks. If none provided, a Google managed key will be used."
   default     = null
 }
 
