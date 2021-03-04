@@ -1,0 +1,34 @@
+- name: include base primary tasks
+  include_role:
+    name: base
+- name: include storage primary tasks
+  include_role:
+    name: storage-bkup
+  vars:
+    swapon: True
+    subnet_cidr: '{{ terraform.outputs.subnet_cidr_nw.value }}'
+    disks:
+      - { name: usrsap, partition_path : usrsap }
+      - { name: swap, partition_path : swap }
+    logvols:
+      usrsap:
+        size: "{{ sap_nw_usrsap_disk_size }}G"
+        vol: usrsap
+        mountpoint: /usr/sap
+    swapvols:
+      swap:
+        size: "{{ sap_nw_swap_disk_size }}G"
+        vol: swap
+        mountpoint: /swap    
+- name: include storage primary tasks
+  include_role:
+    name: storage-bkup
+    tasks_from: ha
+- name: include nw primary tasks
+  include_role:
+    name: nw
+  vars: 
+    sap_nw_product_id: "{{ sap_product_vars[sap_product_and_version].aas_product_id }}"
+    sap_nw_installed_files:
+    - '/sapmnt/{{ sap_nw_sid }}/profile/{{ sap_nw_sid }}_D{{ sap_nw_pas_instance_number }}_{{ sap_nw_pas_virtual_host }}'
+    - '/usr/sap/{{ sap_nw_sid }}/D{{ sap_nw_pas_instance_number }}/exe/R3load'
