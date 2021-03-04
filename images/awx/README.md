@@ -28,10 +28,10 @@ The following variables are required. See `build.json` for optional variables.
 
 ## Updating the AWX version
 
-AWX is vendored in the `sap-iac` repo in `vendor/github.com/ansible/awx`. This is done by running:
+AWX is vendored in the `sap-iac` repo in `third_party/github.com/ansible/awx`. This is done by running:
 
 ```
-cd vendor/github.com/ansible
+cd third_party/github.com/ansible
 git clone --depth 1 --branch 14.1.0 https://github.com/ansible/awx
 ```
 
