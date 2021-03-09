@@ -41,3 +41,5 @@
   become_user: root  
   roles:
   - role: netweaver-aas-ha
+    vars:
+      subnet_cidr: '{{ terraform.outputs.subnet_cidr_nw.value }}'

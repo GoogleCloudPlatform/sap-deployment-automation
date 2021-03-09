@@ -16,30 +16,23 @@
   assert:
     that: sap_product_and_version in sap_product_vars
     fail_msg: 'sap_nw_product and sap_nw_product_version must match one of {{ sap_product_vars.keys() | join(", ") }}'
-- name: selecting ASCS machines
-  set_fact:
-    is_ascs: '{{ ansible_default_ipv4.address in terraform.outputs.inventory.value["ascs"] }}'
+
 - name: include ASCS Tasks
   include_tasks: '{{ role_path }}/tasks/ascs.yml'
-  when: is_ascs
-- name: selecting ERS machines
-  set_fact:
-    is_ers: '{{ ansible_default_ipv4.address in terraform.outputs.inventory.value["ers"] }}'
+  when: ansible_default_ipv4.address in groups.ascs
+
 - name: include ERS Tasks
   include_tasks: '{{ role_path }}/tasks/ers.yml'
-  when: is_ers
-- name: selecting nodes machines
-  set_fact:
-    is_nodes: '{{ ansible_default_ipv4.address in terraform.outputs.inventory.value["nw_nodes"] }}'
+  when: ansible_default_ipv4.address in groups.ers
+
 - name: include nodes Tasks
   include_tasks: '{{ role_path }}/tasks/nodes.yml'
-  when: is_nodes
-- name: selecting PAS machines
-  set_fact:
-    is_pas: '{{ ansible_default_ipv4.address in  terraform.outputs.inventory.value["pas"] }}'
+  when: ansible_default_ipv4.address in groups.nw_nodes
+
 - name: include PAS Tasks
   include_tasks: '{{ role_path }}/tasks/pas.yml'
-  when: is_pas
+  when: ansible_default_ipv4.address in groups.pas
+
 - name: include AAS Tasks
   include_tasks: '{{ role_path }}/tasks/aas.yml'
-  when: '{{ ansible_default_ipv4.address in terraform.outputs.inventory.value["aas"] }}'
+  when: ansible_default_ipv4.address in groups.aas

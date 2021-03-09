@@ -12,20 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: define instance groups
-  set_fact:
-    is_ascs: '{{ ansible_default_ipv4.address in terraform.outputs.inventory.value["ascs"] }}'
-    is_ers: '{{ ansible_default_ipv4.address in terraform.outputs.inventory.value["ers"] }}'
-
 - name: define profile for ascs
   set_fact:
     sap_profile: /sapmnt/{{ sap_nw_sid }}/profile/{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}
-  when: is_ascs
+  when: ansible_default_ipv4.address in groups.ascs
 
 - name: define profile for ers
   set_fact:
     sap_profile: /sapmnt/{{ sap_nw_sid }}/profile/{{ sap_nw_sid }}_ERS{{ sap_nw_ers_instance_number }}_{{ sap_nw_ers_virtual_host }}
-  when: is_ers
+  when: ansible_default_ipv4.address in groups.ers
 
 - name: modify profile and sapservices for ascs
   lineinfile:
@@ -52,7 +47,7 @@
   - path: /usr/sap/sapservices
     line: 'LD_LIBRARY_PATH=/usr/sap/{{ sap_nw_sid }}/ERS{{ sap_nw_ers_instance_number }}/exe:$LD_LIBRARY_PATH; export LD_LIBRARY_PATH; /usr/sap/{{ sap_nw_sid }}/ERS{{ sap_nw_ers_instance_number }}/exe/sapstartsrv pf=/usr/sap/{{ sap_nw_sid }}/ERS{{ sap_nw_ers_instance_number }}/profile/{{ sap_nw_sid }}_ERS{{ sap_nw_ers_instance_number }}_{{ sap_nw_ers_virtual_host }} -D -u {{ sap_nw_user }}'
     state: present
-  when: is_ascs
+  when: ansible_default_ipv4.address in groups.ascs
 
 - name: modify profile and sapservices for ers
   lineinfile:
@@ -79,4 +74,4 @@
   - path: /usr/sap/sapservices
     line: 'LD_LIBRARY_PATH=/usr/sap/{{ sap_nw_sid }}/ASCS{{ sap_nw_ascs_instance_number }}/exe:$LD_LIBRARY_PATH; export LD_LIBRARY_PATH; /usr/sap/{{ sap_nw_sid }}/ASCS{{ sap_nw_ascs_instance_number }}/exe/sapstartsrv pf=/usr/sap/{{ sap_nw_sid }}/SYS/profile/{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }} -D -u {{ sap_nw_user }}'
     state: present
-  when: is_ers
+  when: ansible_default_ipv4.address in groups.ers

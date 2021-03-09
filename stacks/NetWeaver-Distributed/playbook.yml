@@ -76,6 +76,7 @@
   - role: nw-distributed
     vars:
       sap_nw_ascs_virtual_host: '{{ terraform.outputs.ascs_instance_name.value }}'
+      subnet_cidr: '{{ terraform.outputs.subnet_cidr_nw.value }}'
   tags: [ascs, nw]
 
 - name: SAP NW configure
@@ -88,6 +89,7 @@
       sap_nfs_private_ip: '{{ terraform.outputs.nfs_private_ip.value }}'
       sap_nw_ascs_virtual_host: '{{ terraform.outputs.ascs_instance_name.value }}'
       sap_nw_pas_virtual_host: '{{ terraform.outputs.pas_instance_name.value }}'
+      subnet_cidr: '{{ terraform.outputs.subnet_cidr_nw.value }}'
   tags: [pas, nw]
 
 - name: Run assertions on HANA

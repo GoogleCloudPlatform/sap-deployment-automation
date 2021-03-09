@@ -16,15 +16,11 @@
   assert:
     that: sap_product_and_version in sap_product_vars
     fail_msg: 'sap_nw_product and sap_nw_product_version must match one of {{ sap_product_vars.keys() | join(", ") }}'
-- name: selecting ASCS machines
-  set_fact:
-    is_ascs: '{{ ansible_default_ipv4.address in terraform.outputs.inventory.value["ascs"] }}'
+
 - name: include ASCS Tasks
   include_tasks: '{{ role_path }}/tasks/ascs.yml'
-  when: is_ascs
-- name: selecting PAS machines
-  set_fact:
-    is_pas: '{{ ansible_default_ipv4.address in terraform.outputs.inventory.value["pas"] }}'
+  when: ansible_default_ipv4.address in groups.ascs
+
 - name: include PAS Tasks
   include_tasks: '{{ role_path }}/tasks/pas.yml'
-  when: is_pas
+  when: ansible_default_ipv4.address in groups.pas
