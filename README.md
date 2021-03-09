@@ -1,14 +1,32 @@
 # sap-iac
 
-This repository contains code for deploying SAP products in GCP using Ansible and Terraform.
+This repository contains code for deploying SAP products in GCP using Ansible and Terraform. It also contains code for building an [AWX](https://github.com/ansible/awx) image and deploying an instance of it with Terraform.
 
 Each SAP product has a stack defined in the `stacks` directory, with a `playbook.yml` in each stack's directory.
 
 # Requirements
 
-Python 3 is required.
+For running the Ansible playbooks from the command line, Python 3 is required.
 
-# Deploying a Stack
+# Deploying AWX
+
+The AWX image provides a UI with jobs for all of the stacks in the `stacks` subdirectory of this repository.
+
+The easiest way to get started with AWX is to deploy it with Terraform using the `bootstrap.sh` script included in the Terraform module directory.
+
+Change to the module directory:
+
+```
+cd terraform/modules/awx
+```
+
+Then run `bootstrap.sh` with the instance name, project name, subnetwork, and region:
+
+```
+./bootstrap.sh -i xyz-awx -p project-123 -s subnet-456 -r us-central1
+```
+
+# Deploying a Stack with the Ansible CLI
 
 All stacks are deployed in the same way, using the `ansible-wrapper` script at the root of the repository. This script wraps the `ansible-playbook` command with some extra setup, such as creating a Python virtualenv and installing Ansible and all dependencies into it before running `ansible-playbook`. The arguments to `ansible-wrapper` are exactly the same as for `ansible-playbook`.
 
