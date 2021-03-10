@@ -44,7 +44,7 @@
       "command": "./ansible-wrapper",
       "inventory_directory": "./inventory",
       "keep_inventory_file": "{{ user `keep-inventory-file` }}",
-      "playbook_file": "./awx/installer/install.yml",
+      "playbook_file": "../../third_party/github.com/ansible/awx/installer/install.yml",
       "skip_version_check": true,
       "use_proxy": false,
       "user": "packer",

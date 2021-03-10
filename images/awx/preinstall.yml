@@ -23,7 +23,7 @@
       dest: '{{ playbook_dir }}/inventory/host_vars/default'
   - name: modify docker-compose.yml to add terraform volume
     lineinfile:
-      path: '{{ playbook_dir }}/awx/installer/roles/local_docker/templates/docker-compose.yml.j2'
+      path: '{{ playbook_dir }}/../../third_party/github.com/ansible/awx/installer/roles/local_docker/templates/docker-compose.yml.j2'
       # Line gets inserted after last match, which in this case is in the volumes of the task container.
       insertafter: '^      - rsyslog-config:/var/lib/awx/rsyslog/$'
       line: '      - "/usr/local/bin/terraform:/usr/local/bin/terraform"'
