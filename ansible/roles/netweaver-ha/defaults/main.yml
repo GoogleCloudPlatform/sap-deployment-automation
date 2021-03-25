@@ -58,6 +58,17 @@ sap_nw_product_version: '750'
 sap_product_and_version: '{{ sap_nw_product }}/{{ sap_nw_product_version }}'
 # sap_nw_product and sap_nw_product_version must be set to one of the <product>/<version> combos in sap_product_vars.
 sap_product_vars:
+  'BW4HANA/20':
+    db_product_id: 'NW_ABAP_DB:BW4HANA20.CORE.HDB.ABAPHA'
+    pas_product_id: 'NW_ABAP_CI:BW4HANA20.CORE.HDB.ABAPHA'
+    aas_product_id: 'NW_DI:BW4HANA20.CORE.HDB.ABAPHA'
+    ascs_product_id: 'NW_ABAP_ASCS:BW4HANA20.CORE.HDB.ABAPHA'
+    ers_product_id: 'NW_ERS:BW4HANA20.CORE.HDB.ABAPHA'
+    user_product_id: 'NW_Users_Create:GENERIC.HDB.PD'
+    swpm_path: /sapmnt/Software/SWPM2.0
+    load_files: /sapmnt/Software/Kernel_Files
+    install_files: [Kernel_Files, SWPM2.0]
+    ensa_version: '2'
   'NetWeaver/750':
     db_product_id: 'NW_ABAP_DB:NW750.HDB.ABAPHA'
     pas_product_id: 'NW_ABAP_CI:NW750.HDB.ABAPHA'
