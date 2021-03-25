@@ -27,6 +27,8 @@
   changed_when: "'0 rows affected' in hanabackup.stdout"
   when:
     - '"-pri" in "{{ ansible_hostname }}"'
+  async: 600
+  poll: 2
 
 - name: Run system db backup
   shell: |
@@ -43,3 +45,5 @@
   changed_when: "'0 rows affected' in systembackup.stdout"
   when:
     - '"-pri" in "{{ ansible_hostname }}"'
+  async: 600
+  poll: 2
