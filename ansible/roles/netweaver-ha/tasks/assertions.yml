@@ -61,7 +61,7 @@
     - msg_server, MessageServer, GREEN, Running
     - '{{ "enserver, EnqueueServer, GREEN, Running" if sap_product_vars[sap_product_and_version].ensa_version == "1" else "enq_server, Enqueue Server 2, GREEN, Running" }}'
     sap_instances:
-    - '{{ sap_nw_pas_instance_name }}, {{ sap_nw_ascs_instance_number | int }}, 5{{ sap_nw_ascs_instance_number }}13, 5{{ sap_nw_ascs_instance_number }}14, 3, ABAP|GATEWAY|ICMAN|IGS, GREEN'
+    - '{{ sap_nw_pas_instance_name }}, {{ sap_nw_pas_instance_number | int }}, 5{{ sap_nw_pas_instance_number }}13, 5{{ sap_nw_pas_instance_number }}14, 3, ABAP|GATEWAY|ICMAN|IGS, GREEN'
     - '{{ sap_nw_ascs_virtual_host }}, {{ sap_nw_ascs_instance_number | int }}, 5{{ sap_nw_ascs_instance_number }}13, 5{{ sap_nw_ascs_instance_number }}14, 1, MESSAGESERVER|ENQUE, GRAY'
     - '{{ sap_nw_ascs_virtual_host }}, {{ sap_nw_ascs_instance_number | int }}, 5{{ sap_nw_ascs_instance_number }}13, 5{{ sap_nw_ascs_instance_number }}14, 1, MESSAGESERVER|ENQUE, GREEN'
     - '{{ sap_nw_ers_virtual_host }}, {{ sap_nw_ers_instance_number | int }}, 5{{ sap_nw_ers_instance_number }}13, 5{{ sap_nw_ers_instance_number }}14, 0.5, ENQREP, GRAY'
@@ -78,7 +78,7 @@
     sap_expected_processes:
     - '{{ "enrepserver, EnqueueReplicator, GREEN, Running" if sap_product_vars[sap_product_and_version].ensa_version == "1" else "enq_replicator, Enqueue Replicator 2, GREEN, Running" }}'
     sap_instances:
-    - '{{ sap_nw_pas_instance_name }}, {{ sap_nw_ascs_instance_number | int }}, 5{{ sap_nw_ascs_instance_number }}13, 5{{ sap_nw_ascs_instance_number }}14, 3, ABAP|GATEWAY|ICMAN|IGS, GREEN'
+    - '{{ sap_nw_pas_instance_name }}, {{ sap_nw_pas_instance_number | int }}, 5{{ sap_nw_pas_instance_number }}13, 5{{ sap_nw_pas_instance_number }}14, 3, ABAP|GATEWAY|ICMAN|IGS, GREEN'
     - '{{ sap_nw_ascs_virtual_host }}, {{ sap_nw_ascs_instance_number | int }}, 5{{ sap_nw_ascs_instance_number }}13, 5{{ sap_nw_ascs_instance_number }}14, 1, MESSAGESERVER|ENQUE, GRAY'
     - '{{ sap_nw_ascs_virtual_host }}, {{ sap_nw_ascs_instance_number | int }}, 5{{ sap_nw_ascs_instance_number }}13, 5{{ sap_nw_ascs_instance_number }}14, 1, MESSAGESERVER|ENQUE, GREEN'
     - '{{ sap_nw_ers_virtual_host }}, {{ sap_nw_ers_instance_number | int }}, 5{{ sap_nw_ers_instance_number }}13, 5{{ sap_nw_ers_instance_number }}14, 0.5, ENQREP, GRAY'
