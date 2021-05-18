@@ -18,26 +18,28 @@ provider "google" {
 }
 
 module "hana_ha" {
-  source                = "../../../terraform/modules/hana-ha"
-  instance_name         = var.hana_instance_name
-  instance_type         = var.hana_instance_type
-  project_id            = var.project_id
-  primary_zone          = var.primary_zone
-  secondary_zone        = var.secondary_zone
-  gce_ssh_user          = var.gce_ssh_user
-  gce_ssh_pub_key_file  = var.gce_ssh_pub_key_file
-  service_account_email = var.hana_service_account_email
-  subnetwork            = var.subnetwork_hana
-  subnetwork_project    = local.subnetwork_project
-  source_image_family   = var.source_image_family
-  source_image_project  = var.source_image_project
-  boot_disk_size        = var.hana_boot_disk_size
-  boot_disk_type        = var.hana_boot_disk_type
-  autodelete_disk       = var.hana_autodelete_boot_disk
-  network_tags          = var.hana_network_tags
-  target_size           = 1
-  pd_kms_key            = var.hana_pd_kms_key
-  create_backup_volume  = var.hana_create_backup_volume
+  source                  = "../../../terraform/modules/hana-ha"
+  instance_name           = var.hana_instance_name
+  instance_name_primary   = var.hana_instance_name_primary
+  instance_name_secondary = var.hana_instance_name_secondary
+  instance_type           = var.hana_instance_type
+  project_id              = var.project_id
+  primary_zone            = var.primary_zone
+  secondary_zone          = var.secondary_zone
+  gce_ssh_user            = var.gce_ssh_user
+  gce_ssh_pub_key_file    = var.gce_ssh_pub_key_file
+  service_account_email   = var.hana_service_account_email
+  subnetwork              = var.subnetwork_hana
+  subnetwork_project      = local.subnetwork_project
+  source_image_family     = var.source_image_family
+  source_image_project    = var.source_image_project
+  boot_disk_size          = var.hana_boot_disk_size
+  boot_disk_type          = var.hana_boot_disk_type
+  autodelete_disk         = var.hana_autodelete_boot_disk
+  network_tags            = var.hana_network_tags
+  target_size             = 1
+  pd_kms_key              = var.hana_pd_kms_key
+  create_backup_volume    = var.hana_create_backup_volume
 }
 
 module "netweaver_ascs" {

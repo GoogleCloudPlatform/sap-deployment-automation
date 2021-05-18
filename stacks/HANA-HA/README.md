@@ -43,7 +43,11 @@ Terraform module and ansible roles to deploy the SAP HANA HA stack. This stack d
 
 `sap_tf_state_bucket_prefix` (required): Terraform state bucket prefix for storing tf state file
 
-`sap_hana_instance_name` (required): GCE instance name
+`sap_hana_instance_name` (conditional): Base name of HANA instances. The names of the primary and secondary instances will be automatically derived from this. To set explicit names for the primary and secondary instances, use `sap_hana_instance_name_primary` and `sap_hana_instance_name_secondary`.
+
+`sap_hana_instance_name_primary` (conditional): Name of primary HANA instance. Use instead of `sap_hana_instance_name` to explicitly set the name of the primary instance.
+
+`sap_hana_instance_name_secondary` (conditional): Name of secondary HANA instance. Use instead of `sap_hana_instance_name` to explicitly set the name of the secondary instance.
 
 `sap_hana_service_account_name` (required): GCP service account name
 

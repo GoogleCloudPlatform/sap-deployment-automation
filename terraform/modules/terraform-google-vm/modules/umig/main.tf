@@ -15,13 +15,14 @@
  */
 
 locals {
-  hostname      = var.hostname == "" ? "default" : var.hostname
-  num_instances = length(var.static_ips) == 0 ? var.num_instances : length(var.static_ips)
+  hostname             = var.hostname == "" ? "default" : var.hostname
+  num_instances        = length(var.static_ips) == 0 ? var.num_instances : length(var.static_ips)
+  auto_append_hostname = var.auto_append_hostname || local.num_instances > 1
 
   # local.static_ips is the same as var.static_ips with a dummy element appended
   # at the end of the list to work around "list does not have any elements so cannot
   # determine type" error when var.static_ips is empty
-  static_ips = concat(var.static_ips, ["NOT_AN_IP"])
+  static_ips           = concat(var.static_ips, ["NOT_AN_IP"])
 
   instance_group_count = min(
     local.num_instances,
@@ -47,7 +48,11 @@ resource "google_compute_instance_from_template" "compute_instance" {
   provider = google
   project  = var.project_id
   count    = local.num_instances
-  name     = "${local.hostname}-${format("%01d", count.index + 1)}"
+  name     = (
+    local.auto_append_hostname
+    ? "${local.hostname}-${format("%01d", count.index + 1)}"
+    : local.hostname
+  )
   zone     = var.zone != "" ? var.zone : data.google_compute_zones.available.names[count.index % length(data.google_compute_zones.available.names)]
 
   network_interface {

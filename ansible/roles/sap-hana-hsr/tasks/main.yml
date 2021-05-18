@@ -25,8 +25,7 @@
   changed_when: "'successfully enabled system as system replication source site' in enablesr.stdout"
   failed_when: |
     enablesr.rc != 0 and 'this site is already enabled' not in enablesr.stdout
-  when: |
-    '-pri' in ansible_hostname
+  when: sap_hana_is_primary | bool
   async: 60
   poll: 2
 
@@ -39,8 +38,7 @@
   become_user: "{{ sap_hana_user }}"
   register: stopinstance
   changed_when: "'StopSystem' in stopinstance.stdout"
-  when:
-    - '"-sec" in "{{ ansible_hostname }}"'
+  when: not (sap_hana_is_primary | bool)
   async: 60
   poll: 2
 
@@ -57,8 +55,7 @@
   become_user: "{{ sap_hana_user }}"
   register: registersr
   changed_when: "'adding site' in registersr.stdout"
-  when:
-    - '"-sec" in "{{ ansible_hostname }}"'
+  when: not (sap_hana_is_primary | bool)
   async: 60
   poll: 2
 
@@ -72,7 +69,6 @@
   become_user: "{{ sap_hana_user }}"
   register: startinstance
   changed_when: "'StartSystem' in startinstance.stdout"
-  when:
-    - '"-sec" in "{{ ansible_hostname }}"'
+  when: not (sap_hana_is_primary | bool)
   async: 60
   poll: 2

@@ -86,7 +86,14 @@ locals {
     host                = ""
   }
 
-  network_parts = split("/", data.google_compute_subnetwork.subnetwork.network)
-  network       = element(local.network_parts, length(local.network_parts) - 1)
-  region        = join("-", slice(split("-", var.primary_zone), 0, 2))
+  network_parts           = split("/", data.google_compute_subnetwork.subnetwork.network)
+  network                 = element(local.network_parts, length(local.network_parts) - 1)
+  region                  = join("-", slice(split("-", var.primary_zone), 0, 2))
+  instance_name_primary   = var.instance_name_primary != "" ? var.instance_name_primary : "${var.instance_name}-pri"
+  instance_name_secondary = var.instance_name_secondary != "" ? var.instance_name_secondary : "${var.instance_name}-sec"
+  ilb_name                = (
+    var.instance_name != ""
+    ? "${var.instance_name}-ilb"
+    : "${local.instance_name_primary}-${local.instance_name_secondary}-ilb"
+  )
 }
