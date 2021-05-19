@@ -25,8 +25,7 @@
   become_user: "{{ sap_hana_user }}"
   register: hanabackup
   changed_when: "'0 rows affected' in hanabackup.stdout"
-  when:
-    - '"-pri" in "{{ ansible_hostname }}"'
+  when: sap_hana_is_primary | bool
   async: 600
   poll: 2
 
@@ -43,7 +42,6 @@
   become_user: "{{ sap_hana_user }}"
   register: systembackup
   changed_when: "'0 rows affected' in systembackup.stdout"
-  when:
-    - '"-pri" in "{{ ansible_hostname }}"'
+  when: sap_hana_is_primary | bool
   async: 600
   poll: 2

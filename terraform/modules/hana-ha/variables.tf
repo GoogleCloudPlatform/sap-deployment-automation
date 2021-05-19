@@ -28,6 +28,17 @@ variable "secondary_zone" {
 
 variable "instance_name" {
   description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
+  default     = ""
+}
+
+variable "instance_name_primary" {
+  description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
+  default     = ""
+}
+
+variable "instance_name_secondary" {
+  description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
+  default     = ""
 }
 
 variable "instance_type" {

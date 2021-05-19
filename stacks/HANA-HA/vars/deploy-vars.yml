@@ -28,7 +28,7 @@ sap_tf_state_bucket_prefix: hanaha
 # Terraform hana variables (required)
 # Instance name should be 7 charecters or less
 sap_hana_instance_name: hanslbg
-sap_service_account_name: sap-common-sa
+sap_hana_service_account_name: sap-common-sa
 
 # Terraform hana variables (optional)
 sap_hana_instance_type: n1-highmem-32

@@ -50,6 +50,12 @@ variable "hostname" {
   default     = ""
 }
 
+variable "auto_append_hostname" {
+  description = "Whether or not to a append number to the hostname. This will always be true if the number of instances is greater than 1."
+  type        = bool
+  default     = true
+}
+
 variable "static_ips" {
   type        = list(string)
   description = "List of static IPs for VM instances"

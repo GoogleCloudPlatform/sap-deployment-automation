@@ -23,7 +23,9 @@
       sap_hana_backint_install: '{{ sap_hana_backint_bucket_name | default("") != "" }}'
       sap_hana_backint_bucket_name: '{{ sap_hana_backint_bucket_name | default("") }}'
       sap_tf_variables:
-        instance_name: '{{ sap_hana_instance_name }}'
+        instance_name: '{{ sap_hana_instance_name | default("") }}'
+        instance_name_primary: '{{ sap_hana_instance_name_primary | default("") }}'
+        instance_name_secondary: '{{ sap_hana_instance_name_secondary | default("") }}'
         project_id: '{{ sap_project_id }}'
         source_image_family: '{{ sap_source_image_family }}'
         source_image_project: '{{ sap_source_image_project }}'

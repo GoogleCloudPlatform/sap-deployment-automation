@@ -40,7 +40,11 @@ Use the same command as for deploying, but add the `state: absent` variable:
 
 `sap_hana_install_files_bucket`: (Required) - Bucket where HANA installation files are located.
 
-`sap_hana_instance_name`: (Required) - Base name of HANA instances.
+`sap_hana_instance_name`: (Conditional) - Base name of HANA instances. The names of the primary and secondary instances will be automatically derived from this. To set explicit names for the primary and secondary instances, use `sap_hana_instance_name_primary` and `sap_hana_instance_name_secondary`.
+
+`sap_hana_instance_name_primary`: (Conditional) - Name of primary HANA instance. Use instead of `sap_hana_instance_name` to explicitly set the name of the primary instance.
+
+`sap_hana_instance_name_secondary`: (Conditional) - Name of secondary HANA instance. Use instead of `sap_hana_instance_name` to explicitly set the name of the secondary instance.
 
 `sap_hana_instance_number`: (Optional, default `00`) - Instance number for HANA. This is a two digit number, but must be in quotes, or it may get converted into single digits, for example `00` without surrounding quotes gets converted to the number `0`.
 

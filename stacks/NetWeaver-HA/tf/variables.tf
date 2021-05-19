@@ -53,6 +53,12 @@ variable "subnetwork_project" {
 variable "hana_instance_name" {
 }
 
+variable "hana_instance_name_primary" {
+}
+
+variable "hana_instance_name_secondary" {
+}
+
 variable "ascs_instance_name" {
 }
 
