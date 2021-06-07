@@ -18,7 +18,7 @@ provider "google" {}
 
 module "instance_template" {
   source       = "../terraform-google-vm//modules/instance_template"
-  name_prefix  = "${var.instance_name}-instance-template"
+  name_prefix  = var.instance_name
   machine_type = var.instance_type
   project_id   = var.project_id
   region       = var.region
