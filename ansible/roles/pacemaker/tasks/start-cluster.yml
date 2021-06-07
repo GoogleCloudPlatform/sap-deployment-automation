@@ -63,11 +63,26 @@
       owner: root
       group: root
 
+  - name: create systemd dropin directory for pacemaker
+    file:
+      path: /etc/systemd/system/pacemaker.service.d
+      mode: 0755
+      state: directory
+
+  - name: create systemd dropin for pacemaker environment
+    copy:
+      dest: /etc/systemd/system/pacemaker.service.d/python.conf
+      mode: 0644
+      content: |
+        [Service]
+        Environment=CLOUDSDK_PYTHON={{ cloudsdk_python_export_path }}
+
   - name: start and enable services on primary
-    service:
+    systemd:
       name: '{{ item }}'
       state: started
       enabled: true
+      daemon_reload: true
     loop:
     - corosync.service
     - pacemaker.service
@@ -92,11 +107,26 @@
       owner: root
       group: root
 
+  - name: create systemd dropin directory for pacemaker
+    file:
+      path: /etc/systemd/system/pacemaker.service.d
+      mode: 0755
+      state: directory
+
+  - name: create systemd dropin for pacemaker environment
+    copy:
+      dest: /etc/systemd/system/pacemaker.service.d/python.conf
+      mode: 0644
+      content: |
+        [Service]
+        Environment=CLOUDSDK_PYTHON={{ cloudsdk_python_export_path }}
+
   - name: start and enable services
-    service:
+    systemd:
       name: '{{ item }}'
       state: started
       enabled: true
+      daemon_reload: true
     loop:
     - corosync.service
     - hawk.service

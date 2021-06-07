@@ -19,7 +19,7 @@
     - '{{ ansible_os_family }}_{{ ansible_distribution_major_version }}.yml'
     - '{{ ansible_os_family }}.yml'
 
+- import_tasks: os.yml
+
 - import_tasks: gcp.yml
   when: ansible_os_family == 'Suse'
-
-- import_tasks: os.yml
