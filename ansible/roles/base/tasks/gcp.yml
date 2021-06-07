@@ -39,6 +39,8 @@
 - name: Execute the install_google_cloud_sdk.bash
   shell: /tmp/install_google_cloud_sdk.bash --disable-prompts --install-dir={{ gcloud_install_dir }}
   when: false in stat_google_cloud_sdk.results | map(attribute="stat") | map(attribute="exists") | list
+  environment:
+    CLOUDSDK_PYTHON: '{{ cloudsdk_python_export_path }}'
 
 - name: updating alternatives
   command: "update-alternatives --install /usr/bin/{{ item.item }} {{ item.item }} {{ gcloud_install_dir }}/google-cloud-sdk/bin/{{ item.item }} 1 --force"
