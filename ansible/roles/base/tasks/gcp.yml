@@ -26,23 +26,16 @@
     state: absent
   when: false in stat_google_cloud_sdk.results | map(attribute="stat") | map(attribute="exists") | list
 
-- name: Downloading google cloud sdk script
-  get_url: url=https://dl.google.com/dl/cloudsdk/channels/rapid/install_google_cloud_sdk.bash dest=/tmp/install_google_cloud_sdk.bash
-  when: false in stat_google_cloud_sdk.results | map(attribute="stat") | map(attribute="exists") | list
-
-- name: Change file ownership, group and permissions
-  file:
-    path: /tmp/install_google_cloud_sdk.bash
-    mode: '0755'
-  when: false in stat_google_cloud_sdk.results | map(attribute="stat") | map(attribute="exists") | list
-
-- name: Execute the install_google_cloud_sdk.bash
-  shell: /tmp/install_google_cloud_sdk.bash --disable-prompts --install-dir={{ gcloud_install_dir }}
-  when: false in stat_google_cloud_sdk.results | map(attribute="stat") | map(attribute="exists") | list
-  environment:
-    CLOUDSDK_PYTHON: '{{ cloudsdk_python_export_path }}'
+- name: unarchive google-cloud-sdk
+  unarchive:
+    src: '{{ cloudsdk_url }}'
+    dest: '{{ gcloud_install_dir }}'
+    remote_src: true
+    creates: '{{ gcloud_install_dir }}/google-cloud-sdk'
 
 - name: updating alternatives
-  command: "update-alternatives --install /usr/bin/{{ item.item }} {{ item.item }} {{ gcloud_install_dir }}/google-cloud-sdk/bin/{{ item.item }} 1 --force"
+  command: >-
+    update-alternatives --install /usr/bin/{{ item.item }} {{ item.item }}
+    {{ gcloud_install_dir }}/google-cloud-sdk/bin/{{ item.item }} 1 --force
   loop: '{{ stat_google_cloud_sdk.results }}'
   when: not item.stat.exists
