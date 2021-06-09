@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cloudsdk_python_export_path: /usr/bin/python3.6
+cloudsdk_python_export_path: /usr/bin/python2.7
 gcloud_install_dir: /usr/local
 package_list:
   - libopenssl0_9_8
@@ -25,4 +25,3 @@ package_list:
   - libgcc_s1
   - libstdc++6
   - libatomic1
-  - python36

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+ansible_python_interpreter: /usr/bin/python3
 cloudsdk_python_export_path: /usr/bin/python3
 gcloud_install_dir: /usr/local
 package_list:
