@@ -50,7 +50,7 @@
   when: 
     - "{{ sap_hana_create_backup_volume }} == true"
 
-- name: Create {{ sap_hana_sid }} directories in /hana/data and /hana/log
+- name: Create {{ sap_hana_sid }} directories in {{ sap_hana_data_mountpoint }} and {{ sap_hana_log_mountpoint }}
   file:
     path: "{{ item }}/{{ sap_hana_sid }}"
     state: directory

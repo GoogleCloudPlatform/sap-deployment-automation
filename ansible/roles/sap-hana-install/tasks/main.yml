@@ -60,7 +60,7 @@
 
 - name: Check if another instance of HANA DB is running with sid "{{ sap_hana_sid }}"
   stat:
-    path: "/hana/shared/{{ sap_hana_sid }}"
+    path: "{{ sap_hana_shared_mountpoint }}/{{ sap_hana_sid }}"
   register: hana_db_running
   when: exe_install_file.matched > 0
 
@@ -86,7 +86,7 @@
     
     - name: Check if another instance of HANA DB is running with sid "{{ sap_hana_sid }}"
       stat:
-        path: "/hana/shared/{{ sap_hana_sid }}"
+        path: "{{ sap_hana_shared_mountpoint }}/{{ sap_hana_sid }}"
       register: hana_db_running
 
     - name: Check availability of "{{ sap_hostagent_rpm_remote_path }}/SAP_HANA_DATABASE/hdblcm"
@@ -124,7 +124,7 @@
 
     - name: Check if another instance of HANA DB is running with sid "{{ sap_hana_sid }}"
       stat:
-        path: "/hana/shared/{{ sap_hana_sid }}"
+        path: "{{ sap_hana_shared_mountpoint }}/{{ sap_hana_sid }}"
       register: hana_db_running
 
     - name: Check availability of "{{ sap_hostagent_rpm_remote_path }}/DATA_UNITS/HDB_SERVER_LINUX_X86_64/hdblcm"
