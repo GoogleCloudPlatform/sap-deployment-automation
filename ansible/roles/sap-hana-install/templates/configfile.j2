@@ -109,10 +109,10 @@ workergroup=default
 system_usage={{ sap_hana_env_type }}
 
 # Location of Data Volumes ( Default: /hana/data/${sid} )
-datapath=/hana/data/{{ sap_hana_sid }}
+datapath={{ sap_hana_data_mountpoint }}/{{ sap_hana_sid }}
 
 # Location of Log Volumes ( Default: /hana/log/${sid} )
-logpath=/hana/log/{{ sap_hana_sid }}
+logpath={{ sap_hana_log_mountpoint }}/{{ sap_hana_sid }}
 
 # Location of Persistent Memory Volumes ( Default: /hana/pmem/${sid} )
 pmempath=/hana/pmem/{{ sap_hana_sid }}
@@ -136,7 +136,7 @@ master_password={{ sap_hana_common_master_password }}
 password={{ sap_hana_sidadm_password }}
 
 # System Administrator Home Directory ( Default: /usr/sap/${sid}/home )
-home=/usr/sap/{{ sap_hana_user }}/home
+home={{ sap_hana_usr_mountpoint }}/{{ sap_hana_user }}/home
 
 # System Administrator Login Shell ( Default: /bin/sh )
 shell=/bin/sh
@@ -271,7 +271,7 @@ lss_userid={{ sap_hana_deployment_lss_user }}
 lss_groupid={{ sap_hana_deployment_lss_group }}
 
 # Local Secure Store User Home Directory ( Default: /usr/sap/${sid}/lss/home )
-lss_user_home=/usr/sap/{{ sap_hana_sid }}/lss/home
+lss_user_home={{ sap_hana_usr_mountpoint }}/{{ sap_hana_sid }}/lss/home
 
 # Local Secure Store User Login Shell ( Default: /bin/sh )
 lss_user_shell=/bin/sh
