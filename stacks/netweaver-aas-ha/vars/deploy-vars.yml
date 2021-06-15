@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-sap_project_id: mercadona-sap-service-1
+sap_project_id: sap-poc-service
 sap_ssh_priv_key: ~/.ssh/id_rsa
 sap_ssh_pub_key: ~/.ssh/id_rsa.pub
-sap_state_bucket: mercadona-sap-terraform-state
+sap_state_bucket: sap-poc-terraform-state
 sap_aas_instance_name: sapaasha
 sap_network: "vpc-sap-poc-1"
 sap_nw_instance_type: n1-standard-8
@@ -26,9 +26,9 @@ sap_nw_service_account_name: sap-common-sa
 sap_region: europe-west1
 sap_zone: europe-west1-d
 sap_nw_subnetwork: "sub-sap-poc-nw"
-sap_subnetwork_project_id: mercadona-sap-host-1
+sap_subnetwork_project_id: sap-poc-host-1
 sap_nw_boot_disk_size: '30'
-sap_ssh_user: sushma
+sap_ssh_user: ansible
 sap_nw_usrsap_disk_size: '90G'
 sap_nw_additional_disk_type: "pd-standard"
 sap_nw_boot_disk_type: pd-ssd
@@ -54,9 +54,9 @@ sap_nw_db_ilb_ip: 192.168.0.16
 sap_nw_ascs_virtualhostname: sapascs
 sap_nw_ers_virtualhostname: sapers 
 sap_nw_db_virtualhostname: saphana  
-sap_nw_ascs_dns: sapascs.c.mercadona-sap-service-1.internal
-sap_nw_ers_dns: sapers.c.mercadona-sap-service-1.internal
-sap_nw_db_dns: saphana.c.mercadona-sap-service-1.internal
+sap_nw_ascs_dns: sapascs.c.sap-poc-service.internal
+sap_nw_ers_dns: sapers.c.sap-poc-service.internal
+sap_nw_db_dns: saphana.c.sap-poc-service.internal
 sap_nw_sapinst_package_kernel: /sapmnt/Software/Kernel_Files  
 sap_nw_sapinst_package_client: /sapmnt/Software/HANA_CLIENT  
 sap_nw_sid: "SL7" 
