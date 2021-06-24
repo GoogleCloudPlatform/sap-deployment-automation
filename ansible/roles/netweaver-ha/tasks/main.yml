@@ -35,4 +35,5 @@
 
 - name: include AAS Tasks
   include_tasks: '{{ role_path }}/tasks/aas.yml'
-  when: ansible_default_ipv4.address in groups.aas
+  when: |
+    'aas' in groups and ansible_default_ipv4.address in groups.aas
