@@ -35,7 +35,7 @@ sap_nw_user: '{{ sap_nw_sid | lower }}adm'
 # sap_nw_nfs_src: 10.0.10.100:/sap
 
 # If true, source directories will be created on sap_nw_nfs_src.
-sap_nw_create_nfs_source_dirs: sap_nw_nfs_src is defined
+sap_nw_create_nfs_source_dirs: '{{ sap_nw_nfs_src is defined }}'
 
 # Default values to fill in sap_nw_nfsvols when sap_nw_nfs_src is defined.
 sap_nw_sapmnt_nfs_mount_src: '{{ sap_nw_nfs_src }}/sapmnt'

@@ -27,7 +27,11 @@ output "instances_self_links_worker" {
 }
 
 output "master_instance_name" {
-  value = element(split("/", element(tolist(module.sap_hana_instance_master.instances_self_links), 0)), 10)
+  value = (
+    length(module.sap_hana_instance_master.instances_self_links) > 0
+    ? element(split("/", element(tolist(module.sap_hana_instance_master.instances_self_links), 0)), 10)
+    : ""
+    )
 }
 
 output "worker_instance_names" {
