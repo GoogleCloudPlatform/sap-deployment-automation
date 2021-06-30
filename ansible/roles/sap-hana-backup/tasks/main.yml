@@ -25,7 +25,7 @@
   become_user: "{{ sap_hana_user }}"
   register: hanabackup
   changed_when: "'0 rows affected' in hanabackup.stdout"
-  when: sap_hana_is_primary | bool
+  when: (sap_hana_is_primary | bool ) and (sap_hana_deployment_create_initial_tenant != 'n')
   async: 600
   poll: 2
 
