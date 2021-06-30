@@ -74,4 +74,5 @@
     vars:
       sap_hana_primary_instance_name: '{{ terraform.outputs.primary_instance_name.value }}'
       sap_hana_secondary_instance_name: '{{ terraform.outputs.secondary_instance_name.value }}'
+      sap_hana_deployment_create_initial_tenant: '{{ sap_hana_deployment_create_initial_tenant }}'
   tags: [assertions]
