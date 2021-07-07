@@ -110,6 +110,6 @@
     sap_instances:
     - '{{ sap_instance_name }}, {{ sap_hana_instance_number | int }}, 5{{ sap_hana_instance_number }}13, 5{{ sap_hana_instance_number }}14, 0.3, HDB|HDB_WORKER, GREEN'
     sap_instance_number: '{{ sap_hana_instance_number }}'
-    when:
+  when:
     - sap_hana_deployment_create_initial_tenant == 'n'
 
