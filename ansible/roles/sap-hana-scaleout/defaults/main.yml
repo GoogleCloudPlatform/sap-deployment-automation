@@ -47,6 +47,7 @@ sap_hana_ini_file: global.ini
 sap_hana_ini_section: persistence
 sap_hana_ini_setting: basepath_shared
 sap_hana_ini_value: "no"
+sap_hana_deployment_create_initial_tenant: 'y'
 # sap_hana_password is required unless all of the other passwords are set.
 # It defaults to an empty string for those cases where all the other passwords are
 # set, to avoid an undefined variable error.

@@ -46,6 +46,7 @@ sap_hana_swapon: false
 sap_hana_backup_file_name: "/{{ sap_hana_backup_partition_name }}/data/pre_ha_config"
 sap_hana_monitoring_user: hanahamu
 sap_hana_user_store_key: HANAHAUSK
+sap_hana_deployment_create_initial_tenant: 'y'
 # sap_hana_password is required unless all of the other passwords are set.
 # It defaults to an empty string for those cases where all the other passwords are
 # set, to avoid an undefined variable error.
