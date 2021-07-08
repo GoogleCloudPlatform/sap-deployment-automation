@@ -33,7 +33,26 @@
     - hdbxsengine, HDB XSEngine-{{ sap_hana_sid }}, GREEN, Running
     sap_instances: '{{ sap_instances_fact.results | map(attribute="ansible_facts._sap_instances") | list }}'
     sap_instance_number: '{{ sap_hana_instance_number }}'
-  when: ansible_hostname == sap_hana_master_instance_name
+  when:
+  - ansible_hostname == sap_hana_master_instance_name
+  - sap_hana_deployment_create_initial_tenant == 'y'
+
+- name: include sap assertions role for master
+  include_role:
+    name: sap-assertions
+  vars:
+    sap_become_user: '{{ sap_hana_user }}'
+    sap_expected_processes:
+    - hdbdaemon, HDB Daemon, GREEN, Running
+    - hdbcompileserver, HDB Compileserver, GREEN, Running
+    - hdbnameserver, HDB Nameserver, GREEN, Running
+    - hdbpreprocessor, HDB Preprocessor, GREEN, Running
+    - hdbwebdispatcher, HDB Web Dispatcher, GREEN, Running
+    sap_instances: '{{ sap_instances_fact.results | map(attribute="ansible_facts._sap_instances") | list }}'
+    sap_instance_number: '{{ sap_hana_instance_number }}'
+  when:
+  - ansible_hostname == sap_hana_master_instance_name
+  - sap_hana_deployment_create_initial_tenant == 'n'
 
 - name: include sap assertions role for workers
   include_role:
