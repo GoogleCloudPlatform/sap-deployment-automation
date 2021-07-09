@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- name: Run preinstall tasks
+  include_tasks: '{{ sap_hana_preinstall_tasks }}'
+  when: sap_hana_preinstall_tasks != ''
+
 - name: Define install file name
   set_fact:
     sap_hana_install_file_name: '{{ sap_product_vars[sap_product_and_version].sap_hana_install_file_name }}'
@@ -143,3 +147,7 @@
         - not hana_db_running.stat.exists
   when:
     - sap_hana_install_file_name.endswith(".ZIP") and (exe_install_file.matched == 0)
+
+- name: Run postinstall tasks
+  include_tasks: '{{ sap_hana_postinstall_tasks }}'
+  when: sap_hana_postinstall_tasks != ''

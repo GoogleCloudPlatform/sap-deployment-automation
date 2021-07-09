@@ -85,6 +85,10 @@ m2-ultramem-416
 
 `sap_hana_password`: Common password to use for all HANA user and system authentication
 
+`sap_hana_preinstall_tasks`: Path to an Ansible task file that will run before HANA is installed. This can be an absolute path, or a relative path which is relative to the playbook directory.
+
+`sap_hana_postinstall_tasks`: Path to an Ansible task file that will run after HANA is installed. This can be an absolute path, or a relative path which is relative to the playbook directory.
+
 # Example playbook to deploy SAP HANA HA stack
 
 Below is the example playbook to deploy the HANA HA stack. Replace the variable values to fit your need

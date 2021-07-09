@@ -77,6 +77,10 @@ Running GCE instance deployed using the terraform code under `stacks/HANA-Scaleu
 
 `sap_hana_logvols`: List of logical volumes to create on the system
 
+`sap_hana_preinstall_tasks`: Path to an Ansible task file that will run before HANA is installed. This can be an absolute path, or a relative path which is relative to the playbook directory.
+
+`sap_hana_postinstall_tasks`: Path to an Ansible task file that will run after HANA is installed. This can be an absolute path, or a relative path which is relative to the playbook directory.
+
 # Defaults:
 
 All the defaults for this role are defined in `defaults/main.yml`
