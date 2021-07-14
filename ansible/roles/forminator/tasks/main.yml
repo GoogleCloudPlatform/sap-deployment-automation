@@ -104,13 +104,13 @@
       }}'
   - name: ensure cache directory exists
     file:
-      path: '{{ sap_cache_dir }}'
+      path: '{{ sap_cache_dir }}/terraform-{{ sap_tf_version }}'
       state: directory
     when: not existing_tf_version_correct
   - name: download and unarchive terraform
     unarchive:
       src: '{{ sap_tf_download_url }}'
-      dest: '{{ sap_cache_dir }}'
+      dest: '{{ sap_cache_dir }}/terraform-{{ sap_tf_version }}'
       remote_src: true
     when: not existing_tf_version_correct
   - name: define terraform executable
@@ -119,7 +119,7 @@
     when: existing_tf_version_correct
   - name: define terraform executable
     set_fact:
-      sap_tf_exec: '{{ sap_cache_dir }}/terraform'
+      sap_tf_exec: '{{ sap_cache_dir }}/terraform-{{ sap_tf_version }}/terraform'
     when: not existing_tf_version_correct
 
 - block:
