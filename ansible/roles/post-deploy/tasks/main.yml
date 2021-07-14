@@ -36,14 +36,8 @@
     line: 'S\1'
     state: present
   - path: '{{ sap_profile }}'
-    line: 'service/halib = $(DIR_CT_RUN)/saphascriptco.so'
-    state: present
-  - path: '{{ sap_profile }}'
-    line: 'service/halib_cluster_connector = /usr/bin/sap_suse_cluster_connector'
-    state: present
-  - path: '{{ sap_profile }}'
     line: 'enque/encni/set_so_keepalive = true'
-    state: present
+    state: '{{ "present" if sap_ensa_version == "1" else "absent" }}'
   - path: /usr/sap/sapservices
     line: 'LD_LIBRARY_PATH=/usr/sap/{{ sap_nw_sid }}/ERS{{ sap_nw_ers_instance_number }}/exe:$LD_LIBRARY_PATH; export LD_LIBRARY_PATH; /usr/sap/{{ sap_nw_sid }}/ERS{{ sap_nw_ers_instance_number }}/exe/sapstartsrv pf=/usr/sap/{{ sap_nw_sid }}/ERS{{ sap_nw_ers_instance_number }}/profile/{{ sap_nw_sid }}_ERS{{ sap_nw_ers_instance_number }}_{{ sap_nw_ers_virtual_host }} -D -u {{ sap_nw_user }}'
     state: present
@@ -63,15 +57,32 @@
     line: 'S\1'
     state: present
   - path: '{{ sap_profile }}'
-    line: 'service/halib = $(DIR_CT_RUN)/saphascriptco.so'
-    state: present
-  - path: '{{ sap_profile }}'
-    line: 'service/halib_cluster_connector = /usr/bin/sap_suse_cluster_connector'
-    state: present
-  - path: '{{ sap_profile }}'
     line: 'Autostart = 1'
     state: absent
   - path: /usr/sap/sapservices
     line: 'LD_LIBRARY_PATH=/usr/sap/{{ sap_nw_sid }}/ASCS{{ sap_nw_ascs_instance_number }}/exe:$LD_LIBRARY_PATH; export LD_LIBRARY_PATH; /usr/sap/{{ sap_nw_sid }}/ASCS{{ sap_nw_ascs_instance_number }}/exe/sapstartsrv pf=/usr/sap/{{ sap_nw_sid }}/SYS/profile/{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }} -D -u {{ sap_nw_user }}'
     state: present
   when: ansible_default_ipv4.address in groups.ers
+
+- name: modify profile to enable sap suse cluster connector
+  lineinfile:
+    path: '{{ item.path }}'
+    regex: "{{ item.regex | default(omit) }}"
+    backrefs: '{{ "regex" in item }}'
+    line: "{{ item.line | default(omit) }}"
+    state: '{{ item.state }}'
+  with_items:
+  - path: '{{ sap_profile }}'
+    line: 'service/halib = $(DIR_CT_RUN)/saphascriptco.so'
+    state: present
+  - path: '{{ sap_profile }}'
+    line: 'service/halib_cluster_connector = /usr/bin/sap_suse_cluster_connector'
+    state: present
+  when: ansible_os_family == 'Suse'
+
+- name: add sidadm to haclient group for sap suse cluster connector
+  user:
+    name: '{{ sap_nw_user }}'
+    groups: haclient
+    append: true
+  when: ansible_os_family == 'Suse'

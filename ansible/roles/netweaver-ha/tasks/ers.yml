@@ -51,3 +51,5 @@
 - name: include storage primary tasks
   include_role:
     name: post-deploy
+  vars:
+    sap_ensa_version: "{{ sap_product_vars[sap_product_and_version].ensa_version }}"
