@@ -16,9 +16,4 @@ sap_gcloud_path: /usr/bin/gcloud
 sap_cluster_name: hacluster
 sap_cluster_user: hacluster
 sap_cluster_user_password: linux
-sap_cluster_instance_number: '00'
 sap_use_lb: false
-# Health check port is not needed when sap_use_lb is false.
-sap_health_check_port: ''
-# ENSA version normally won't change. Must be '1' or '2'.
-sap_ensa_version: '2'
