@@ -60,6 +60,14 @@ resource "google_compute_region_backend_service" "default" {
       failover    = lookup(backend.value, "failover", null)
     }
   }
+  dynamic "failover_policy" {
+    for_each = var.failover_policy != null ? [var.failover_policy] : []
+    content {
+      disable_connection_drain_on_failover = lookup(failover_policy.value, "disable_connection_drain_on_failover", null)
+      drop_traffic_if_unhealthy            = lookup(failover_policy.value, "drop_traffic_if_unhealthy", null)
+      failover_ratio                       = lookup(failover_policy.value, "failover_ratio", null)
+    }
+  }
   health_checks = [var.health_check["type"] == "tcp" ? google_compute_health_check.tcp[0].self_link : google_compute_health_check.http[0].self_link]
 }
 
