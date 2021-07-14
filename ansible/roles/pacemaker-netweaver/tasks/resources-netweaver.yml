@@ -13,7 +13,7 @@
 # limitations under the License.
 
 - block:
-  - name: create enqueue replication server for ensa1
+  - name: create ascs resource for ensa1
     command: >-
       pcs resource create rsc_{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }} SAPInstance
       InstanceName={{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}
@@ -27,7 +27,7 @@
     when: |
       sap_ensa_version == '1'
 
-  - name: create enqueue replication server for ensa2
+  - name: create ascs resource for ensa2
     command: >-
       pcs resource create rsc_{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }} SAPInstance
       InstanceName={{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}
@@ -86,7 +86,7 @@
     ansible_os_family == 'RedHat'
 
 - block:
-  - name: create enqueue replication server for ensa1
+  - name: create ascs resource for ensa1
     command: >-
       crm configure primitive rsc_{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }} SAPInstance
       operations \$id=rsc_{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}-operations
@@ -101,7 +101,7 @@
     when: |
       sap_ensa_version == '1'
 
-  - name: create enqueue replication server for ensa2
+  - name: create ascs resource for ensa2
     command: >-
       crm configure primitive rsc_{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }} SAPInstance
       operations \$id=rsc_{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}-operations
