@@ -142,23 +142,12 @@
     changed_when: crm_command_status.rc == 0
     failed_when: crm_command_status.rc != 0 and 'listed more than once in group' not in crm_command_status.stderr
 
-  - name: create colocation constraint for ensa1
-    command: |
-      crm -F configure colocation col_sap_{{ sap_nw_sid }}_no_both -inf: g-ers g-ascs
-    register: crm_command_status
-    changed_when: crm_command_status.rc == 0
-    failed_when: crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
-    when: |
-      sap_ensa_version == '1'
-
-  - name: create colocation constraint for ensa2
+  - name: create colocation constraint
     command: |
       crm -F configure colocation col_sap_{{ sap_nw_sid }}_no_both -5000: g-ers g-ascs
     register: crm_command_status
     changed_when: crm_command_status.rc == 0
     failed_when: crm_command_status.rc != 0 and 'Found existing' not in crm_command_status.stderr
-    when: |
-      sap_ensa_version == '2'
 
   - name: create optional colocation constraint order
     command: >-
