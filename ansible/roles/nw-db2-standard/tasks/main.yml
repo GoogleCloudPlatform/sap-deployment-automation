@@ -1,0 +1,108 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: ensure that a known product version is defined for db2
+  assert:
+    that: sap_db2_product_and_version in sap_product_vars
+    fail_msg: 'sap_db2_product and sap_db2_product_version must match one of {{ sap_product_vars.keys() | select("match", "^{}/".format(sap_db2_product)) | list | join(", ") }}'
+  run_once: true
+
+- name: ensure that a known product version is defined for sap
+  assert:
+    that: sap_nw_product_and_version in sap_product_vars
+    fail_msg: 'sap_nw_product and sap_nw_product_version must match one of {{ sap_product_vars.keys() | select("match", "^{}/".format(sap_nw_product)) | list | join(", ") }}'
+  run_once: true
+
+- name: include base role
+  include_role:
+    name: base
+
+- name: include storage role
+  include_role:
+    name: storage
+  vars:
+    swapon: true
+    disks:
+    - { name: db2, partition_path : db2 }
+    - { name: sapmnt, partition_path : sapmnt }
+    - { name: usrsap, partition_path : usrsap }
+    - { name: swap, partition_path : swap }
+    logvols:
+      db2:
+        size: 100%VG
+        vol: db2
+        mountpoint: /db2
+      sapmnt:
+        size: 100%VG
+        vol: sapmnt
+        mountpoint: /sapmnt
+      usrsap:
+        size: 100%VG
+        vol: usrsap
+        mountpoint: /usr/sap
+    swapvols:
+      swap:
+        size: 100%VG
+        vol: swap
+
+- name: include nw-pre role
+  include_role:
+    name: nw-pre
+  vars:
+    sap_product_and_version: '{{ sap_nw_product_and_version }}'
+
+- name: include nw-pre role
+  include_role:
+    name: nw-pre
+  vars:
+    sap_product_and_version: '{{ sap_db2_product_and_version }}'
+
+- name: include db2-pre role
+  include_role:
+    name: db2-pre
+
+# The toggle-lock-escalation script is a workaround for an issue with SAP on DB2 11.x
+# that causes the following failure during PAS installation:
+# "An error occurred during table depooling: Batch job SWPM_RUTPOADAPT terminated".
+# For distributed and HA, this is done by the db2-lock-escalation role after sapinst
+# has finished installing DB2, but for Standard this needs to run in the background to
+# do the fix while sapinst is running.
+- name: copy toggle-lock-escalation script
+  copy:
+    src: tmp/toggle-lock-escalation
+    dest: /tmp/toggle-lock-escalation
+    mode: 0755
+
+- name: start toggle-lock-escalation script to run asynchronously while sapinst runs
+  command: '/tmp/toggle-lock-escalation {{ sap_db2_user }} {{ sap_db2_state_dir }}'
+  async: 3600
+  poll: 0
+  # No need to show changed. Since it is run async without polling, the real test of its
+  # success is when sapinst finishes successfully.
+  changed_when: false
+
+- name: include sapinst role
+  include_role:
+    name: sapinst
+  vars:
+    sap_product_id: '{{ sap_product_vars[sap_nw_product_and_version].onehost_product_id }}'
+    sap_sapinst_swpm_path: '{{ sap_product_vars[sap_nw_product_and_version].swpm_path }}'
+    sap_sapinst_template: inifile_onehost_db2.params
+
+- name: include db2-lock-escalation role
+  include_role:
+    name: db2-lock-escalation
+  vars:
+    sap_db2_lock_escalation_avoid: true
+    sap_db2_lock_escalation_state_file: '{{ sap_db2_state_dir }}/toggle-db2-lock-escalation'

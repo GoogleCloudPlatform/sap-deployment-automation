@@ -1,0 +1,38 @@
+#!/bin/sh
+# This is intended to be run as a workaround for an issue with SAP on DB2 11.x
+# that causes the following failure during PAS installation:
+# "An error occurred during table depooling: Batch job SWPM_RUTPOADAPT terminated".
+# This script changes the value of the DB2_AVOID_LOCK_ESCALATION registry variable
+# after DB2 is installed, but before PAS is installed. It needs to run in the
+# background while sapinst is running because sapinst for the OneHost product ID
+# installs both DB2 and PAS in the same process.
+
+DB2_USER=${1}
+DB2_STATE_DIR=${2}
+
+# Ensure the state directory exists. If the toggle-lock-escalation file is
+# present there, then sapinst has already run and DB2_AVOID_LOCK_ESCALATION
+# has been reset back to its original value, so exit.
+su - ${DB2_USER} -c "mkdir -p ${DB2_STATE_DIR}"
+[ -f ${DB2_STATE_DIR}/toggle-lock-escalation ] && exit
+
+# Wait for DB2 to come up and check the version. If not 11.x, then exit.
+while true; do
+    db2_version=$(su - ${DB2_USER} -c 'db2licm -v' 2>/dev/null)
+    if [ ${?} -eq 0 ]; then
+        echo ${db2_version} | grep -qE '^11\.'
+        if [ ${?} -eq 0 ]; then break; else exit; fi
+    else
+        sleep 30
+    fi
+done
+
+# Wait for the DB2_WORKLOAD variable to be set.
+while true; do
+    db2_workload=$(su - ${DB2_USER} -c 'db2set DB2_WORKLOAD')
+    if [ "${db2_workload}" = "SAP" ]; then break; else sleep 10; fi
+done
+
+# Toggle the DB2_AVOID_LOCK_ESCALATION variable set by aggregate variable
+# DB2_WORKLOAD. This will be reset later by Ansible when sapinst is completed.
+su - ${DB2_USER} -c 'db2set DB2_AVOID_LOCK_ESCALATION=FALSE'

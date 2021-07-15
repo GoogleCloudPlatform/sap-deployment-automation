@@ -1,0 +1,52 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+sap_db2_user: 'db2{{ sap_nw_sid | lower }}'
+sap_db2_state_dir: /db2/{{ sap_db2_user }}/.ansible-state
+
+sap_nw_master_password: '{{ sap_nw_password }}'
+sap_nw_sapadm_password: '{{ sap_nw_password }}'
+sap_nw_db2sid_password: '{{ sap_nw_password }}'
+sap_nw_sapsid_password: '{{ sap_nw_password }}'
+sap_nw_sidadm_password: '{{ sap_nw_password }}'
+sap_nw_user: '{{ sap_nw_sid | lower }}adm'
+
+sap_nw_ascs_instance_number: '01'
+sap_nw_pas_instance_number: '00'
+sap_nw_install_files_dest: /sapmnt/Software
+sap_nw_kernel_files: /sapmnt/Software/Kernel_Files
+sap_nw_rdbms_files: /sapmnt/Software/RDBMS
+
+sap_db2_product: 'DB2'
+sap_db2_product_version: '11.5MP5FP1'
+sap_db2_product_and_version: '{{ sap_db2_product }}/{{ sap_db2_product_version }}'
+sap_nw_product: 'NetWeaver'
+sap_nw_product_version: '750'
+sap_nw_product_and_version: '{{ sap_nw_product }}/{{ sap_nw_product_version }}'
+sap_product_vars:
+  'NetWeaver/750':
+    onehost_product_id: 'NW_ABAP_OneHost:NW750.DB6.ABAP'
+    swpm_path: /sapmnt/Software/SWPM1.0
+    load_files: /sapmnt/Software/NW75
+    install_files: [Kernel_Files, NW75, SWPM1.0]
+    ensa_version: '1'
+  'DB2/10.5FP9':
+    db_client: /sapmnt/Software/DB_CLIENT
+    install_files: [DB_CLIENT, RDBMS]
+  'DB2/11.1MP4FP6':
+    db_client: /sapmnt/Software/DB_CLIENT
+    install_files: [DB_CLIENT, RDBMS]
+  'DB2/11.5MP5FP1':
+    db_client: /sapmnt/Software/DB_CLIENT
+    install_files: [DB_CLIENT, RDBMS]
