@@ -152,6 +152,7 @@
     changed_when: terraform is changed
     loop:
     - '{{ sap_tf_project_path }}/.terraform'
+    - '{{ sap_tf_project_path }}/.terraform.lock.hcl'
     - '{{ terraform_tempdir.path }}'
 
 # No need to continue if `terraform destroy` was run.
