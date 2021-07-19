@@ -1,0 +1,70 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: include storage role
+  include_role:
+    name: storage
+  vars:
+    swapon: true
+    disks:
+    - { name: usrsap, partition_path : usrsap }
+    - { name: swap, partition_path : swap }
+    logvols:
+      usrsap:
+        size: 100%VG
+        vol: usrsap
+        mountpoint: /usr/sap
+    swapvols:
+      swap:
+        size: 100%VG
+        vol: swap
+
+- name: include nfs-client role
+  include_role:
+    name: nfs-client
+  vars:
+    nfs_client_mounts: '{{ {
+      sap_nw_sapmnt_nfs_mount_src: "/sapmnt",
+      sap_nw_saptrans_nfs_mount_src: "/usr/sap/trans",
+      sap_nw_ascs_nfs_mount_src: sap_nw_ascs_nfs_mount_dest,
+      sap_nw_ers_nfs_mount_src: sap_nw_ers_nfs_mount_dest
+    } }}'
+    nfs_client_share: '{{ sap_nw_nfs_src | default("") }}'
+
+- name: include nw-pre role
+  include_role:
+    name: nw-pre
+  vars:
+    sap_product_and_version: '{{ sap_nw_product_and_version }}'
+
+- name: include nw-pre role
+  include_role:
+    name: nw-pre
+  vars:
+    sap_product_and_version: '{{ sap_db2_product_and_version }}'
+
+- name: include sapinst role
+  include_role:
+    name: sapinst
+  vars:
+    sap_product_id: '{{ sap_product_vars[sap_nw_product_and_version].ascs_product_id }}'
+    sap_sapinst_extra_args: SAPINST_USE_HOSTNAME={{ sap_nw_ascs_virtual_host }}
+    sap_sapinst_swpm_path: '{{ sap_product_vars[sap_nw_product_and_version].swpm_path }}'
+    sap_sapinst_template: inifile_ascs.params
+
+- name: include post-deploy role
+  include_role:
+    name: post-deploy
+  vars:
+    sap_ensa_version: '{{ sap_product_vars[sap_nw_product_and_version].ensa_version }}'

@@ -1,0 +1,271 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: ensure required directories exist
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: 0755
+    owner: '{{ sap_db2_user }}'
+    group: '{{ sap_db2_group }}'
+  loop:
+  - '{{ sap_db2_backup_dir }}'
+  - '{{ sap_db2_log_archive_dir }}'
+  - '{{ sap_db2_state_dir }}'
+
+- name: ensure data and temporary directories exist on secondary
+  file:
+    path: '/db2/{{ sap_nw_sid }}/sap{{ item.0 }}{{ item.1 }}'
+    state: directory
+    mode: 0750
+    owner: '{{ sap_db2_user }}'
+    group: '{{ sap_db2_group }}'
+  loop: '{{ ["data", "tmp"] | product([1, 2, 3, 4]) | list }}'
+  when: not (sap_db2_is_primary | bool)
+
+# A bug in the rsct package requires this workaround on RHEL. See:
+# https://www.ibm.com/support/pages/apar/IJ00283
+- name: symlink softdog kernel module
+  file:
+    src: /lib/modules/{{ ansible_kernel }}/kernel/drivers/watchdog/softdog.ko.xz
+    dest: /lib/modules/{{ ansible_kernel }}/kernel/drivers/watchdog/softdog.ko
+    state: link
+  when:
+  - ansible_os_family == 'RedHat'
+  - ansible_distribution_major_version == '7'
+
+- name: enable log archiving on primary
+  shell: >-
+    . /db2/{{ sap_db2_user }}/.sapenv.sh &&
+    . /db2/{{ sap_db2_user }}/sqllib/db2profile &&
+    db2 update db cfg for {{ sap_nw_sid }} using LOGARCHMETH1 DISK:{{ sap_db2_log_archive_dir }} &&
+    touch {{ sap_db2_state_dir }}/enable-log-archiving
+  become_user: '{{ sap_db2_user }}'
+  when: sap_db2_is_primary | bool
+  args:
+    creates: '{{ sap_db2_state_dir }}/enable-log-archiving'
+
+- name: create full database backup on primary
+  shell: >-
+    . /db2/{{ sap_db2_user }}/.sapenv.sh &&
+    . /db2/{{ sap_db2_user }}/sqllib/db2profile &&
+    db2 backup db {{ sap_nw_sid }} to {{ sap_db2_backup_dir }} compress &&
+    touch {{ sap_db2_state_dir }}/backup-database
+  become_user: '{{ sap_db2_user }}'
+  when: sap_db2_is_primary | bool
+  args:
+    creates: '{{ sap_db2_state_dir }}/backup-database'
+
+- name: restore database from backup on secondary
+  shell: >-
+    . /db2/{{ sap_db2_user }}/.sapenv.sh &&
+    . /db2/{{ sap_db2_user }}/sqllib/db2profile &&
+    db2 restore db {{ sap_nw_sid }} from {{ sap_db2_backup_dir }} replace history file &&
+    touch {{ sap_db2_state_dir }}/restore-database
+  become_user: '{{ sap_db2_user }}'
+  when: not (sap_db2_is_primary | bool)
+  args:
+    creates: '{{ sap_db2_state_dir }}/restore-database'
+
+- name: find backup file
+  find:
+    paths: '{{ sap_db2_backup_dir }}'
+    recurse: true
+  run_once: true
+  register: sap_db2_backup_search
+
+- name: remove backup file
+  file:
+    path: '{{ item.path }}'
+    state: absent
+  # Backup is on NFS, so only run on one host to avoid race conditions.
+  run_once: true
+  loop: '{{ sap_db2_backup_search.files }}'
+
+- name: add hadr ports to services file
+  blockinfile:
+    path: /etc/services
+    block: |
+      {{ sap_nw_sid }}_HADR_1	{{ sap_db2_hadr_port1 }}/tcp
+      {{ sap_nw_sid }}_HADR_2	{{ sap_db2_hadr_port2 }}/tcp
+
+- name: update database config for primary
+  shell: >-
+    . /db2/{{ sap_db2_user }}/.sapenv.sh &&
+    . /db2/{{ sap_db2_user }}/sqllib/db2profile &&
+    db2 update db cfg for {{ sap_nw_sid }} using HADR_LOCAL_HOST {{ sap_db2_instance_name_primary }} &&
+    db2 update db cfg for {{ sap_nw_sid }} using HADR_LOCAL_SVC {{ sap_nw_sid }}_HADR_1 &&
+    db2 update db cfg for {{ sap_nw_sid }} using HADR_REMOTE_HOST {{ sap_db2_instance_name_secondary }} &&
+    db2 update db cfg for {{ sap_nw_sid }} using HADR_REMOTE_SVC {{ sap_nw_sid }}_HADR_2 &&
+    db2 update db cfg for {{ sap_nw_sid }} using HADR_REMOTE_INST {{ sap_db2_user }} &&
+    db2 update db cfg for {{ sap_nw_sid }} using HADR_TIMEOUT 120 &&
+    db2 update db cfg for {{ sap_nw_sid }} using HADR_SYNCMODE NEARSYNC &&
+    db2 update db cfg for {{ sap_nw_sid }} using HADR_SPOOL_LIMIT 1000 &&
+    db2 update db cfg for {{ sap_nw_sid }} using HADR_PEER_WINDOW 240 &&
+    db2 update db cfg for {{ sap_nw_sid }} using INDEXREC RESTART &&
+    db2 update db cfg for {{ sap_nw_sid }} using LOGINDEXBUILD ON &&
+    touch {{ sap_db2_state_dir }}/update-db-cfg
+  become_user: '{{ sap_db2_user }}'
+  when: sap_db2_is_primary | bool
+  args:
+    creates: '{{ sap_db2_state_dir }}/update-db-cfg'
+
+- name: update database config for secondary
+  shell: >-
+    . /db2/{{ sap_db2_user }}/.sapenv.sh &&
+    . /db2/{{ sap_db2_user }}/sqllib/db2profile &&
+    db2 update db cfg for {{ sap_nw_sid }} using HADR_LOCAL_HOST {{ sap_db2_instance_name_secondary }} &&
+    db2 update db cfg for {{ sap_nw_sid }} using HADR_LOCAL_SVC {{ sap_nw_sid }}_HADR_2 &&
+    db2 update db cfg for {{ sap_nw_sid }} using HADR_REMOTE_HOST {{ sap_db2_instance_name_primary }} &&
+    db2 update db cfg for {{ sap_nw_sid }} using HADR_REMOTE_SVC {{ sap_nw_sid }}_HADR_1 &&
+    db2 update db cfg for {{ sap_nw_sid }} using HADR_REMOTE_INST {{ sap_db2_user }} &&
+    db2 update db cfg for {{ sap_nw_sid }} using HADR_TIMEOUT 120 &&
+    db2 update db cfg for {{ sap_nw_sid }} using HADR_SYNCMODE NEARSYNC &&
+    db2 update db cfg for {{ sap_nw_sid }} using HADR_SPOOL_LIMIT 1000 &&
+    db2 update db cfg for {{ sap_nw_sid }} using HADR_PEER_WINDOW 240 &&
+    db2 update db cfg for {{ sap_nw_sid }} using INDEXREC RESTART &&
+    db2 update db cfg for {{ sap_nw_sid }} using LOGINDEXBUILD ON &&
+    touch {{ sap_db2_state_dir }}/update-db-cfg
+  become_user: '{{ sap_db2_user }}'
+  when: not (sap_db2_is_primary | bool)
+  args:
+    creates: '{{ sap_db2_state_dir }}/update-db-cfg'
+
+- name: start hadr on secondary
+  shell: >-
+    . /db2/{{ sap_db2_user }}/.sapenv.sh &&
+    . /db2/{{ sap_db2_user }}/sqllib/db2profile &&
+    db2 deactivate db {{ sap_nw_sid }} &&
+    db2 start hadr on db {{ sap_nw_sid }} as standby &&
+    touch {{ sap_db2_state_dir }}/start-hadr
+  become_user: '{{ sap_db2_user }}'
+  when: not (sap_db2_is_primary | bool)
+  args:
+    creates: '{{ sap_db2_state_dir }}/start-hadr'
+
+- name: start hadr on primary
+  shell: >-
+    . /db2/{{ sap_db2_user }}/.sapenv.sh &&
+    . /db2/{{ sap_db2_user }}/sqllib/db2profile &&
+    db2 deactivate db {{ sap_nw_sid }} &&
+    db2 start hadr on db {{ sap_nw_sid }} as primary &&
+    touch {{ sap_db2_state_dir }}/start-hadr
+  become_user: '{{ sap_db2_user }}'
+  when: sap_db2_is_primary | bool
+  args:
+    creates: '{{ sap_db2_state_dir }}/start-hadr'
+
+- name: wait for hadr to be in peer state
+  shell: >-
+    . /db2/{{ sap_db2_user }}/.sapenv.sh &&
+    . /db2/{{ sap_db2_user }}/sqllib/db2profile &&
+    db2pd -d {{ sap_nw_sid }} -hadr
+  become_user: '{{ sap_db2_user }}'
+  changed_when: false
+  register: sap_db2_ha_status
+  retries: 30
+  until: |
+    'HADR_STATE = PEER' in sap_db2_ha_status.stdout
+  delay: 2
+
+- name: prepare nodes to be defined to a peer domain
+  shell: >-
+    preprpnode {{ sap_db2_instance_name_primary }} {{ sap_db2_instance_name_secondary }} &&
+    touch {{ sap_db2_state_dir }}/prepare-nodes
+  args:
+    creates: '{{ sap_db2_state_dir }}/prepare-nodes'
+
+- name: create cluster domain input file
+  template:
+    src: tmp/db2haicu.xml.j2
+    dest: /tmp/db2haicu.xml
+    mode: 0644
+
+- name: create cluster domain on secondary
+  shell: >-
+    . /db2/{{ sap_db2_user }}/.sapenv.sh &&
+    . /db2/{{ sap_db2_user }}/sqllib/db2profile &&
+    db2haicu -f /tmp/db2haicu.xml &&
+    touch {{ sap_db2_state_dir }}/create-cluster-domain
+  become_user: '{{ sap_db2_user }}'
+  when: not (sap_db2_is_primary | bool)
+  args:
+    creates: '{{ sap_db2_state_dir }}/create-cluster-domain'
+
+- name: create cluster domain on primary
+  shell: >-
+    . /db2/{{ sap_db2_user }}/.sapenv.sh &&
+    . /db2/{{ sap_db2_user }}/sqllib/db2profile &&
+    db2haicu -f /tmp/db2haicu.xml &&
+    touch {{ sap_db2_state_dir }}/create-cluster-domain
+  become_user: '{{ sap_db2_user }}'
+  when: sap_db2_is_primary | bool
+  args:
+    creates: '{{ sap_db2_state_dir }}/create-cluster-domain'
+
+- name: create custom resource health check script
+  copy:
+    src: usr/local/bin/db2vip
+    dest: /usr/local/bin/db2vip
+    mode: 0755
+
+- name: create custom resource input file
+  template:
+    src: tmp/db2customresource.cfg.j2
+    dest: /tmp/db2customresource.cfg
+    mode: 0644
+  run_once: true
+
+- name: create db2vip custom resource
+  shell: >-
+    . /db2/{{ sap_db2_user }}/.sapenv.sh &&
+    . /db2/{{ sap_db2_user }}/sqllib/db2profile &&
+    mkrsrc -f /tmp/db2customresource.cfg IBM.Application &&
+    touch {{ sap_db2_state_dir }}/create-db2vip-resource
+  run_once: true
+  environment:
+    CT_MANAGEMENT_SCOPE: '2'
+  args:
+    creates: '{{ sap_db2_state_dir }}/create-db2vip-resource'
+
+- name: create db2vip resource group
+  shell: >-
+    . /db2/{{ sap_db2_user }}/.sapenv.sh &&
+    . /db2/{{ sap_db2_user }}/sqllib/db2profile &&
+    mkrg -l None db2vip_rg &&
+    chrg -o Online db2vip_rg &&
+    addrgmbr -g db2vip_rg -m F IBM.Application:db2vip_rs &&
+    rgreq -o start db2vip_rg &&
+    touch {{ sap_db2_state_dir }}/create-db2vip-resource-group
+  run_once: true
+  args:
+    creates: '{{ sap_db2_state_dir }}/create-db2vip-resource-group'
+
+- name: create managed relationship between hadr and health check resources
+  shell: >-
+    . /db2/{{ sap_db2_user }}/.sapenv.sh &&
+    . /db2/{{ sap_db2_user }}/sqllib/db2profile &&
+    rgreq -o lock db2vip_rg &&
+    rgreq -o lock db2_{{ sap_db2_user }}_{{ sap_db2_user }}_{{ sap_nw_sid }}-rg &&
+    mkrel -o NoCondition \
+      -p Collocated \
+      -S IBM.Application:db2vip_rs \
+      -G IBM.Application:db2_{{ sap_db2_user }}_{{ sap_db2_user }}_{{ sap_nw_sid }}-rs \
+      db2hadr_colo_db2vip &&
+    rgreq -o unlock db2_{{ sap_db2_user }}_{{ sap_db2_user }}_{{ sap_nw_sid }}-rg &&
+    rgreq -o unlock db2vip_rg &&
+    touch {{ sap_db2_state_dir }}/create-managed-relationship
+  run_once: true
+  args:
+    creates: '{{ sap_db2_state_dir }}/create-managed-relationship'

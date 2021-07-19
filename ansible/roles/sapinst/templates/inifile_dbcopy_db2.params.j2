@@ -7,47 +7,14 @@
 # Windows only: Password for the Diagnostics Agent specific 'SAPService<DASID>' user.
 # DiagnosticsAgent.sapServiceDASIDPassword =
 
-# Specify whether you want to decluster during the import.
-# InitDeclusteringForImport.decluster =
-
-# SAP code page. Value for Unicode is: '4103' on little endian (intel), '4102' on big endian. Value for Non-Unicode is: '1100' or country specific.
-NW_ABAP_Import_Dialog.dbCodepage = 4103
-
-# Communication port for the Migration Monitor.
-# NW_ABAP_Import_Dialog.migmonComPort =
-
-# Communication type for the Migration Monitor. Possible values are: 'EXCHANGE', 'SOCKETS', none
-# NW_ABAP_Import_Dialog.migmonComType = EXCHANGE
-
-# Exchange directory for the Migration Monitor
-# NW_ABAP_Import_Dialog.migmonExchangeDir =
-
-# Number of parallel Migration Monitor jobs
-NW_ABAP_Import_Dialog.migmonJobNum = 5
-
-# Additional 'R3load' arguments for the LOAD phase
-NW_ABAP_Import_Dialog.migmonLoadArgs = -stop_on_error -loadprocedure fast LOAD:COMPRESS_ALL:DEF_CRT
-
-# Additional 'R3load' arguments for the TASK phase
-# NW_ABAP_Import_Dialog.migmonTaskArgs =
-
-# Migration key.
-# NW_ABAP_Import_Dialog.migrationKey =
-
-# Enables setting advanced 'R3load' options.
-# NW_ABAP_Import_Dialog.useAdvancedLoadConfig = false
-
-# Enables setting attribues for parallel export/import.
-# NW_ABAP_Import_Dialog.useParallelExportImport = false
-
 # System copy AS Java with product instance Process Integration and/or Development Infrastructure: Specify whether the target system should replace the source system. Possible values are  'true' or 'false'.
 # NW_CreateDBandLoad.movePVCforUsagePiAndDi =
 
 # Name of the database connect user for ABAP. Default value is 'sap<sapsid>'.
-# NW_DB6_DB.db6.abap.connect.user =
+NW_DB6_DB.db6.abap.connect.user = sap{{ sap_nw_sid | lower }}
 
 # Name of the database schema for ABAP. Default value is 'sap<sapsid>'.
-# NW_DB6_DB.db6.abap.schema =
+NW_DB6_DB.db6.abap.schema = sap{{ sap_nw_sid | lower }}
 
 # Name of the database connect user for Java. Default value is 'sap<sapsid>db'.
 # NW_DB6_DB.db6.java.connect.user =
@@ -60,24 +27,6 @@ NW_ABAP_Import_Dialog.migmonLoadArgs = -stop_on_error -loadprocedure fast LOAD:C
 
 # Master password
 NW_GetMasterPassword.masterPwd = {{ sap_nw_master_password }}
-
-# Human readable form of the default login language to be preselected in SAPGUI. This Parameter is potentialy prompted in addition in the screen that also asks for the <SAPSID>. It is only prompted in systems that have an ABAP stack. It is prompted for installation but not for system copy. It is asked in those installations, that perform the ABAP load. That could be the database load installation in case of a distributed system szenario, or in case of a standard system installation with all instances on one host. This Parameter is saved in the 'DEFAULT' profile. It is has no influence on language settings in a Java stack. Valid names are stored in a table of subcomponent 'NW_languagesInLoadChecks'. The available languages must be declaired in the 'LANGUAGES_IN_LOAD' parameter of the 'product.xml' file . In this file, the one-character representation of the languages is used. Check the same table in subcomponent 'NW_languagesInLoadChecks'.
-# NW_GetSidNoProfiles.SAP_GUI_DEFAULT_LANGUAGE =
-
-# Windows only: The drive to use
-NW_GetSidNoProfiles.sapdrive = undefined
-
-# Unix only: The SAP mount directory path. Default value is '/sapmnt'.
-# NW_GetSidNoProfiles.sapmnt = /sapmnt
-
-# The SAP system ID <SAPSID> of the system to be installed
-NW_GetSidNoProfiles.sid = {{ sap_nw_sid }}
-
-# Only use this parameter if recommended by SAP.
-# NW_GetSidNoProfiles.strictSidCheck = true
-
-# Specify whether this system is to be a Unicode system.
-# NW_GetSidNoProfiles.unicode = true
 
 # DEPRECATED, DO NOT USE!
 # NW_SAPCrypto.SAPCryptoFile =
@@ -109,6 +58,9 @@ NW_GetSidNoProfiles.sid = {{ sap_nw_sid }}
 # SAP INTERNAL USE ONLY
 # NW_adaptProfile.templateFiles =
 
+# ABAP message server port for connecting to the message server, leave empty for default
+# NW_checkMsgServer.abapMSPort =
+
 # The database host
 # NW_getDBInfoGeneric.dbhost =
 
@@ -125,20 +77,19 @@ NW_getDBInfoGeneric.dbsid = {{ sap_nw_sid }}
 NW_getFQDN.setFQDN = false
 
 # The load type chosen by the user. Valid values are: 'SAP', 'STD', 'OBR', 'HCP', 'MDA', 'HBR', 'SBR'
-NW_getLoadType.loadType = SAP
+NW_getLoadType.loadType = DB6BR
+
+# ABAP system is Unicode (true|false), only needed if it cannot be determined from the system.
+NW_getUnicode.isUnicode = true
 
 # Provide  'profile' directory of SAP Netweaver-based system.
-# NW_readProfileDir.profileDir =
+NW_readProfileDir.profileDir = /sapmnt/{{ sap_nw_sid }}/profile
 
 # Enter the path of the existing 'profile' directory.
-NW_readProfileDir.profilesAvailable = false
+# NW_readProfileDir.profilesAvailable = true
 
 # Windows only: The drive to use
 # NW_readProfileDir.sapdrive =
-
-# The ASP device name where the SAP system will be in installed. The property is IBM i only.
-# Values from 1 to 256 can be specified. The default is 1, the System ASP.
-# OS4.DestinationASP =
 
 # The folder containing all archives that have been downloaded from http://support.sap.com/swdc and are supposed to be used in this procedure
 archives.downloadBasket = {{ sap_nw_kernel_files }}
@@ -162,7 +113,7 @@ SAPINST.CD.PACKAGE.EXPORT = {{ sap_product_vars[sap_nw_product_and_version].load
 # db6.DBDataDriveWindows =
 
 # Memory for the database
-# db6.DatabaseMemory = 5290
+# db6.DatabaseMemory =
 
 # Windows only: Drive for the 'db2dump' directory
 # db6.Db2dumpDriveWindows =
@@ -174,19 +125,13 @@ SAPINST.CD.PACKAGE.EXPORT = {{ sap_product_vars[sap_nw_product_and_version].load
 # db6.InstallPureScale = false
 
 # AIX and Linux only: Choose if you want to install IBM Tivoli System Automation for Multiplatforms.
-db6.InstallTSA = {{ sap_sapinst_install_tsamp | default(false) | lower }}
+db6.InstallTSA = {{ sap_sapinst_install_tsamp | lower }}
 
 # Windows only: Drive for the log directory
 # db6.LogDirDriveWindows =
 
 # Number of additional partitions
 # db6.NumAdditionalPartitions =
-
-# List of tablespace pools and their sizes. One string with the following format:  poolname1{poolsize1}; poolname2{poolsize2}; ...
-db6.TablespacePoolSizes = SAPSID#DATA{20}
-
-# Specify whether you want to use the SAP standard tablespace pool.
-db6.UseStandardTablespacePool = true
 
 # Allow unsigned database software packages.
 # db6.allowUnsignedDatabaseSoftware =
@@ -195,16 +140,13 @@ db6.UseStandardTablespacePool = true
 db6.cluster.ClusterType = HADR (High Availability Disaster Recovery)
 
 # First High Availability Disaster Recovery (HADR) port
-db6.cluster.HADRPort1 = {{ sap_db2_hadr_port1 | default(5951) }}
+db6.cluster.HADRPort1 = {{ sap_db2_hadr_port1 }}
 
 # Second  High Availability Disaster Recovery (HADR) port
-db6.cluster.HADRPort2 = {{ sap_db2_hadr_port2 | default(5952) }}
+db6.cluster.HADRPort2 = {{ sap_db2_hadr_port2 }}
 
 # Choose synchronisation mode for  High Availability Disaster Recovery (HADR).
 # db6.cluster.SyncMode =
-
-# Specify whether you want the tablespaces to be created automatically.
-db6.createTablespacesUsingSapinst = true
 
 # Windows only: If you are installing in a domain, you can set the domain type of the connect user to 'global' or 'local'.
 # db6.domainTypeConnectUser =
@@ -222,31 +164,13 @@ db6.createTablespacesUsingSapinst = true
 # db6.gid_sysmon =
 
 # Use 'R3load' options for IBM Db2 Deep Compression.
-db6.minimizeDatabaseSizeCompression = true
+# db6.minimizeDatabaseSizeCompression =
 
 # Use 'R3load' options for Deferred Table Creation.
 # db6.minimizeDatabaseSizeDeferredTable = true
 
 # Do not install an MCOD system.
 # db6.notuseMcod =
-
-# Number of 'sapdata' directories
-db6.numPathsForSapdatas = 4
-
-# Number of 'saptmp' directories
-db6.numPathsForSaptmps = 4
-
-# Windows only: List of drives for 'sapdata' directories, must be one string with the entries in the following format: sapdata1=x:, sapdata2=y:, sapdata3=z:, ...
-# db6.sapdataDrivesList =
-
-# Windows only: List of drives for 'saptmp' directories, must be one string with the entries in the following format: saptmp1=x:, saptmp2=y:, saptmp3=z:,...
-# db6.saptmpDrivesList =
-
-# Specify whether you want to use Automatic Storage.
-db6.useAutoStorage = true
-
-# Specify whether you want to use the extra directory in your 'sapdata' or 'saptmp' paths.
-db6.useExtraSapdataSaptmpDirLayout = false
 
 # Install an MCOD system.
 # db6.useMcod =
@@ -302,10 +226,10 @@ nwUsers.sidadmPassword = {{ sap_nw_sidadm_password }}
 # ora.whatInstallation = isSingle
 
 # Database communication port
-storageBasedCopy.db6.CommunicationPortNumber = 5912
+# storageBasedCopy.db6.CommunicationPortNumber = 5912
 
 # Last port in range for database partition communication
-storageBasedCopy.db6.PortRangeEnd = 5917
+# storageBasedCopy.db6.PortRangeEnd = 5917
 
 # First port in range for database partition communication
-storageBasedCopy.db6.PortRangeStart = 5914
+# storageBasedCopy.db6.PortRangeStart = 5914
