@@ -1,6 +1,9 @@
 # NetWeaver-DB2-Standard
 
 This stack defines an Ansible playbook and a Terraform root module to deploy the NetWeaver-DB2-Standard stack. A single instance is created that runs DB2, ASCS, and PAS.
+# Deployment Architecture
+
+![NetWeaver-DB2-Standard](./images/standard.png)
 
 # Requirements
 

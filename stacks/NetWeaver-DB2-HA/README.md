@@ -10,6 +10,10 @@ The stack creates:
 * One secondary DB2 instance
 * One or more application server instances (PAS and AAS)
 
+# Deployment Architecture
+
+![NetWeaver-DB2-HA](./images/ha.png)
+
 # Requirements
 
 Python 3.5 or greater is required.
