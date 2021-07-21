@@ -14,6 +14,17 @@ Python 3 is required.
 
 See the README at the root of the repository for instructions common to all stacks.
 
+# General Remarks
+
+Web Dispatcher version 7.77 (latest SP) should be used with RHEL 7.7 and SuSe 12. There might be some package inconsistencies with WD 7.81. I used SAPWEBDISP_SP_341-80004425.SAR
+Together with SAP Web Dispatcher SAR file, you should provide a SAP Host Agent SAR file  (ie SAPHOSTAGENT51_51-20009394.SAR) should be uploaded to a GCS bucket.
+Also, SWPM2.0 will be used for the installation. 
+Example GCS bucket structure & contents:
+
+gs://<bucket-name>/WebDispatcher/750/WEBDISP/SAPHOSTAGENT51_51-20009394.SAR
+gs://<bucket-name>/WebDispatcher/750/WEBDISP/SAPWEBDISP_SP_341-80004425.SAR
+gs://<bucket-name>/WebDispatcher/750/SWPM2.0 -> UNPACKED SWPM, NOT SAR!
+
 ## Deploying the stack
 
 Copy stacks/WebDisp/vars/deploy-vars.yml and populate it with the variables as described below.
