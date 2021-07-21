@@ -23,11 +23,11 @@ Also, SWPM2.0 will be used for the installation.
 Example GCS bucket structure & contents:
 
 
-gs://<bucket-name>/WebDispatcher/750/WEBDISP/SAPHOSTAGENT51_51-20009394.SAR
+gs://\<bucket-name\>/WebDispatcher/750/WEBDISP/SAPHOSTAGENT51_51-20009394.SAR
 
-gs://<bucket-name>/WebDispatcher/750/WEBDISP/SAPWEBDISP_SP_341-80004425.SAR
+gs://\<bucket-name\>/WebDispatcher/750/WEBDISP/SAPWEBDISP_SP_341-80004425.SAR
 
-gs://<bucket-name>/WebDispatcher/750/SWPM2.0 -> UNPACKED SWPM, NOT SAR!
+gs://\<bucket-name\>/WebDispatcher/750/SWPM2.0 -> UNPACKED SWPM, NOT SAR!
 
 ## Deploying the stack
 
