@@ -4,7 +4,7 @@ This stack builds a Web Dispatcher .
 
 # Deployment Architecture
 
-![Web Dispatcher-Standard](./images/standard.png)
+![Web Dispatcher-Standard](./images/wd-standard.png)
 
 # Requirements
 
@@ -29,12 +29,12 @@ From the root of the repository, run:
 Use the same command as for deploying, but add the `state: absent` variable:
 
 ```
-./ansible-wrapper stacks/Web isp/playbook.yml -e @vars.yml -e state=absent
+./ansible-wrapper stacks/WebDisp/playbook.yml -e @vars.yml -e state=absent
 ```
 
 # Variables
 
-`sap_wd_instance_type`: (Optional, default `n1-standard-8`) - The GCE instance type for Web Dispatcher or S4HANA instances.
+`sap_wd_instance_type`: (Optional, default `n1-standard-2`) - The GCE instance type for Web Dispatcher or S4HANA instances.
 
 `sap_wd_install_files_bucket`: (Required) - Bucket where Web Dispatcher or S4HANA installation files are located.
 
@@ -42,9 +42,7 @@ Use the same command as for deploying, but add the `state: absent` variable:
 
 `sap_wd_password`: (Required) - The password for Web Dispatcher or S4HANA.
 
-`sap_wd_product`: (Optional, default `Web Dispatcher`) - The SAP product, must be one of `Web Dispatcher` or `S4HANA`.
-
-`sap_wd_product_version`: (Optional, default `750`) - The SAP product version. If `sap_wd_product` is `Web Dispatcher` it must be `750`, if `sap_wd_product` is `S4HANA` it must be `1709` or `1809`.
+`sap_wd_product_version`: (Optional, default `750`) - The SAP product version. If `sap_wd_product` is `Web Dispatcher` it must be `750`.
 
 `sap_wd_service_account_name`: (Optional, default `sap-common-sa`) - The name of the service account assigned to Web Dispatcher or S4HANA instances. This should not be a full service account email, just the name before the `@` symbol.
 
