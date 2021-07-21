@@ -1,0 +1,59 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- hosts: 127.0.0.1
+  connection: local
+  roles:
+  - role: forminator
+    vars:
+      sap_tf_project_path: ./tf
+      sap_state: '{{ state | default("present") }}'
+      sap_tf_variables:
+        project_id: '{{ sap_project_id }}'
+        sap_wd_additional_disk_type: '{{ sap_wd_additional_disk_type | default("pd-ssd") }}'
+        sap_wd_autodelete_boot_disk: '{{ sap_wd_autodelete_boot_disk | default(true) }}'
+        sap_wd_boot_disk_size: '{{ sap_wd_boot_disk_size | default(20) }}'
+        sap_wd_boot_disk_type: '{{ sap_wd_boot_disk_type | default("pd-ssd") }}'
+        sap_wd_instance_name: '{{ sap_wd_instance_name }}'
+        sap_wd_instance_type: '{{ sap_wd_instance_type | default("n1-standard-8") }}'
+        sap_wd_network_tags: '{{ sap_wd_network_tags | default([sap_network_tag | default("sap-allow-all")]) }}'
+        sap_wd_service_account_email: '{{ sap_wd_service_account_email | default("{}@{}.iam.gserviceaccount.com".format(sap_wd_service_account_name | default("sap-common-sa"), sap_project_id)) }}'
+        sap_wd_sapmnt_disk_size: '{{ sap_wd_sapmnt_disk_size | default(20) }}'
+        sap_wd_swap_disk_size: '{{ sap_wd_swap_disk_size | default(20) }}'
+        sap_wd_usrsap_disk_size: '{{ sap_wd_usrsap_disk_size | default(10) }}'
+        sap_wd_use_public_ip: '{{ sap_wd_use_public_ip | default(false) }}'
+        source_image_family: '{{ sap_source_image_family }}'
+        source_image_project: '{{ sap_source_image_project }}'
+        subnetwork_wd: '{{ sap_wd_subnetwork }}'
+        subnetwork_project: '{{ sap_subnetwork_project_id | default("") }}'
+        zone: '{{ sap_zone }}'
+  tags: [wd, assertions]
+
+- name: SAP Web Dispatcher configure
+  hosts: wd
+  become: yes
+  roles:
+  - role: wd-standard
+    vars:
+      sap_wd_virtual_host: '{{ terraform.outputs.wd_instance_name.value }}'
+  tags: [wd]
+
+- name: Run assertions on Web Dispatcher
+  hosts: wd
+  become: yes
+  tasks:
+  - include_role:
+      name: wd-standard
+      tasks_from: assertions
+  tags: [wd, assertions]
