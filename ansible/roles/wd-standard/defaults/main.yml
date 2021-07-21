@@ -1,0 +1,63 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+sap_wd_instance_number: "80"
+sap_wd_install_files_dest: /sapmnt/Software
+sap_wd_kernel_files: /sapmnt/Software/Kernel_Files
+sap_wd_sapmnt_disk_size: 20
+sap_wd_swap_disk_size: 20
+sap_wd_user: '{{ sap_wd_sid | lower }}adm'
+sap_wd_usrsap_disk_size: 10
+
+sap_wd_product: 'WebDispatcher'
+sap_wd_product_version: '750'
+sap_product_and_version: '{{ sap_wd_product }}/{{ sap_wd_product_version }}'
+# sap_wd_product and sap_wd_product_version must be set to one of the <product>/<version> combos in sap_product_vars.
+sap_product_vars:
+  'BW4HANA/20':
+    onehost_product_id: 'NW_ABAP_OneHost:BW4HANA20.CORE.HDB.ABAP'
+    swpm_path: /sapmnt/Software/SWPM2.0
+    load_files: /sapmnt/Software/Kernel_Files
+    install_files: [Kernel_Files, SWPM2.0]
+  'NetWeaver/750':
+    onehost_product_id: 'NW_ABAP_OneHost:NW750.HDB.ABAP'
+    swpm_path: /sapmnt/Software/SWPM1.0
+    load_files: /sapmnt/Software/NW75
+    install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM1.0]
+  'NetWeaver/751':
+    onehost_product_id: 'NW_ABAP_OneHost:NW751.HDB.ABAP'
+    swpm_path: /sapmnt/Software/SWPM1.0
+    load_files: /sapmnt/Software/NW75
+    install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM1.0]
+  'NetWeaver/752':
+    onehost_product_id: 'NW_ABAP_OneHost:NW752.HDB.ABAP'
+    swpm_path: /sapmnt/Software/SWPM1.0
+    load_files: /sapmnt/Software/NW75
+    install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM1.0]
+  'WebDispatcher/750':
+    onehost_product_id: 'NW_Webdispatcher:NW750.IND.PD'
+    swpm_path: /sapmnt/Software/SWPM2.0
+    load_files: /sapmnt/Software/WEBDISP
+    install_files: [WEBDISP, SWPM2.0]
+  'S4HANA/1709':
+    onehost_product_id: 'NW_ABAP_OneHost:S4HANA1709.CORE.HDB.ABAP'
+    swpm_path: /sapmnt/Software/SWPM1.0
+    load_files: /sapmnt/Software/S4HANA_Export
+    install_files: [HANA_CLIENT, Kernel_Files, S4HANA_Export, SWPM1.0]
+  'S4HANA/1809':
+    onehost_product_id: 'NW_ABAP_OneHost:S4HANA1809.CORE.HDB.ABAP'
+    swpm_path: /sapmnt/Software/SWPM2.0
+    load_files: /sapmnt/Software/Kernel_Files
+    install_files: [Kernel_Files, SWPM2.0]
