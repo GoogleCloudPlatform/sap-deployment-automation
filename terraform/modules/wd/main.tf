@@ -117,8 +117,6 @@ resource "google_compute_instance" "gcp_wd" {
   }
 
   lifecycle {
-    # Ignore changes in the instance metadata, since it is modified by the SAP startup script.
-    # https://github.com/terraform-providers/terraform-provider-google/issues/2098
     ignore_changes = [attached_disk]
   }
 
