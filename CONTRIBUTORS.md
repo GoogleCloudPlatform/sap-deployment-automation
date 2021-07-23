@@ -5,3 +5,4 @@
 * John Mitchell
 * Sushma Malasani
 * Joseph Wright
+* Maciej Zachariasz
