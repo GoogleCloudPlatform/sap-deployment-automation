@@ -31,11 +31,6 @@
     src: inifile_wd.params.j2
     dest: /usr/sap/inifile_wd.params
 
-- name: instkey.pkey file
-  template:
-    src: instkey.pkey
-    dest: /usr/sap/instkey.pkey
-
 - name: check for files created by wd installer
   stat:
     path: '{{ item }}'

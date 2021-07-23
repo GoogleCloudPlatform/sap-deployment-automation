@@ -26,38 +26,8 @@ sap_wd_product_version: '750'
 sap_product_and_version: '{{ sap_wd_product }}/{{ sap_wd_product_version }}'
 # sap_wd_product and sap_wd_product_version must be set to one of the <product>/<version> combos in sap_product_vars.
 sap_product_vars:
-  'BW4HANA/20':
-    onehost_product_id: 'NW_ABAP_OneHost:BW4HANA20.CORE.HDB.ABAP'
-    swpm_path: /sapmnt/Software/SWPM2.0
-    load_files: /sapmnt/Software/Kernel_Files
-    install_files: [Kernel_Files, SWPM2.0]
-  'NetWeaver/750':
-    onehost_product_id: 'NW_ABAP_OneHost:NW750.HDB.ABAP'
-    swpm_path: /sapmnt/Software/SWPM1.0
-    load_files: /sapmnt/Software/NW75
-    install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM1.0]
-  'NetWeaver/751':
-    onehost_product_id: 'NW_ABAP_OneHost:NW751.HDB.ABAP'
-    swpm_path: /sapmnt/Software/SWPM1.0
-    load_files: /sapmnt/Software/NW75
-    install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM1.0]
-  'NetWeaver/752':
-    onehost_product_id: 'NW_ABAP_OneHost:NW752.HDB.ABAP'
-    swpm_path: /sapmnt/Software/SWPM1.0
-    load_files: /sapmnt/Software/NW75
-    install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM1.0]
   'WebDispatcher/750':
     onehost_product_id: 'NW_Webdispatcher:NW750.IND.PD'
     swpm_path: /sapmnt/Software/SWPM2.0
     load_files: /sapmnt/Software/WEBDISP
     install_files: [WEBDISP, SWPM2.0]
-  'S4HANA/1709':
-    onehost_product_id: 'NW_ABAP_OneHost:S4HANA1709.CORE.HDB.ABAP'
-    swpm_path: /sapmnt/Software/SWPM1.0
-    load_files: /sapmnt/Software/S4HANA_Export
-    install_files: [HANA_CLIENT, Kernel_Files, S4HANA_Export, SWPM1.0]
-  'S4HANA/1809':
-    onehost_product_id: 'NW_ABAP_OneHost:S4HANA1809.CORE.HDB.ABAP'
-    swpm_path: /sapmnt/Software/SWPM2.0
-    load_files: /sapmnt/Software/Kernel_Files
-    install_files: [Kernel_Files, SWPM2.0]
