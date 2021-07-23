@@ -42,9 +42,12 @@
         size: "{{ sap_wd_swap_disk_size - 1 }}G"
         vol: swap
         mountpoint: /swap
-- name: include wd-pre primary tasks
+- name: include nw-pre primary tasks
   include_role:
-    name: wd-pre
+    name: nw-pre
+  vars:
+    sap_nw_install_files_bucket: '{{ sap_wd_install_files_bucket }}'
+    sap_nw_install_files_dest: '{{ sap_wd_install_files_dest }}'
 - name: include wd primary tasks
   include_role:
     name: wd

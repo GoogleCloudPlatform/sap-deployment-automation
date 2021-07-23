@@ -21,5 +21,4 @@
     - sapwebdisp, Web Dispatcher, GREEN, Running
     sap_instances:
     - 'WEBDISP, GREEN'        
-            #    - '{{ sap_wd_instance_name }}, {{ sap_wd_instance_number | int }}, 5{{ sap_wd_instance_number }}13, *, 3, WEBDISP, GREEN'
     sap_instance_number: '{{ sap_wd_instance_number }}'
