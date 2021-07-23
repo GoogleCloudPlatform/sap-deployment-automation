@@ -40,7 +40,7 @@
       sap_nw_ascs_nfs_mount_src: sap_nw_ascs_nfs_mount_dest,
       sap_nw_ers_nfs_mount_src: sap_nw_ers_nfs_mount_dest
     } }}'
-    nfs_client_share: '{{ sap_nw_nfs_src | default("") }}'
+    nfs_client_share: '{{ _sap_nw_nfs_src | default("") }}'
 
 - name: include nw-pre role
   include_role:

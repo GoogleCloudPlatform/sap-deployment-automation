@@ -59,20 +59,25 @@ sap_nw_rdbms_files: /sapmnt/Software/RDBMS
 sap_nw_nfs_server: ''
 sap_nw_nfs_share: /sap
 sap_nw_nfs_src: '{{ sap_nw_nfs_server }}:{{ sap_nw_nfs_share }}'
+# _sap_nw_nfs_src is ony defined here for internal use. It is needed to make both AWX and
+# non-AWX deployments work. AWX always defines both sap_nw_nfs_server and sap_nw_nfs_src;
+# when one is set by the user, the other will be an empty string. When not using AWX, just
+# one of sap_nw_nfs_server or sap_nw_nfs_src can be defined in vars.
+_sap_nw_nfs_src: '{{ sap_nw_nfs_src if sap_nw_nfs_src != "" else sap_nw_nfs_server ~ ":" ~ sap_nw_nfs_share }}'
 
 # If the condition below is true, source directories will be created under sap_nw_nfs_src.
 # If it is false, it means neither sap_nw_nfs_server or sap_nw_nfs_src have been changed from
 # the defaults. In that case, directories will not be created and sap_nw_*_nfs_mount_src
 # variables must be defined instead.
-sap_nw_create_nfs_source_dirs: '{{ sap_nw_nfs_src != ":{}".format(sap_nw_nfs_share) }}'
+sap_nw_create_nfs_source_dirs: '{{ _sap_nw_nfs_src != ":" ~ sap_nw_nfs_share }}'
 
-# Default values to fill in sap_nw_nfsvols when sap_nw_nfs_src is defined. If not using
-# default values, the sap_nw_*_nfs_mount_src variables can be defined individually.
-sap_nw_sapmnt_nfs_mount_src: '{{ sap_nw_nfs_src }}/sapmnt'
-sap_nw_saptrans_nfs_mount_src: '{{ sap_nw_nfs_src }}/saptrans'
-sap_nw_ascs_nfs_mount_src: '{{ sap_nw_nfs_src }}/ASCS{{ sap_nw_ascs_instance_number }}'
+# Default values to fill in sap_nw_nfsvols when one of sap_nw_nfs_server or sap_nw_nfs_src is defined.
+# If not using default values, the sap_nw_*_nfs_mount_src variables can be defined individually.
+sap_nw_sapmnt_nfs_mount_src: '{{ _sap_nw_nfs_src }}/sapmnt'
+sap_nw_saptrans_nfs_mount_src: '{{ _sap_nw_nfs_src }}/saptrans'
+sap_nw_ascs_nfs_mount_src: '{{ _sap_nw_nfs_src }}/ASCS{{ sap_nw_ascs_instance_number }}'
 sap_nw_ascs_nfs_mount_dest: '/usr/sap/{{ sap_nw_sid }}/ASCS{{ sap_nw_ascs_instance_number }}'
-sap_nw_ers_nfs_mount_src: '{{ sap_nw_nfs_src }}/ERS{{ sap_nw_ers_instance_number }}'
+sap_nw_ers_nfs_mount_src: '{{ _sap_nw_nfs_src }}/ERS{{ sap_nw_ers_instance_number }}'
 sap_nw_ers_nfs_mount_dest: '/usr/sap/{{ sap_nw_sid }}/ERS{{ sap_nw_ers_instance_number }}'
 
 sap_db2_product: 'DB2'
