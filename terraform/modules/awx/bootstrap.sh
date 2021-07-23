@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,12 +32,13 @@ warn()
 
 usage()
 {
-    msg="Usage: ${0} -i <instance-name> -p <project-id> -s <subnetwork> [-P <subnetwork-project-id>] [-r <region>] [-n] [-y] [-d] [-h]\n"
+    msg="Usage: ${0} -i <instance-name> -p <project-id> -s <subnetwork> [-P <subnetwork-project-id>] [-r <region>] [-c stable|unstable] [-n] [-y] [-d] [-h]\n"
     msg="${msg}    -i <instance-name>         (Required) Name given to AWX instance.\n"
     msg="${msg}    -p <project-id>            (Required) ID of GCP project.\n"
     msg="${msg}    -s <subnetwork>            (Required) Subnetwork in which AWX instance is created.\n"
     msg="${msg}    -P <subnetwork-project-id> (Optional) ID of subnetwork project, if using a shared VPC.\n"
     msg="${msg}    -r <region>                (Optional) GCP region, defaults to us-central1.\n"
+    msg="${msg}    -c <channel>               (Optional) Channel for AWX image, must be one of 'stable' (default) or 'unstable'.\n"
     msg="${msg}    -n                         (Optional) Add a Cloud NAT instance for the subnet, defaults to false.\n"
     msg="${msg}    -y                         (Optional) Answer yes to proceed to create or destroy resources.\n"
     msg="${msg}    -d                         (Optional) Destroy an instance which was previously\n"
@@ -88,13 +89,14 @@ find_terraform()
 run_terraform()
 {
     local instance_name=${1}
-    local project_id=${2}
-    local subnetwork=${3}
-    local subnetwork_project_id=${4}
-    local region=${5}
-    local nat_create=${6}
-    local proceed=${7}
-    local destroy=${8}
+    local image_family=${2}
+    local project_id=${3}
+    local subnetwork=${4}
+    local subnetwork_project_id=${5}
+    local region=${6}
+    local nat_create=${7}
+    local proceed=${8}
+    local destroy=${9}
 
     local tf_exec=`find_terraform`
     if [ -z "${tf_exec}" ]; then
@@ -105,6 +107,7 @@ run_terraform()
     ${tf_exec} init
     ${tf_exec} plan -out plan.out \
         -var instance_name="${instance_name}" \
+        -var source_image_family="${image_family}" \
         -var project_id="${project_id}" \
         -var subnetwork="${subnetwork}" \
         -var subnetwork_project_id="${subnetwork_project_id}" \
@@ -151,7 +154,7 @@ ensure_auth()
     export GOOGLE_APPLICATION_CREDENTIALS=${credentials}
 }
 
-while getopts "i:p:s:P:r:nydh" flag; do
+while getopts "i:p:s:P:r:c:nydh" flag; do
     case ${flag} in
       i) instance_name=${OPTARG}
         ;;
@@ -162,6 +165,8 @@ while getopts "i:p:s:P:r:nydh" flag; do
       P) subnetwork_project_id=${OPTARG}
         ;;
       r) region=${OPTARG}
+        ;;
+      c) channel=${OPTARG}
         ;;
       n) nat_create=true
         ;;
@@ -178,7 +183,16 @@ done
 [ -n "${project_id}" ]    || usage
 [ -n "${subnetwork}" ]    || usage
 [ -n "${region}" ]        || region="us-central1"
+[ -n "${channel}" ]       || channel=stable
 [ -n "${nat_create}" ]    || nat_create=false
+
+if [ "${channel}" = "stable" ]; then
+    image_family="sap-awx"
+elif [ "${channel}" = "unstable" ]; then
+    image_family="sap-awx-unstable"
+else
+    fail "The AWX image channel must be one of 'stable' or 'unstable'."
+fi
 
 which curl 1>/dev/null    || fail "curl is required"
 which gcloud 1>/dev/null  || fail "gcloud is required"
@@ -186,6 +200,7 @@ which unzip 1>/dev/null   || fail "unzip is required"
 
 ensure_auth && run_terraform \
     "${instance_name}" \
+    "${image_family}" \
     "${project_id}" \
     "${subnetwork}" \
     "${subnetwork_project_id}" \

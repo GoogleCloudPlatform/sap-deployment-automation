@@ -1,6 +1,7 @@
 {
   "variables": {
     "awx-version": "",
+    "image-family": "sap-awx",
     "image-version": "",
     "keep-inventory-file": "false",
     "project-id": "",
@@ -13,8 +14,8 @@
   },
   "builders": [{
     "type": "googlecompute",
-    "image_name": "sap-awx-{{ user `image-version` }}",
-    "image_family": "sap-awx",
+    "image_name": "{{ user `image-family` }}-{{ user `image-version` }}",
+    "image_family": "{{ user `image-family` }}",
     "project_id": "{{ user `project-id` }}",
     "service_account_email": "{{ user `service-account-email` }}",
     "source_image_family": "{{ user `source-image-family` }}",
