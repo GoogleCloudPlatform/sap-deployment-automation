@@ -116,11 +116,9 @@ resource "google_compute_instance" "gcp_wd" {
     ssh-keys = "${var.ssh_user}:${file("${var.public_key_path}")}"
   }
 
-#  lifecycle {
-#    # Ignore changes in the instance metadata, since it is modified by the SAP startup script.
-#    # https://github.com/terraform-providers/terraform-provider-google/issues/2098
-#    ignore_changes = [metadata, attached_disk]
-#  }
+  lifecycle {
+    ignore_changes = [attached_disk]
+  }
 
   service_account {
     email  = var.service_account_email
