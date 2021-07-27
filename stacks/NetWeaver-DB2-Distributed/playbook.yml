@@ -38,7 +38,7 @@
         instance_type_ascs: '{{ sap_nw_instance_type | default("e2-standard-8") }}'
         instance_type_db2: '{{ sap_db2_instance_type | default("e2-standard-8") }}'
         network_tags: '{{ sap_nw_network_tags | default([sap_network_tag | default("sap-allow-all")]) }}'
-        num_instances_as: '{{ sap_nw_as_num_instances }}'
+        num_instances_as: '{{ sap_nw_as_num_instances | default(1) }}'
         project_id: '{{ sap_project_id }}'
         service_account_email: '{{ sap_nw_service_account_email | default("{}@{}.iam.gserviceaccount.com".format(sap_nw_service_account_name | default("sap-common-sa"), sap_project_id)) }}'
         source_image: '{{ sap_source_image | default("") }}'

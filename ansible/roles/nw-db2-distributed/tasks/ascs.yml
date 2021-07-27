@@ -43,9 +43,9 @@
   vars:
     nfs_server_exports:
     - directory: /sapmnt
-      clients: '{{ groups.db2 + groups.pas + groups.aas }}'
+      clients: '{{ groups.db2 + groups.pas + groups.aas | default([]) }}'
     - directory: /usr/sap/trans
-      clients: '{{ groups.pas + groups.aas }}'
+      clients: '{{ groups.pas + groups.aas | default([]) }}'
 
 - name: include nw-pre role
   include_role:

@@ -63,6 +63,7 @@
 
 - name: include aas tasks
   include_tasks: '{{ role_path }}/tasks/as.yml'
-  when: ansible_default_ipv4.address in groups.aas
+  when: |
+    'aas' in groups and ansible_default_ipv4.address in groups.aas
   vars:
     sap_product_id: '{{ sap_product_vars[sap_nw_product_and_version].aas_product_id }}'
