@@ -141,7 +141,7 @@
       "type": "multiplechoice",
       "variable": "sap_hana_product_version",
       "default": "20SPS03",
-      "choices": ["20SPS03", "20SPS04"]
+      "choices": ["20SPS03", "20SPS04", "20SPS05"]
     },
     {
       "question_name": "HANA SID",
