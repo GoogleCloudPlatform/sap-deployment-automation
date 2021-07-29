@@ -12,10 +12,76 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: add entries to hosts file
+# Existing entry for self will be added to Ansible-managed block along with peers.
+- name: remove existing entry for self
+  lineinfile:
+    path: '{{ hosts_file_path }}'
+    regexp: '^\s*{{ ansible_default_ipv4.address }}\s'
+    state: absent
+  when: hosts_file_peers | length > 0
+
+- name: define hostfile entries for peer hosts
+  set_fact:
+    # This defines hosts file entries for "peer" hosts: those that are in the same stack
+    # and need to resolve each other's hostnames. For example, PAS, AAS, and DB2 instances.
+    # Those that are peers are determined by the variable `hosts_file_peers`, which is a
+    # list of IPs of the peer hosts. The hostname values are then looked up in hostvars.
+    hosts_file_peer_entries: |
+      {% set delim = joiner(',') %}
+      {
+        {% for host in hostvars %}
+          {% if host in hosts_file_peers %}
+            {% set names = [] %}
+
+            {% if hostvars[host]['ansible_fqdn'] | default('') %}
+              {% set _ = names.append(hostvars[host]['ansible_fqdn']) %}
+            {% endif %}
+
+            {% if hostvars[host]['ansible_hostname'] | default('') %}
+              {% set _ = names.append(hostvars[host]['ansible_hostname']) %}
+            {% endif %}
+
+            {{ delim() }} '{{ host }}': {{ names }}
+
+          {% endif %}
+        {% endfor %}
+      }
+  run_once: true
+  delegate_to: localhost
+  when: hosts_file_peers | length > 0
+
+- name: combine hosts file entries that overlap with peer entries
+  set_fact:
+    # This combines the names in cases where entries passed in via the
+    # `hosts_file_entries` variable have the same IP as peer entries.
+    hosts_file_entries_overlap: |
+      {% set delim = joiner(',') %}
+      {
+        {% for entry in hosts_file_entries %}
+          {% set ip = entry['ip'] %}
+          {% if ip in hosts_file_peer_entries %}
+            {{ delim() }} '{{ ip }}': {{ hosts_file_peer_entries[ip] + entry['names'] | unique }}
+          {% else %}
+            {{ delim() }} '{{ ip }}': {{ entry['names'] }}
+          {% endif %}
+        {% endfor %}
+      }
+  run_once: true
+  delegate_to: localhost
+  when: hosts_file_peers | length > 0
+
+- name: define final hosts file entries
+  set_fact:
+    hosts_file_entries_merged: '{{ hosts_file_peer_entries | combine(hosts_file_entries_overlap) }}'
+  run_once: true
+  delegate_to: localhost
+  when: hosts_file_peers | length > 0
+
+- name: ensure entries exist in hosts file
   blockinfile:
     path: '{{ hosts_file_path }}'
+    # Note tabs are used as delimiters in block content below.
     block: |
-      {% for item in hosts_file_entries %}
-      {{ item.ip }}	{{ item.names | join('	') }}
+      {% for ip, names in hosts_file_entries_merged.items() %}
+      {{ ip }}	{{ names | join('	') }}
       {% endfor %}

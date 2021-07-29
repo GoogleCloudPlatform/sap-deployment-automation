@@ -31,6 +31,8 @@
 - name: include hosts-file role
   include_role:
     name: hosts-file
+  vars:
+    hosts_file_peers: '{{ ansible_play_hosts }}'
 
 - name: include ascs tasks
   include_tasks: '{{ role_path }}/tasks/ascs.yml'
