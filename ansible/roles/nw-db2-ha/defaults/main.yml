@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-sap_domain: '{{ ansible_domain }}'
 hosts_file_entries:
 - ip: '{{ sap_db2_vip }}'
   names: ['{{ sap_db2_virtual_host }}']
