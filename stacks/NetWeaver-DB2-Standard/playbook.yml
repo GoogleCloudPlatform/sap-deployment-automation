@@ -32,7 +32,7 @@
         disk_type_swap: '{{ sap_nw_disk_type_swap | default("pd-ssd") }}'
         disk_type_usrsap: '{{ sap_nw_disk_type_usrsap | default("pd-ssd") }}'
         instance_name: '{{ sap_nw_instance_name }}'
-        instance_type: '{{ sap_nw_instance_type | default("n1-highmem-32") }}'
+        instance_type: '{{ sap_nw_instance_type | default("e2-standard-8") }}'
         network_tags: '{{ sap_nw_network_tags | default([sap_network_tag | default("sap-allow-all")]) }}'
         project_id: '{{ sap_project_id }}'
         service_account_email: '{{ sap_nw_service_account_email | default("{}@{}.iam.gserviceaccount.com".format(sap_nw_service_account_name | default("sap-common-sa"), sap_project_id)) }}'

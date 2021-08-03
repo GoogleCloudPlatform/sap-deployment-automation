@@ -26,11 +26,11 @@
         disk_size_sapmnt: '{{ sap_nw_disk_size_sapmnt | default(25) }}'
         disk_size_swap: '{{ sap_nw_disk_size_swap | default(25) }}'
         disk_size_usrsap: '{{ sap_nw_disk_size_usrsap | default(25) }}'
-        disk_type_usrsap: '{{ sap_nw_disk_type_usrsap | default("pd-ssd") }}'
         disk_type_boot: '{{ sap_nw_disk_type_boot | default("pd-ssd") }}'
         disk_type_db2: '{{ sap_nw_disk_type_db2 | default("pd-ssd") }}'
         disk_type_sapmnt: '{{ sap_nw_disk_type_sapmnt | default("pd-ssd") }}'
         disk_type_swap: '{{ sap_nw_disk_type_swap | default("pd-ssd") }}'
+        disk_type_usrsap: '{{ sap_nw_disk_type_usrsap | default("pd-ssd") }}'
         instance_basename_as: '{{ sap_nw_as_instance_basename }}'
         instance_name_ascs: '{{ sap_nw_ascs_instance_name }}'
         instance_name_db2: '{{ sap_db2_instance_name }}'
@@ -46,7 +46,7 @@
         source_image_project_id: '{{ sap_source_image_project }}'
         subnetwork: '{{ sap_nw_subnetwork }}'
         subnetwork_project_id: '{{ sap_subnetwork_project_id | default("") }}'
-        zone: '{{ sap_zone }}'
+        zone: '{{ sap_zone | default("us-central1-a") }}'
   tags: [nw, db2, assertions]
 
 - hosts: nodes

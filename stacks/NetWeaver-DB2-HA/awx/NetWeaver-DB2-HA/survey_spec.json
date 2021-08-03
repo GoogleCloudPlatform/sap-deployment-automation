@@ -219,7 +219,7 @@
     },
     {
       "question_name": "DB2 version",
-      "question_description": "This is the version of DB2 to install. IMPORTANT: the DB2 version determines the OS version that can be used. Please consult https://www.ibm.com/support/pages/system-requirements-ibm-db2-linux-unix-and-windows for the compatibility matrix.",
+      "question_description": "This is the version of DB2 to install. IMPORTANT: the DB2 version determines the OS version that can be used. Please consult https://github.com/GoogleCloudPlatform/sap-deployment-automation/tree/master/stacks/NetWeaver-DB2-HA#support-matrix.",
       "required": true,
       "type": "multiplechoice",
       "variable": "sap_db2_product_version",

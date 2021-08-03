@@ -32,7 +32,7 @@
         ers_ilb_required: '{{ sap_nw_ers_ilb_required | default(sap_source_image_project == "suse-sap-cloud") }}'
         filestore_name: '{{ sap_filestore_name | default("") }}'
         filestore_size: '{{ sap_filestore_size | default(1024) }}'
-        filestore_tier: '{{ sap_filestore_tier | default("STANDARD") }}'
+        filestore_tier: '{{ sap_filestore_tier | default("BASIC_HDD") }}'
         health_check_port_ascs: '{{ sap_nw_ascs_health_check_port | default(6666) }}'
         health_check_port_db2: '{{ sap_db2_health_check_port | default(6666) }}'
         health_check_port_ers: '{{ sap_nw_ers_health_check_port | default(6667) }}'
@@ -54,8 +54,8 @@
         source_image_project_id: '{{ sap_source_image_project }}'
         subnetwork: '{{ sap_nw_subnetwork }}'
         subnetwork_project_id: '{{ sap_subnetwork_project_id | default("") }}'
-        zone_primary: '{{ sap_primary_zone }}'
-        zone_secondary: '{{ sap_secondary_zone }}'
+        zone_primary: '{{ sap_primary_zone | default("us-central1-a") }}'
+        zone_secondary: '{{ sap_secondary_zone | default("us-central1-b") }}'
   tags: [db2, nw, assertions]
 
 - hosts: nodes
