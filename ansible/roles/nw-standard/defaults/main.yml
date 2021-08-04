@@ -62,3 +62,13 @@ sap_product_vars:
     swpm_path: /sapmnt/Software/SWPM2.0
     load_files: /sapmnt/Software/Kernel_Files
     install_files: [Kernel_Files, SWPM2.0]
+  'S4HANA/1909':
+    onehost_product_id: 'NW_ABAP_OneHost:S4HANA1909.CORE.HDB.ABAP'
+    swpm_path: /sapmnt/Software/SWPM2.0
+    load_files: /sapmnt/Software/Kernel_Files
+    install_files: [Kernel_Files, SWPM2.0]
+  'S4HANA/2020':
+    onehost_product_id: 'NW_ABAP_OneHost:S4HANA2020.CORE.HDB.ABAP'
+    swpm_path: /sapmnt/Software/SWPM2.0
+    load_files: /sapmnt/Software/Kernel_Files
+    install_files: [Kernel_Files, SWPM2.0]

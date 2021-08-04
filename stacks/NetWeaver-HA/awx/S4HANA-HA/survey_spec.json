@@ -243,16 +243,16 @@
       "type": "multiplechoice",
       "variable": "sap_hana_product_version",
       "default": "20SPS03",
-      "choices": ["20SPS03", "20SPS04"]
+      "choices": ["20SPS03", "20SPS04", "20SPS05"]
     },
     {
       "question_name": "S4HANA version",
-      "question_description": "This is the version of S4HANA to install. Version 1809 requires HANA version 20SPS04.",
+      "question_description": "This is the version of S4HANA to install. Version 1809 requires at least HANA version 20SPS04. Versions 1909 and 2020 require HANA version 20SPS05.",
       "required": true,
       "type": "multiplechoice",
       "variable": "sap_nw_product_version",
       "default": "1709",
-      "choices": ["1709", "1809"]
+      "choices": ["1709", "1809", "1909", "2020"]
     },
     {
       "question_name": "HANA SID",
