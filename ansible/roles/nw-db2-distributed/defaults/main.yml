@@ -17,10 +17,20 @@ sap_db2_state_dir: /db2/{{ sap_db2_user }}/.ansible-state
 
 sap_nw_master_password: '{{ sap_nw_password }}'
 sap_nw_sapadm_password: '{{ sap_nw_password }}'
-sap_nw_db2sid_password: '{{ sap_nw_password }}'
 sap_nw_sapsid_password: '{{ sap_nw_password }}'
 sap_nw_sidadm_password: '{{ sap_nw_password }}'
+sap_db2_dbsid_password: '{{ sap_nw_password }}'
 sap_nw_user: '{{ sap_nw_sid | lower }}adm'
+
+sap_nw_sapsys_gid: 2001
+sap_db2_sysadm_gid: 2002
+sap_db2_sysctrl_gid: 2003
+sap_db2_sysmaint_gid: 2004
+sap_db2_sysmon_gid: 2005
+sap_nw_sidadm_uid: 2000
+sap_nw_sapadm_uid: 2001
+sap_nw_sapsid_uid: 2002
+sap_db2_dbsid_uid: 2003
 
 sap_nw_ascs_instance_number: '00'
 sap_nw_pas_instance_number: '00'

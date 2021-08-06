@@ -210,16 +210,16 @@ db6.createTablespacesUsingSapinst = true
 # db6.domainTypeConnectUser =
 
 # The group id of the 'sysadm' user
-# db6.gid_sysadm =
+db6.gid_sysadm = {{ sap_db2_sysadm_gid }}
 
 # The group id of 'sysctrl'
-# db6.gid_sysctrl =
+db6.gid_sysctrl = {{ sap_db2_sysctrl_gid }}
 
 # The group id of 'sysmaint'
-# db6.gid_sysmaint =
+db6.gid_sysmaint = {{ sap_db2_sysmaint_gid }}
 
 # The group id of 'sysmon'
-# db6.gid_sysmon =
+db6.gid_sysmon = {{ sap_db2_sysmon_gid }}
 
 # Use 'R3load' options for IBM Db2 Deep Compression.
 db6.minimizeDatabaseSizeCompression = true
@@ -258,16 +258,16 @@ db6.useExtraSapdataSaptmpDirLayout = false
 hostAgent.sapAdmPassword = {{ sap_nw_sapadm_password }}
 
 # The password of the 'db2<dbsid>' user
-nwUsers.db6.db2sidPassword = {{ sap_nw_db2sid_password }}
+nwUsers.db6.db2sidPassword = {{ sap_db2_dbsid_password }}
 
 # The user id of the 'db2<dbsid>' user
-# nwUsers.db6.db2sidUid =
+nwUsers.db6.db2sidUid = {{ sap_db2_dbsid_uid }}
 
 # The password of the ABAP connection user
 nwUsers.db6.sapsidPassword = {{ sap_nw_sapsid_password }}
 
 # The user id of the ABAP connection user
-# nwUsers.db6.sapsidUid =
+nwUsers.db6.sapsidUid = {{ sap_nw_sapsid_uid }}
 
 # The password of the Java connection user
 # nwUsers.db6.sapsiddbPassword =
@@ -282,13 +282,13 @@ nwUsers.db6.sapsidPassword = {{ sap_nw_sapsid_password }}
 # nwUsers.sapServiceSIDPassword =
 
 # UNIX only: The user ID of the 'sapadm' user, leave empty for default. The ID is ignored if the user already exists.
-# nwUsers.sapadmUID =
+nwUsers.sapadmUID = {{ sap_nw_sapadm_uid }}
 
 # UNIX only: The group id of the 'sapsys' group, leave empty for default. The ID is ignored if the group already exists.
-# nwUsers.sapsysGID =
+nwUsers.sapsysGID = {{ sap_nw_sapsys_gid }}
 
 # UNIX only: The user id of the <sapsid>adm user, leave empty for default. The ID is ignored if the user already exists.
-# nwUsers.sidAdmUID =
+nwUsers.sidAdmUID = {{ sap_nw_sidadm_uid }}
 
 # The password of the '<sapsid>adm' user
 nwUsers.sidadmPassword = {{ sap_nw_sidadm_password }}

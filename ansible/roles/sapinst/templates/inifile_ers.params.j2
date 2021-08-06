@@ -38,13 +38,13 @@ hostAgent.sapAdmPassword = {{ sap_nw_sapadm_password }}
 # nwUsers.sapServiceSIDPassword =
 
 # UNIX only: The user ID of the 'sapadm' user, leave empty for default. The ID is ignored if the user already exists.
-# nwUsers.sapadmUID =
+nwUsers.sapadmUID = {{ sap_nw_sapadm_uid }}
 
 # UNIX only: The group id of the 'sapsys' group, leave empty for default. The ID is ignored if the group already exists.
-# nwUsers.sapsysGID =
+nwUsers.sapsysGID = {{ sap_nw_sapsys_gid }}
 
 # UNIX only: The user id of the <sapsid>adm user, leave empty for default. The ID is ignored if the user already exists.
-# nwUsers.sidAdmUID =
+nwUsers.sidAdmUID = {{ sap_nw_sidadm_uid }}
 
 # The password of the '<sapsid>adm' user
 nwUsers.sidadmPassword = {{ sap_nw_sidadm_password }}

@@ -34,6 +34,11 @@
     path: '{{ sap_sapinst_state_file }}'
   register: sap_sapinst_state_file_stat
 
+- name: ensure sapinst group exists with specified gid
+  group:
+    name: sapinst
+    gid: '{{ sap_sapinst_gid }}'
+
 - name: run sapinst for product id {{ sap_product_id }}
   command: >-
     ./sapinst
