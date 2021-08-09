@@ -26,6 +26,8 @@
     become_user: '{{ sap_become_user }}'
     changed_when: false
     failed_when: false
+    async: 60
+    pool: 1
     args:
       executable: /bin/sh
 
@@ -42,6 +44,8 @@
     become_user: '{{ sap_become_user }}'
     changed_when: false
     failed_when: false
+    async: 60
+    pool: 1
     args:
       executable: /bin/sh
 
