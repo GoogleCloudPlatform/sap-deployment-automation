@@ -27,7 +27,7 @@
     changed_when: false
     failed_when: false
     async: 60
-    pool: 1
+    poll: 1
     args:
       executable: /bin/sh
 
@@ -45,7 +45,7 @@
     changed_when: false
     failed_when: false
     async: 60
-    pool: 1
+    poll: 1
     args:
       executable: /bin/sh
 
