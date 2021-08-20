@@ -40,7 +40,7 @@
       - '{{ sap_iac_path }}/ansible*'
       - '{{ sap_iac_path }}/stacks'
       - '{{ sap_iac_path }}/terraform'
-      - '{{ sap_iac_path }}/vendor'
+      - '{{ sap_iac_path }}/third_party'
       dest: '{{ playbook_dir }}/sap-iac.tar.gz'
       format: gz
     register: archive_sap_iac
