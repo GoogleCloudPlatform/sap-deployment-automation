@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-sap_hana_install_files_bucket: sap-iac
+sap_hana_install_files_bucket: sap-deployment-media
 sap_hana_product_version: 20SPS03
 sap_product_and_version: 'HANA/{{ sap_hana_product_version }}'
 sap_product_vars:

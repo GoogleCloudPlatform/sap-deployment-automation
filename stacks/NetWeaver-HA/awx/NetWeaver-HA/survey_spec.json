@@ -224,7 +224,7 @@
       "variable": "sap_hana_install_files_bucket",
       "min": 1,
       "max": 1024,
-      "default": "sap-iac"
+      "default": "sap-deployment-media"
     },
     {
       "question_name": "NetWeaver installation files bucket",
@@ -234,7 +234,7 @@
       "variable": "sap_nw_install_files_bucket",
       "min": 1,
       "max": 1024,
-      "default": "sap-iac"
+      "default": "sap-deployment-media"
     },
     {
       "question_name": "HANA version",

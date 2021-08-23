@@ -35,4 +35,4 @@ sap_win_boot_disk_size: 50
 sap_win_boot_disk_type: pd-ssd
 sap_win_network_tags: ["sap-allow-all"]
 sap_win_use_public_ip: true
-sap_win_install_files_bucket_folder: "sap-iac/Windows-Bastion"
+sap_win_install_files_bucket_folder: "sap-deployment-media/Windows-Bastion"

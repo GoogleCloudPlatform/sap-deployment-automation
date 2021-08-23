@@ -36,4 +36,4 @@
         boot_disk_type: '{{ sap_win_boot_disk_type | default("pd-ssd") }}'
         network_tags: '{{ sap_win_network_tags | default([sap_network_tag | default("sap-allow-all")]) }}'
         use_public_ip: '{{ sap_win_use_public_ip | default(true) | bool }}'
-        install_files_bucket_folder: '{{ sap_win_install_files_bucket_folder | default("sap-iac/Windows-Bastion") }}'
+        install_files_bucket_folder: '{{ sap_win_install_files_bucket_folder | default("sap-deployment-media/Windows-Bastion") }}'
