@@ -1,6 +1,6 @@
-# sap-awx-image
+# SAP AWX Image
 
-This repository uses Packer to build a GCE image for AWX.
+This uses Packer to build a GCE image for AWX containing job templates for SAP stacks.
 
 ## Requirements
 
@@ -28,7 +28,7 @@ The following variables are required. See `build.json` for optional variables.
 
 ## Updating the AWX version
 
-AWX is vendored in the `sap-iac` repo in `third_party/github.com/ansible/awx`. This is done by running:
+AWX is vendored in the `sap-deployment-automation` repo in `third_party/github.com/ansible/awx`. This is done by running:
 
 ```
 cd third_party/github.com/ansible

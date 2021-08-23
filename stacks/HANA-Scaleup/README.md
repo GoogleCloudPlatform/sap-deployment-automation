@@ -15,13 +15,13 @@ Terraform module and ansible roles to deploy the SAP HANA Scaleup stack. This st
 
 1. Terraform code for deploying the infrastructure required for installing and configuring SAP HANA scaleup nodes is stored under `tf/`.
 
-2. Ansible roles for configuring HANA scaleup on the GCE instances is stored under `sap-iac/ansible/roles`.
+2. Ansible roles for configuring HANA scaleup on the GCE instances is stored in the repository under `ansible/roles`.
 
 3. Ansible playbook to deploy the HANA scale-up stack is `playbook.yml`.
 
 # Variables
 
-* All the ansible SAP HANA scaleup configuration default values are defined in the higher level ansible role under `sap-iac/ansible/roles/sap-hana-scaleup/defaults/main.yml`.
+* All the ansible SAP HANA scaleup configuration default values are defined in the higher level ansible role under `ansible/roles/sap-hana-scaleup/defaults/main.yml`.
 
 * All the variables required for deploying stack are defined in the `vars/deploy-vars.yml` file.
 
@@ -130,17 +130,13 @@ Below is the example playbook to deploy the HANA scaleup stack. Replace the vari
 
 # Deploy HANA scaleup stack
 
-* Use the ansible wrapper script under `sap-iac/ansible-wrapper` to deploy the stack. 
-
-* The ansible wrapper script will setup the environment along with installing the correct terraform and ansible version required for running the code
-
-* Run the below command by changing into the root folder `sap-iac/` for deploying the SAP HANA scaleup stack
+* Use the `ansible-wrapper` script at the root of the repository to deploy the stack. The ansible wrapper script will setup the environment along with installing the correct ansible version and dependencies required for running the code.
 
 `./ansible-wrapper ./stacks/HANA-Scaleup/playbook.yml --extra-vars '@./stacks/HANA-Scaleup/vars/deploy-vars.yml'`
 
 # Destroy HANA scaleup stack
 
-* Run the below command by changing into the root folder `sap-iac/` for destroying the SAP HANA scaleup stack
+* Use the `ansible-wrapper` script at the root of the repository to destroy the stack.
 
 `./ansible-wrapper ./stacks/HANA-Scaleup/playbook.yml -e state=absent --extra-vars '@./stacks/HANA-Scaleup/vars/deploy-vars.yml'`
 
