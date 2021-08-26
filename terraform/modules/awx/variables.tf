@@ -68,7 +68,7 @@ variable "source_image_family" {
 variable "source_image_project" {
   type           = string
   description    = "Project of disk source image."
-  default        = "albatross-duncanl-sandbox-2"
+  default        = "sap-iac-test"
 }
 
 variable "tags" {

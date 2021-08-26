@@ -1,4 +1,4 @@
-# sap-iac
+# SAP Deployment Automation
 
 This repository contains code for deploying SAP products in GCP using Ansible and Terraform. It also contains code for building an [AWX](https://github.com/ansible/awx) image and deploying an instance of it with Terraform.
 
