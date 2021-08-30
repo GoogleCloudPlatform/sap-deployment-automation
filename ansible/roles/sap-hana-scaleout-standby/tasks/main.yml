@@ -1,0 +1,95 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: Include base role
+  include_role:
+    name: base
+
+- name: Include common role
+  include_role:
+    name: common
+
+- name: Install python pip
+  zypper:
+    name: '{{ item }}'
+    state: present
+    disable_gpg_check: yes
+  with_items:
+    - python-pip
+    - python3-pip
+  when: |
+    (ansible_os_family == 'Suse') and (ansible_distribution_major_version == '15')
+
+- name: Include sap ssh keygen role
+  include_role:
+    name: ssh-keygen
+  when: not ( ansible_hostname | regex_search('([w]\d\d+$)') )
+
+- name: Include tasks for master
+  include_tasks:
+    file: master.yml
+  when: not ( ansible_hostname | regex_search('([w]\d\d+$)') )
+
+- name: Updating /etc/sudoers
+  lineinfile:
+    path: /etc/sudoers
+    line: '{{ item }}'
+  with_items:
+    - '{{ sap_hana_user }} ALL=NOPASSWD: /sbin/multipath,/sbin/multipathd,/etc/init.d/multipathd,/usr/bin/sg_persist,/bin/mount,/bin/umount,/bin/kill,/usr/bin/lsof,/usr/bin/systemctl,/usr/sbin/lsof,/usr/sbin/xfs_repair,/usr/bin/mkdir,/sbin/vgscan,/sbin/pvscan,/sbin/lvscan,/sbin/vgchange,/sbin/lvdisplay,/usr/bin/gcloud'
+    - ''
+
+- name: Include tasks for worker
+  include_tasks:
+    file: worker.yml
+  when: ( ansible_hostname | regex_search('([w]\d\d+$)') ) and not ( ansible_hostname | regex_search('([{{ sap_instance_count_worker|int + 1 }}]+$)') )
+
+- name: Include tasks for standby
+  include_tasks:
+    file: standby.yml
+  when: ( ansible_hostname | regex_search('([w]\d\d+$)') ) and ( ansible_hostname | regex_search('([{{ sap_instance_count_worker|int + 1 }}]+$)') )
+
+- name: Include continuation tasks for master
+  include_tasks:
+    file: master2.yml
+  when: not ( ansible_hostname | regex_search('([w]\d\d+$)') )
+
+- set_fact:
+    sap_hana_worker_node_names_new: "{{ sap_hana_worker_node_names | reject('search', my_regex) | list }}"
+  vars:
+    my_regex: '([{{ sap_instance_count_worker|int + 1 }}]+$)'
+
+- name: Change file ownership, group and permissions
+  file:
+    path: /han*
+    mode: '0775'
+    state: directory
+    recurse: yes
+
+- name: Add hana worker nodes
+  include_tasks:
+    file: worker_node_add.yml
+  vars:
+    sap_hana_worker_node_names_loop: "{{ item }}"
+  when: not ( ansible_hostname | regex_search('([w]\d\d+$)') )
+  with_items: "{{ sap_hana_worker_node_names_new }}"
+
+- name: Add hana standby nodes
+  include_role:
+    name: sap-hana-scaleout-add-standby-nodes
+  when: not ( ansible_hostname | regex_search('([w]\d\d+$)') )
+
+- name: Add hana failover config
+  include_tasks:
+    file: failover_config.yml
+  when: not ( ansible_hostname | regex_search('([w]\d\d+$)') )

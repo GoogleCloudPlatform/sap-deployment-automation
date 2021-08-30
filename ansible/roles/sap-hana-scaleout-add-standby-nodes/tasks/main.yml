@@ -1,0 +1,106 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: Set base shared path
+  lineinfile: 
+    dest: '{{ item }}'
+    regexp: '^basepath_shared = no$'
+    line: 'basepath_shared = yes'
+  with_items: '{{ sap_hana_usr_mountpoint }}/{{ sap_hana_sid }}/SYS/global/hdb/custom/config/global.ini'
+
+- name: Stop HANA system
+  shell: |
+    . ${HOME}/.sapenv.sh
+    sapcontrol -nr {{ sap_hana_instance_number }} -function StopSystem
+  register: sap_stop_hana
+  become: true
+  become_user: '{{ sap_hana_user }}'
+  changed_when: false
+  failed_when: false
+  args:
+    executable: /bin/sh
+
+- name: Sleep for 300 seconds and continue with play
+  wait_for:
+    timeout: 300
+
+- name: Start HANA system
+  shell: |
+    . ${HOME}/.sapenv.sh
+    sapcontrol -nr {{ sap_hana_instance_number }} -function StartSystem
+  register: sap_stop_hana
+  become: true
+  become_user: '{{ sap_hana_user }}'
+  changed_when: false
+  failed_when: false
+  args:
+    executable: /bin/sh
+
+- name: Sleep for 300 seconds and continue with play
+  wait_for:
+    timeout: 300
+
+- name: Group of tasks that are tightly coupled
+  vars:
+    max_retries: 5
+    retry_delay: 10
+  block:
+    - name: Increment the retry count
+      set_fact:
+        retry_count: "{{ 0 if retry_count is undefined else retry_count | int + 1 }}"
+
+    - name: 'Remove {{ sap_hana_gce_storage_client_path }}/gceStorageClient.pyc'
+      file:
+        path: '{{ sap_hana_gce_storage_client_path }}/gceStorageClient.pyc'
+        state: absent
+
+    - name: Create {{ sap_hana_sid }} directories in /hana/data and /hana/log
+      file:
+        path: "{{ item }}/{{ sap_hana_sid }}"
+        state: directory
+        mode: 0777
+        recurse: true
+      with_items:
+        - "{{ sap_hana_data_mountpoint }}"
+        - "{{ sap_hana_log_mountpoint }}"
+
+    - name: Add standby nodes to master
+      shell: |
+        cat /root/.deploy/hana_passwords.xml | ./hdblcm --action=add_hosts --addhosts={{ sap_hana_instance_name }}w0{{ sap_instance_count_worker + sap_instance_count_standby }}:role=standby --root_user=root --listen_interface=global --read_password_from_stdin=xml -b
+      args:
+        chdir: "{{ sap_hana_shared_mountpoint }}/{{ sap_hana_sid }}/hdblcm/"
+        creates: "/usr/sap/{{ sap_hana_sid }}/SYS/profile/{{ sap_hana_sid }}_HDB{{ sap_hana_instance_number }}_{{ sap_hana_instance_name }}w0{{ sap_instance_count_worker + sap_instance_count_standby }}"
+
+  rescue:
+    - fail:
+        msg: Maximum retries of grouped tasks reached
+      when: retry_count | int == max_retries | int
+
+    - debug:
+        msg: "Task Group failed, let's give it another shot"
+
+    - name: Sleep between retries
+      wait_for:
+        timeout: "{{ retry_delay }}"
+      delegate_to: localhost
+      become: false
+
+    - include_tasks: main.yml
+
+- name: Set base shared path
+  lineinfile: 
+    dest: '{{ item }}'
+    regexp: '^basepath_shared = yes$'
+    line: 'basepath_shared = no'
+  with_items: '{{ sap_hana_usr_mountpoint }}/{{ sap_hana_sid }}/SYS/global/hdb/custom/config/global.ini'

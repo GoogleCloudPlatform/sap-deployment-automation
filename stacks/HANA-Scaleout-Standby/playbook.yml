@@ -1,0 +1,77 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: SAP HANA deploy
+  hosts: 127.0.0.1
+  connection: local
+  roles:
+  - role: forminator
+    vars:
+      sap_tf_project_path: ./tf
+      sap_state: '{{ state | default("present") }}'
+      sap_hana_backint_install: '{{ sap_hana_backint_bucket_name | default("") != "" }}'
+      sap_hana_backint_bucket_name: '{{ sap_hana_backint_bucket_name | default("") }}'
+      sap_tf_variables:
+        instance_name: '{{ sap_hana_instance_name }}'
+        project_id: '{{ sap_project_id }}'
+        source_image_family: '{{ sap_source_image_family }}'
+        source_image_project: '{{ sap_source_image_project }}'
+        subnetwork: '{{ sap_hana_subnetwork }}'
+        service_account_email: '{{ sap_hana_service_account_email | default("{}@{}.iam.gserviceaccount.com".format(sap_hana_service_account_name | default("sap-common-sa"), sap_project_id)) }}'
+        subnetwork_project: '{{ sap_subnetwork_project_id | default(sap_project_id) }}'
+        zone: '{{ sap_zone | default("us-central1-a") }}'
+        instance_type: '{{ sap_hana_instance_type | default("n1-highmem-32") }}'
+        autodelete_disk: '{{ sap_hana_autodelete_boot_disk | default(true) }}'
+        boot_disk_size: '{{ sap_hana_boot_disk_size | default(30) }}'
+        boot_disk_type: '{{ sap_hana_boot_disk_type | default("pd-ssd") }}'
+        network_tags: '{{ sap_hana_network_tags | default([sap_network_tag | default("sap-allow-all")]) }}'
+        pd_kms_key: '{{ sap_hana_pd_kms_key | default(None) }}'
+        instance_count_worker: '{{ sap_instance_count_worker | default(1) }}'
+        instance_count_standby: '{{ sap_instance_count_standby | default(1) }}'
+  tags: [assertions]
+
+- name: SAP HANA scaleout master and worker configure
+  hosts: hana
+  become: yes
+  vars:
+    sap_hana_backint_install: '{{ sap_hana_backint_bucket_name | default("") != "" }}'
+    sap_hana_backint_bucket_name: '{{ sap_hana_backint_bucket_name | default("") }}'
+    sap_hana_master_instance_name: '{{ terraform.outputs.master_instance_name.value }}'
+    sap_hana_master_instance_ip: '{{ terraform.outputs.address_master.value }}'
+    sap_hana_worker_instance_ip: '{{ terraform.outputs.address_worker.value }}'
+    sap_hana_worker_node_names: '{{ terraform.outputs.instances_self_links_worker.value }}'
+    sap_hana_standby_instance_ip: '{{ terraform.outputs.address_standby.value }}'
+    sap_hana_worker_disks_list: '{{ terraform.outputs.worker_attached_disks_data.value }}'
+    sap_hana_master_disks_list: '{{ terraform.outputs.master_attached_disks_data.value }}'
+    sap_hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
+    sap_hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
+    sap_hana_usr_size: '{{ terraform.outputs.hana_usr_size.value }}G'
+    sap_hana_shared_fs_mount_point: '{{ terraform.outputs.hana_filestore_shared.value }}'
+    sap_hana_backup_fs_mount_point: '{{ terraform.outputs.hana_filestore_backup.value }}'
+    sap_add_gce_storage_client: true
+  roles:
+  - role: sap-hana-scaleout-standby
+
+- name: Run assertions
+  hosts: hana
+  become: yes
+  tasks:
+  - include_role:
+      name: sap-hana-scaleout-standby
+      tasks_from: assertions
+    vars:
+      sap_hana_master_instance_name: '{{ terraform.outputs.master_instance_name.value }}'
+      sap_hana_standby_instance_name: ['{{ sap_hana_instance_name }}w0{{ sap_instance_count_worker|int + 1 }}']
+      sap_hana_instances: '{{ [terraform.outputs.master_instance_name.value] + terraform.outputs.worker_instance_names.value }}'
+  tags: [assertions]

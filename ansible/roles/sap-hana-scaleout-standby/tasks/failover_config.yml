@@ -1,0 +1,86 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: list of the profile files and store it in register
+  raw: find /usr/sap/{{ sap_hana_sid }}/SYS/profile/*
+  register: profile_dir
+
+- debug:
+    var: item
+  with_items: '{{ profile_dir.stdout_lines }}'
+
+- name: Set auto hana start
+  become: yes
+  lineinfile: 
+    dest: '{{ item }}'
+    regexp: '^Autostart = 0$'
+    line: 'Autostart = 1'
+  with_items: '{{ profile_dir.stdout_lines }}'
+
+- name: Stop HANA system
+  shell: |
+    . ${HOME}/.sapenv.sh
+    sapcontrol -nr {{ sap_hana_instance_number }} -function StopSystem
+  register: sap_stop_hana
+  become: true
+  become_user: '{{ sap_hana_user }}'
+  changed_when: false
+  failed_when: false
+  args:
+    executable: /bin/sh
+
+- name: Sleep for 300 seconds and continue with play
+  wait_for:
+    timeout: 300
+
+- name: Start HANA system
+  shell: |
+    . ${HOME}/.sapenv.sh
+    sapcontrol -nr {{ sap_hana_instance_number }} -function StartSystem
+  register: sap_stop_hana
+  become: true
+  become_user: '{{ sap_hana_user }}'
+  changed_when: false
+  failed_when: false
+  args:
+    executable: /bin/sh
+
+- name: Sleep for 300 seconds and continue with play
+  wait_for:
+    timeout: 300
+
+- name: Create hdbconfig SQL file
+  template:
+    src: failover_config.j2
+    dest: '/root/.deploy/hdbconfig.sql'
+  register: failover_config
+
+- name: Run failover config
+  shell: |
+    source /usr/sap/{{ sap_hana_sid }}/home/.sapenv.sh && hdbsql -d SYSTEMDB -u SYSTEM -p {{ sap_hana_password }} -i 00 -I /root/.deploy/hdbconfig.sql -O /dev/null
+    source /usr/sap/{{ sap_hana_sid }}/home/.sapenv.sh && hdbsql -u SYSTEM -p {{ sap_hana_password }} -i 00 -I /root/.deploy/hdbconfig.sql -O /dev/null
+  no_log: true
+
+- name: Add a line to a file if the file does not exist, without passing regexp
+  lineinfile:
+    path: '{{ sap_hana_usr_mountpoint }}/{{ sap_hana_sid }}/SYS/global/hdb/custom/config/global.ini'
+    line: partition_*_*__fencing = disabled
+    state: absent
+
+- name: Add a line to a file if the file does not exist, without passing regexp
+  lineinfile:
+    path: '{{ sap_hana_usr_mountpoint }}/{{ sap_hana_sid }}/SYS/global/hdb/custom/config/global.ini'
+    insertafter: '^\[storage\]'
+    line: partition_*_*__fencing = enabled
+    create: yes

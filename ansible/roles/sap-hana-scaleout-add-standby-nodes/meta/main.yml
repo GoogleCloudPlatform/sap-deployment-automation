@@ -12,19 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ansible_python_interpreter: /usr/bin/python3
-cloudsdk_python_export_path: /usr/bin/python3
-gcloud_install_dir: /usr/local
-package_list:
-  - libopenssl1_1
-  - tuned
-  - krb5-32bit
-  - unrar
-  - numactl
-  - sap-suse-cluster-connector
-  - socat
-  - libgcc_s1
-  - libstdc++6
-  - libatomic1
-  - python-pip
-  - python3-pip
+galaxy_info:
+  author: Bala Guduru
+  description: Add scaleout standby node
+  min_ansible_version: 2.9
+  galaxy_tags: []
+dependencies: []
