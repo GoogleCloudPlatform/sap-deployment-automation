@@ -1,0 +1,19 @@
+---
+
+- name: Deploy gceStorageClient global.ini
+  template:
+    src: '{{ role_path }}/templates/global_ini.j2'
+    dest: '{{ sap_hana_shared_mountpoint }}/gceStorageClient/global.ini'
+  register: global_ini
+
+- name: Include SAP HANA
+  include_tasks:
+    file: hana_pre_install.yml
+  vars:
+    gce_storage_client_package: gceStorageClient.py
+
+- name: Include SAP HANA
+  include_tasks:
+    file: hana_install.yml
+  vars:
+    gce_storage_client_package: gceStorageClient.py

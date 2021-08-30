@@ -1,0 +1,7 @@
+{% if nfs_version == 3 %}
+{{ sap_hana_shared_mountpoint }} -rsize=1048576,wsize=1048576,hard,intr,timeo=18,retrans=200 {{ sap_hana_shared_fs_mount_point }}
+{{ sap_hana_backup_mountpoint }} -rsize=1048576,wsize=1048576,hard,intr,timeo=18,retrans=200 {{ sap_hana_backup_fs_mount_point }}
+{% else %}
+{{ sap_hana_shared_mountpoint }} -fstype=nfs4 -rsize=1048576,wsize=1048576,hard,intr,timeo=18,retrans=200 {{ sap_hana_shared_fs_mount_point }}
+{{ sap_hana_backup_mountpoint }} -fstype=nfs4 -rsize=1048576,wsize=1048576,hard,intr,timeo=18,retrans=200 {{ sap_hana_backup_fs_mount_point }}
+{% endif %}

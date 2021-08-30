@@ -28,3 +28,21 @@ package_list:
   - compat-sap-c++-7
   - compat-sap-c++-9
   - libatomic
+  - unar.x86_64
+  - tuned-profiles-sap-hana
+  - joe
+  - resource-agents-sap-hana.x86_64
+  - numactl-libs.x86_64
+  - libtool-ltdl.x86_64
+  - nfs-utils.x86_64
+  - pacemaker
+  - pcs
+  - lvm2.x86_64
+  - compat-sap-c++-5.x86_64
+  - csh
+  - autofs
+  - ndctl
+  - libatomic
+  - unzip
+  - libsss_autofs
+  - python2-pip

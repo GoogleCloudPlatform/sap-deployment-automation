@@ -1,0 +1,58 @@
+---
+
+- debug:
+    var: sap_hana_worker_disks_list
+
+- name: Include base role
+  include_role:
+    name: base
+
+- name: Include common role
+  include_role:
+    name: common
+
+- name: Include sap ssh keygen role
+  include_role:
+    name: ssh-keygen
+  when: not ( ansible_hostname | regex_search('([w]\d\d+$)') )
+
+- name: Include tasks for master
+  include_tasks:
+    file: master.yml
+  when: not ( ansible_hostname | regex_search('([w]\d\d+$)') )
+
+- name: Include tasks for worker
+  include_tasks:
+    file: worker.yml
+  when: ( ansible_hostname | regex_search('([w]\d\d+$)') ) and not ( ansible_hostname | regex_search('([{{ sap_instance_count_worker|int + 1 }}]+$)') )
+
+- name: Include tasks for standby
+  include_tasks:
+    file: standby.yml
+  when: ( ansible_hostname | regex_search('([w]\d\d+$)') ) and ( ansible_hostname | regex_search('([{{ sap_instance_count_worker|int + 1 }}]+$)') )
+
+- name: Include continuation tasks for master
+  include_tasks:
+    file: master2.yml
+  when: not ( ansible_hostname | regex_search('([w]\d\d+$)') )
+
+- set_fact:
+    sap_hana_worker_node_names_new: "{{ sap_hana_worker_node_names | reject('search', 'w02') | list }}"
+
+- debug: 
+    var: sap_hana_worker_node_names_new
+
+- name: Add hana worker nodes
+  include_tasks:
+    file: worker_node_add.yml
+  when: not ( ansible_hostname | regex_search('([w]\d\d+$)') )
+
+- name: Add hana standby nodes
+  include_role:
+    name: sap-hana-scaleout-add-standby-nodes
+  when: not ( ansible_hostname | regex_search('([w]\d\d+$)') )
+
+- name: Add hana failover config
+  include_tasks:
+    file: failover_config.yml
+  when: not ( ansible_hostname | regex_search('([w]\d\d+$)') )

@@ -1,0 +1,21 @@
+---
+
+- name: Include copy ssh keys role
+  include_role:
+    name: sap-hana-copy-ssh-keys
+
+- name: Include storage role
+  include_tasks:
+    file: storage.yml
+  vars:
+    disks: "{{ sap_hana_disks_worker }}"
+    logvols: "{{ sap_hana_logvols_worker }}"
+    swapon: "{{ sap_hana_swapon | default(false) }}"
+
+- name: Include hana shared and backup mount role
+  include_role:
+    name: sap-hana-nfs-mount-standby
+
+- name: Include worker2 role
+  include_tasks:
+    file: worker2.yml

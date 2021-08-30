@@ -1,0 +1,75 @@
+---
+
+- name: Create .deploy directory
+  file:
+    path: /root/.deploy
+    state: directory
+    mode: '0755'
+
+- name: Create cfg file for master
+  template:
+    src: "{{ role_path }}/templates/configfile.j2"
+    dest: "/root/.deploy/hana_passwords.xml"
+  register: hana_passwords_xml
+
+- name: Group of tasks that are tightly coupled
+  vars:
+    max_retries: 5
+    retry_delay: 10
+  block:
+    - name: Increment the retry count
+      set_fact:
+        retry_count: "{{ 0 if retry_count is undefined else retry_count | int + 1 }}"
+
+    - name: 'Remove {{ sap_hana_gce_storage_client_path }}/gceStorageClient.pyc'
+      file:
+        path: '{{ sap_hana_gce_storage_client_path }}/gceStorageClient.pyc'
+        state: absent
+
+    - name: Create {{ sap_hana_sid }} directories in /hana/data and /hana/log
+      file:
+        path: "{{ item }}/{{ sap_hana_sid }}"
+        state: directory
+        mode: 0777
+        recurse: yes
+      with_items:
+        - "{{ sap_hana_data_mountpoint }}"
+        - "{{ sap_hana_log_mountpoint }}"
+
+    - name: Run chmod 777 on worker nodes
+      shell: |
+        ssh -oStrictHostKeyChecking=no root@{{ item.split('/')[10] }} 'chmod 777 -R {{ sap_hana_data_mountpoint }} {{ sap_hana_log_mountpoint }}'
+      with_items:
+        - "{{ sap_hana_worker_node_names_new }}"
+
+    - name: Add worker nodes to master
+      shell: |
+        cat /root/.deploy/hana_passwords.xml | ./hdblcm --action=add_hosts --addhosts={{ item.split('/')[10] }} --root_user=root --listen_interface=global --read_password_from_stdin=xml -b
+      args:
+        chdir: "{{ sap_hana_shared_mountpoint }}/{{ sap_hana_sid }}/hdblcm/"
+
+      with_items:
+        - "{{ sap_hana_worker_node_names_new }}"
+      register: hana_worker_node_add
+
+    - debug:
+        var: hana_worker_node_add
+
+  rescue:
+    - fail:
+        msg: Maximum retries of grouped tasks reached
+      when: retry_count | int == max_retries | int
+
+    - debug:
+        msg: "Task Group failed, let's give it another shot"
+    
+    - debug:
+        var: hana_worker_node_add
+
+    - name: Sleep between retries
+      wait_for:
+        timeout: "{{ retry_delay }}"
+      delegate_to: localhost
+      become: false
+
+    - include_tasks: main.yml

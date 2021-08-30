@@ -1,0 +1,172 @@
+---
+
+- name: Define install file name
+  set_fact:
+    sap_hana_install_file_name: '{{ sap_product_vars[sap_product_and_version].sap_hana_install_file_name }}'
+
+- name: Create temporary directory to store the processed template
+  tempfile:
+    state: directory
+    suffix: hanaconfig
+  register: tmpdir
+
+- name: Create .deploy directory
+  file:
+    path: /root/.deploy
+    state: directory
+    mode: 0755
+
+- name: Deploy HANA Configfile Template for scaleout with standby
+  template:
+    src: "{{ role_path }}/templates/configfile-soby.j2"
+    dest: "/root/.deploy/configfile.cfg"
+    mode: 0750
+  register: cftemplat
+
+- name: Identify EXE archive install file
+  find: 
+    paths: "{{ sap_hostagent_rpm_remote_path }}"
+    patterns: "*_part1.exe"
+  register: exe_install_file
+
+- name: Download unrar for unzipping hana
+  get_url: 
+    url: https://storage.googleapis.com/sapdeploy/dm-templates/third_party/unrar/unrar
+    dest: /usr/bin
+    mode: 0755
+  when: ((exe_install_file.matched > 0) and (ansible_os_family == "RedHat"))
+
+- name: Extract EXE Archive
+  shell: |
+    /usr/bin/unrar -o+ x "{{ item.path }}" 
+  args:
+    chdir: "{{ sap_hostagent_rpm_remote_path }}"
+    creates: "{{ item.path.split('_')[0] }}/DATA_UNITS/HDB_LCM_LINUX_X86_64/hdblcm"
+  register: sap_hana_deployment_register_extractexe
+  with_items: "{{ exe_install_file.files }}"
+  when: exe_install_file.matched > 0
+
+# - name: "Check availability of {{ item.path.split('_')[0] }}/DATA_UNITS/HDB_LCM_LINUX_X86_64/hdblcm"
+#   stat:
+#     path: "{{ item.path.split('_')[0] }}/DATA_UNITS/HDB_LCM_LINUX_X86_64/hdblcm"
+#   register: sap_hana_deployment_register_hdblcm_stat
+#   with_items: "{{ exe_install_file.files }}"
+#   when: exe_install_file.matched > 0
+
+- name: Check if another instance of HANA DB is running with sid "{{ sap_hana_sid }}"
+  stat:
+    path: "/hana/shared/{{ sap_hana_sid }}"
+  register: hana_db_running
+  when: exe_install_file.matched > 0
+
+# - name: Group of tasks that are tightly coupled
+#   vars:
+#     max_retries: "{{ 5 if max_retries is undefined else max_retries | int }}"
+#     retry_delay: "{{ 10 if retry_delay is undefined else retry_delay | int }}"
+#   block:
+#     - name: Increment the retry count
+#       set_fact:
+#         retry_count: "{{ 0 if retry_count is undefined else retry_count | int + 1 }}"
+
+#     - name: Create {{ sap_hana_sid }} directories in /hana/data and /hana/log
+#       file:
+#         path: "{{ item }}/{{ sap_hana_sid }}"
+#         state: directory
+#         mode: 0777
+#       with_items:
+#         - "{{ sap_hana_data_mountpoint }}"
+#         - "{{ sap_hana_log_mountpoint }}"
+
+#     - name: Install SAP HANA started from EXE
+#       command: "./hdblcm {{ sap_hana_deployment_hdblcm_extraargs }} --configfile=/root/.deploy/configfile.cfg -b"
+#       register: installhana
+#       args:
+#         chdir: "{{ item.path.split('_')[0] }}/DATA_UNITS/HDB_LCM_LINUX_X86_64/"
+#       changed_when: "'SAP HANA Lifecycle Management' in installhana.stdout"
+#       with_items: "{{ exe_install_file.files }}"
+#       when: exe_install_file.matched > 0 and not hana_db_running.stat.exists
+
+#   rescue:
+#     - fail:
+#         msg: Maximum retries of grouped tasks reached
+#       when: retry_count | int == max_retries | int
+
+#     - debug:
+#         msg: "Task Group failed, let's give it another shot"
+
+#     - name: Sleep between retries
+#       wait_for:
+#         timeout: "{{ retry_delay }}" # seconds
+#       delegate_to: localhost
+#       become: false
+
+# - name: Install SAP HANA from SAR
+#   block:
+#     - name: Extract SAR Archive
+#       command: >-
+#         ./{{ sap_product_vars[sap_product_and_version].sap_hana_sapcar_file_name }}
+#         -manifest SIGNATURE.SMF -xvf {{ sap_hana_install_file_name }}
+#       args:
+#         chdir: "{{ sap_hostagent_rpm_remote_path }}"
+#         creates: "{{ sap_hostagent_rpm_remote_path }}/SAP_HANA_DATABASE/hdblcm"
+#       register: sap_hana_deployment_register_extractbundle
+    
+#     - name: Check if another instance of HANA DB is running with sid "{{ sap_hana_sid }}"
+#       stat:
+#         path: "/hana/shared/{{ sap_hana_sid }}"
+#       register: hana_db_running
+
+#     - name: Check availability of "{{ sap_hostagent_rpm_remote_path }}/SAP_HANA_DATABASE/hdblcm"
+#       stat:
+#         path: "{{ sap_hostagent_rpm_remote_path }}/SAP_HANA_DATABASE/hdblcm"
+#       register: sap_hana_deployment_register_hdblcm_stat
+#       failed_when: not sap_hana_deployment_register_hdblcm_stat.stat.exists
+
+#     - name: Install SAP HANA started
+#       command: "./hdblcm {{ sap_hana_deployment_hdblcm_extraargs }} --configfile=/root/.deploy/configfile.cfg -b"
+#       register: installhana
+#       args:
+#         chdir: "{{ sap_hostagent_rpm_remote_path }}/SAP_HANA_DATABASE/"
+#       changed_when: "'SAP HANA Lifecycle Management' in installhana.stdout"
+#       when:
+#         - not hana_db_running.stat.exists
+#   when:
+#     - (sap_hana_install_file_name.startswith("IMDB") or sap_hana_install_file_name.endswith(".SAR")) and (exe_install_file.matched == 0)
+
+# - name: Install SAP HANA from ZIP
+#   block:
+#     - name: Identify EXE archive install file
+#       find:
+#         paths: "{{ sap_hostagent_rpm_remote_path }}"
+#         patterns: "*.ZIP"
+#       register: zip_install_file
+#     - name: Extract ZIP Archive
+#       unarchive:
+#         src: "{{ zip_install_file.files.0.path }}"
+#         dest: "{{ sap_hostagent_rpm_remote_path }}"
+#         remote_src: yes
+#       register: sap_hana_deployment_register_extractzip
+#       args:
+#         creates: "{{ sap_hostagent_rpm_remote_path }}/DATA_UNITS/HDB_LCM_LINUX_X86_64/hdblcm"
+
+#     - name: Check if another instance of HANA DB is running with sid "{{ sap_hana_sid }}"
+#       stat:
+#         path: "/hana/shared/{{ sap_hana_sid }}"
+#       register: hana_db_running
+
+#     - name: Check availability of "{{ sap_hostagent_rpm_remote_path }}/DATA_UNITS/HDB_LCM_LINUX_X86_64/hdblcm"
+#       stat:
+#         path: "{{ sap_hostagent_rpm_remote_path }}/DATA_UNITS/HDB_LCM_LINUX_X86_64/hdblcm"
+#       register: sap_hana_deployment_register_hdblcm_stat
+#       failed_when: not sap_hana_deployment_register_hdblcm_stat.stat.exists
+
+#     - name: Install SAP HANA started
+#       command: "./hdblcm {{ sap_hana_deployment_hdblcm_extraargs }} --configfile=/root/.deploy/configfile.cfg -b"
+#       register: installhana
+#       args:
+#         chdir: "{{ sap_hostagent_rpm_remote_path }}/DATA_UNITS/HDB_LCM_LINUX_X86_64/"
+#       changed_when: "'SAP HANA Lifecycle Management' in installhana.stdout"
+#       when:
+#         - not hana_db_running.stat.exists
+#   when:
+#     - sap_hana_install_file_name.endswith(".ZIP") and (exe_install_file.matched == 0)

@@ -1,0 +1,57 @@
+---
+
+- name: 'Create {{ sap_hana_sid }} dir in {{ sap_hana_data_mountpoint }} and {{ sap_hana_log_mountpoint }}'
+  file:
+    path: '{{ item }}'
+    state: directory
+    recurse: true
+    mode: 0777
+  with_items:
+    - '{{ sap_hana_data_mountpoint }}/{{ sap_hana_sid }}'
+    - '{{ sap_hana_log_mountpoint }}/{{ sap_hana_sid }}'
+
+- name: 'Create {{ sap_hana_data_mountpoint }} and {{ sap_hana_log_mountpoint }}'
+  file:
+    path: '{{ item }}'
+    state: directory
+    owner: '{{ sap_hana_system_uid }}'
+    group: '{{ sap_sapsys_gid }}'
+    recurse: true
+    mode: 0777
+  with_items:
+    - '{{ sap_hana_data_mountpoint }}'
+    - '{{ sap_hana_log_mountpoint }}'
+
+- name: Run /usr/bin/sync
+  shell: >
+    /usr/bin/sync
+  register: sync_run
+
+- name: 'Umount {{ sap_hana_data_mountpoint }} and {{ sap_hana_log_mountpoint }}'
+  mount:
+    path: '{{ item }}'
+    state: unmounted
+  with_items:
+    - '{{ sap_hana_data_mountpoint }}'
+    - '{{ sap_hana_log_mountpoint }}'
+
+- name: 'Create {{ sap_hana_shared_mountpoint }} and {{ sap_hana_backup_mountpoint }}'
+  file:
+    path: '{{ item }}'
+    state: directory
+    recurse: true
+    mode: 0777
+  with_items:
+    - '{{ sap_hana_shared_mountpoint }}'
+    - '{{ sap_hana_backup_mountpoint }}'
+
+- name: 'Mount {{ sap_hana_shared_mountpoint }} and {{ sap_hana_backup_mountpoint }} filestore volumes'
+  mount:
+    src: '{{ item.source }}'
+    path: '{{ item.path }}'
+    #opts: -rsize=1048576,wsize=1048576,hard,intr,timeo=18,retrans=200
+    state: mounted
+    fstype: nfs
+  loop:
+    - { source: '{{ sap_hana_shared_fs_mount_point }}', path: '{{ sap_hana_shared_mountpoint }}' }
+    - { source: '{{ sap_hana_backup_fs_mount_point }}', path: '{{ sap_hana_backup_mountpoint }}' }

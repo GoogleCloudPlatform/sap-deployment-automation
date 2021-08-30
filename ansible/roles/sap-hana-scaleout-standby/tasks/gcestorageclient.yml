@@ -1,0 +1,39 @@
+---
+
+- name: Ensure pip is installed.
+  package:
+    name: python2-pip
+    state: present
+  register: pip_installed
+
+- name: Install required python package from GCE storage client
+  pip:
+    name: pyasn1-modules
+
+- name: 'Create {{ sap_hana_shared_mountpoint }}/gceStorageClient directory'
+  file:
+    path: '{{ sap_hana_shared_mountpoint }}/gceStorageClient'
+    state: directory
+
+- name: Download GCE Storage Client
+  get_url: 
+    url: 'https://storage.googleapis.com/deploybeta/gceStorageClient/{{ gce_storage_client_package }}'
+    dest: '{{ sap_hana_shared_mountpoint }}/gceStorageClient/'
+    mode: 755
+  register: gce_storage_client_file
+
+- name: Create gcloud directory under sidadm user home directory
+  file:
+    path: '{{ sap_hana_usr_mountpoint }}/{{ sap_hana_sid }}/home/.config/gcloud/'
+    state: directory
+    owner: '{{ sap_hana_system_uid }}'
+    group: '{{ sap_sapsys_gid }}'
+    recurse: true
+
+- name: Updating /etc/sudoers
+  lineinfile:
+    path: /etc/sudoers
+    line: '{{ item }}'
+  with_items:
+    - '{{ sap_hana_user }} ALL=NOPASSWD: /sbin/multipath,/sbin/multipathd,/etc/init.d/multipathd,/usr/bin/sg_persist,/bin/mount,/bin/umount,/bin/kill,/usr/bin/lsof,/usr/bin/systemctl,/usr/sbin/lsof,/usr/sbin/xfs_repair,/usr/bin/mkdir,/sbin/vgscan,/sbin/pvscan,/sbin/lvscan,/sbin/vgchange,/sbin/lvdisplay,/usr/bin/gcloud'
+    - ''

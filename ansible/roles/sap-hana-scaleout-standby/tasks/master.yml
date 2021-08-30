@@ -1,0 +1,23 @@
+---
+
+- name: Include storage role
+  include_tasks:
+    file: storage.yml
+  vars:
+    disks: "{{ sap_hana_disks }}"
+    logvols: "{{ sap_hana_logvols }}"
+    swapon: "{{ sap_hana_swapon | default(false) }}"
+
+- name: Include hana shared and backup mount role
+  include_role:
+    name: sap-hana-nfs-mount-standby
+
+- name: Include hana packages download role
+  include_role:
+    name: sap-hana-download-packages
+
+- name: Include gceStorageClient role
+  include_tasks:
+    file: gcestorageclient.yml
+  vars:
+    gce_storage_client_package: gceStorageClient.py

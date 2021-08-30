@@ -1,0 +1,57 @@
+---
+
+- name: Group of tasks that are tightly coupled
+  vars:
+    max_retries: 5
+    retry_delay: 10
+  block:
+    - name: Increment the retry count
+      set_fact:
+        retry_count: "{{ 0 if retry_count is undefined else retry_count | int + 1 }}"
+
+    - name: Create {{ sap_hana_sid }} directories in /hana/data and /hana/log
+      file:
+        path: "{{ item }}/{{ sap_hana_sid }}"
+        state: directory
+        mode: 0777
+        recurse: true
+      with_items:
+        - "{{ sap_hana_data_mountpoint }}"
+        - "{{ sap_hana_log_mountpoint }}"
+
+    #Delete this after initial working. Redundant action from gcestorageclient.yml file
+    - name: Change GCE Storage Client Perms
+      file: 
+        path: '{{ sap_hana_shared_mountpoint }}/gceStorageClient/{{ gce_storage_client_package }}'
+        mode: 0755
+      register: gce_storage_client_file
+
+    - name: 'Remove {{ sap_hana_gce_storage_client_path }}/gceStorageClient.pyc'
+      file:
+        path: '{{ sap_hana_gce_storage_client_path }}/gceStorageClient.pyc'
+        state: absent
+
+    - name: Install SAP HANA started from EXE
+      command: "./hdblcm {{ sap_hana_deployment_hdblcm_extraargs }} --configfile=/root/.deploy/configfile.cfg -b"
+      register: installhana
+      args:
+        chdir: "{{ item.path.split('_')[0] }}/DATA_UNITS/HDB_LCM_LINUX_X86_64/"
+      changed_when: "'SAP HANA Lifecycle Management' in installhana.stdout"
+      with_items: "{{ exe_install_file.files }}"
+      when: exe_install_file.matched > 0 and not hana_db_running.stat.exists
+
+  rescue:
+    - fail:
+        msg: Maximum retries of grouped tasks reached
+      when: retry_count | int == max_retries | int
+
+    - debug:
+        msg: "Task Group failed, let's give it another shot"
+
+    - name: Sleep between retries
+      wait_for:
+        timeout: "{{ retry_delay }}"
+      delegate_to: localhost
+      become: false
+
+    - include_tasks: hana_install.yml

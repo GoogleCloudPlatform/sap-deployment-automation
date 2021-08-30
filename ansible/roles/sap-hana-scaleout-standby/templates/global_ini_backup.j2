@@ -1,0 +1,36 @@
+[communication]
+sslclientpki = off
+listeninterface = .global
+
+[multidb]
+mode = multidb
+database_isolation = low
+singletenant = yes
+
+[persistence]
+basepath_datavolumes = {{ sap_hana_data_mountpoint }}/{{ sap_hana_sid }}
+basepath_logvolumes = {{ sap_hana_log_mountpoint }}/{{ sap_hana_sid }}
+use_mountpoints = yes
+basepath_shared = no
+
+[storage]
+ha_provider = gceStorageClient
+ha_provider_path = {{ sap_hana_shared_mountpoint }}/gceStorageClient
+{% for element in sap_hana_worker_disks_list %}
+partition_{{ loop.index }}_*__pd = {{ sap_hana_instance_name }}-mnt0000{{ loop.index }}
+{% endfor %}
+partition_*_data__dev = /dev/{{ sap_hana_data_partition_name }}/data
+partition_*_log__dev = /dev/{{ sap_hana_data_partition_name }}/log
+partition_*_data__mountOptions = -t xfs -o logbsize=256k
+partition_*_log__mountOptions = -t xfs -o nobarrier,logbsize=256k
+partition_*_*__fencing = disabled
+
+[trace]
+ha_gcestorageclient = info
+
+% for element in sap_hana_master_disks_list %}
+partition_{{ loop.index }}_*__pd = {{ sap_hana_instance_name }}-mnt0000{{ loop.index }}
+{% endfor %}
+{% for element in sap_hana_worker_disks_list %}
+partition_{{ loop.index|int + 1 }}_*__pd = {{ sap_hana_instance_name }}-mnt0000{{ loop.index|int + 1 }}
+{% endfor %}

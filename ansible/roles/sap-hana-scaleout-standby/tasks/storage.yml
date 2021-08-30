@@ -1,0 +1,69 @@
+---
+- name: Verifying disks attached to system
+  stat:
+    path: "/dev/disk/by-id/google-{{ ansible_hostname }}-{{ item.name }}"
+  with_items: "{{ disks }}"
+  register: diskpath
+  tags:
+    - disk_setup
+
+- name: Create disk dictionary
+  set_fact:
+    disksdict: "{{ disksdict | default({}) | combine( {item.item.partition_path: item.stat.lnk_source} ) }}"
+  with_items: "{{ diskpath.results }}"
+  tags:
+    - disk_setup
+
+- name: Create disk partitions
+  parted:
+    device: "{{ item.value }}"
+    number: 1
+    state: present
+  with_items: "{{ disksdict|dict2items }}"
+  tags:
+    - disk_setup
+
+- name: Create logical volume groups
+  lvg:
+    vg: "{{ item.key }}"
+    pvs: "{{ item.value }}1"
+    state: present
+  with_items: "{{ disksdict|dict2items }}"
+  tags:
+    - disk_setup
+
+- name: Create app logical volumes
+  lvol:
+    state: present
+    vg: "{{ item.value.vol }}"
+    lv: "{{ item.key }}"
+    size: "{{ item.value.size }}"
+    pvs: "{{ item.value.pvs | default(omit) }}"
+  with_dict: "{{ logvols }}"
+  tags:
+    - disk_setup
+  when: logvols is defined
+
+- name: Create swap logical volumes
+  lvol:
+    state: present
+    vg: "{{ item.value.vol }}"
+    lv: "{{ item.key }}"
+    size: "{{ item.value.size }}"
+    pvs: "{{ item.value.pvs | default(omit) }}"
+  with_dict: "{{ swapvols }}"
+  tags:
+    - disk_setup
+  when: (swapon == True) and (swapvols is defined)
+
+- name: Create filesystems
+  filesystem:
+    dev:  /dev/{{ item.value.vol}}/{{ item.key }}
+    fstype: "{{ item.value.fstype | default('xfs')}}"
+    force: no
+    opts: "{{ item.value.opts | default(omit) }}"
+  with_dict: "{{ logvols }}"
+  ignore_errors: True
+  tags:
+    - disk_setup
+  when: logvols is defined
