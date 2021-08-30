@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-terraform {
-  backend "gcs" {}
-}
+galaxy_info:
+  author: Bala Guduru
+  description: Install GCE storage client
+  min_ansible_version: 2.9
+  galaxy_tags: []
+dependencies: []

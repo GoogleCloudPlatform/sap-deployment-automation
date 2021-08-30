@@ -1,27 +1,41 @@
 # SAP HANA installation and configuration using Terraform and Ansible
 
-Terraform module and ansible roles to deploy the SAP HANA Scaleout stack. This stack deploys a master HANA node along with the required no.of worker nodes to form a HANA Scaleout cluster. All instances are deployed in the same zone. There is option to add additional worker nodes after the initial deployment. HANA Scaleout config is performed by a higher ansible role `ansible/roles/sap-hana-scaleout` that in turn calls lower ansible roles to do a specific task as part of the scaleout config.
+Terraform module and ansible roles to deploy the SAP HANA Scaleout Standby stack. This stack deploys a master HANA node along with the required no.of worker nodes to form a HANA Scaleout Standby cluster. All instances are deployed in the same zone. There is option to add additional worker nodes after the initial deployment. HANA Scaleout Standby config is performed by a higher ansible role `ansible/roles/sap-hana-scaleout-standby` that in turn calls lower ansible roles to do a specific task as part of the scaleout standby config.
 
 # Deployment Architecture
 
-### <img src="images/scaleout.png" width="500px">
+### <img src="images/scaleout-standby.png" width="500px">
 
 # Requirements
 
 * Terraform version `>=0.12`
 * Ansible version `>= 2.9.2`
 
+# Support Matrix
+
+The following HANA and OS version combinations have been tested with images from the `rhel-sap-cloud` and `suse-sap-cloud` projects.
+
+|                    | rhel-7-7-sap       | sles-12-sp5-sap    | sles-15-sp1-sap    
+| ------------------ | :----------------: | :----------------: | :----------------: |
+| **HANA-20SPS03**   | :x:                | :x:                | :x:                | 
+| **HANA-20SPS04**   | :white_check_mark: | :white_check_mark: | :white_check_mark: | 
+| **HANA-20SPS05**   | :white_check_mark: | :white_check_mark: | :white_check_mark: | 
+
+# Link to SAP HANA host auto-failover on Google CLoud using google gceStorageClient
+
+https://cloud.google.com/solutions/sap/docs/sap-hana-ha-planning-guide#host_auto_failover
+
 # Usage
 
-1. Terraform code for deploying the infrastructure required for installing and configuring SAP HANA Scaleout nodes is stored under `tf/`.
+1. Terraform code for deploying the infrastructure required for installing and configuring SAP HANA Scaleout Standby nodes is stored under `tf/`.
 
-2. Ansible roles for configuring HANA Scaleout on the GCE instances is stored under `sap-iac/ansible/roles`.
+2. Ansible roles for configuring HANA Scaleout Standby on the GCE instances is stored under `sap-iac/ansible/roles`.
 
-3. Ansible playbook to deploy the HANA scaleout stack is `playbook.yml`.
+3. Ansible playbook to deploy the HANA scaleout Standby stack is `playbook.yml`.
 
 # Variables
 
-* All the ansible SAP HANA Scaleout configuration default values are defined in the higher level ansible role under `sap-iac/ansible/roles/sap-hana-scaleout/defaults/main.yml`.
+* All the ansible SAP HANA Scaleout Standby configuration default values are defined in the higher level ansible role under `sap-iac/ansible/roles/sap-hana-scaleout-standby/defaults/main.yml`.
 
 * All the variables required for deploying stack are defined in the `vars/deploy-vars.yml` file.
 
@@ -42,6 +56,8 @@ Terraform module and ansible roles to deploy the SAP HANA Scaleout stack. This s
 `sap_tf_state_bucket_prefix` (required): Terraform state bucket prefix for storing tf state file
 
 `sap_instance_count_worker`: No.of worker nodes to be deployed
+
+`sap_instance_count_standby`: No.of standby nodes to be deployed (currently only supports one standby node)
 
 `sap_hana_instance_name` (required): GCE instance name
 
@@ -79,9 +95,9 @@ m2-ultramem-416
 
 `sap_hana_password`: Common password to use for all HANA user and system authentication
 
-# Example playbook to deploy SAP HANA Scaleout stack
+# Example playbook to deploy SAP HANA Scaleout Standby stack
 
-Below is the example playbook to deploy the HANA Scaleout stack. Replace the variable values to fit your need
+Below is the example playbook to deploy the HANA Scaleout Standby stack. Replace the variable values to fit your need
 
 ```yaml
 - name: SAP HANA deploy
@@ -109,81 +125,61 @@ Below is the example playbook to deploy the HANA Scaleout stack. Replace the var
         boot_disk_type: "pd-ssd"
         network_tags: ["sap-allow-all"]
         pd_kms_key: None
-        create_backup_volume: true
         instance_count_worker: 1
+        instance_count_standby: 1
 
-- name: SAP HANA scaleout master configure
-  hosts: hana-master
+- name: SAP HANA scaleout master and worker configure
+  hosts: hana
   become: yes
   vars:
-    sap_hana_backint_install: true
-    sap_hana_backint_bucket_name: "sap-hana-backint-backup"
+    sap_hana_backint_install: '{{ sap_hana_backint_bucket_name | default("") != "" }}'
+    sap_hana_backint_bucket_name: '{{ sap_hana_backint_bucket_name | default("") }}'
     sap_hana_master_instance_name: '{{ terraform.outputs.master_instance_name.value }}'
     sap_hana_master_instance_ip: '{{ terraform.outputs.address_master.value }}'
     sap_hana_worker_instance_ip: '{{ terraform.outputs.address_worker.value }}'
     sap_hana_worker_node_names: '{{ terraform.outputs.instances_self_links_worker.value }}'
-    sap_hana_shared_size: '{{ terraform.outputs.hana_shared_size.value }}G'
+    sap_hana_standby_instance_ip: '{{ terraform.outputs.address_standby.value }}'
+    sap_hana_worker_disks_list: '{{ terraform.outputs.worker_attached_disks_data.value }}'
+    sap_hana_master_disks_list: '{{ terraform.outputs.master_attached_disks_data.value }}'
     sap_hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
     sap_hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
     sap_hana_usr_size: '{{ terraform.outputs.hana_usr_size.value }}G'
-    sap_hana_backup_size: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
+    sap_hana_shared_fs_mount_point: '{{ terraform.outputs.hana_filestore_shared.value }}'
+    sap_hana_backup_fs_mount_point: '{{ terraform.outputs.hana_filestore_backup.value }}'
+    sap_add_gce_storage_client: true
   roles:
-  - role: sap-hana-scaleout
+  - role: sap-hana-scaleout-standby
 
-- name: SAP HANA scaleout worker configure
-  hosts: hana-worker
+- name: Run assertions
+  hosts: hana
   become: yes
-  vars:
-    sap_hana_backint_install: true
-    sap_hana_backint_bucket_name: "sap-hana-backint-backup"
-    sap_hana_master_instance_name: '{{ terraform.outputs.master_instance_name.value }}'
-    sap_hana_master_instance_ip: '{{ terraform.outputs.address_master.value }}'
-    sap_hana_worker_instance_ip: '{{ terraform.outputs.address_worker.value }}'
-    sap_hana_worker_node_names: '{{ terraform.outputs.instances_self_links_worker.value }}'
-    sap_hana_shared_size: '{{ terraform.outputs.hana_shared_size.value }}G'
-    sap_hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
-    sap_hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
-    sap_hana_usr_size: '{{ terraform.outputs.hana_usr_size.value }}G'
-    sap_hana_backup_size: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
-  roles:
-  - role: sap-hana-scaleout
-
-- name: SAP HANA scaleout master configure
-  hosts: hana-master
-  become: yes
-  vars:
-    sap_hana_backint_install: true
-    sap_hana_backint_bucket_name: "sap-hana-backint-backup"
-    sap_hana_master_instance_name: '{{ terraform.outputs.master_instance_name.value }}'
-    sap_hana_master_instance_ip: '{{ terraform.outputs.address_master.value }}'
-    sap_hana_worker_instance_ip: '{{ terraform.outputs.address_worker.value }}'
-    sap_hana_worker_node_names: '{{ terraform.outputs.instances_self_links_worker.value }}'
-    sap_hana_shared_size: '{{ terraform.outputs.hana_shared_size.value }}G'
-    sap_hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
-    sap_hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
-    sap_hana_usr_size: '{{ terraform.outputs.hana_usr_size.value }}G'
-    sap_hana_backup_size: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
-    sap_add_worker_nodes: true
-  roles:
-  - role: sap-hana-scaleout
+  tasks:
+  - include_role:
+      name: sap-hana-scaleout-standby
+      tasks_from: assertions
+    vars:
+      sap_hana_master_instance_name: '{{ terraform.outputs.master_instance_name.value }}'
+      sap_hana_standby_instance_name: ['{{ sap_hana_instance_name }}w0{{ sap_instance_count_worker|int + 1 }}']
+      sap_hana_instances: '{{ [terraform.outputs.master_instance_name.value] + terraform.outputs.worker_instance_names.value }}'
+  tags: [assertions]
 ```
 
-# Deploy HANA Scaleout stack
+# Deploy HANA Scaleout Standby stack
 
 * Use the ansible wrapper script under `sap-iac/ansible-wrapper` to deploy the stack. 
 
 * The ansible wrapper script will setup the environment along with installing the correct terraform and ansible version required for running the code
 
-* Run the below command by changing into the root folder `sap-iac/` for deploying the SAP HANA Scaleout stack
+* Run the below command by changing into the root folder `sap-iac/` for deploying the SAP HANA Scaleout Standby stack
 
-`./ansible-wrapper ./stacks/HANA-Scaleout/playbook.yml --extra-vars '@./stacks/HANA-Scaleout/vars/deploy-vars.yml'`
+`./ansible-wrapper ./stacks/HANA-Scaleout-Standby/playbook.yml --extra-vars '@./stacks/HANA-Scaleout-Standby/vars/deploy-vars.yml'`
 
-# Destroy HANA Scaleout stack
+# Destroy HANA Scaleout Standby stack
 
-* Run the below command by changing into the root folder `sap-iac/` for destroying the SAP HANA Scaleout stack
+* Run the below command by changing into the root folder `sap-iac/` for destroying the SAP HANA Scaleout Standby stack
 
-`./ansible-wrapper ./stacks/HANA-Scaleout/playbook.yml -e state=absent --extra-vars '@./stacks/HANA-Scaleout/vars/deploy-vars.yml'`
+`./ansible-wrapper ./stacks/HANA-Scaleout-Standby/playbook.yml -e state=absent --extra-vars '@./stacks/HANA-Scaleout-Standby/vars/deploy-vars.yml'`
 
 # Author Information
 
-Bala Guduru <balabharat.guduru@googlecloud.corp-partner.google.com>
+Bala Guduru

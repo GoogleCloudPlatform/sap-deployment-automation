@@ -1,10 +1,25 @@
----
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- debug: 
+    var: sap_hana_worker_node_names_loop
 
 - name: Create .deploy directory
   file:
     path: /root/.deploy
     state: directory
-    mode: '0755'
+    mode: '0775'
 
 - name: Create cfg file for master
   template:
@@ -14,8 +29,8 @@
 
 - name: Group of tasks that are tightly coupled
   vars:
-    max_retries: 5
-    retry_delay: 10
+    max_retries: 30
+    retry_delay: 30
   block:
     - name: Increment the retry count
       set_fact:
@@ -30,7 +45,7 @@
       file:
         path: "{{ item }}/{{ sap_hana_sid }}"
         state: directory
-        mode: 0777
+        mode: 0775
         recurse: yes
       with_items:
         - "{{ sap_hana_data_mountpoint }}"
@@ -38,18 +53,17 @@
 
     - name: Run chmod 777 on worker nodes
       shell: |
-        ssh -oStrictHostKeyChecking=no root@{{ item.split('/')[10] }} 'chmod 777 -R {{ sap_hana_data_mountpoint }} {{ sap_hana_log_mountpoint }}'
+        ssh -oStrictHostKeyChecking=no root@{{ item.split('/')[10] }} 'chmod 775 -R {{ sap_hana_data_mountpoint }} {{ sap_hana_log_mountpoint }}'
       with_items:
-        - "{{ sap_hana_worker_node_names_new }}"
+        - "{{ sap_hana_worker_node_names_loop }}"
 
     - name: Add worker nodes to master
       shell: |
         cat /root/.deploy/hana_passwords.xml | ./hdblcm --action=add_hosts --addhosts={{ item.split('/')[10] }} --root_user=root --listen_interface=global --read_password_from_stdin=xml -b
       args:
         chdir: "{{ sap_hana_shared_mountpoint }}/{{ sap_hana_sid }}/hdblcm/"
-
       with_items:
-        - "{{ sap_hana_worker_node_names_new }}"
+        - "{{ sap_hana_worker_node_names_loop }}"
       register: hana_worker_node_add
 
     - debug:
@@ -72,4 +86,4 @@
       delegate_to: localhost
       become: false
 
-    - include_tasks: main.yml
+    - include_tasks: worker_node_add.yml

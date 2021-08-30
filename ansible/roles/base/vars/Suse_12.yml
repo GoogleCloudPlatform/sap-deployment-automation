@@ -25,3 +25,4 @@ package_list:
   - libgcc_s1
   - libstdc++6
   - libatomic1
+  - python2-pip

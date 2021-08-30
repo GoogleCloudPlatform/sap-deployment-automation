@@ -1,26 +1,77 @@
----
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-- name: Ensure pip is installed.
+- name: Install packages
   package:
-    name: python2-pip
+    name: python2-pyasn1-modules
     state: present
-  register: pip_installed
+  register: result
+  retries: 50
+  until: result is succeeded
+  delay: 10
+  when: |
+    (ansible_os_family == 'Suse') and (ansible_distribution_major_version == '12')
 
 - name: Install required python package from GCE storage client
   pip:
     name: pyasn1-modules
+    state: latest
+
+- block:
+  - name: Add gcestorgeclient repo
+    yum_repository:
+      name: google-sapgcestorageclient
+      description: GCE Storage Client
+      baseurl: https://packages.cloud.google.com/yum/repos/google-sapgcestorageclient-el7-x86_64/
+      gpgcheck: no
+      gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg
+
+  - name: Install gcestorageclient
+    yum:
+      name: google-sapgcestorageclient
+      state: present
+      disable_gpg_check: yes
+  when: |
+    ansible_os_family == 'RedHat'
+
+- block:
+  - name: Add gcestorgeclient repo
+    zypper_repository:
+      name: google-sapgcestorageclient
+      disable_gpg_check: yes
+      runrefresh: yes
+      repo: https://packages.cloud.google.com/yum/repos/google-sapgcestorageclient-sles12-x86_64/
+
+  - name: Install gcestorageclient
+    zypper:
+      name: google-sapgcestorageclient
+      state: present
+      disable_gpg_check: yes
+  when: |
+    ansible_os_family == 'Suse'
 
 - name: 'Create {{ sap_hana_shared_mountpoint }}/gceStorageClient directory'
   file:
     path: '{{ sap_hana_shared_mountpoint }}/gceStorageClient'
     state: directory
 
-- name: Download GCE Storage Client
-  get_url: 
-    url: 'https://storage.googleapis.com/deploybeta/gceStorageClient/{{ gce_storage_client_package }}'
-    dest: '{{ sap_hana_shared_mountpoint }}/gceStorageClient/'
-    mode: 755
-  register: gce_storage_client_file
+- name: "Copy gcestorageclient.py to {{ sap_hana_shared_mountpoint }}/gceStorageClient"
+  copy:
+    src: /usr/sap/google-sapgcestorageclient/gceStorageClient.py
+    dest: '{{ sap_hana_shared_mountpoint }}/gceStorageClient/gceStorageClient.py'
+    remote_src: yes
+    mode: 0775
 
 - name: Create gcloud directory under sidadm user home directory
   file:

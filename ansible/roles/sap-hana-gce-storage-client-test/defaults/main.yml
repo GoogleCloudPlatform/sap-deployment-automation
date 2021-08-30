@@ -12,6 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-terraform {
-  backend "gcs" {}
-}
+gce_storage_client_package: google-sapgcestorageclient-2.0-0.adhoc.noarch.rpm

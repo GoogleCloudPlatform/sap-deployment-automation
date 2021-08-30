@@ -91,7 +91,7 @@
   with_dict: "{{ logvols }}"
   tags:
     - disk_setup
-  when: logvols is defined
+  when: (logvols is defined) and (sap_hana_stack_name != 'hana-scaleout-standby')
 
 - name: Swap on
   block:

@@ -1,4 +1,16 @@
----
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 # Terraform common vars for hana and netweaver (optional)
 sap_zone: europe-west1-b
@@ -13,11 +25,9 @@ sap_tf_state_bucket: sap-terraform-state-bg-demo
 sap_tf_state_bucket_prefix: hanascaleoutsb
 
 # Terraform hana variables (required)
-sap_instance_count_worker: 1
+sap_instance_count_worker: 2
 sap_instance_count_standby: 1
-#sap_hana_shared_fs_mount_point: "10.155.181.194:/hanashared"
-#sap_hana_backup_fs_mount_point: "10.243.66.194:/hanabackup"
-sap_hana_instance_name: bghanasb
+sap_hana_instance_name: hansosb
 sap_hana_service_account_name: terraform-managed-bg-demo
 
 # Terraform hana variables (optional)
@@ -27,7 +37,6 @@ sap_hana_boot_disk_size: 30
 sap_hana_boot_disk_type: pd-ssd
 sap_hana_network_tags: ["hana-allow", "ssh"]
 sap_hana_pd_kms_key: null
-#sap_hana_create_backup_volume: true
 sap_hana_backint_install: false
 
 # Ansible hana variables (required)

@@ -1,11 +1,11 @@
-# sap-hana-scaleout
+# sap-hana-scaleout-standby
 
 A higher level ansible role to install and configure HANA Scaleout.
 
 # Requirements
 
 Ansible version `>= 2.9.2`
-Running GCE instance deployed using the terraform code under `stacks/HANA-Scaleout`
+Running GCE instance deployed using the terraform code under `stacks/HANA-Scaleout-standby`
 
 # Role Variables
 

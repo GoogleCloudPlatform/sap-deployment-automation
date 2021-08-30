@@ -1,11 +1,23 @@
----
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 - name: 'Create {{ sap_hana_sid }} dir in {{ sap_hana_data_mountpoint }} and {{ sap_hana_log_mountpoint }}'
   file:
     path: '{{ item }}'
     state: directory
     recurse: true
-    mode: 0777
+    mode: 0775
   with_items:
     - '{{ sap_hana_data_mountpoint }}/{{ sap_hana_sid }}'
     - '{{ sap_hana_log_mountpoint }}/{{ sap_hana_sid }}'
@@ -17,7 +29,7 @@
     owner: '{{ sap_hana_system_uid }}'
     group: '{{ sap_sapsys_gid }}'
     recurse: true
-    mode: 0777
+    mode: 0775
   with_items:
     - '{{ sap_hana_data_mountpoint }}'
     - '{{ sap_hana_log_mountpoint }}'
@@ -40,16 +52,20 @@
     path: '{{ item }}'
     state: directory
     recurse: true
-    mode: 0777
+    mode: 0775
   with_items:
     - '{{ sap_hana_shared_mountpoint }}'
     - '{{ sap_hana_backup_mountpoint }}'
+
+- name: Run /sbin/vgchange
+  shell: >
+    /sbin/vgchange -a n {{ sap_hana_data_partition_name }}
+  register: vg_change_run
 
 - name: 'Mount {{ sap_hana_shared_mountpoint }} and {{ sap_hana_backup_mountpoint }} filestore volumes'
   mount:
     src: '{{ item.source }}'
     path: '{{ item.path }}'
-    #opts: -rsize=1048576,wsize=1048576,hard,intr,timeo=18,retrans=200
     state: mounted
     fstype: nfs
   loop:

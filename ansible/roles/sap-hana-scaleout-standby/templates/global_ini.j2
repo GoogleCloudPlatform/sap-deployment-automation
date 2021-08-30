@@ -7,8 +7,10 @@ basepath_shared = no
 [storage]
 ha_provider = gceStorageClient
 ha_provider_path = {{ sap_hana_shared_mountpoint }}/gceStorageClient
-partition_1_*_pd = {{ sap_hana_instance_name }}-mnt00001
-partition_2_*_pd = {{ sap_hana_instance_name }}-mnt00002
+partition_1_*__pd = {{ sap_hana_instance_name }}-mnt00001
+{% for element in sap_hana_worker_disks_list %}
+partition_{{ loop.index + 1 }}_*__pd = {{ sap_hana_instance_name }}-mnt0000{{ loop.index + 1 }}
+{% endfor %}
 partition_*_data__dev = /dev/{{ sap_hana_data_partition_name }}/data
 partition_*_log__dev = /dev/{{ sap_hana_data_partition_name }}/log
 partition_*_data__mountOptions = -t xfs -o logbsize=256k

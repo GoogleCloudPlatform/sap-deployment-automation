@@ -1,4 +1,4 @@
-# sap-hana-add-worker-nodes
+# sap-hana-add-worker-nodes-standby
 
 Ansible role to add worker nodes as part of HANA scaleout stack.
 
