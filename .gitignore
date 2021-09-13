@@ -6,4 +6,3 @@ terraform.tfstate.backup
 .cache/
 .terraform/
 venv/
-*vars.yml
