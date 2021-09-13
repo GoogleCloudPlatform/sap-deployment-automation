@@ -15,9 +15,9 @@
 - block:
   - name: create ascs resource for ensa1
     command: >-
-      pcs resource create rsc_{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }} SAPInstance
-      InstanceName={{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}
-      START_PROFILE=/sapmnt/{{ sap_nw_sid }}/profile/{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}
+      pcs resource create rsc_{{ sap_nw_sid }}_{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }} SAPInstance
+      InstanceName={{ sap_nw_sid }}_{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}
+      START_PROFILE=/sapmnt/{{ sap_nw_sid }}/profile/{{ sap_nw_sid }}_{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}
       AUTOMATIC_RECOVER=false
       meta resource-stickiness=5000 migration-threshold=1
       --group g-ascs
@@ -29,9 +29,9 @@
 
   - name: create ascs resource for ensa2
     command: >-
-      pcs resource create rsc_{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }} SAPInstance
-      InstanceName={{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}
-      START_PROFILE=/sapmnt/{{ sap_nw_sid }}/profile/{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}
+      pcs resource create rsc_{{ sap_nw_sid }}_{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }} SAPInstance
+      InstanceName={{ sap_nw_sid }}_{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}
+      START_PROFILE=/sapmnt/{{ sap_nw_sid }}/profile/{{ sap_nw_sid }}_{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}
       AUTOMATIC_RECOVER=false
       meta resource-stickiness=5000
       --group g-ascs
@@ -75,7 +75,7 @@
 
   - name: create location constraint for ensa1
     command: >-
-      pcs constraint location rsc_{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}
+      pcs constraint location rsc_{{ sap_nw_sid }}_{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }}
       rule score=2000 runs_ers_{{ sap_nw_sid }} eq 1
     register: pcs_command_status
     changed_when: pcs_command_status.rc == 0
@@ -88,11 +88,11 @@
 - block:
   - name: create ascs resource for ensa1
     command: >-
-      crm configure primitive rsc_{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }} SAPInstance
-      operations \$id=rsc_{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}-operations
+      crm configure primitive rsc_{{ sap_nw_sid }}_{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }} SAPInstance
+      operations \$id=rsc_{{ sap_nw_sid }}_{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }}-operations
       op monitor interval=11 timeout=60 on_fail=restart
-      params InstanceName={{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}
-      START_PROFILE=/usr/sap/{{ sap_nw_sid }}/SYS/profile/{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}
+      params InstanceName={{ sap_nw_sid }}_{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}
+      START_PROFILE=/usr/sap/{{ sap_nw_sid }}/SYS/profile/{{ sap_nw_sid }}_{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}
       AUTOMATIC_RECOVER=false
       meta resource-stickiness=5000 failure-timeout=60 migration-threshold=1 priority=10
     register: crm_command_status
@@ -103,11 +103,11 @@
 
   - name: create ascs resource for ensa2
     command: >-
-      crm configure primitive rsc_{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }} SAPInstance
-      operations \$id=rsc_{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}-operations
+      crm configure primitive rsc_{{ sap_nw_sid }}_{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }} SAPInstance
+      operations \$id=rsc_{{ sap_nw_sid }}_{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }}-operations
       op monitor interval=11 timeout=60 on_fail=restart
-      params InstanceName={{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}
-      START_PROFILE=/usr/sap/{{ sap_nw_sid }}/SYS/profile/{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}
+      params InstanceName={{ sap_nw_sid }}_{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}
+      START_PROFILE=/usr/sap/{{ sap_nw_sid }}/SYS/profile/{{ sap_nw_sid }}_{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}
       AUTOMATIC_RECOVER=false
       meta resource-stickiness=5000
     register: crm_command_status
@@ -118,7 +118,7 @@
 
   - name: add ascs resource to vip group
     command: |
-      crm configure modgroup g-ascs add rsc_{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}
+      crm configure modgroup g-ascs add rsc_{{ sap_nw_sid }}_{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }}
     register: crm_command_status
     changed_when: crm_command_status.rc == 0
     failed_when: crm_command_status.rc != 0 and 'listed more than once in group' not in crm_command_status.stderr
@@ -152,7 +152,7 @@
   - name: create optional colocation constraint order
     command: >-
       crm configure order ord_sap_{{ sap_nw_sid }}_first_start_ascs
-      Optional: rsc_{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}:start
+      Optional: rsc_{{ sap_nw_sid }}_{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }}:start
       rsc_{{ sap_nw_sid }}_ERS{{ sap_nw_ers_instance_number }}:stop
       symmetrical=false
     register: crm_command_status
@@ -162,7 +162,7 @@
   - name: create location constraint for ensa1
     command: >-
       crm configure location loc_sap_{{ sap_nw_sid }}_failover_to_ers
-      rsc_{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}
+      rsc_{{ sap_nw_sid }}_{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }}
       rule 2000: runs_ers_{{ sap_nw_sid }} eq 1
     register: crm_command_status
     changed_when: crm_command_status.rc == 0

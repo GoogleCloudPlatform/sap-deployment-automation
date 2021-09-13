@@ -50,6 +50,4 @@
     name: nw
   vars:
     sap_nw_product_id: '{{ sap_product_vars[sap_product_and_version].onehost_product_id }}'
-    sap_nw_installed_files:
-    - /usr/sap/hostctrl/exe/sapcontrol
-    - /sapmnt/{{ sap_nw_sid }}/profile/{{ sap_nw_sid }}_D{{ sap_nw_pas_instance_number }}_{{ sap_nw_instance_name }}
+    sap_sapinst_template: "{{ sap_product_vars[sap_product_and_version].onehost_sapinst_template | default('inifile.params.j2') }}"

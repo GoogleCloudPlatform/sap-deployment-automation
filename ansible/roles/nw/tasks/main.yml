@@ -28,20 +28,20 @@
 
 - name: inifile.params config file
   template:
-    src: inifile.params.j2
+    src: '{{ sap_sapinst_template | default("inifile.params.j2") }}'
     dest: /usr/sap/inifile_nw.params
 
-- name: check for files created by nw installer
-  stat:
-    path: '{{ item }}'
-  loop: '{{ sap_nw_installed_files }}'
-  register: stat_sap_nw_installed_files
-    
-- name: installing s4-hana 
+- name: installing application server
   command: >- 
      ./sapinst SAPINST_INPUT_PARAMETERS_URL=/usr/sap/inifile_nw.params \
      SAPINST_EXECUTE_PRODUCT_ID={{ sap_nw_product_id }} \
      SAPINST_SKIP_DIALOGS=true SAPINST_START_GUISERVER=false
   args:
     chdir: "{{ sap_product_vars[sap_product_and_version].swpm_path }}"
-  when: false in stat_sap_nw_installed_files.results | map(attribute="stat") | map(attribute="exists") | list
+    creates: /root/.ansible-state-install-as
+
+- name: ensure state file exists
+  copy:
+    dest: /root/.ansible-state-install-as
+    content: ''
+    mode: 0644

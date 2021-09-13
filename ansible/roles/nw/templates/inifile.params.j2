@@ -61,7 +61,7 @@ SAPINST.CD.PACKAGE.RDBMS = {{ sap_nw_rdbms_files }}
 # NW_CI_Instance.ascsInstallWebDispatcher = false
 
 # Standard system with AS ABAP only: ASCS instance number. Leave empty for default.
-# NW_CI_Instance.ascsInstanceNumber =
+NW_CI_Instance.ascsInstanceNumber = {{ sap_nw_ascs_instance_number }}
 
 # Standard system with AS ABAP only: Virtual host name for the ASCS instance. Leave empty for default.
 NW_CI_Instance.ascsVirtualHostname = {{ sap_nw_ascs_virtual_host }}
@@ -196,7 +196,7 @@ NW_System.installSAPHostAgent = false
 # NW_getFQDN.FQDN =
 
 # Specify whether you want to set FQDN for the system.
-# NW_getFQDN.setFQDN = true
+NW_getFQDN.setFQDN = false
 
 # The load type chosen by the user. Valid values are: 'SAP', 'STD', 'OBR', 'HCP', 'MDA', 'HBR', 'SBR'
 NW_getLoadType.loadType = SAP
