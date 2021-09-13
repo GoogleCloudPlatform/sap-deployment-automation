@@ -116,10 +116,10 @@
     },
     {
       "question_name": "HANA standby count",
-      "question_description": "Number of HANA worker instances.",
+      "question_description": "Number of HANA standby instances.",
       "required": true,
       "type": "integer",
-      "variable": "sap_instance_count_worker",
+      "variable": "sap_instance_count_standby",
       "default": 1
     },
     {
