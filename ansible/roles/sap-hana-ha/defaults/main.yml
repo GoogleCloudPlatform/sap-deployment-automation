@@ -19,14 +19,17 @@ sap_product_and_version: 'HANA/{{ sap_hana_product_version }}'
 sap_product_vars:
   'HANA/20SPS03':
     sap_hana_install_file_name: '51.*\.(rar|exe)'
+    sap_hana_upgrade_file_name: 'IMDB.*\.SAR'
     sap_hana_sapcar_file_name: SAPCAR_1320-80000935.EXE
     sap_hostagent_rpm_file_name: saphostagentrpm_44-20009394.rpm
   'HANA/20SPS04':
     sap_hana_install_file_name: '51.*\.ZIP'
+    sap_hana_upgrade_file_name: 'IMDB.*\.SAR'
     sap_hana_sapcar_file_name: SAPCAR_1320-80000935.EXE
     sap_hostagent_rpm_file_name: saphostagentrpm_44-20009394.rpm
   'HANA/20SPS05':
     sap_hana_install_file_name: '51.*\.ZIP'
+    sap_hana_upgrade_file_name: 'IMDB.*\.SAR'
     sap_hana_sapcar_file_name: SAPCAR_1320-80000935.EXE
     sap_hostagent_rpm_file_name: saphostagentrpm_44-20009394.rpm
 sap_hostagent_rpm_remote_path: "/hana/shared/software"
