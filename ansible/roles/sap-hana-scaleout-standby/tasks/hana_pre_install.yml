@@ -16,6 +16,10 @@
   set_fact:
     sap_hana_install_file_name: '{{ sap_product_vars[sap_product_and_version].sap_hana_install_file_name }}'
 
+- name: Define upgrade file name
+  set_fact:
+    sap_hana_upgrade_file_name: '{{ sap_product_vars[sap_product_and_version].sap_hana_upgrade_file_name }}'
+
 - name: Create temporary directory to store the processed template
   tempfile:
     state: directory
@@ -40,6 +44,12 @@
     paths: "{{ sap_hostagent_rpm_remote_path }}"
     patterns: "*_part1.exe"
   register: exe_install_file
+
+- name: Identify IMDB SAR archive install file
+  find: 
+    paths: "{{ sap_hostagent_rpm_remote_path }}"
+    patterns: "*.SAR"
+  register: sar_install_file
 
 - name: Download unrar for unzipping hana
   get_url: 
