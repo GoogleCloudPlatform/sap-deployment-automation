@@ -39,19 +39,17 @@
     src: inifile.params.j2
     dest: /usr/sap/inifile_ers.params
 
-- name: check for files created by ers installer
-  stat:
-    path: '{{ item }}'
-  loop:
-  - '/usr/sap/{{ sap_nw_sid }}/ERS{{ sap_nw_ers_instance_number }}/exe/sapcontrol'
-  - '/usr/sap/hostctrl/exe/saphostexec'
-  register: ers_installed_files
-
-- name: installing s4-hana
+- name: installing ers
   command: >-
      ./sapinst SAPINST_INPUT_PARAMETERS_URL=/usr/sap/inifile_ers.params \
      SAPINST_EXECUTE_PRODUCT_ID={{ sap_nw_product_id }} \
      SAPINST_SKIP_DIALOGS=true SAPINST_START_GUISERVER=false
   args:
    chdir: "{{ sap_product_vars[sap_product_and_version].swpm_path }}"
-  when: false in ers_installed_files.results | map(attribute="stat") | map(attribute="exists") | list
+   creates: /root/.ansible-state-install-ers
+
+- name: ensure state file exists
+  copy:
+    dest: /root/.ansible-state-install-ers
+    content: ''
+    mode: 0644

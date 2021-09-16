@@ -27,6 +27,8 @@ sap_nw_swap_disk_size: 28
 sap_nw_user: '{{ sap_nw_sid | lower }}adm'
 sap_nw_usrsap_disk_size: 50
 
+sap_scs_name: '{{ sap_product_vars[sap_product_and_version].scs_name | default("ASCS") }}'
+
 sap_nw_product: 'NetWeaver'
 sap_nw_product_version: '750'
 sap_product_and_version: '{{ sap_nw_product }}/{{ sap_nw_product_version }}'
@@ -64,6 +66,17 @@ sap_product_vars:
     load_files: /sapmnt/Software/NW75
     install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM1.0]
     ensa_version: '1'
+  'NetWeaver-Java/750':
+    db_product_id: 'NW_Java_DB:NW750.HDB.PD'
+    pas_product_id: 'NW_Java_CI:NW750.HDB.PD'
+    ascs_product_id: 'NW_Java_SCS:NW750.HDB.PD'
+    swpm_path: /sapmnt/Software/SWPM10SP32
+    load_files: /sapmnt/Software/NW75
+    install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM10SP32]
+    ensa_version: '1'
+    scs_name: 'SCS'
+    db_sapinst_template: inifile_java.params.j2
+    pas_sapinst_template: inifile_java.params.j2
   'S4HANA/1709':
     db_product_id: 'NW_ABAP_DB:S4HANA1709.CORE.HDB.ABAP'
     pas_product_id: 'NW_ABAP_CI:S4HANA1709.CORE.HDB.ABAP'
