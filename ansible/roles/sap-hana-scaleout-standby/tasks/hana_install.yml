@@ -61,39 +61,6 @@
 
     - include_tasks: hana_install.yml
 
-- name: Install SAP HANA from SAR
-  block:
-    - name: Extract SAR Archive
-      command: >-
-        ./{{ sap_product_vars[sap_product_and_version].sap_hana_sapcar_file_name }}
-        -manifest SIGNATURE.SMF -xvf {{ sap_hana_install_file_name }}
-      args:
-        chdir: "{{ sap_hostagent_rpm_remote_path }}"
-        creates: "{{ sap_hostagent_rpm_remote_path }}/SAP_HANA_DATABASE/hdblcm"
-      register: sap_hana_deployment_register_extractbundle
-    
-    - name: Check if another instance of HANA DB is running with sid "{{ sap_hana_sid }}"
-      stat:
-        path: "{{ sap_hana_shared_mountpoint }}/{{ sap_hana_sid }}"
-      register: hana_db_running
-
-    - name: Check availability of "{{ sap_hostagent_rpm_remote_path }}/SAP_HANA_DATABASE/hdblcm"
-      stat:
-        path: "{{ sap_hostagent_rpm_remote_path }}/SAP_HANA_DATABASE/hdblcm"
-      register: sap_hana_deployment_register_hdblcm_stat
-      failed_when: not sap_hana_deployment_register_hdblcm_stat.stat.exists
-
-    - name: Install SAP HANA started
-      command: "./hdblcm {{ sap_hana_deployment_hdblcm_extraargs }} --configfile=/root/.deploy/configfile.cfg -b"
-      register: installhana
-      args:
-        chdir: "{{ sap_hostagent_rpm_remote_path }}/SAP_HANA_DATABASE/"
-      changed_when: "'SAP HANA Lifecycle Management' in installhana.stdout"
-      when:
-        - not hana_db_running.stat.exists
-  when:
-    - (sap_hana_install_file_name.startswith("IMDB") or sap_hana_install_file_name.endswith(".SAR")) and (exe_install_file.matched == 0)
-
 - name: Install SAP HANA from ZIP
   block:
     - name: Identify EXE archive install file
@@ -131,3 +98,41 @@
         - not hana_db_running.stat.exists
   when:
     - sap_hana_install_file_name.endswith(".ZIP") and (exe_install_file.matched == 0)
+
+- name: Install SAP HANA from SAR
+  block:
+    - name: Extract SAR Archive
+      command: >-
+        ./{{ sap_product_vars[sap_product_and_version].sap_hana_sapcar_file_name }}
+        -manifest SIGNATURE.SMF -xvf {{ item.path }}
+      args:
+        chdir: "{{ sap_hostagent_rpm_remote_path }}"
+        creates: "{{ sap_hostagent_rpm_remote_path }}/SAP_HANA_DATABASE/hdblcm"
+      register: sap_hana_deployment_register_extractbundle
+      with_items: "{{ sar_install_file.files }}"
+
+    - name: Check availability of "{{ sap_hostagent_rpm_remote_path }}/SAP_HANA_DATABASE/hdblcm"
+      stat:
+        path: "{{ sap_hostagent_rpm_remote_path }}/SAP_HANA_DATABASE/hdblcm"
+      register: sap_hana_deployment_register_hdblcm_stat
+      failed_when: not sap_hana_deployment_register_hdblcm_stat.stat.exists
+
+    - name: Ensure group "sapsys" exists with correct gid
+      group:
+        name: sapsys
+        state: present
+        gid: '{{ sap_sapsys_gid }}'
+
+    - name: "add {{ sap_hana_user }} to the primary group sapsys"
+      user:
+        name: '{{ sap_hana_user }}'
+        group: sapsys
+
+    - name: Upgrade SAP HANA started
+      command: "./hdblcm --configfile={{ tmpdir.path }}/configfile.cfg --action=update --ignore=check_signature_file --update_execution_mode=optimized -b"
+      register: installhana
+      args:
+        chdir: "{{ sap_hostagent_rpm_remote_path }}/SAP_HANA_DATABASE/"
+      changed_when: "'SAP HANA Lifecycle Management' in installhana.stdout"
+  when:
+    - (sap_hana_upgrade_file_name.startswith("IMDB") or sap_hana_upgrade_file_name.endswith(".SAR")) and (sar_install_file.matched > 0)

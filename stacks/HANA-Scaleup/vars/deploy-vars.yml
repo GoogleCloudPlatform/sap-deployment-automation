@@ -13,27 +13,27 @@
 # limitations under the License.
 
 # Terraform common vars for hana and netweaver (optional)
-sap_zone: us-central1-a
+sap_zone: europe-west1-b
 
 # Terraform common vars for hana and netweaver (required)
-sap_project_id: albatross-duncanl-sandbox-2
+sap_project_id: sap-poc-service
 sap_source_image_family: rhel-7-7-sap-ha
 sap_source_image_project: rhel-sap-cloud
-sap_subnetwork_project_id: '{{ sap_project_id }}'
-sap_hana_subnetwork: app2
-sap_tf_state_bucket: sap-terraform-state-bg
+sap_subnetwork_project_id: sap-poc-host
+sap_hana_subnetwork: subnet-1
+sap_tf_state_bucket: sap-terraform-state-bg-demo
 sap_tf_state_bucket_prefix: hanslbg
 
 # Terraform hana variables (required)
 sap_hana_instance_name: hanslbg
-sap_hana_service_account_name: sap-common-sa
+sap_hana_service_account_name: terraform-managed-bg-demo
 
 # Terraform hana variables (optional)
 sap_hana_instance_type: n1-highmem-32
 sap_hana_autodelete_boot_disk: "true"
 sap_hana_boot_disk_size: 30
 sap_hana_boot_disk_type: pd-ssd
-sap_hana_network_tags: ["sap-allow-all"]
+sap_hana_network_tags: ["sap-allow-all", "ssh"]
 sap_hana_pd_kms_key: null
 sap_hana_create_backup_volume: true
 sap_hana_backint_install: false
