@@ -28,22 +28,20 @@
 
 - name: inifile.params config file
   template:
-    src: inifile.params.j2
+    src: '{{ sap_sapinst_template | default("inifile.params.j2") }}'
     dest: /usr/sap/inifile_db.params
-
-- name: check for files created by db installer
-  stat:
-    path: '{{ item }}'
-  loop:
-  - /home/{{ sap_nw_user }}/.hdb/{{ sap_nw_pas_virtual_host }}
-  - /sapmnt/{{ sap_nw_sid }}/exe/uc/linuxx86_64/R3load
-  register: db_installed_files
     
-- name: installing s4-hana 
+- name: installing db
   command: >- 
      ./sapinst SAPINST_INPUT_PARAMETERS_URL=/usr/sap/inifile_db.params \
      SAPINST_EXECUTE_PRODUCT_ID={{ sap_nw_product_id }} \
      SAPINST_SKIP_DIALOGS=true SAPINST_START_GUISERVER=false
   args:
     chdir: "{{ sap_product_vars[sap_product_and_version].swpm_path }}"
-  when: false in db_installed_files.results | map(attribute="stat") | map(attribute="exists") | list
+    creates: /root/.ansible-state-install-db
+
+- name: ensure state file exists
+  copy:
+    dest: /root/.ansible-state-install-db
+    content: ''
+    mode: 0644

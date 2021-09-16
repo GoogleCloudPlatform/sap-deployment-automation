@@ -88,10 +88,10 @@
     opts: defaults
     src: "/dev/{{ item.value.vol }}/{{ item.key }}"
     state: mounted
-  with_dict: "{{ logvols }}"
+  with_dict: "{{ logvols | default({}) }}"
   tags:
     - disk_setup
-  when: (logvols is defined) and (sap_hana_stack_name != 'hana-scaleout-standby')
+  when: item.value.mount | default(true)
 
 - name: Swap on
   block:

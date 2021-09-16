@@ -55,7 +55,6 @@ sap_hana_ini_setting: basepath_shared
 sap_hana_ini_value: "no"
 sap_hana_system_restart: "n"
 sap_hana_gce_storage_client_path: '{{ sap_hana_shared_mountpoint }}/gceStorageClient'
-sap_hana_stack_name: 'hana-scaleout-standby'
 # sap_hana_password is required unless all of the other passwords are set.
 # It defaults to an empty string for those cases where all the other passwords are
 # set, to avoid an undefined variable error.
@@ -80,11 +79,13 @@ sap_hana_logvols:
     vol: "{{ sap_hana_data_partition_name }}"
     mountpoint: "{{ sap_hana_data_mountpoint }}"
     fstype: xfs
+    mount: false
   log:
     size: "{{ sap_hana_log_size }}"
     vol: "{{ sap_hana_data_partition_name }}"
     mountpoint: "{{ sap_hana_log_mountpoint }}"
     fstype: xfs
+    mount: false
 
 sap_hana_disks_worker:
   - { name: data, partition_path : "{{ sap_hana_data_partition_name }}"}
@@ -94,11 +95,13 @@ sap_hana_logvols_worker:
     vol: "{{ sap_hana_data_partition_name }}"
     mountpoint: "{{ sap_hana_data_mountpoint }}"
     fstype: xfs
+    mount: false
   log:
     size: "{{ sap_hana_log_size }}"
     vol: "{{ sap_hana_data_partition_name }}"
     mountpoint: "{{ sap_hana_log_mountpoint }}"
     fstype: xfs
+    mount: false
 
 sap_hana_disks_standby:
   - { name: data, partition_path : "{{ sap_hana_data_partition_name }}"}
@@ -108,11 +111,13 @@ sap_hana_logvols_standby:
     vol: "{{ sap_hana_data_partition_name }}"
     mountpoint: "{{ sap_hana_data_mountpoint }}"
     fstype: xfs
+    mount: false
   log:
     size: "{{ sap_hana_log_size }}"
     vol: "{{ sap_hana_data_partition_name }}"
     mountpoint: "{{ sap_hana_log_mountpoint }}"
     fstype: xfs
+    mount: false
 
 # Hana install vars
 sap_hana_deployment_hdblcm_extraargs:

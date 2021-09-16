@@ -31,14 +31,6 @@
     src: inifile.params.j2
     dest: /usr/sap/inifile_ascs.params
 
-- name: check for files created by ascs installer
-  stat:
-    path: '{{ item }}'
-  loop:
-  - '/usr/sap/{{ sap_nw_sid }}/ASCS{{ sap_nw_ascs_instance_number }}/exe/sapcontrol'
-  - '/sapmnt/{{ sap_nw_sid }}/profile/{{ sap_nw_sid }}_ASCS{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}'
-  register: ascs_installed_files
-
 - name: installing ascs
   command: >- 
      ./sapinst SAPINST_INPUT_PARAMETERS_URL=/usr/sap/inifile_ascs.params \
@@ -46,4 +38,10 @@
      SAPINST_SKIP_DIALOGS=true SAPINST_START_GUISERVER=false
   args:
     chdir: "{{ sap_product_vars[sap_product_and_version].swpm_path }}"
-  when: false in ascs_installed_files.results | map(attribute="stat") | map(attribute="exists") | list
+    creates: /root/.ansible-state-install-ascs
+
+- name: ensure state file exists
+  copy:
+    dest: /root/.ansible-state-install-ascs
+    content: ''
+    mode: 0644

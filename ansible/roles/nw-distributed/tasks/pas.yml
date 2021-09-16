@@ -38,16 +38,15 @@
 - name: include nw-pre primary tasks
   include_role:
     name: nw-pre  
-- name: include db primary tasks    
+- name: include db primary tasks
   include_role:
     name: db
   vars:
     sap_nw_product_id: "{{ sap_product_vars[sap_product_and_version].db_product_id }}"
+    sap_sapinst_template: "{{ sap_product_vars[sap_product_and_version].db_sapinst_template | default('inifile.params.j2') }}"
 - name: include nw primary tasks
   include_role:
     name: nw
   vars:
     sap_nw_product_id: "{{ sap_product_vars[sap_product_and_version].pas_product_id }}"
-    sap_nw_installed_files:
-    - '/sapmnt/{{ sap_nw_sid }}/profile/{{ sap_nw_sid }}_D{{ sap_nw_pas_instance_number }}_{{ sap_nw_pas_virtual_host }}'
-    - '/usr/sap/{{ sap_nw_sid }}/D{{ sap_nw_pas_instance_number }}/exe/R3load'
+    sap_sapinst_template: "{{ sap_product_vars[sap_product_and_version].pas_sapinst_template | default('inifile.params.j2') }}"

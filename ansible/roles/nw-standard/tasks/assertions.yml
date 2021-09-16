@@ -12,7 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: include sap assertions role
+- name: include sap assertions role for ascs abap
+  include_role:
+    name: sap-assertions
+  vars:
+    sap_become_user: '{{ sap_nw_user }}'
+    sap_expected_processes:
+    - msg_server, MessageServer, GREEN, Running
+    - '{{ "enserver, EnqueueServer, GREEN, Running" if sap_product_vars[sap_product_and_version].ensa_version == "1" else "enq_server, Enqueue Server 2, GREEN, Running" }}'
+    sap_instances:
+    - '{{ sap_nw_instance_name }}, {{ sap_nw_ascs_instance_number | int }}, 5{{ sap_nw_ascs_instance_number }}13, 5{{ sap_nw_ascs_instance_number }}14, 1, MESSAGESERVER|ENQUE, GREEN'
+    - '{{ sap_nw_instance_name }}, {{ sap_nw_pas_instance_number | int }}, 5{{ sap_nw_pas_instance_number }}13, 5{{ sap_nw_pas_instance_number }}14, 3, ABAP|GATEWAY|ICMAN|IGS, GREEN'
+    sap_instance_number: '{{ sap_nw_ascs_instance_number }}'
+  when: sap_scs_name == 'ASCS'
+
+- name: include sap assertions role for pas abap
   include_role:
     name: sap-assertions
   vars:
@@ -22,7 +36,32 @@
     - igswd_mt, IGS Watchdog, GREEN, Running
     - gwrd, Gateway, GREEN, Running
     - icman, ICM, GREEN, Running
-    sap_instances:
-    - '{{ sap_nw_instance_name }}, 0, 50013, 50014, 1, MESSAGESERVER|ENQUE, GREEN'
-    - '{{ sap_nw_instance_name }}, {{ sap_nw_pas_instance_number | int }}, 5{{ sap_nw_pas_instance_number }}13, 5{{ sap_nw_pas_instance_number }}14, 3, ABAP|GATEWAY|ICMAN|IGS, GREEN'
+    sap_instances: []
     sap_instance_number: '{{ sap_nw_pas_instance_number }}'
+  when: sap_scs_name == 'ASCS'
+
+- name: include sap assertions role for scs java
+  include_role:
+    name: sap-assertions
+  vars:
+    sap_become_user: '{{ sap_nw_user }}'
+    sap_expected_processes:
+    - msg_server, MessageServer, GREEN, Running
+    - '{{ "enserver, EnqueueServer, GREEN, Running" if sap_product_vars[sap_product_and_version].ensa_version == "1" else "enq_server, Enqueue Server 2, GREEN, Running" }}'
+    sap_instances:
+    - '{{ sap_nw_instance_name }}, {{ sap_nw_ascs_instance_number | int }}, 5{{ sap_nw_ascs_instance_number }}13, 5{{ sap_nw_ascs_instance_number }}14, 1, GATEWAY|MESSAGESERVER|ENQUE, GREEN'
+    - '{{ sap_nw_instance_name }}, {{ sap_nw_pas_instance_number | int }}, 5{{ sap_nw_pas_instance_number }}13, 5{{ sap_nw_pas_instance_number }}14, 3, J2EE|IGS, GREEN'
+    sap_instance_number: '{{ sap_nw_ascs_instance_number }}'
+  when: sap_scs_name == 'SCS'
+
+- name: include sap assertions role for java
+  include_role:
+    name: sap-assertions
+  vars:
+    sap_become_user: '{{ sap_nw_user }}'
+    sap_expected_processes:
+    - jstart, J2EE Server, GREEN, All processes running
+    - igswd_mt, IGS Watchdog, GREEN, Running
+    sap_instances: []
+    sap_instance_number: '{{ sap_nw_pas_instance_number }}'
+  when: sap_scs_name == 'SCS'
