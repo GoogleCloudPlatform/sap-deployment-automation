@@ -1,0 +1,91 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: include storage role
+  include_role:
+    name: storage
+  vars:
+    swapon: true
+    disks:
+    - { name: db2, partition_path: db2 }
+    - { name: usrsap, partition_path: usrsap }
+    - { name: swap, partition_path: swap }
+    logvols:
+      db2:
+        size: 100%VG
+        vol: db2
+        mountpoint: /db2
+      usrsap:
+        size: 100%VG
+        vol: usrsap
+        mountpoint: /usr/sap
+    swapvols:
+      swap:
+        size: 100%VG
+        vol: swap
+
+- name: include nfs-client role
+  include_role:
+    name: nfs-client
+  vars:
+    nfs_client_mounts: '{{ { sap_nw_sapmnt_nfs_mount_src: "/sapmnt" } }}'
+
+- name: include db2-pre role
+  include_role:
+    name: db2-pre
+
+# The DB2 installer fails if it cannot connect to the virtual host on the load
+# balancer IP, but that is not available until DB2 is installed. Adding the IP
+# to the local interface allows the connection to succeed. After installation,
+# this role is run again with `local_interface_state: absent` to remove it.
+- name: include local-interface role
+  include_role:
+    name: local-interface
+  vars:
+    local_interface_ip: '{{ sap_db2_vip }}'
+  when: sap_db2_is_primary | bool
+
+- name: include sapinst role for primary
+  include_role:
+    name: sapinst
+  vars:
+    sap_product_id: '{{ sap_product_vars[sap_nw_product_and_version].db_product_id }}'
+    sap_sapinst_extra_args: SAPINST_USE_HOSTNAME={{ sap_db2_virtual_host }}
+    sap_sapinst_install_tsamp: true
+    sap_sapinst_swpm_path: '{{ sap_product_vars[sap_nw_product_and_version].swpm_path }}'
+    sap_sapinst_template: inifile_db_db2.params
+  when: sap_db2_is_primary | bool
+
+- name: include local-interface role
+  include_role:
+    name: local-interface
+  vars:
+    local_interface_ip: '{{ sap_db2_vip }}'
+    local_interface_state: absent
+  when: sap_db2_is_primary | bool
+
+- name: include sapinst role for secondary
+  include_role:
+    name: sapinst
+  vars:
+    sap_product_id: '{{ sap_product_vars[sap_nw_product_and_version].dbcopy_product_id }}'
+    sap_sapinst_extra_args: SAPINST_USE_HOSTNAME={{ sap_db2_virtual_host }}
+    sap_sapinst_install_tsamp: true
+    sap_sapinst_swpm_path: '{{ sap_product_vars[sap_nw_product_and_version].swpm_path }}'
+    sap_sapinst_template: inifile_dbcopy_db2.params
+  when: not (sap_db2_is_primary | bool)
+
+- name: include db2-hadr role
+  include_role:
+    name: db2-hadr

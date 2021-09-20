@@ -46,3 +46,8 @@ package_list:
   - unzip
   - libsss_autofs
   - python2-pip
+  # For DB2
+  - socat
+  - ksh
+  - pam.i686
+  - libstdc++.i686

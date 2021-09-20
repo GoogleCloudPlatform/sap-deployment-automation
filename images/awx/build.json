@@ -73,7 +73,9 @@
       "inline": [
         "rm -f ./sap-iac.tar.gz",
         "rm -f ./inventory/host_vars/default",
-        "rm -rf ./venv"
+        "rm -rf ./venv",
+        "# To undo install.yml modifications made in preinstall.yml:",
+        "git checkout -- ../../third_party/github.com/ansible/awx/installer/roles/local_docker/templates/docker-compose.yml.j2"
       ]
     }
   ]

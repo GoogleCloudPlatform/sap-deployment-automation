@@ -1,0 +1,13 @@
+PersistentResourceAttributes::
+  Name="db2vip_rs"
+  ResourceType=1
+  StartCommand="/usr/local/bin/db2vip start"
+  StopCommand="/usr/local/bin/db2vip stop"
+  MonitorCommand="/usr/local/bin/db2vip status"
+  MonitorCommandPeriod=10
+  MonitorCommandTimeout=5
+  StopCommandTimeout=5
+  UserName="root"
+  RunCommandsSync=0
+  ProtectionMode=0
+  NodeNameList={"{{ sap_db2_instance_name_primary }}","{{ sap_db2_instance_name_secondary }}"}

@@ -1,0 +1,68 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: include storage role
+  include_role:
+    name: storage
+  vars:
+    swapon: true
+    nfs_mount: true
+    disks:
+    - { name: sapmnt, partition_path : sapmnt }
+    - { name: usrsap, partition_path : usrsap }
+    - { name: swap, partition_path : swap }
+    logvols:
+      sapmnt:
+        size: 100%VG
+        vol: sapmnt
+        mountpoint: /sapmnt
+        export: true
+      usrsap:
+        size: 100%VG
+        vol: usrsap
+        mountpoint: /usr/sap
+    swapvols:
+      swap:
+        size: 100%VG
+        vol: swap
+
+- name: include nfs-server role
+  include_role:
+    name: nfs-server
+  vars:
+    nfs_server_exports:
+    - directory: /sapmnt
+      clients: '{{ groups.db2 + groups.pas + groups.aas | default([]) }}'
+    - directory: /usr/sap/trans
+      clients: '{{ groups.pas + groups.aas | default([]) }}'
+
+- name: include nw-pre role
+  include_role:
+    name: nw-pre
+  vars:
+    sap_product_and_version: '{{ sap_nw_product_and_version }}'
+
+- name: include nw-pre role
+  include_role:
+    name: nw-pre
+  vars:
+    sap_product_and_version: '{{ sap_db2_product_and_version }}'
+
+- name: include sapinst role
+  include_role:
+    name: sapinst
+  vars:
+    sap_product_id: '{{ sap_product_vars[sap_nw_product_and_version].ascs_product_id }}'
+    sap_sapinst_swpm_path: '{{ sap_product_vars[sap_nw_product_and_version].swpm_path }}'
+    sap_sapinst_template: inifile_ascs.params

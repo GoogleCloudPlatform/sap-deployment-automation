@@ -1,0 +1,37 @@
+<DB2Cluster xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	    xsi:noNamespaceSchemaLocation="db2ha.xsd"
+	    clusterManagerName="TSA"
+	    version="1.0">
+  <ClusterDomain domainName="db2_hadr">
+    <Quorum quorumDeviceProtocol="network"
+	    quorumDeviceName="{{ sap_db2_vip }}" />
+    <PhysicalNetwork physicalNetworkName="db2_public_network_0"
+		     physicalNetworkProtocol="ip">
+      <Interface interfaceName="{{ ansible_default_ipv4.alias }}"
+		 clusterNodeName="{{ sap_db2_instance_name_primary }}">
+        <IPAddress baseAddress="{{ sap_db2_primary_ip }}"
+		   subnetMask="255.255.255.255"
+		   networkName="db2_public_network_0" />
+      </Interface>
+      <Interface interfaceName="{{ ansible_default_ipv4.alias }}"
+		 clusterNodeName="{{ sap_db2_instance_name_secondary }}">
+        <IPAddress baseAddress="{{ sap_db2_secondary_ip }}"
+		   subnetMask="255.255.255.255"
+		   networkName="db2_public_network_0" />
+      </Interface>
+    </PhysicalNetwork>
+    <ClusterNode clusterNodeName="{{ sap_db2_instance_name_primary }}" />
+    <ClusterNode clusterNodeName="{{ sap_db2_instance_name_secondary }}" />
+  </ClusterDomain>
+  <FailoverPolicy><HADRFailover /></FailoverPolicy>
+  <DB2PartitionSet>
+    <DB2Partition dbpartitionnum="0" instanceName="{{ sap_db2_user }}" />
+  </DB2PartitionSet>
+  <HADRDBSet>
+    <HADRDB databaseName="{{ sap_nw_sid }}"
+	    localInstance="{{ sap_db2_user }}"
+	    remoteInstance="{{ sap_db2_user }}"
+	    localHost="{{ sap_db2_instance_name_primary }}"
+	    remoteHost="{{ sap_db2_instance_name_secondary }}" />
+  </HADRDBSet>
+</DB2Cluster>

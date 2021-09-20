@@ -138,3 +138,8 @@ variable "ilb_required" {
   default     = true
 }
 
+variable "failover_policy" {
+  type        = map(string)
+  description = "Failover policy for the backend service"
+  default     = null
+}

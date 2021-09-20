@@ -1,0 +1,72 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Supported DB2 versions are 10.5FP9, 11.1MP4FP6, and 11.5MP5FP1.
+sap_db2_product_version: 11.5MP5FP1
+
+# Name of the DB2 VM instance.
+sap_db2_instance_name: abc-db2
+
+# Type of the DB2 VM instance.
+sap_db2_instance_type: e2-standard-8
+
+# Instance type of non-database machines.
+sap_nw_instance_type: e2-standard-8
+
+# Name of the ASCS VM instance.
+sap_nw_ascs_instance_name: abc-ascs
+
+# Base name of application server instances. The names will be derived from
+# this with a numeric suffix added.
+sap_nw_as_instance_basename: abc-as
+
+# Number of application server VM instances. This should be at least 1.
+# The first instance is the PAS, and subsequent instances are AAS.
+sap_nw_as_num_instances: 1
+
+# Image of all VM instances.
+sap_source_image_family: sles-15-sp3-sap
+sap_source_image_project: suse-sap-cloud
+# sap_source_image_family: rhel-7-7-sap-ha
+# sap_source_image_project: rhel-sap-cloud
+
+# Service account of all VM instances.
+sap_nw_service_account_name: sap-common-sa
+
+# SID of SAP instance.
+sap_nw_sid: ABC
+
+# Password for SAP instance. See https://docs.ansible.com/ansible/2.9/user_guide/vault.html
+# for details on using Ansible Vault to manage passwords. For testing purposes you can change
+# this to an ordinary string.
+sap_nw_password: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  34646235373364613136306165653738636334663233383734616364613065663630316430663937
+  3838616563663933656361613864636130346263633764640a633666633430303836353638653235
+  33366330323735316532326637373165393039356235666662666533396361346536336435316463
+  6266346531313561380a393239616634353265666262316466633539623834633931636334633839
+  6362
+
+# Bucket where SAP install media is located.
+sap_nw_install_files_bucket: sap-deployment-media
+
+# GCP project, subnetwork, and zone in which instances will be located.
+sap_project_id: abcxyz
+sap_nw_subnetwork: default
+sap_zone: us-central1-a
+
+# Bucket and prefix required for Terraform state. Every stack MUST have a unique
+# bucket and prefix combination or Terraform will treat them as the same stack.
+sap_tf_state_bucket: abcxyz
+sap_tf_state_bucket_prefix: abc-nwdb2

@@ -1,0 +1,69 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# This is intended to be run twice: the first time with sap_db2_avoid_lock_escalation
+# set to true, and the second time set to false. It runs the first time after DB2 is
+# installed, and the second time after PAS is installed to undo the change.
+
+- name: get db2 version info
+  shell: >-
+    . /db2/{{ sap_db2_user }}/.sapenv.sh &&
+    . /db2/{{ sap_db2_user }}/sqllib/db2profile &&
+    db2licm -v
+  register: sap_db2_version_info
+  changed_when: false
+
+- name: get group of db2 user
+  command: id -g
+  become_user: '{{ sap_db2_user }}'
+  register: sap_db2_group
+  changed_when: false
+  when: sap_db2_version_info.stdout.startswith('11.')
+
+- name: ensure state directory exists
+  file:
+    path: '{{ sap_db2_lock_escalation_state_file | dirname }}'
+    state: directory
+    owner: '{{ sap_db2_user }}'
+    group: '{{ sap_db2_group.stdout }}'
+    mode: '0755'
+  when: sap_db2_version_info.stdout.startswith('11.')
+
+- name: toggle db2 lock escalation
+  shell: >-
+    . /db2/{{ sap_db2_user }}/.sapenv.sh &&
+    . /db2/{{ sap_db2_user }}/sqllib/db2profile &&
+    db2set DB2_AVOID_LOCK_ESCALATION=FALSE
+  become_user: '{{ sap_db2_user }}'
+  when:
+  - sap_db2_version_info.stdout.startswith('11.')
+  - not (sap_db2_lock_escalation_avoid | bool)
+  args:
+    # This file is created by the next task. After the next
+    # task has run, this does not need to run again.
+    creates: '{{ sap_db2_lock_escalation_state_file }}'
+
+- name: reset db2 lock escalation to initial value
+  shell: >-
+    . /db2/{{ sap_db2_user }}/.sapenv.sh &&
+    . /db2/{{ sap_db2_user }}/sqllib/db2profile &&
+    db2set DB2_AVOID_LOCK_ESCALATION= &&
+    db2set DB2_WORKLOAD=SAP &&
+    touch {{ sap_db2_lock_escalation_state_file }}
+  become_user: '{{ sap_db2_user }}'
+  when:
+  - sap_db2_version_info.stdout.startswith('11.')
+  - sap_db2_lock_escalation_avoid | bool
+  args:
+    creates: '{{ sap_db2_lock_escalation_state_file }}'

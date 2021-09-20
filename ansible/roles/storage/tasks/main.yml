@@ -16,7 +16,30 @@
   stat:
     path: "/dev/disk/by-id/google-{{ ansible_hostname }}-{{ item.name }}"
   with_items: "{{ disks }}"
-  register: diskpath
+  register: diskpath_host
+  tags:
+    - disk_setup
+
+- name: Verifying disks attached to system
+  stat:
+    # For systems that do not use the hostname in the device name.
+    path: "/dev/disk/by-id/google-{{ item.name }}"
+  with_items: "{{ disks }}"
+  register: diskpath_nohost
+  tags:
+    - disk_setup
+
+- name: Define disk path
+  set_fact:
+    diskpath: '{{ diskpath_host }}'
+  when: true in diskpath_host.results | map(attribute='stat') | map(attribute='exists') | list
+  tags:
+    - disk_setup
+
+- name: Define disk path
+  set_fact:
+    diskpath: '{{ diskpath_nohost }}'
+  when: true in diskpath_nohost.results | map(attribute='stat') | map(attribute='exists') | list
   tags:
     - disk_setup
 

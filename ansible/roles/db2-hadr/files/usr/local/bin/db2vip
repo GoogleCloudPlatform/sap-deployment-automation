@@ -1,0 +1,56 @@
+#!/bin/bash
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+ACTION=${1}
+OPSTATE_ONLINE=1
+OPSTATE_OFFLINE=2
+
+exit_msg() {
+    echo ${2}
+    exit ${1}
+}
+
+case ${ACTION} in
+    start)
+        # Run socat in the foreground. The db2vip_rs resource has
+        # RunCommandsSync=0 so it forks into the background.
+        socat -U TCP-LISTEN:6666,backlog=10,fork,reuseaddr /dev/null
+        ;;
+
+    stop)
+        for pid in $(ps -ef | awk '/[s]ocat .* TCP-LISTEN:6666,/{print $2}'); do
+            kill -TERM ${pid} >/dev/null 2>&1
+            if [ ${?} -eq 0 ]; then
+                exit_msg 0 'socat is stopped'
+            else
+                exit_msg 1 'socat failed to stop'
+            fi
+        done
+        exit_msg 0 'socat is already stopped'
+        ;;
+
+    status)
+        status=$(ps -ef | grep -E '[s]ocat .* TCP-LISTEN:6666,')
+        if [ -n "${status}" ]; then
+            exit_msg ${OPSTATE_ONLINE} 'socat is running'
+        else
+            exit_msg ${OPSTATE_OFFLINE} 'socat is stopped'
+        fi
+        ;;
+
+    *)
+        exit_msg 1 "Usage: ${0} start|stop|status"
+        ;;
+esac

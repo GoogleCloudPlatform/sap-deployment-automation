@@ -26,3 +26,6 @@ package_list:
   - libstdc++6
   - libatomic1
   - python2-pip
+  # For DB2
+  - libstdc++6-32bit
+  - pam-32bit
