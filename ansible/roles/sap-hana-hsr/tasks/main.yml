@@ -59,16 +59,69 @@
   async: 60
   poll: 2
 
+- name: Determine if SAPHanaSR hook exists
+  stat:
+    path: '{{ item }}'
+  register: sap_hana_sr_hook_paths
+  loop:
+  - /usr/share/SAPHanaSR/SAPHanaSR.py
+  - /usr/share/SAPHanaSR/srHook/SAPHanaSR.py
+
+- block:
+  - name: Define SAPHanaSR hook directory
+    set_fact:
+      sap_hana_sr_hook_dir: '{{
+        sap_hana_sr_hook_paths.results
+        | map(attribute="stat")
+        | selectattr("exists", "true")
+        | map(attribute="path")
+        | list | first | dirname
+      }}'
+
+  - name: Configure SAPHanaSR hook in global.ini
+    blockinfile:
+      path: /hana/shared/{{ sap_hana_sid }}/global/hdb/custom/config/global.ini
+      block: |
+        [ha_dr_provider_SAPHanaSR]
+        provider = SAPHanaSR
+        path = {{ sap_hana_sr_hook_dir }}
+        execution_order = 1
+
+        [trace]
+        ha_dr_saphanasr = info
+    register: modify_global_ini
+
+  - name: Ensure sudoers is configured for SAPHanaSR hook
+    template:
+      src: etc/sudoers.d/sap_hana_sr.j2
+      dest: /etc/sudoers.d/sap_hana_sr
+      owner: root
+      group: root
+      mode: '0440'
+      validate: /usr/sbin/visudo -cf %s
+
+  - name: Ensure HANA is restarted if global.ini is changed
+    shell: |
+      . /usr/sap/{{ sap_hana_user }}/home/.sapenv.sh
+      sapcontrol -nr {{ sap_hana_instance_number }} -function StopSystem
+      sapcontrol -nr {{ sap_hana_instance_number }} -function WaitforStopped 600 2
+      sapcontrol -nr {{ sap_hana_instance_number }} -function StartSystem
+    become_user: '{{ sap_hana_user }}'
+    when: modify_global_ini is changed
+    async: 60
+    poll: 2
+  when: true in sap_hana_sr_hook_paths.results | map(attribute="stat") | map(attribute="exists") | list
+
 - name: Ensure HANA instance is started in the secondary node
   shell: |
-      /usr/sap/{{ sap_hana_sid | upper }}/HDB{{ sap_hana_instance_number }}/exe/sapcontrol \
-      -nr {{ sap_hana_instance_number }} -function StartSystem
-  args:
-    executable: /bin/bash
-  become: yes
+    . /usr/sap/{{ sap_hana_user }}/home/.sapenv.sh
+    sapcontrol -nr {{ sap_hana_instance_number }} -function StartSystem
   become_user: "{{ sap_hana_user }}"
   register: startinstance
-  changed_when: "'StartSystem' in startinstance.stdout"
-  when: not (sap_hana_is_primary | bool)
-  async: 60
-  poll: 2
+  changed_when: >
+    'StartSystem' in startinstance.stdout
+  when:
+  - not (sap_hana_is_primary | bool)
+  - registersr is changed
+  async: 30
+  poll: 1

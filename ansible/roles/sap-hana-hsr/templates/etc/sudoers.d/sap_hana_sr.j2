@@ -1,0 +1,10 @@
+{% set sap_hana_sid_lc = sap_hana_sid | lower -%}
+Cmnd_Alias SOK_A   = /usr/sbin/crm_attribute -n hana_{{ sap_hana_sid_lc }}_site_srHook_{{ sap_hana_primary_instance_name }} -v SOK   -t crm_config -s SAPHanaSR
+Cmnd_Alias SFAIL_A = /usr/sbin/crm_attribute -n hana_{{ sap_hana_sid_lc }}_site_srHook_{{ sap_hana_primary_instance_name }} -v SFAIL -t crm_config -s SAPHanaSR
+Cmnd_Alias SOK_B   = /usr/sbin/crm_attribute -n hana_{{ sap_hana_sid_lc }}_site_srHook_{{ sap_hana_secondary_instance_name }} -v SOK   -t crm_config -s SAPHanaSR
+Cmnd_Alias SFAIL_B = /usr/sbin/crm_attribute -n hana_{{ sap_hana_sid_lc }}_site_srHook_{{ sap_hana_secondary_instance_name }} -v SFAIL -t crm_config -s SAPHanaSR
+{{ sap_hana_user }} ALL=(ALL) NOPASSWD: SOK_A, SFAIL_A, SOK_B, SFAIL_B
+{% if ansible_os_family == 'RedHat' -%}
+{# Per RHEL docs: https://access.redhat.com/articles/3004101 #}
+Defaults!SOK_A, SFAIL_A, SOK_A, SFAIL_B !requiretty
+{% endif -%}
