@@ -30,7 +30,22 @@ HDB_Schema_Check_Dialogs.schemaPassword = {{ sap_nw_password }}
 # NW_CI_Instance.ascsInstallGateway = false
 
 # Standard system only: Add web dispatcher process to (A)SCS instance
-# NW_CI_Instance.ascsInstallWebDispatcher = false
+NW_CI_Instance.ascsInstallWebDispatcher = {{ sap_nw_ascs_install_web_dispatcher | default('false') | lower }}
+
+# There are three types of encryption modes: 'Always' (default), 'depending on the incoming protocol', 'Never'
+NW_webdispatcher_Instance.encryptionMode = {{ sap_nw_wd_encryption_mode | default('Always') }}
+
+# Operating systems have restrictions for maximum number of open 'file handles' (sockets) for each process. Default is 2048. Provide a much higher value for  scenarios with heavy workload.
+NW_webdispatcher_Instance.scenarioSize = {{ sap_nw_wd_scenario_size | default('2048') }}
+
+# Set this parameter to 'true' if the SAP Web Dispatcher HTTP Port is to be used.
+NW_webdispatcher_Instance.useWdHTTPPort = {{ sap_nw_wd_use_http | default('true') | lower }}
+
+# HTTP Port of SAP Web Dispatcher. You can only specify this parameter if 'NW_webdispatcher_Instance.useWdHTTPPort' is set to 'true'.
+NW_webdispatcher_Instance.wdHTTPPort = {{ sap_nw_wd_http_port | default('8000') }}
+
+# HTTPS Port of SAP Web Dispatcher.
+NW_webdispatcher_Instance.wdHTTPSPort = {{ sap_nw_wd_https_port | default('44300') }}
 
 # Standard system with AS ABAP only: ASCS instance number. Leave empty for default.
 # NW_CI_Instance.ascsInstanceNumber =
