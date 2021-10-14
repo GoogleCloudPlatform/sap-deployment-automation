@@ -31,6 +31,9 @@ sap_nw_user: '{{ sap_nw_sid | lower }}adm'
 
 sap_scs_name: '{{ sap_product_vars[sap_product_and_version].scs_name | default("ASCS") }}'
 
+sap_nw_ascs_install_gateway: false
+sap_nw_ascs_install_web_dispatcher: false
+
 # If sap_nw_nfs_src is defined, sap_nw_nfsvols defaults to using it as the source.
 # Otherwise, sap_nw_nfsvols must be defined in vars. This is for use with e.g. Cloud FileStore,
 # which can use the same NFS volume for multiple mounts.

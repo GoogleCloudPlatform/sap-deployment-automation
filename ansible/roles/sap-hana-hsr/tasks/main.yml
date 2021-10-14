@@ -80,7 +80,7 @@
 
   - name: Configure SAPHanaSR hook in global.ini
     blockinfile:
-      path: /hana/shared/{{ sap_hana_sid }}/global/hdb/custom/config/global.ini
+      path: '{{ sap_hana_shared_mountpoint }}/{{ sap_hana_sid }}/global/hdb/custom/config/global.ini'
       block: |
         [ha_dr_provider_SAPHanaSR]
         provider = SAPHanaSR

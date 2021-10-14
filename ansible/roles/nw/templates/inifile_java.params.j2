@@ -30,7 +30,7 @@ HDB_Schema_Check_Dialogs.schemaPassword = {{ sap_nw_password }}
 # NW_CI_Instance.ascsInstallGateway = false
 
 # Standard system only: Add web dispatcher process to (A)SCS instance
-NW_CI_Instance.ascsInstallWebDispatcher = {{ sap_nw_ascs_install_web_dispatcher | default('false') | lower }}
+NW_CI_Instance.ascsInstallWebDispatcher = {{ sap_nw_ascs_install_web_dispatcher | lower }}
 
 # There are three types of encryption modes: 'Always' (default), 'depending on the incoming protocol', 'Never'
 NW_webdispatcher_Instance.encryptionMode = {{ sap_nw_wd_encryption_mode | default('Always') }}
