@@ -29,6 +29,9 @@ sap_nw_usrsap_disk_size: 50
 
 sap_scs_name: '{{ sap_product_vars[sap_product_and_version].scs_name | default("ASCS") }}'
 
+sap_nw_ascs_install_gateway: false
+sap_nw_ascs_install_web_dispatcher: false
+
 sap_nw_product: 'NetWeaver'
 sap_nw_product_version: '750'
 sap_product_and_version: '{{ sap_nw_product }}/{{ sap_nw_product_version }}'

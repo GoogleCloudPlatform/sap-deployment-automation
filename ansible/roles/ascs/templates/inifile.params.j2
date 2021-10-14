@@ -65,10 +65,10 @@ NW_GetSidNoProfiles.unicode = true
 NW_getFQDN.setFQDN = false
 
 # Add gateway process in the ASCS instance
-NW_SCS_Instance.ascsInstallGateway = {{ sap_nw_ascs_install_gateway | default('false') | lower }}
+NW_SCS_Instance.ascsInstallGateway = {{ sap_nw_ascs_install_gateway | lower }}
 
 # Add Web Dispatcher process in the ASCS instance
-NW_SCS_Instance.ascsInstallWebDispatcher = {{ sap_nw_ascs_install_web_dispatcher | default('false') | lower }}
+NW_SCS_Instance.ascsInstallWebDispatcher = {{ sap_nw_ascs_install_web_dispatcher | lower }}
 
 # There are three types of encryption modes: 'Always' (default), 'depending on the incoming protocol', 'Never'
 NW_webdispatcher_Instance.encryptionMode = {{ sap_nw_wd_encryption_mode | default('Always') }}
