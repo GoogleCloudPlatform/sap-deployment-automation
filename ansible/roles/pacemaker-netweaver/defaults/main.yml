@@ -15,5 +15,4 @@
 sap_gcloud_path: /usr/bin/gcloud
 sap_cluster_name: hacluster
 sap_cluster_user: hacluster
-sap_cluster_user_password: linux
 sap_use_lb: false

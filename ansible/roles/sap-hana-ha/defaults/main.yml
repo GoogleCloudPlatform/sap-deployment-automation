@@ -64,6 +64,7 @@ sap_hana_common_master_password: '{{ sap_hana_password }}'
 sap_hana_root_password: '{{ sap_hana_password }}'
 sap_hana_sapadm_password: '{{ sap_hana_password }}'
 sap_hana_sidadm_password: '{{ sap_hana_password }}'
+sap_hana_cluster_user_password: '{{ sap_hana_password }}'
 sap_hana_hsr_operation_mode: logreplay
 sap_hana_hsr_replication_mode: syncmem
 

@@ -46,6 +46,7 @@
   include_role:
     name: pacemaker-netweaver
   vars:
+    sap_cluster_user_password: '{{ sap_nw_cluster_user_password }}'
     sap_ensa_version: '{{ sap_product_vars[sap_nw_product_and_version].ensa_version }}'
     sap_primary_instance: '{{ sap_nw_ascs_instance_name }}'
     sap_primary_instance_ip: '{{ sap_nw_ascs_private_ip }}'

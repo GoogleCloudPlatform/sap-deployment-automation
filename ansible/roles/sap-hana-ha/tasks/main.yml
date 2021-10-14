@@ -77,6 +77,8 @@
 - name: Include pacemaker install/config role
   include_role:
     name: pacemaker-hana
+  vars:
+    sap_cluster_user_password: '{{ sap_hana_cluster_user_password }}'
 
 - name: Include SAP hana backint role
   include_role:
