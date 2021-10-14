@@ -1,0 +1,11 @@
+[Unit]
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/sap-local-routes
+
+[Install]
+WantedBy=multi-user.target

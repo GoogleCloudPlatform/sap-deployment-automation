@@ -86,3 +86,34 @@
     groups: haclient
     append: true
   when: ansible_os_family == 'Suse'
+
+# https://cloud.google.com/solutions/sap/docs/netweaver-ha-config-sles#enable-back-end-comms
+- name: ensure communication is enabled between load balancer backend vms
+  block:
+  - name: configure kernel to accept local traffic on primary interface
+    sysctl:
+      name: net.ipv4.conf.{{ ansible_default_ipv4.interface }}.accept_local
+      value: '1'
+      sysctl_set: true
+      sysctl_file: /etc/sysctl.d/sap-local-routes.conf
+
+  - name: ensure files are present for service to create local routes
+    copy:
+      src: '{{ item.path }}'
+      dest: '/{{ item.path }}'
+      owner: root
+      group: root
+      mode: '{{ item.mode }}'
+    loop:
+    - path: etc/systemd/system/sap-local-routes.service
+      mode: '0644'
+    - path: usr/local/bin/sap-local-routes
+      mode: '0755'
+
+  - name: ensure service to create local routes is enabled and running
+    systemd:
+      name: sap-local-routes.service
+      enabled: true
+      state: started
+      daemon_reload: true
+  when: ansible_os_family == 'Suse'
