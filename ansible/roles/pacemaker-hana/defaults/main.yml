@@ -12,9 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-sap_gcloud_path: /usr/bin/gcloud
-sap_cluster_name: hacluster
-sap_cluster_user: hacluster
-sap_hana_instance_number: '00'
 sap_use_lb: true
 sap_health_check_port: 60000
