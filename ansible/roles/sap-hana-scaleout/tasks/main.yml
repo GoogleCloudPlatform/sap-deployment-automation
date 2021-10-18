@@ -34,7 +34,10 @@
 - name: Include sap preconfigure agent role
   include_role:
     name: sap-preconfigure
-  when: ( ansible_os_family == "RedHat") and not ( ansible_hostname | regex_search('([w]\d\d+$)') )
+  when:
+  - ansible_os_family == "RedHat"
+  - ansible_distribution_major_version | int < 8
+  - not (ansible_hostname | regex_search('([w]\d\d+$)'))
 
 - name: Include sap hana preconfigure agent role
   include_role:
@@ -70,11 +73,6 @@
   include_role:
     name: sap-hostagent
   when: not ( ansible_hostname | regex_search('([w]\d\d+$)') ) and ( sap_add_worker_nodes is not defined )
-
-- name: Include common role
-  include_role:
-    name: common
-  when: ansible_hostname | regex_search('([w]\d\d+$)')
 
 - name: Include copy ssh keys role
   include_role:

@@ -16,10 +16,6 @@
   include_role:
     name: base
 
-- name: Include common role
-  include_role:
-    name: common
-
 - name: Install python pip
   zypper:
     name: '{{ item }}'

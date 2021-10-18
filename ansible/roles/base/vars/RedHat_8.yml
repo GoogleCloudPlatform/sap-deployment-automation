@@ -12,21 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Install GCC 7.x for RedHat
-  package:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - compat-sap-c++-7
-    - libatomic
-  when:  ansible_os_family == "RedHat"
-  
-- name: Install GCC 7.x for Suse
-  package:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - libgcc_s1
-    - libstdc++6
-    - libatomic1
-  when: ansible_os_family == "Suse"
+ansible_python_interpreter: /usr/bin/python3
+cloudsdk_python_export_path: /usr/bin/python3
+gcloud_install_dir: /usr/local
+package_list:
+  - "@large-systems"
+  - uuidd
+  - tcsh
+  - psmisc
+  - compat-sap-c++-9
+  - compat-sap-c++-10
+  - compat-sap-c++-11
+  - libatomic
+  - tuned-profiles-sap-hana
+  - resource-agents-sap-hana
+  - numactl-libs
+  - libtool-ltdl
+  - nfs-utils
+  - pacemaker
+  - pcs
+  - lvm2
+  - autofs
+  - ndctl
+  - unzip
+  - libsss_autofs
+  - python3-pip

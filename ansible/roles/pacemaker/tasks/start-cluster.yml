@@ -41,8 +41,51 @@
     when: >-
       sap_primary_instance + ': Already authorized' not in pcs_command_status.stdout and
       sap_secondary_instance + ': Already authorized' not in pcs_command_status.stdout
-  when: |
-    ansible_os_family == 'RedHat'
+  when:
+  - ansible_os_family == 'RedHat'
+  - pacemaker_major_version | int < 2
+
+- block:
+  - name: start and enable pcsd
+    service:
+      name: pcsd.service
+      state: started
+      enabled: true
+
+  - command: timeout 5 pcs cluster auth
+    register: pcs_command_status
+    changed_when: false
+    failed_when: false
+  - name: set cluster authentication
+    command: >
+      pcs host auth {{ sap_primary_instance }} {{ sap_secondary_instance }}
+      -u {{ sap_cluster_user }} -p {{ sap_cluster_user_password }}
+    no_log: true
+    run_once: true
+    when: >-
+      ('Unable to read Corosync configuration' in pcs_command_status.stderr) or
+      ((sap_primary_instance + ': Already authorized' not in pcs_command_status.stdout) and
+       (sap_secondary_instance + ': Already authorized' not in pcs_command_status.stdout))
+
+  - name: write cluster configuration
+    command: >-
+      pcs cluster setup {{ sap_cluster_name }} --start
+      {{ sap_primary_instance }} {{ sap_secondary_instance }}
+    args:
+      creates: /etc/corosync/corosync.conf
+    run_once: true
+
+  - name: start and enable corosync and pacemaker
+    service:
+      name: '{{ item }}'
+      state: started
+      enabled: true
+    loop:
+    - corosync.service
+    - pacemaker.service
+  when:
+  - ansible_os_family == 'RedHat'
+  - pacemaker_major_version | int >= 2
 
 - block:
   - name: generate corosync key
@@ -133,3 +176,17 @@
     - pacemaker.service
   when: |
     not is_primary and ansible_os_family == 'Suse'
+
+- name: create systemd dropin directory for corosync
+  file:
+    path: /etc/systemd/system/corosync.service.d
+    mode: '0755'
+    state: directory
+
+- name: create systemd dropin for corosync to delay start
+  copy:
+    dest: /etc/systemd/system/corosync.service.d/override.conf
+    mode: '0644'
+    content: |
+      [Service]
+      ExecStartPre=/bin/sleep 60
