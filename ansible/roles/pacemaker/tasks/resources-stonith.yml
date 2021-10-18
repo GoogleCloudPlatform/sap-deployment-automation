@@ -24,6 +24,14 @@
     command: pcs property set stonith-enabled=true
     when: |
       'stonith-enabled: true' not in pcs_command_status.stdout
+  - name: configure property stonith-timeout
+    command: pcs property set stonith-timeout=300s
+    when: |
+      'stonith-timeout: 300s' not in pcs_command_status.stdout
+
+  - name: define fence_gce instance argument
+    set_fact:
+      fence_gce_instance_argument: '{{ "port" if fence_agents_release | int < 30 else "plug" }}'
 
   - command: |
       pcs stonith show
@@ -32,9 +40,10 @@
   - name: configure stonith resources
     command: >-
       pcs stonith create STONITH-{{ item.instance }} fence_gce
-      port={{ item.instance }}
+      {{ fence_gce_instance_argument }}={{ item.instance }}
       zone={{ item.zone }}
       project={{ sap_project_id }}
+      method=cycle
     loop:
     - instance: '{{ sap_primary_instance }}'
       zone: '{{ sap_primary_zone }}'

@@ -22,7 +22,7 @@
     # sap-assertions role requires sap_expected_pacemaker_status variable
     sap_expected_pacemaker_status:
     - 2 nodes configured
-    - 8 resources configured
+    - '8 resource(s| instances) configured'
     - 'Online: \[ {{ sap_nw_ascs_instance_name }} {{ sap_nw_ers_instance_name }} \]'
     - 'STONITH-{{ sap_nw_ascs_instance_name }}[\t\s]+\(stonith:fence_gce\):[\t\s]+Started[\t\s]+{{ sap_nw_ers_instance_name }}'
     - 'STONITH-{{ sap_nw_ers_instance_name }}[\t\s]+\(stonith:fence_gce\):[\t\s]+Started[\t\s]+{{ sap_nw_ascs_instance_name }}'

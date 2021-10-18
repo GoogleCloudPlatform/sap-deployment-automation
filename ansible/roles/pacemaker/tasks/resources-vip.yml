@@ -45,7 +45,7 @@
     when: not sap_use_lb
     register: pcs_command_status
     changed_when: pcs_command_status.rc == 0
-    failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
+    failed_when: pcs_command_status.rc != 0 and 'already exist' not in pcs_command_status.stderr
 
   - name: group vip resources
     command: |
@@ -53,7 +53,7 @@
     when: sap_use_lb
     register: pcs_command_status
     changed_when: pcs_command_status.rc == 0
-    failed_when: pcs_command_status.rc != 0 and 'already exists' not in pcs_command_status.stderr
+    failed_when: pcs_command_status.rc != 0 and 'already exist' not in pcs_command_status.stderr
   when:
     ansible_os_family == 'RedHat'
 

@@ -38,4 +38,4 @@
     - vm.pagecache_limit_ignore_dirty
     - net.ipv4.tcp_slow_start_after_idle
     - kernel.numa_balancing
-  when: ansible_facts['distribution'] == "SLES_SAP"
+  when: ansible_os_family == 'Suse'

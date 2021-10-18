@@ -12,8 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-sap_gcloud_path: /usr/bin/gcloud
-sap_cluster_name: hacluster
-sap_cluster_user: hacluster
-sap_cluster_user_password: linux
-sap_use_lb: false
+ansible_python_interpreter: /usr/bin/python3
+cloudsdk_python_export_path: /usr/bin/python3
+gcloud_install_dir: /usr/local
+package_list:
+  - "@large-systems"
+  - uuidd
+  - tcsh
+  - psmisc
+  - compat-sap-c++-9
+  - compat-sap-c++-10
+  - compat-sap-c++-11
+  - libatomic
+  - tuned-profiles-sap-hana
+  - resource-agents-sap-hana
+  - numactl-libs
+  - libtool-ltdl
+  - nfs-utils
+  - pacemaker
+  - pcs
+  - lvm2
+  - autofs
+  - ndctl
+  - unzip
+  - libsss_autofs
+  - python3-pip

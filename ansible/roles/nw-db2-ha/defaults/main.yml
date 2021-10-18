@@ -32,6 +32,7 @@ sap_nw_sapadm_password: '{{ sap_nw_password }}'
 sap_nw_sapsid_password: '{{ sap_nw_password }}'
 sap_nw_sidadm_password: '{{ sap_nw_password }}'
 sap_db2_dbsid_password: '{{ sap_nw_password }}'
+sap_nw_cluster_user_password: '{{ sap_nw_password }}'
 sap_nw_user: '{{ sap_nw_sid | lower }}adm'
 
 sap_nw_sapsys_gid: 2001
