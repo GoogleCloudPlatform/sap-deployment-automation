@@ -19,12 +19,14 @@
 - name: define pacemaker major version
   set_fact:
     pacemaker_major_version: '{{ ansible_facts.packages["pacemaker"][0]["version"].split(".")[0] }}'
-  when: 'pacemaker' in ansible_facts.packages
+  when: |
+    'pacemaker' in ansible_facts.packages
 
 - name: define fence agents release
   set_fact:
     fence_agents_release: '{{ ansible_facts.packages["fence-agents-gce"][0]["release"].split(".")[0] }}'
-  when: 'fence-agents-gce' in ansible_facts.packages
+  when: |
+    'fence-agents-gce' in ansible_facts.packages
 
 - block:
   - name: ensure haproxy is installed
