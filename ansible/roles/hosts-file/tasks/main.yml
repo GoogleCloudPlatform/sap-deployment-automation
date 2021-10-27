@@ -72,7 +72,14 @@
 
 - name: define final hosts file entries
   set_fact:
-    hosts_file_entries_merged: '{{ hosts_file_peer_entries | combine(hosts_file_entries_overlap) }}'
+    hosts_file_entries_final: '{{ hosts_file_entries }}'
+  run_once: true
+  delegate_to: localhost
+  when: hosts_file_peers | length == 0
+
+- name: define final hosts file entries
+  set_fact:
+    hosts_file_entries_final: '{{ hosts_file_peer_entries | combine(hosts_file_entries_overlap) }}'
   run_once: true
   delegate_to: localhost
   when: hosts_file_peers | length > 0
@@ -82,6 +89,6 @@
     path: '{{ hosts_file_path }}'
     # Note tabs are used as delimiters in block content below.
     block: |
-      {% for ip, names in hosts_file_entries_merged.items() %}
+      {% for ip, names in hosts_file_entries_final.items() %}
       {{ ip }}	{{ names | join('	') }}
       {% endfor %}
