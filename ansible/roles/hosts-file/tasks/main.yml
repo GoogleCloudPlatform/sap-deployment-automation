@@ -12,13 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- name: read hosts file
+  slurp:
+    path: '{{ hosts_file_path }}'
+  register: hosts_file_content
+  changed_when: false
+
 # Existing entry for self will be added to Ansible-managed block along with peers.
 - name: remove existing entry for self
   lineinfile:
     path: '{{ hosts_file_path }}'
     regexp: '^\s*{{ ansible_default_ipv4.address }}\s'
     state: absent
-  when: hosts_file_peers | length > 0
+  when:
+  - hosts_file_peers | length > 0
+  - >
+    'ANSIBLE MANAGED BLOCK' not in hosts_file_content.content | b64decode
 
 - name: define hostfile entries for peer hosts
   set_fact:
