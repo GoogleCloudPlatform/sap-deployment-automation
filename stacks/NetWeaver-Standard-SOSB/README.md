@@ -1,10 +1,10 @@
-# NetWeaver-Standard
+# NetWeaver-Standard-SOSB
 
 This stack builds a NetWeaver or S4HANA Standard instance, including HANA Scaleup.
 
 # Deployment Architecture
 
-![NetWeaver-Standard](./images/standard.png)
+![NetWeaver-Standard-SOSB](./images/standard.png)
 
 # Requirements
 
@@ -16,12 +16,12 @@ See the README at the root of the repository for instructions common to all stac
 
 ## Deploying the stack
 
-Copy stacks/NetWeaver-Standard/vars/deploy-vars.yml and populate it with the variables as described below.
+Copy stacks/NetWeaver-Standard-SOSB/vars/deploy-vars.yml and populate it with the variables as described below.
 
 From the root of the repository, run:
 
 ```
-./ansible-wrapper stacks/NetWeaver-Standard/playbook.yml -e @vars.yml
+./ansible-wrapper stacks/NetWeaver-Standard-SOSB/playbook.yml -e @vars.yml
 ```
 
 ## Destroying the stack
@@ -29,7 +29,7 @@ From the root of the repository, run:
 Use the same command as for deploying, but add the `state: absent` variable:
 
 ```
-./ansible-wrapper stacks/NetWeaver-Standard/playbook.yml -e @vars.yml -e state=absent
+./ansible-wrapper stacks/NetWeaver-Standard-SOSB/playbook.yml -e @vars.yml -e state=absent
 ```
 
 # Variables
