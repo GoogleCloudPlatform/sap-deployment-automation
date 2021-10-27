@@ -1,0 +1,267 @@
+{
+  "description": "",
+  "name": "parameters",
+  "spec": [
+    {
+      "question_name": "Terraform state bucket",
+      "question_description": "This is the bucket where Terraform state is stored. If it does not exist yet, it will be created.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_tf_state_bucket",
+      "min": 1,
+      "max": 1024
+    },
+    {
+      "question_name": "Terraform state bucket prefix",
+      "question_description": "This the state file prefix in the Terraform state bucket. Choose a unique name to avoid clashes with other state files.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_tf_state_bucket_prefix",
+      "min": 1,
+      "max": 1024
+    },
+    {
+      "question_name": "Project ID",
+      "question_description": "This is the ID of the project in which cloud resources are created.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_project_id",
+      "min": 1,
+      "max": 1024
+    },
+    {
+      "question_name": "HANA subnetwork",
+      "question_description": "This is the subnetwork for the HANA machine instance network interfaces.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_hana_subnetwork",
+      "min": 1,
+      "max": 1024
+    },
+    {
+      "question_name": "BW4HANA subnetwork",
+      "question_description": "This is the subnetwork for the BW4HANA machine instance network interfaces.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_nw_subnetwork",
+      "min": 1,
+      "max": 1024
+    },
+    {
+      "question_name": "Subnetwork project",
+      "question_description": "This is the project of the subnetwork for the machine instance network interfaces. If left blank, it will default to the Project ID.",
+      "required": false,
+      "type": "text",
+      "variable": "sap_subnetwork_project_id",
+      "min": 0,
+      "max": 1024,
+      "default": ""
+    },
+    {
+      "question_name": "Network tag",
+      "question_description": "This is the network tag that will be assigned to instances.",
+      "required": false,
+      "type": "text",
+      "variable": "sap_network_tag",
+      "min": 1,
+      "max": 1024,
+      "default": "sap-allow-all"
+    },
+    {
+      "question_name": "Zone",
+      "question_description": "This is the zone of the region in which cloud resources will be created.",
+      "required": true,
+      "type": "multiplechoice",
+      "variable": "sap_zone",
+      "min": 1,
+      "max": 30,
+      "default": "us-central1-a",
+      "choices": ["us-east1-b", "us-east1-c", "us-east1-d", "us-east4-c", "us-east4-b", "us-east4-a", "us-central1-c", "us-central1-a", "us-central1-f", "us-central1-b", "us-west1-b", "us-west1-c", "us-west1-a", "europe-west4-a", "europe-west4-b", "europe-west4-c", "europe-west1-b", "europe-west1-d", "europe-west1-c", "europe-west3-c", "europe-west3-a", "europe-west3-b", "europe-west2-c", "europe-west2-b", "europe-west2-a", "asia-east1-b", "asia-east1-a", "asia-east1-c", "asia-southeast1-b", "asia-southeast1-a", "asia-southeast1-c", "asia-northeast1-b", "asia-northeast1-c", "asia-northeast1-a", "asia-south1-c", "asia-south1-b", "asia-south1-a", "australia-southeast1-b", "australia-southeast1-c", "australia-southeast1-a", "southamerica-east1-b", "southamerica-east1-c", "southamerica-east1-a", "asia-east2-a", "asia-east2-b", "asia-east2-c", "asia-northeast2-a", "asia-northeast2-b", "asia-northeast2-c", "asia-northeast3-a", "asia-northeast3-b", "asia-northeast3-c", "asia-southeast2-a", "asia-southeast2-b", "asia-southeast2-c", "europe-north1-a", "europe-north1-b", "europe-north1-c", "europe-west6-a", "europe-west6-b", "europe-west6-c", "northamerica-northeast1-a", "northamerica-northeast1-b", "northamerica-northeast1-c", "us-west2-a", "us-west2-b", "us-west2-c", "us-west3-a", "us-west3-b", "us-west3-c", "us-west4-a", "us-west4-b", "us-west4-c"]
+    },
+    {
+      "question_name": "HANA instance name",
+      "question_description": "This is the name of the HANA instance.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_hana_instance_name",
+      "min": 1,
+      "max": 13
+    },
+    {
+      "question_name": "BW4HANA instance name",
+      "question_description": "This is the name of the BW4HANA instance.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_nw_instance_name",
+      "min": 1,
+      "max": 13
+    },
+    {
+      "question_name": "Image family",
+      "question_description": "Family of the image used to create machines (rhel-7-4-sap, rhel-7-6-sap-ha, rhel-7-7-sap-ha, sles-12-sp2-sap, sles-12-sp3-sap, sles-12-sp4-sap, sles-12-sp5-sap, sles-15-sap, sles-15-sp1-sap, sles-15-sp2-sap).",
+      "required": true,
+      "type": "text",
+      "variable": "sap_source_image_family",
+      "default": "rhel-7-7-sap-ha"
+    },
+    {
+      "question_name": "Image project",
+      "question_description": "Project of the image used to create machines. Choose rhel-sap-cloud for 'rhel' images and suse-sap-cloud for 'sles' images.",
+      "required": true,
+      "type": "multiplechoice",
+      "variable": "sap_source_image_project",
+      "default": "rhel-sap-cloud",
+      "choices": ["rhel-sap-cloud", "suse-sap-cloud"]
+    },
+    {
+      "question_name": "HANA instance type",
+      "question_description": "Machine instance type for HANA.",
+      "required": true,
+      "type": "multiplechoice",
+      "variable": "sap_hana_instance_type",
+      "default": "n1-highmem-32",
+      "choices": ["n1-highmem-32", "n1-highmem-64", "n1-highmem-96", "n2-highmem-32", "n2-highmem-48", "n2-highmem-64", "n2-highmem-80", "m1-megamem-96", "m1-ultramem-40", "m1-ultramem-80", "m1-ultramem-160", "m2-ultramem-208", "m2-ultramem-416"]
+    },
+    {
+      "question_name": "BW4HANA instance type",
+      "question_description": "Machine instance type for BW4HANA.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_nw_instance_type",
+      "min": 1,
+      "max": 1024,
+      "default": "n1-standard-2"
+    },
+    {
+      "question_name": "HANA service account name",
+      "question_description": "This is the name of an existing service account for the HANA machine instance. This should be the name before the '@' symbol, not the entire email address.",
+      "required": false,
+      "type": "text",
+      "variable": "sap_hana_service_account_name",
+      "min": 0,
+      "max": 1024,
+      "default": "sap-common-sa"
+    },
+    {
+      "question_name": "BW4HANA service account name",
+      "question_description": "This is the name of an existing service account for the BW4HANA machine instance. This should be the name before the '@' symbol, not the entire email address.",
+      "required": false,
+      "type": "text",
+      "variable": "sap_nw_service_account_name",
+      "min": 0,
+      "max": 1024,
+      "default": "sap-common-sa"
+    },
+    {
+      "question_name": "HANA installation files bucket",
+      "question_description": "This is the bucket from which HANA installation files will be downloaded. You can add folders to the bucket name to define the path in the bucket where the files are located, for example 'xyz-install-files/hana/2.0sps03'.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_hana_install_files_bucket",
+      "min": 1,
+      "max": 1024,
+      "default": "sap-deployment-media"
+    },
+    {
+      "question_name": "BW4HANA installation files bucket",
+      "question_description": "This is the bucket from which BW4HANA installation files will be downloaded. You can add folders to the bucket name to define the path in the bucket where the files are located, for example 'xyz-install-files/bw4hana/20'.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_nw_install_files_bucket",
+      "min": 1,
+      "max": 1024,
+      "default": "sap-deployment-media"
+    },
+    {
+      "question_name": "HANA version",
+      "question_description": "This is the version of HANA to install.",
+      "required": true,
+      "type": "multiplechoice",
+      "variable": "sap_hana_product_version",
+      "default": "20SPS03",
+      "choices": ["20SPS03", "20SPS04", "20SPS05"]
+    },
+    {
+      "question_name": "BW4HANA version",
+      "question_description": "This is the version of BW4HANA to install.",
+      "required": true,
+      "type": "multiplechoice",
+      "variable": "sap_nw_product_version",
+      "default": "20",
+      "choices": ["20"]
+    },
+    {
+      "question_name": "HANA SID",
+      "question_description": "This is the system identifier for HANA. It must be three characters starting with a letter.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_hana_sid",
+      "min": 3,
+      "max": 3,
+      "default": "ABC"
+    },
+    {
+      "question_name": "BW4HANA SID",
+      "question_description": "This is the system identifier for BW4HANA. It must be three characters starting with a letter.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_nw_sid",
+      "min": 3,
+      "max": 3,
+      "default": "XYZ"
+    },
+    {
+      "question_name": "HANA instance number",
+      "question_description": "This is the instance number for HANA. It must be a two digit number between 00 and 99.",
+      "required": true,
+      "type": "text",
+      "variable": "sap_hana_instance_number",
+      "min": 2,
+      "max": 2,
+      "default": "00"
+    },
+    {
+      "question_name": "HANA worker count",
+      "question_description": "Number of HANA worker instances.",
+      "required": true,
+      "type": "integer",
+      "variable": "sap_instance_count_worker",
+      "default": 1
+    },
+    {
+      "question_name": "HANA standby count",
+      "question_description": "Number of HANA standby instances.",
+      "required": true,
+      "type": "integer",
+      "variable": "sap_instance_count_standby",
+      "default": 1
+    },
+    {
+      "question_name": "HANA password",
+      "question_description": "This is the password to be used for HANA database and users.",
+      "required": true,
+      "type": "password",
+      "variable": "sap_hana_password",
+      "min": 8,
+      "max": 100
+    },
+    {
+      "question_name": "BW4HANA password",
+      "question_description": "This is the password for BW4HANA.",
+      "required": true,
+      "type": "password",
+      "variable": "sap_nw_password",
+      "min": 8,
+      "max": 100
+    },
+    {
+      "question_name": "Hana backint backup bucket",
+      "question_description": "This is the bucket where hana backups are stored by backint. If the bucket does not exist it will be created. If left empty, backint will not be installed.",
+      "required": false,
+      "type": "text",
+      "variable": "sap_hana_backint_bucket_name",
+      "min": 0,
+      "default": ""
+    }
+  ]
+}

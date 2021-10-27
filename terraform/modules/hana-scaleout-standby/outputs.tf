@@ -42,6 +42,10 @@ output "address_worker" {
   value = google_compute_address.gcp_sap_hana_intip_worker.*.address
 }
 
+output "address_standby" {
+  value = google_compute_address.gcp_sap_hana_intip_standby.*.address
+}
+
 output "master_attached_disks_data" {
   value = google_compute_attached_disk.master_data.*.disk
 }
