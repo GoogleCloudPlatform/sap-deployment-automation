@@ -55,23 +55,7 @@ output "ilb_internal_ip_ers" {
 }
 
 output "inventory" {
-  value           = {
-    ascs          = [module.ascs.internal_ip],
-    ers           = [module.ers.internal_ip],
-    db2           = [module.db2_primary.internal_ip, module.db2_secondary.internal_ip],
-    db2_primary   = [module.db2_primary.internal_ip],
-    db2_secondary = [module.db2_secondary.internal_ip],
-    pas           = [for k, v in module.as : v.internal_ip if k == local.instance_name_pas]
-    aas           = [for k, v in module.as : v.internal_ip if k != local.instance_name_pas],
-    nodes         = concat(
-      [
-	module.ascs.internal_ip,
-	module.ers.internal_ip,
-	module.db2_primary.internal_ip,
-	module.db2_secondary.internal_ip,
-      ],
-      [for as in module.as : as.internal_ip]),
-  }
+  value = local.inventory
 }
 
 output "pas_instance_name" {

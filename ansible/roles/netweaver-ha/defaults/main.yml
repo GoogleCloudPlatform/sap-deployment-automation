@@ -12,6 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+sap_is_aas: false
+sap_is_ascs: false
+sap_is_ers: false
+sap_is_pas: false
+sap_is_scs: false
+
 sap_domain: '{{ ansible_domain }}'
 
 sap_hana_password: ''

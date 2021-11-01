@@ -34,7 +34,7 @@
     sap_instances: '{{ sap_instances_fact.results | map(attribute="ansible_facts._sap_instances") | list }}'
     sap_instance_number: '{{ sap_hana_instance_number }}'
   when:
-  - ansible_hostname == sap_hana_master_instance_name
+  - sap_hana_is_master | bool
   - sap_hana_deployment_create_initial_tenant == 'y'
 
 - name: include sap assertions role for master
@@ -51,7 +51,7 @@
     sap_instances: '{{ sap_instances_fact.results | map(attribute="ansible_facts._sap_instances") | list }}'
     sap_instance_number: '{{ sap_hana_instance_number }}'
   when:
-  - ansible_hostname == sap_hana_master_instance_name
+  - sap_hana_is_master | bool
   - sap_hana_deployment_create_initial_tenant == 'n'
 
 - name: include sap assertions role for workers
@@ -68,7 +68,9 @@
     - hdbwebdispatcher, HDB Web Dispatcher, GREEN, Running
     sap_instances: '{{ sap_instances_fact.results | map(attribute="ansible_facts._sap_instances") | list }}'
     sap_instance_number: '{{ sap_hana_instance_number }}'
-  when: ( ansible_hostname != sap_hana_master_instance_name ) and (sap_hana_deployment_create_initial_tenant == 'y')
+  when:
+  - not (sap_hana_is_master | bool)
+  - sap_hana_deployment_create_initial_tenant == 'y'
 
 - name: include sap assertions role for workers
   include_role:
@@ -83,4 +85,6 @@
     - hdbwebdispatcher, HDB Web Dispatcher, GREEN, Running
     sap_instances: '{{ sap_instances_fact.results | map(attribute="ansible_facts._sap_instances") | list }}'
     sap_instance_number: '{{ sap_hana_instance_number }}'
-  when: ( ansible_hostname != sap_hana_master_instance_name ) and (sap_hana_deployment_create_initial_tenant == 'n')
+  when:
+  - not (sap_hana_is_master | bool)
+  - sap_hana_deployment_create_initial_tenant == 'n'

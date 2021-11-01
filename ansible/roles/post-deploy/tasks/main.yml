@@ -15,12 +15,12 @@
 - name: define profile for ascs
   set_fact:
     sap_profile: /sapmnt/{{ sap_nw_sid }}/profile/{{ sap_nw_sid }}_{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }}
-  when: ansible_default_ipv4.address in groups.ascs
+  when: sap_is_ascs | bool
 
 - name: define profile for ers
   set_fact:
     sap_profile: /sapmnt/{{ sap_nw_sid }}/profile/{{ sap_nw_sid }}_ERS{{ sap_nw_ers_instance_number }}_{{ sap_nw_ers_virtual_host }}
-  when: ansible_default_ipv4.address in groups.ers
+  when: sap_is_ers | bool
 
 - name: modify profile and sapservices for ascs
   lineinfile:
@@ -41,7 +41,7 @@
   - path: /usr/sap/sapservices
     line: 'LD_LIBRARY_PATH=/usr/sap/{{ sap_nw_sid }}/ERS{{ sap_nw_ers_instance_number }}/exe:$LD_LIBRARY_PATH; export LD_LIBRARY_PATH; /usr/sap/{{ sap_nw_sid }}/ERS{{ sap_nw_ers_instance_number }}/exe/sapstartsrv pf=/usr/sap/{{ sap_nw_sid }}/SYS/profile/{{ sap_nw_sid }}_ERS{{ sap_nw_ers_instance_number }}_{{ sap_nw_ers_virtual_host }} -D -u {{ sap_nw_user }}'
     state: present
-  when: ansible_default_ipv4.address in groups.ascs
+  when: sap_is_ascs | bool
 
 - name: modify profile and sapservices for ers
   lineinfile:
@@ -62,7 +62,7 @@
   - path: /usr/sap/sapservices
     line: 'LD_LIBRARY_PATH=/usr/sap/{{ sap_nw_sid }}/{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }}/exe:$LD_LIBRARY_PATH; export LD_LIBRARY_PATH; /usr/sap/{{ sap_nw_sid }}/{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }}/exe/sapstartsrv pf=/usr/sap/{{ sap_nw_sid }}/SYS/profile/{{ sap_nw_sid }}_{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }}_{{ sap_nw_ascs_virtual_host }} -D -u {{ sap_nw_user }}'
     state: present
-  when: ansible_default_ipv4.address in groups.ers
+  when: sap_is_ers | bool
 
 - name: modify profile to enable sap suse cluster connector
   lineinfile:

@@ -40,15 +40,14 @@
 - name: Add hana shared entry to /etc/exports
   lineinfile:
     path: "/etc/exports"
-    line: "{{ sap_hana_shared_mountpoint }} {{ item.split('/')[10] }}(rw,no_root_squash,sync,no_subtree_check)"
+    line: "{{ sap_hana_shared_mountpoint }} {{ item }}(rw,no_root_squash,sync,no_subtree_check)"
   with_list: "{{ sap_hana_worker_node_names }}"
   notify: Reload NFS
 
 - name: Add /hanabackup entry to /etc/exports
   lineinfile:
     path: "/etc/exports"
-    line: "{{ sap_hana_backup_mountpoint}} {{ item.split('/')[10] }}(rw,no_root_squash,sync,no_subtree_check)"
+    line: "{{ sap_hana_backup_mountpoint }} {{ item }}(rw,no_root_squash,sync,no_subtree_check)"
   with_list: "{{ sap_hana_worker_node_names }}"
   notify: Reload NFS
-  when: 
-    - "{{ sap_hana_create_backup_volume }} == true"
+  when: sap_hana_create_backup_volume | bool

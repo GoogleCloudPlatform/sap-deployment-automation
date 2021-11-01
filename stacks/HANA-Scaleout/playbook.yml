@@ -42,15 +42,11 @@
   tags: [assertions]
 
 - name: SAP HANA scaleout master configure
-  hosts: hana-master
+  hosts: hana_master
   become: yes
   vars:
     sap_hana_backint_install: '{{ sap_hana_backint_bucket_name | default("") != "" }}'
     sap_hana_backint_bucket_name: '{{ sap_hana_backint_bucket_name | default("") }}'
-    sap_hana_master_instance_name: '{{ terraform.outputs.master_instance_name.value }}'
-    sap_hana_master_instance_ip: '{{ terraform.outputs.address_master.value }}'
-    sap_hana_worker_instance_ip: '{{ terraform.outputs.address_worker.value }}'
-    sap_hana_worker_node_names: '{{ terraform.outputs.instances_self_links_worker.value }}'
     sap_hana_shared_size: '{{ terraform.outputs.hana_shared_size.value }}G'
     sap_hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
     sap_hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
@@ -60,15 +56,11 @@
   - role: sap-hana-scaleout
 
 - name: SAP HANA scaleout worker configure
-  hosts: hana-worker
+  hosts: hana_worker
   become: yes
   vars:
     sap_hana_backint_install: '{{ sap_hana_backint_bucket_name | default("") != "" }}'
     sap_hana_backint_bucket_name: '{{ sap_hana_backint_bucket_name | default("") }}'
-    sap_hana_master_instance_name: '{{ terraform.outputs.master_instance_name.value }}'
-    sap_hana_master_instance_ip: '{{ terraform.outputs.address_master.value }}'
-    sap_hana_worker_instance_ip: '{{ terraform.outputs.address_worker.value }}'
-    sap_hana_worker_node_names: '{{ terraform.outputs.instances_self_links_worker.value }}'
     sap_hana_shared_size: '{{ terraform.outputs.hana_shared_size.value }}G'
     sap_hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
     sap_hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
@@ -78,15 +70,11 @@
   - role: sap-hana-scaleout
 
 - name: SAP HANA scaleout master configure
-  hosts: hana-master
+  hosts: hana_master
   become: yes
   vars:
     sap_hana_backint_install: '{{ sap_hana_backint_bucket_name | default("") != "" }}'
     sap_hana_backint_bucket_name: '{{ sap_hana_backint_bucket_name | default("") }}'
-    sap_hana_master_instance_name: '{{ terraform.outputs.master_instance_name.value }}'
-    sap_hana_master_instance_ip: '{{ terraform.outputs.address_master.value }}'
-    sap_hana_worker_instance_ip: '{{ terraform.outputs.address_worker.value }}'
-    sap_hana_worker_node_names: '{{ terraform.outputs.instances_self_links_worker.value }}'
     sap_hana_shared_size: '{{ terraform.outputs.hana_shared_size.value }}G'
     sap_hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
     sap_hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
@@ -103,7 +91,4 @@
   - include_role:
       name: sap-hana-scaleout
       tasks_from: assertions
-    vars:
-      sap_hana_master_instance_name: '{{ terraform.outputs.master_instance_name.value }}'
-      sap_hana_instances: '{{ [terraform.outputs.master_instance_name.value] + terraform.outputs.worker_instance_names.value }}'
   tags: [assertions]

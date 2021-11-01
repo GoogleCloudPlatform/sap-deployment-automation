@@ -48,10 +48,7 @@ output "hana_attached_disks_backup" {
 }
 
 output "inventory" {
-  value = {
-    "hana" = [module.gcp_hana.address],
-    "nw"   = [module.gcp_netweaver.instance_internal_ip],
-  }
+  value = concat(module.gcp_hana.inventory, module.gcp_netweaver.inventory)
 }
 
 output "nw_instance_name" {

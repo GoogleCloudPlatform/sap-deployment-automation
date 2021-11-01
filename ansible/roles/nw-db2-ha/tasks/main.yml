@@ -36,11 +36,11 @@
 
 - name: include ascs tasks
   include_tasks: '{{ role_path }}/tasks/ascs.yml'
-  when: ansible_default_ipv4.address in groups.ascs
+  when: sap_is_ascs | bool
 
 - name: include ers tasks
   include_tasks: '{{ role_path }}/tasks/ers.yml'
-  when: ansible_default_ipv4.address in groups.ers
+  when: sap_is_ers | bool
 
 - name: include pacemaker role
   include_role:
@@ -51,11 +51,11 @@
     sap_primary_instance: '{{ sap_nw_ascs_instance_name }}'
     sap_primary_instance_ip: '{{ sap_nw_ascs_private_ip }}'
     sap_secondary_instance: '{{ sap_nw_ers_instance_name }}'
-  when: ansible_default_ipv4.address in groups.ascs + groups.ers
+  when: sap_is_scs | bool
 
 - name: include db2 tasks
   include_tasks: '{{ role_path }}/tasks/db2.yml'
-  when: ansible_default_ipv4.address in groups.db2
+  when: sap_is_db2 | bool
 
 # Hack to work around the following PAS install failure with DB2 11.x:
 # "An error occurred during table depooling: Batch job SWPM_RUTPOADAPT terminated".
@@ -65,11 +65,11 @@
   vars:
     sap_db2_lock_escalation_avoid: false
     sap_db2_lock_escalation_state_file: '{{ sap_db2_state_dir }}/toggle-db2-lock-escalation'
-  when: sap_db2_is_primary | bool
+  when: sap_is_db2_primary | bool
 
 - name: include pas tasks
   include_tasks: '{{ role_path }}/tasks/as.yml'
-  when: ansible_default_ipv4.address in groups.pas
+  when: sap_is_pas | bool
   vars:
     sap_product_id: '{{ sap_product_vars[sap_nw_product_and_version].pas_product_id }}'
 
@@ -80,11 +80,10 @@
   vars:
     sap_db2_lock_escalation_avoid: true
     sap_db2_lock_escalation_state_file: '{{ sap_db2_state_dir }}/toggle-db2-lock-escalation'
-  when: sap_db2_is_primary | bool
+  when: sap_is_db2_primary | bool
 
 - name: include aas tasks
   include_tasks: '{{ role_path }}/tasks/as.yml'
-  when: |
-    'aas' in groups and ansible_default_ipv4.address in groups.aas
+  when: sap_is_aas | bool
   vars:
     sap_product_id: '{{ sap_product_vars[sap_nw_product_and_version].aas_product_id }}'

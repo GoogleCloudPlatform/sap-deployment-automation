@@ -12,6 +12,47 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+sap_is_aas: false
+sap_is_ascs: false
+sap_is_db2: false
+sap_is_pas: false
+
+# NFS exports on ASCS used by DB2, PAS, and AAS.
+# To disable, set nfs_server_exports to [].
+nfs_server_exports:
+- directory: /sapmnt
+  clients: '{{
+    hostvars.values()
+    | selectattr("sap_is_db2", "defined")
+    | selectattr("sap_is_db2")
+    | map(attribute=("ansible_default_ipv4.address"))
+    | list
+    + hostvars.values()
+    | selectattr("sap_is_pas", "defined")
+    | selectattr("sap_is_pas")
+    | map(attribute=("ansible_default_ipv4.address"))
+    | list
+    + hostvars.values()
+    | list
+    | selectattr("sap_is_aas", "defined")
+    | selectattr("sap_is_aas")
+    | map(attribute=("ansible_default_ipv4.address"))
+    | list
+  }}'
+- directory: /usr/sap/trans
+  clients: '{{
+    hostvars.values()
+    | selectattr("sap_is_pas", "defined")
+    | selectattr("sap_is_pas")
+    | map(attribute=("ansible_default_ipv4.address"))
+    | list
+    + hostvars.values()
+    | selectattr("sap_is_aas", "defined")
+    | selectattr("sap_is_aas")
+    | map(attribute=("ansible_default_ipv4.address"))
+    | list
+  }}'
+
 sap_db2_user: 'db2{{ sap_nw_sid | lower }}'
 sap_db2_state_dir: /db2/{{ sap_db2_user }}/.ansible-state
 

@@ -10,9 +10,50 @@ This role operates either in "push mode" or not, as defined by the variable `sap
 
 If `sap_ansible_is_push_mode` is `true`, then the Terraform module that is passed in the `sap_tf_project_path` variable _must_ do the following:
 
-1. It must provide an output called `inventory` that is a map structured as `{ abc = [10.10.10.10], xyz = [10.10.10.11, 10.10.10.12] }`, where `abc` and `xyz` are host groups that will be converted into an Ansible inventory.
+1. It must provide an output called `inventory`. See [Terraform Inventory Output](#terraform-inventory-output) below for a full description.
 
-2. It must receive the variables `gce_ssh_user` and `gce_ssh_pub_key_file`, which will be added to all machine metadata as `ssh-keys = "${var.gce_ssh_user}:${file("${var.gce_ssh_pub_key_file}")}"`.
+2. It must define the variables `gce_ssh_user` and `gce_ssh_pub_key_file`, and use them to set the `ssh-keys` instance metadata, for example: `ssh-keys = "${var.gce_ssh_user}:${file("${var.gce_ssh_pub_key_file}")}"`. This must be done for all machines that are present in the `inventory` output.
+
+## Terraform Inventory Output
+
+The Terraform `inventory` output is an array of maps, with each map representing a host in the inventory. Each one contains the following keys:
+
+`host` (Required, type _string_) - The hostname or IP address of the inventory host.
+
+`groups` (Required, type _array_ of _string_) - Inventory groups to which the host belongs.
+
+`vars` (Optional, type _map_) - An arbitrary map of variables that will be defined as Ansible [host variables](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html#assigning-a-variable-to-one-machine-host-variables).
+
+Example Terraform inventory output:
+
+```
+output "inventory" {
+  value = [
+    {
+      host    = 10.10.10.10,
+      groups  = ["abc"],
+      vars    = {
+        foo   = var.foo,
+      },
+    },
+    {
+      host    = 10.10.10.11,
+      groups  = ["xyz"],
+    },
+    {
+      host    = 10.10.10.12,
+      groups  = ["abc", "xyz"],
+      vars    = {
+        foo   = var.foo,
+        bar   = local.bar,
+        baz   = {
+          xyz = [{ a = 123 }, { b = 456 }],
+        },
+      },
+    },
+  ]
+}
+```
 
 # Role Variables
 

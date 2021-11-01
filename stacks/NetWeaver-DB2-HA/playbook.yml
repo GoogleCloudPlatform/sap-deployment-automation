@@ -58,7 +58,7 @@
         zone_secondary: '{{ sap_secondary_zone | default("us-central1-b") }}'
   tags: [db2, nw, assertions]
 
-- hosts: nodes
+- hosts: sap
   become: yes
   roles:
   - role: nw-db2-ha
@@ -73,7 +73,7 @@
       sap_nw_pas_virtual_host: '{{ terraform.outputs.pas_instance_name.value }}'
   tags: [db2, nw]
 
-- hosts: nodes
+- hosts: sap
   become: yes
   tasks:
   - include_role:

@@ -96,13 +96,5 @@ output "hana_attached_disks_backup" {
 }
 
 output "inventory" {
-  value = {
-    hana = [module.hana.address],
-    ascs = [module.ascs.instance_internal_ip],
-    pas  = [module.pas.instance_internal_ip],
-    nodes = [
-      module.ascs.instance_internal_ip,
-      module.pas.instance_internal_ip,
-    ],
-  }
+  value = local.inventory
 }

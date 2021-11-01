@@ -46,4 +46,43 @@ locals {
     for i in range(var.num_instances_as) : "${var.instance_basename_as}-${i+1}"
   ]
   metadata              = { ssh-keys = "${var.ssh_user}:${file(var.ssh_pub_key_file)}" }
+
+  as_instances          = values(module.as)
+  base_inventory        = [
+    {
+      groups            = ["sap"],
+      host              = module.ascs.internal_ip,
+      vars              = {
+        sap_is_ascs     = true,
+      }
+    },
+    {
+      groups            = ["sap"],
+      host              = module.db2.internal_ip,
+      vars              = {
+        sap_is_db2      = true,
+      }
+    },
+  ]
+  pas_inventory         = (
+    var.num_instances_as < 1 ? [] : [
+      {
+	groups          = ["sap"],
+        host            = local.as_instances[0].internal_ip,
+        vars            = {
+          sap_is_pas    = true,
+        }
+      }]
+    )
+  aas_inventory         = (
+    var.num_instances_as < 2 ? [] : [
+      for as in slice(local.as_instances, 1, var.num_instances_as) : {
+	groups          = ["sap"],
+        host            = as.internal_ip,
+        vars            = {
+          sap_is_aas    = true,
+        }
+      }]
+    )
+  inventory             = concat(local.base_inventory, local.pas_inventory, local.aas_inventory)
 }

@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-
-output "internal_ip" {
-  value = module.vm.internal_ip
+output "inventory" {
+  value = [{
+    host = module.vm.internal_ip,
+    groups = ["nw"],
+  }]
 }

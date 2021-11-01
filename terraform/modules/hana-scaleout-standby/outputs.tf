@@ -25,7 +25,10 @@ output "instances_self_links_worker" {
 }
 
 output "master_instance_name" {
-  value = element(split("/", element(tolist(module.sap_hana_instance_master.instances_self_links), 0)), 10)
+  value = (
+    length(module.sap_hana_instance_master.instances_self_links) == 0 ? "" :
+    split("/", module.sap_hana_instance_master.instances_self_links[0])[10]
+    )
 }
 
 output "worker_instance_names" {
@@ -67,18 +70,7 @@ output "hana_usr_size" {
 }
 
 output "inventory" {
-  value = {
-    hana = concat(
-      google_compute_address.gcp_sap_hana_intip_master.*.address,
-      google_compute_address.gcp_sap_hana_intip_worker.*.address,
-      google_compute_address.gcp_sap_hana_intip_standby.*.address,
-    )
-    hana-master = google_compute_address.gcp_sap_hana_intip_master.*.address
-    hana-worker = concat(
-      google_compute_address.gcp_sap_hana_intip_worker.*.address,
-      google_compute_address.gcp_sap_hana_intip_standby.*.address,
-    )
-  }
+  value = local.inventory
 }
 
 output "hana_filestore_backup" {

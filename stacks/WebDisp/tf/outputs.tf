@@ -15,9 +15,7 @@
  */
 
 output "inventory" {
-  value = {
-    "wd"   = [module.gcp_webdisp.instance_internal_ip],
-  }
+  value = module.gcp_webdisp.inventory
 }
 
 output "wd_instance_name" {

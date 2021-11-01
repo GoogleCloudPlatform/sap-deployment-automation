@@ -68,6 +68,23 @@ locals {
   hana_shared_size   = min(1024, lookup(local.instance_mem_map, var.sap_hana_instance_type))
   hana_usr_size      = 32
   hana_backup_size   = lookup(local.instance_mem_map, var.sap_hana_instance_type) * 2
+  inventory          = concat(module.hana.inventory, local.nw_inventory)
+  nw_inventory       = [
+    {
+      host           = module.ascs.instance_internal_ip,
+      groups         = ["nw"],
+      vars           = {
+        sap_is_ascs  = true,
+      },
+    },
+    {
+      host           = module.pas.instance_internal_ip,
+      groups         = ["nw"],
+      vars           = {
+        sap_is_pas   = true,
+      },
+    },
+  ]
   pd_ssd_size        = max(lookup(local.pd_ssd_map, var.sap_hana_instance_type), (local.hana_log_size + local.hana_data_size + local.hana_shared_size + local.hana_usr_size))
   pd_hdd_size        = local.hana_backup_size
   region             = join("-", slice(split("-", var.zone), 0, 2))

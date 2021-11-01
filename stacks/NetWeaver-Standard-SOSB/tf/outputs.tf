@@ -71,10 +71,7 @@ output "hana_filestore_shared" {
 }
 
 output "inventory" {
-  value = {
-    "hana" = flatten([module.gcp_hana.address_master, module.gcp_hana.address_worker, module.gcp_hana.address_standby])
-    "nw"   = [module.gcp_netweaver.instance_internal_ip],
-  }
+  value = concat(module.gcp_hana.inventory, module.gcp_netweaver.inventory)
 }
 
 output "nw_ip" {

@@ -159,39 +159,49 @@
 - meta: end_play
   when: sap_state == 'absent'
 
-- name: flatten inventory map into a list of maps
-  # Convert { "abc": ["10.10.10.10", "10.10.10.11"], "xyz": ["10.10.10.12"] } into:
-  # [
-  #   { "group": "abc", "host": "10.10.10.10" },
-  #   { "group": "abc", "host": "10.10.10.11" },
-  #   { "group": "xyz", "host": "10.10.10.12" }
-  # ]
-  set_fact:
-    inventory_hosts: |
-      {{ inventory_hosts | default([]) }} + {% set j = joiner(",") %}
-        [{% for host in item.value %}{{ j() }}{ "group": "{{ item.key }}", "host": "{{ host }}" }{% endfor %}]
-  with_dict: '{{ terraform.outputs.inventory.value }}'
-  when: sap_ansible_is_push_mode
-
-- name: build inventory
-  add_host:
-    name: '{{ item.host }}'
-    ansible_user: '{{ sap_ssh_user }}'
-    ansible_ssh_private_key_file: '{{ sap_ssh_priv_key }}'
-    terraform: '{{ terraform }}'
-    groups: '{{ item.group }}'
-  loop: '{{ inventory_hosts }}'
-  changed_when: false
-  when: sap_ansible_is_push_mode
+- block:
+  - name: create a tempdir for add_host tasks
+    tempfile:
+      state: directory
+    register: add_host_tempdir
+    changed_when: false
+  - name: define add_host tasks
+    copy:
+      dest: '{{ add_host_tempdir.path }}/add_hosts.yml'
+      content: |
+        #jinja2:lstrip_blocks: True
+        {% for item in terraform.outputs.inventory.value %}
+        - name: add {{ item.host }} to inventory
+          add_host:
+            name: {{ item.host }}
+            ansible_user: {{ sap_ssh_user }}
+            ansible_ssh_private_key_file: {{ sap_ssh_priv_key }}
+            groups: {{ item.groups | to_json }}
+            terraform: {{ terraform | to_json }}
+            {% for k, v in (item.vars | default({})).items() %}
+            {{ k }}: {{ v | to_json }}
+            {% endfor %}
+        {% endfor %}
+  - name: include add_host tasks
+    include_tasks:
+      file: '{{ add_host_tempdir.path }}/add_hosts.yml'
+  always:
+  - name: clean up add_host tempdir
+    file:
+      path: '{{ add_host_tempdir.path }}'
+      state: absent
 
 - name: wait for hosts
+  # Run a command with sudo to ensure the guest agent has added `sap_ssh_user` _and_ it
+  # is present in the sudoers file, otherwise later the ansible connection can fail with:
+  # FAILED! => {"msg": "Missing sudo password"}
   command: >-
     ssh -i {{ sap_ssh_priv_key }} -o StrictHostKeyChecking=no
-    {{ sap_ssh_user }}@{{ item.host }} exit
+    {{ sap_ssh_user }}@{{ item.host }} sudo true
   register: can_ssh
   retries: 12
   delay: 10
   until: can_ssh is succeeded
-  loop: '{{ inventory_hosts }}'
+  loop: '{{ terraform.outputs.inventory.value }}'
   changed_when: false
   when: sap_ansible_is_push_mode

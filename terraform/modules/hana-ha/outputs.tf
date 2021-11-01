@@ -124,5 +124,5 @@ output "health_check_port" {
 }
 
 output "inventory" {
-  value = { hana = [google_compute_address.gcp_sap_hana_intip_primary.address, google_compute_address.gcp_sap_hana_intip_secondary.address] }
+  value = local.inventory
 }

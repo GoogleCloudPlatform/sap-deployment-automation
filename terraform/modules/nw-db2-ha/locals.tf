@@ -45,4 +45,61 @@ locals {
   region                = join("-", slice(split("-", var.zone_primary), 0, 2))
   subnetwork_project_id = var.subnetwork_project_id == "" ? var.project_id : var.subnetwork_project_id
   zones                 = [var.zone_primary, var.zone_secondary]
+
+  as_instances          = values(module.as)
+  base_inventory        = [
+    {
+      groups            = ["sap"],
+      host              = module.ascs.internal_ip,
+      vars              = {
+        sap_is_ascs     = true,
+        sap_is_scs      = true,
+      }
+    },
+    {
+      groups            = ["sap"],
+      host              = module.ers.internal_ip,
+      vars              = {
+        sap_is_ers      = true,
+        sap_is_scs      = true,
+      }
+    },
+    {
+      groups            = ["sap"],
+      host              = module.db2_primary.internal_ip,
+      vars              = {
+        sap_is_db2         = true,
+        sap_is_db2_primary = true,
+      }
+    },
+    {
+      groups            = ["sap"],
+      host              = module.db2_secondary.internal_ip,
+      vars              = {
+        sap_is_db2           = true,
+        sap_is_db2_secondary = true,
+      }
+    },
+  ]
+  pas_inventory         = (
+    var.num_instances_as < 1 ? [] : [
+      {
+	groups          = ["sap"],
+        host            = local.as_instances[0].internal_ip,
+        vars            = {
+          sap_is_pas    = true,
+        }
+      }]
+    )
+  aas_inventory         = (
+    var.num_instances_as < 2 ? [] : [
+      for as in slice(local.as_instances, 1, var.num_instances_as) : {
+	groups          = ["sap"],
+        host            = as.internal_ip,
+        vars            = {
+          sap_is_aas    = true,
+        }
+      }]
+    )
+  inventory             = concat(local.base_inventory, local.pas_inventory, local.aas_inventory)
 }

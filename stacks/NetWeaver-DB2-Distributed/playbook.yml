@@ -49,7 +49,7 @@
         zone: '{{ sap_zone | default("us-central1-a") }}'
   tags: [nw, db2, assertions]
 
-- hosts: nodes
+- hosts: sap
   become: yes
   roles:
   - role: nw-db2-distributed
@@ -59,7 +59,7 @@
       sap_nw_pas_virtual_host: '{{ sap_nw_as_instance_basename }}-1'
   tags: [nw, db2]
 
-- hosts: nodes
+- hosts: sap
   become: yes
   tasks:
   - include_role:

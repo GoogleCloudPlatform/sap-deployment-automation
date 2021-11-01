@@ -76,5 +76,8 @@ output "instance_ip" {
 }
 
 output "inventory" {
-  value = { hana = [google_compute_address.gcp_sap_hana_intip.address] }
+  value    = [{
+    host   = google_compute_address.gcp_sap_hana_intip.address,
+    groups = ["hana"]
+  }]
 }
