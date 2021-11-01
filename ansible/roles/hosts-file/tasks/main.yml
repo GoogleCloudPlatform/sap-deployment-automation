@@ -41,6 +41,7 @@
         {% for host in hostvars %}
           {% if host in hosts_file_peers %}
             {% set names = [] %}
+            {% set ip = hostvars[host]['ansible_default_ipv4']['address'] %}
 
             {% if hostvars[host]['ansible_fqdn'] | default('') %}
               {% set _ = names.append(hostvars[host]['ansible_fqdn']) %}
@@ -50,7 +51,7 @@
               {% set _ = names.append(hostvars[host]['ansible_hostname']) %}
             {% endif %}
 
-            {{ delim() }} '{{ host }}': {{ names }}
+            {{ delim() }} '{{ ip }}': {{ names }}
 
           {% endif %}
         {% endfor %}
