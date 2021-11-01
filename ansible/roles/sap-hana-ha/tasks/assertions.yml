@@ -15,12 +15,12 @@
 - name: define instance name for primary
   set_fact:
     sap_instance_name: '{{ sap_hana_primary_instance_name }}'
-  when: ansible_hostname == sap_hana_primary_instance_name
+  when: sap_hana_is_primary | bool
 
 - name: define instance name for secondary
   set_fact:
     sap_instance_name: '{{ sap_hana_secondary_instance_name }}'
-  when: ansible_hostname == sap_hana_secondary_instance_name
+  when: not (sap_hana_is_primary | bool)
 
 - name: define pacemaker expected status for redhat
   set_fact:
@@ -72,8 +72,7 @@
     sap_instances:
     - '{{ sap_instance_name }}, {{ sap_hana_instance_number | int }}, 5{{ sap_hana_instance_number }}13, 5{{ sap_hana_instance_number }}14, 0.3, HDB|HDB_WORKER, GREEN'
     sap_instance_number: '{{ sap_hana_instance_number }}'
-  when:
-    - sap_hana_deployment_create_initial_tenant == 'y'
+  when: sap_hana_deployment_create_initial_tenant == 'y'
 
 - name: include sap assertions role with no HANA tenant DB
   include_role:
@@ -90,5 +89,4 @@
     sap_instances:
     - '{{ sap_instance_name }}, {{ sap_hana_instance_number | int }}, 5{{ sap_hana_instance_number }}13, 5{{ sap_hana_instance_number }}14, 0.3, HDB|HDB_WORKER, GREEN'
     sap_instance_number: '{{ sap_hana_instance_number }}'
-  when:
-    - sap_hana_deployment_create_initial_tenant == 'n'
+  when: sap_hana_deployment_create_initial_tenant == 'n'

@@ -52,7 +52,7 @@
         subnetwork_hana: '{{ sap_hana_subnetwork }}'
         subnetwork_project: '{{ sap_subnetwork_project_id | default("") }}'
         zone: '{{ sap_zone }}'
-  tags: [hana, ascs, pas, nw, assertions]
+  tags: [hana, nw, assertions]
 
 - name: SAP HANA configure
   hosts: hana
@@ -70,17 +70,7 @@
   tags: [hana]
 
 - name: SAP NW configure
-  hosts: ascs
-  become: yes
-  roles:
-  - role: nw-distributed
-    vars:
-      sap_nw_ascs_virtual_host: '{{ terraform.outputs.ascs_instance_name.value }}'
-      subnet_cidr: '{{ terraform.outputs.subnet_cidr_nw.value }}'
-  tags: [ascs, nw]
-
-- name: SAP NW configure
-  hosts: pas
+  hosts: nw
   become: yes
   roles:
   - role: nw-distributed 
@@ -90,7 +80,7 @@
       sap_nw_ascs_virtual_host: '{{ terraform.outputs.ascs_instance_name.value }}'
       sap_nw_pas_virtual_host: '{{ terraform.outputs.pas_instance_name.value }}'
       subnet_cidr: '{{ terraform.outputs.subnet_cidr_nw.value }}'
-  tags: [pas, nw]
+  tags: [nw]
 
 - name: Run assertions on HANA
   hosts: hana

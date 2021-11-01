@@ -91,6 +91,19 @@ locals {
   region                  = join("-", slice(split("-", var.primary_zone), 0, 2))
   instance_name_primary   = var.instance_name_primary != "" ? var.instance_name_primary : "${var.instance_name}-pri"
   instance_name_secondary = var.instance_name_secondary != "" ? var.instance_name_secondary : "${var.instance_name}-sec"
+  inventory               = [
+    {
+      host                = google_compute_address.gcp_sap_hana_intip_primary.address,
+      groups              = ["hana"],
+      vars                = {
+        sap_hana_is_primary = true,
+      },
+    },
+    {
+      host                = google_compute_address.gcp_sap_hana_intip_secondary.address,
+      groups              = ["hana"],
+    },
+  ]
   ilb_name                = (
     var.instance_name != ""
     ? "${var.instance_name}-ilb"

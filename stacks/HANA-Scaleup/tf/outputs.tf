@@ -57,7 +57,7 @@ output "sap_image_family" {
 }
 
 output "inventory" {
-  value = { hana = [module.hana_scaleup.address] }
+  value = module.hana_scaleup.inventory
 }
 
 output "hana_attached_disks_data" {

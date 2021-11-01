@@ -76,4 +76,20 @@ locals {
   subnetwork_project = var.subnetwork_project == "" ? var.project_id : var.subnetwork_project
   network_parts      = split("/", data.google_compute_subnetwork.subnetwork.network)
   network            = element(local.network_parts, length(local.network_parts) - 1)
+
+  master_inventory   = [{
+    host             = join("", google_compute_address.gcp_sap_hana_intip_master.*.address),
+    groups           = ["hana", "hana_master"],
+    vars             = {
+      sap_hana_is_master = true,
+    },
+  }]
+  worker_inventory   = [for ip in google_compute_address.gcp_sap_hana_intip_worker : {
+    host             = ip.address,
+    groups           = ["hana", "hana_worker"],
+    vars             = {
+      sap_hana_is_worker = true,
+    },
+  }]
+  inventory          = concat(local.master_inventory, local.worker_inventory)
 }

@@ -12,6 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# These should be toggled to true in the inventory for relevant hosts.
+sap_is_aas: false
+sap_is_ascs: false
+sap_is_db2: false
+sap_is_db2_primary: false
+sap_is_db2_secondary: false
+sap_is_ers: false
+sap_is_pas: false
+sap_is_scs: false
+
 hosts_file_entries:
 - ip: '{{ sap_db2_vip }}'
   names: ['{{ sap_db2_virtual_host }}']
@@ -22,7 +32,6 @@ hosts_file_entries:
 
 sap_db2_hadr_port1: 5951
 sap_db2_hadr_port2: 5952
-sap_db2_is_primary: '{{ ansible_default_ipv4.address == sap_db2_primary_ip }}'
 sap_db2_user: 'db2{{ sap_nw_sid | lower }}'
 sap_db2_group: 'db{{ sap_nw_sid | lower }}adm'
 sap_db2_state_dir: /db2/{{ sap_db2_user }}/.ansible-state

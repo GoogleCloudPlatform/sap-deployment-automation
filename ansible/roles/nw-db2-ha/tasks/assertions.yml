@@ -68,7 +68,7 @@
     - '{{ sap_nw_ers_virtual_host }}, {{ sap_nw_ers_instance_number | int }}, 5{{ sap_nw_ers_instance_number }}13, 5{{ sap_nw_ers_instance_number }}14, 0.5, ENQREP, GREEN'
     sap_instance_number: '{{ sap_nw_ascs_instance_number }}'
     sap_has_pacemaker: true
-  when: ansible_hostname == sap_nw_ascs_instance_name
+  when: sap_is_ascs | bool
 
 - name: include sap assertions role for ers
   include_role:
@@ -86,7 +86,7 @@
     sap_instance_number: '{{ sap_nw_ers_instance_number }}'
     sap_has_pacemaker: true
   when:
-  - ansible_hostname == sap_nw_ers_instance_name
+  - sap_is_ers | bool
 
 - name: include sap assertions role for pas
   include_role:
@@ -105,4 +105,4 @@
     - '{{ sap_nw_ers_virtual_host }}, {{ sap_nw_ers_instance_number | int }}, 5{{ sap_nw_ers_instance_number }}13, 5{{ sap_nw_ers_instance_number }}14, 0.5, ENQREP, GRAY'
     - '{{ sap_nw_ers_virtual_host }}, {{ sap_nw_ers_instance_number | int }}, 5{{ sap_nw_ers_instance_number }}13, 5{{ sap_nw_ers_instance_number }}14, 0.5, ENQREP, GREEN'
     sap_instance_number: '{{ sap_nw_pas_instance_number }}'
-  when: ansible_hostname == sap_nw_pas_instance_name
+  when: sap_is_pas | bool

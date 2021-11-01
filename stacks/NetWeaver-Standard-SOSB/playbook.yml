@@ -66,7 +66,6 @@
       sap_hana_master_instance_name: '{{ terraform.outputs.master_instance_name.value }}'
       sap_hana_master_instance_ip: '{{ terraform.outputs.address_master.value }}'
       sap_hana_worker_instance_ip: '{{ terraform.outputs.address_worker.value }}'
-      sap_hana_worker_node_names: '{{ terraform.outputs.instances_self_links_worker.value }}'
       sap_hana_standby_instance_ip: '{{ terraform.outputs.address_standby.value }}'
       sap_hana_worker_disks_list: '{{ terraform.outputs.worker_attached_disks_data.value }}'
       sap_hana_master_disks_list: '{{ terraform.outputs.master_attached_disks_data.value }}'
@@ -85,7 +84,12 @@
   roles:
   - role: nw-standard
     vars:
-      sap_hana_virtual_host: '{{ terraform.outputs.inventory.value.hana.0 }}'
+      sap_hana_virtual_host: '{{
+        terraform.outputs.inventory.value
+        | selectattr("groups", "equalto", ["hana"])
+        | map(attribute="host")
+        | list | first
+      }}'
       sap_nw_ascs_virtual_host: '{{ terraform.outputs.nw_instance_name.value }}'
       sap_nw_pas_virtual_host: '{{ terraform.outputs.nw_instance_name.value }}'
   tags: [nw]
@@ -99,7 +103,6 @@
       tasks_from: assertions
     vars:
       sap_hana_master_instance_name: '{{ terraform.outputs.master_instance_name.value }}'
-      sap_hana_standby_instance_name: ['{{ sap_hana_instance_name }}w0{{ sap_hana_instance_count_worker|int + 1 }}']
       sap_hana_instances: '{{ [terraform.outputs.master_instance_name.value] + terraform.outputs.worker_instance_names.value }}'
   tags: [assertions]
 

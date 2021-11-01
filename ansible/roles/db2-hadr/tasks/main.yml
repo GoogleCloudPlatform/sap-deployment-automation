@@ -32,7 +32,7 @@
     owner: '{{ sap_db2_user }}'
     group: '{{ sap_db2_group }}'
   loop: '{{ ["data", "tmp"] | product([1, 2, 3, 4]) | list }}'
-  when: not (sap_db2_is_primary | bool)
+  when: sap_is_db2_secondary | bool
 
 # A bug in the rsct package requires this workaround on RHEL. See:
 # https://www.ibm.com/support/pages/apar/IJ00283
@@ -52,7 +52,7 @@
     db2 update db cfg for {{ sap_nw_sid }} using LOGARCHMETH1 DISK:{{ sap_db2_log_archive_dir }} &&
     touch {{ sap_db2_state_dir }}/enable-log-archiving
   become_user: '{{ sap_db2_user }}'
-  when: sap_db2_is_primary | bool
+  when: sap_is_db2_primary | bool
   args:
     creates: '{{ sap_db2_state_dir }}/enable-log-archiving'
 
@@ -63,7 +63,7 @@
     db2 backup db {{ sap_nw_sid }} to {{ sap_db2_backup_dir }} compress &&
     touch {{ sap_db2_state_dir }}/backup-database
   become_user: '{{ sap_db2_user }}'
-  when: sap_db2_is_primary | bool
+  when: sap_is_db2_primary | bool
   args:
     creates: '{{ sap_db2_state_dir }}/backup-database'
 
@@ -74,7 +74,7 @@
     db2 restore db {{ sap_nw_sid }} from {{ sap_db2_backup_dir }} replace history file &&
     touch {{ sap_db2_state_dir }}/restore-database
   become_user: '{{ sap_db2_user }}'
-  when: not (sap_db2_is_primary | bool)
+  when: sap_is_db2_secondary | bool
   args:
     creates: '{{ sap_db2_state_dir }}/restore-database'
 
@@ -117,7 +117,7 @@
     db2 update db cfg for {{ sap_nw_sid }} using LOGINDEXBUILD ON &&
     touch {{ sap_db2_state_dir }}/update-db-cfg
   become_user: '{{ sap_db2_user }}'
-  when: sap_db2_is_primary | bool
+  when: sap_is_db2_primary | bool
   args:
     creates: '{{ sap_db2_state_dir }}/update-db-cfg'
 
@@ -138,7 +138,7 @@
     db2 update db cfg for {{ sap_nw_sid }} using LOGINDEXBUILD ON &&
     touch {{ sap_db2_state_dir }}/update-db-cfg
   become_user: '{{ sap_db2_user }}'
-  when: not (sap_db2_is_primary | bool)
+  when: sap_is_db2_secondary | bool
   args:
     creates: '{{ sap_db2_state_dir }}/update-db-cfg'
 
@@ -150,7 +150,7 @@
     db2 start hadr on db {{ sap_nw_sid }} as standby &&
     touch {{ sap_db2_state_dir }}/start-hadr
   become_user: '{{ sap_db2_user }}'
-  when: not (sap_db2_is_primary | bool)
+  when: sap_is_db2_secondary | bool
   args:
     creates: '{{ sap_db2_state_dir }}/start-hadr'
 
@@ -162,7 +162,7 @@
     db2 start hadr on db {{ sap_nw_sid }} as primary &&
     touch {{ sap_db2_state_dir }}/start-hadr
   become_user: '{{ sap_db2_user }}'
-  when: sap_db2_is_primary | bool
+  when: sap_is_db2_primary | bool
   args:
     creates: '{{ sap_db2_state_dir }}/start-hadr'
 
@@ -199,7 +199,7 @@
     db2haicu -f /tmp/db2haicu.xml &&
     touch {{ sap_db2_state_dir }}/create-cluster-domain
   become_user: '{{ sap_db2_user }}'
-  when: not (sap_db2_is_primary | bool)
+  when: sap_is_db2_secondary | bool
   args:
     creates: '{{ sap_db2_state_dir }}/create-cluster-domain'
 
@@ -210,7 +210,7 @@
     db2haicu -f /tmp/db2haicu.xml &&
     touch {{ sap_db2_state_dir }}/create-cluster-domain
   become_user: '{{ sap_db2_user }}'
-  when: sap_db2_is_primary | bool
+  when: sap_is_db2_primary | bool
   args:
     creates: '{{ sap_db2_state_dir }}/create-cluster-domain'
 

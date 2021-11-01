@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+sap_is_ascs: false
+sap_is_pas: false
+
 sap_hana_password: ''
 sap_hana_db_system_password: '{{ sap_hana_password }}'
 sap_hana_sidadm_password: '{{ sap_hana_password }}'

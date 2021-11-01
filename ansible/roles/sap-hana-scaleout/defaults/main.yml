@@ -12,6 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# These should be toggled to true in the inventory for relevant hosts.
+sap_hana_is_master: false
+sap_hana_is_worker: false
+
+sap_add_worker_nodes: false
+
+sap_hana_master_instance_name: '{{
+  hostvars.values()
+  | selectattr("sap_hana_is_master", "defined")
+  | selectattr("sap_hana_is_master")
+  | map(attribute="ansible_hostname")
+  | list
+  | first
+}}'
+sap_hana_worker_node_names: '{{
+  hostvars.values()
+  | selectattr("sap_hana_is_worker", "defined")
+  | selectattr("sap_hana_is_worker")
+  | map(attribute="ansible_hostname")
+  | list
+}}'
+
 sap_hana_install_files_bucket: sap-deployment-media
 sap_hana_product_version: 20SPS03
 sap_product_and_version: 'HANA/{{ sap_hana_product_version }}'

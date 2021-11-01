@@ -71,14 +71,7 @@ output "ers_ilb_ip" {
 }
 
 output "inventory" {
-  value = {
-    hana     = [module.hana_ha.primary_instance_ip, module.hana_ha.secondary_instance_ip],
-    ascs     = module.netweaver_ascs.instance_ips,
-    ers      = module.netweaver_ers.instance_ips,
-    nw_nodes = concat(module.netweaver_ascs.instance_ips, module.netweaver_ers.instance_ips),
-    pas      = local.num_as_instances == 0 ? [] : [module.netweaver_as.instance_ips[0]],
-    aas      = local.num_as_instances <= 1 ? [] : slice(module.netweaver_as.instance_ips, 1, local.num_as_instances)
-  }
+  value = local.inventory
 }
 
 output "subnet_cidr_hana" {

@@ -54,7 +54,7 @@
     name: local-interface
   vars:
     local_interface_ip: '{{ sap_db2_vip }}'
-  when: sap_db2_is_primary | bool
+  when: sap_is_db2_primary | bool
 
 - name: include sapinst role for primary
   include_role:
@@ -65,7 +65,7 @@
     sap_sapinst_install_tsamp: true
     sap_sapinst_swpm_path: '{{ sap_product_vars[sap_nw_product_and_version].swpm_path }}'
     sap_sapinst_template: inifile_db_db2.params
-  when: sap_db2_is_primary | bool
+  when: sap_is_db2_primary | bool
 
 - name: include local-interface role
   include_role:
@@ -73,7 +73,7 @@
   vars:
     local_interface_ip: '{{ sap_db2_vip }}'
     local_interface_state: absent
-  when: sap_db2_is_primary | bool
+  when: sap_is_db2_primary | bool
 
 - name: include sapinst role for secondary
   include_role:
@@ -84,7 +84,7 @@
     sap_sapinst_install_tsamp: true
     sap_sapinst_swpm_path: '{{ sap_product_vars[sap_nw_product_and_version].swpm_path }}'
     sap_sapinst_template: inifile_dbcopy_db2.params
-  when: not (sap_db2_is_primary | bool)
+  when: sap_is_db2_secondary | bool
 
 - name: include db2-hadr role
   include_role:

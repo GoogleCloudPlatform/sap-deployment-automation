@@ -50,17 +50,15 @@
 
     - name: Run chmod 775 on worker nodes
       shell: |
-        ssh -oStrictHostKeyChecking=no root@{{ item.split('/')[10] }} 'chmod 775 -R {{ sap_hana_data_mountpoint }} {{ sap_hana_log_mountpoint }}'
-      with_items:
-        - "{{ sap_hana_worker_node_names_new }}"
+        ssh -oStrictHostKeyChecking=no root@{{ item }} 'chmod 775 -R {{ sap_hana_data_mountpoint }} {{ sap_hana_log_mountpoint }}'
+      with_items: "{{ sap_hana_worker_node_names }}"
 
     - name: Add worker nodes to master
       shell: |
-        cat /root/.deploy/hana_passwords.xml | ./hdblcm --action=add_hosts --addhosts={{ item.split('/')[10] }} --root_user=root --listen_interface=global --read_password_from_stdin=xml -b
+        cat /root/.deploy/hana_passwords.xml | ./hdblcm --action=add_hosts --addhosts={{ item }} --root_user=root --listen_interface=global --read_password_from_stdin=xml -b
       args:
         chdir: "{{ sap_hana_shared_mountpoint }}/{{ sap_hana_sid }}/hdblcm/"
-      with_items:
-        - "{{ sap_hana_worker_node_names_new }}"
+      with_items: "{{ sap_hana_worker_node_names }}"
       register: hana_worker_node_add
 
     - debug:

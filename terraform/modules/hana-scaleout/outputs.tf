@@ -81,12 +81,5 @@ output "hana_backup_size" {
 }
 
 output "inventory" {
-  value = {
-    hana = concat(
-      google_compute_address.gcp_sap_hana_intip_master.*.address,
-      google_compute_address.gcp_sap_hana_intip_worker.*.address,
-    )
-    hana-master = google_compute_address.gcp_sap_hana_intip_master.*.address
-    hana-worker = google_compute_address.gcp_sap_hana_intip_worker.*.address
-  }
+  value = local.inventory
 }

@@ -19,8 +19,8 @@
 
 - name: include ASCS Tasks
   include_tasks: '{{ role_path }}/tasks/ascs.yml'
-  when: ansible_default_ipv4.address in groups.ascs
+  when: sap_is_ascs | bool
 
 - name: include PAS Tasks
   include_tasks: '{{ role_path }}/tasks/pas.yml'
-  when: ansible_default_ipv4.address in groups.pas
+  when: sap_is_pas | bool

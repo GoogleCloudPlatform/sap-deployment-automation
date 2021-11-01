@@ -24,18 +24,19 @@
   with_items:
     - python-pip
     - python3-pip
-  when: |
-    (ansible_os_family == 'Suse') and (ansible_distribution_major_version == '15')
+  when:
+  - ansible_os_family == 'Suse'
+  - ansible_distribution_major_version == '15'
 
 - name: Include sap ssh keygen role
   include_role:
     name: ssh-keygen
-  when: not ( ansible_hostname | regex_search('([w]\d\d+$)') )
+  when: sap_hana_is_master | bool
 
 - name: Include tasks for master
   include_tasks:
     file: master.yml
-  when: not ( ansible_hostname | regex_search('([w]\d\d+$)') )
+  when: sap_hana_is_master | bool
 
 - name: Updating /etc/sudoers
   lineinfile:
@@ -48,22 +49,17 @@
 - name: Include tasks for worker
   include_tasks:
     file: worker.yml
-  when: ( ansible_hostname | regex_search('([w]\d\d+$)') ) and not ( ansible_hostname | regex_search('([{{ sap_instance_count_worker|int + 1 }}]+$)') )
+  when: sap_hana_is_worker | bool
 
 - name: Include tasks for standby
   include_tasks:
     file: standby.yml
-  when: ( ansible_hostname | regex_search('([w]\d\d+$)') ) and ( ansible_hostname | regex_search('([{{ sap_instance_count_worker|int + 1 }}]+$)') )
+  when: sap_hana_is_standby | bool
 
 - name: Include continuation tasks for master
   include_tasks:
     file: master2.yml
-  when: not ( ansible_hostname | regex_search('([w]\d\d+$)') )
-
-- set_fact:
-    sap_hana_worker_node_names_new: "{{ sap_hana_worker_node_names | reject('search', my_regex) | list }}"
-  vars:
-    my_regex: '([{{ sap_instance_count_worker|int + 1 }}]+$)'
+  when: sap_hana_is_master | bool
 
 - name: Change file ownership, group and permissions
   file:
@@ -75,17 +71,14 @@
 - name: Add hana worker nodes
   include_tasks:
     file: worker_node_add.yml
-  vars:
-    sap_hana_worker_node_names_loop: "{{ item }}"
-  when: not ( ansible_hostname | regex_search('([w]\d\d+$)') )
-  with_items: "{{ sap_hana_worker_node_names_new }}"
+  when: sap_hana_is_master | bool
 
 - name: Add hana standby nodes
   include_role:
     name: sap-hana-scaleout-add-standby-nodes
-  when: not ( ansible_hostname | regex_search('([w]\d\d+$)') )
+  when: sap_hana_is_master | bool
 
 - name: Add hana failover config
   include_tasks:
     file: failover_config.yml
-  when: not ( ansible_hostname | regex_search('([w]\d\d+$)') )
+  when: sap_hana_is_master | bool

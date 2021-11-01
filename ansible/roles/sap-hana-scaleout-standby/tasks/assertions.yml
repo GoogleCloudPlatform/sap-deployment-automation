@@ -14,15 +14,19 @@
 
 - name: define instances
   set_fact:
-    _sap_instances: '{{ item }}, {{ sap_hana_instance_number | int }}, 5{{ sap_hana_instance_number }}13, 5{{ sap_hana_instance_number }}14, 0.3, HDB|HDB_WORKER, GREEN'
-  register: sap_instances_fact
-  loop: '{{ sap_hana_instances }}'
+    sap_instances_master_worker: |
+      {% set delim = joiner(',') %}
+      [
+        {% for instance in [sap_hana_master_instance_name] + sap_hana_worker_node_names %}
+          {{ delim() }}
+          '{{ instance }}, {{ sap_hana_instance_number | int }}, 5{{ sap_hana_instance_number }}13, 5{{ sap_hana_instance_number }}14, 0.3, HDB|HDB_WORKER, GREEN'
+        {% endfor %}
+      ]
 
 - name: define instances
   set_fact:
-    _sap_instances_standby: '{{ item }}, {{ sap_hana_instance_number | int }}, 5{{ sap_hana_instance_number }}13, 5{{ sap_hana_instance_number }}14, 0.3, HDB|HDB_STANDBY, GREEN'
-  register: sap_instances_standby_fact
-  loop: '{{ sap_hana_standby_instance_name }}'
+    sap_instances_standby:
+    - '{{ sap_hana_standby_instance_name }}, {{ sap_hana_instance_number | int }}, 5{{ sap_hana_instance_number }}13, 5{{ sap_hana_instance_number }}14, 0.3, HDB|HDB_STANDBY, GREEN'
 
 - name: include sap assertions role for master
   include_role:
@@ -37,9 +41,9 @@
     - hdbpreprocessor, HDB Preprocessor, GREEN, Running
     - hdbwebdispatcher, HDB Web Dispatcher, GREEN, Running
     - hdbxsengine, HDB XSEngine-{{ sap_hana_sid }}, GREEN, Running
-    sap_instances: '{{ sap_instances_fact.results | map(attribute="ansible_facts._sap_instances") | list }}'
+    sap_instances: '{{ sap_instances_master_worker }}'
     sap_instance_number: '{{ sap_hana_instance_number }}'
-  when: ansible_hostname == sap_hana_master_instance_name
+  when: sap_hana_is_master | bool
 
 - name: include sap assertions role for workers
   include_role:
@@ -53,9 +57,9 @@
     - hdbnameserver, HDB Nameserver, GREEN, Running
     - hdbpreprocessor, HDB Preprocessor, GREEN, Running
     - hdbwebdispatcher, HDB Web Dispatcher, GREEN, Running
-    sap_instances: '{{ sap_instances_fact.results | map(attribute="ansible_facts._sap_instances") | list }}'
+    sap_instances: '{{ sap_instances_master_worker }}'
     sap_instance_number: '{{ sap_hana_instance_number }}'
-  when: ( ansible_hostname != sap_hana_master_instance_name ) and ( ansible_hostname != sap_hana_standby_instance_name[0] )
+  when: sap_hana_is_worker | bool
 
 - name: include sap assertions role for standby
   include_role:
@@ -68,6 +72,6 @@
     - hdbnameserver, HDB Nameserver, GREEN, Running
     - hdbpreprocessor, HDB Preprocessor, GREEN, Running
     - hdbwebdispatcher, HDB Web Dispatcher, GREEN, Running
-    sap_instances: '{{ sap_instances_standby_fact.results | map(attribute="ansible_facts._sap_instances_standby") | list }}'
+    sap_instances: '{{ sap_instances_standby }}'
     sap_instance_number: '{{ sap_hana_instance_number }}'
-  when: ansible_hostname == sap_hana_standby_instance_name[0]
+  when: sap_hana_is_standby | bool

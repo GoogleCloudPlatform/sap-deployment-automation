@@ -76,4 +76,27 @@ locals {
   network_parts      = split("/", data.google_compute_subnetwork.subnetwork.network)
   network            = element(local.network_parts, length(local.network_parts) - 1)
   sap_node_count     = var.instance_count_worker + var.instance_count_standby
+
+  master_inventory   = [{
+    host             = join("", google_compute_address.gcp_sap_hana_intip_master.*.address),
+    groups           = ["hana"],
+    vars             = {
+      sap_hana_is_master = true,
+    },
+  }]
+  standby_inventory  = [{
+    host             = join("", google_compute_address.gcp_sap_hana_intip_standby.*.address),
+    groups           = ["hana"],
+    vars             = {
+      sap_hana_is_standby = true,
+    },
+  }]
+  worker_inventory   = [for ip in google_compute_address.gcp_sap_hana_intip_worker : {
+    host             = ip.address,
+    groups           = ["hana"],
+    vars             = {
+      sap_hana_is_worker = true,
+    },
+  }]
+  inventory          = concat(local.master_inventory, local.standby_inventory, local.worker_inventory)
 }

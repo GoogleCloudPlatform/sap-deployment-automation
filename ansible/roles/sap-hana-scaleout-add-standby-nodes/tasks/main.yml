@@ -77,10 +77,10 @@
 
     - name: Add standby nodes to master
       shell: |
-        cat /root/.deploy/hana_passwords.xml | ./hdblcm --action=add_hosts --addhosts={{ sap_hana_instance_name }}w0{{ sap_instance_count_worker + sap_instance_count_standby }}:role=standby --root_user=root --listen_interface=global --read_password_from_stdin=xml -b
+        cat /root/.deploy/hana_passwords.xml | ./hdblcm --action=add_hosts --addhosts={{ sap_hana_standby_instance_name }}:role=standby --root_user=root --listen_interface=global --read_password_from_stdin=xml -b
       args:
         chdir: "{{ sap_hana_shared_mountpoint }}/{{ sap_hana_sid }}/hdblcm/"
-        creates: "/usr/sap/{{ sap_hana_sid }}/SYS/profile/{{ sap_hana_sid }}_HDB{{ sap_hana_instance_number }}_{{ sap_hana_instance_name }}w0{{ sap_instance_count_worker + sap_instance_count_standby }}"
+        creates: "/usr/sap/{{ sap_hana_sid }}/SYS/profile/{{ sap_hana_sid }}_HDB{{ sap_hana_instance_number }}_{{ sap_hana_standby_instance_name }}"
 
   rescue:
     - fail:

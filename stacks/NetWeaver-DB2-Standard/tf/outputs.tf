@@ -15,5 +15,5 @@
  */
 
 output "inventory" {
-  value = { nw = [module.nw_db2_standard.internal_ip] }
+  value = module.nw_db2_standard.inventory
 }

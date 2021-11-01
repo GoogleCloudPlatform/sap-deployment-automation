@@ -44,6 +44,46 @@ locals {
     host                = ""
   }
   ilb_required       = var.source_image_project == "rhel-sap-cloud" ? false : true
+  scs_inventory      = [
+    {
+      groups         = ["sap"],
+      host           = join("", module.netweaver_ascs.instance_ips),
+      vars           = {
+        sap_is_ascs  = true,
+        sap_is_scs   = true,
+      }
+    },
+    {
+      groups         = ["sap"],
+      host           = join("", module.netweaver_ers.instance_ips),
+      vars           = {
+        sap_is_ers   = true,
+        sap_is_scs   = true,
+      }
+    },
+  ]
+  pas_inventory      = (
+    var.nw_as_num_instances < 1 ? [] : [
+      {
+	host         = module.netweaver_as.instance_ips[0],
+	groups       = ["sap"],
+        vars         = {
+          sap_is_pas = true,
+        }
+      }]
+    )
+  aas_inventory      = (
+    var.nw_as_num_instances < 2 ? [] : [
+      for ip in slice(module.netweaver_as.instance_ips, 1, var.nw_as_num_instances) : {
+	groups       = ["sap"],
+        host         = ip,
+        vars         = {
+          sap_is_aas = true,
+        }
+      }]
+    )
+  inventory          = concat(module.hana_ha.inventory, local.scs_inventory,
+    local.pas_inventory, local.aas_inventory)
   region             = join("-", slice(split("-", var.primary_zone), 0, 2))
   subnetwork_project = var.subnetwork_project == "" ? var.project_id : var.subnetwork_project
   network_parts_hana = split("/", data.google_compute_subnetwork.subnetwork_hana.network)

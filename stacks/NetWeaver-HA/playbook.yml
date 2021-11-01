@@ -81,8 +81,8 @@
       sap_hana_backup_size: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
     tags: [hana]
 
-- name: SAP ASCS and ERS configure
-  hosts: nw_nodes
+- name: SAP application configure
+  hosts: sap
   become: yes
   become_user: root  
   roles:
@@ -103,38 +103,6 @@
       subnet_cidr: '{{ terraform.outputs.subnet_cidr_nw.value }}'
     tags: [nw, ascs, ers]
 
-- name: SAP PAS configure
-  hosts: pas
-  become: yes
-  become_user: root
-  roles:
-  - role: netweaver-ha
-    vars:
-      sap_hana_vip: '{{ terraform.outputs.hana_ilb_ip.value }}'
-      sap_nw_ascs_vip: '{{ terraform.outputs.ascs_ilb_ip.value }}'
-      sap_nw_ers_vip: '{{ terraform.outputs.ers_ilb_ip.value }}'
-      sap_nw_pas_virtual_host: '{{ terraform.outputs.pas_instance_name.value }}'
-      sap_nw_usrsap_disk_size: '{{ terraform.outputs.nw_usrsap_disk_size.value - 1 }}'
-      sap_nw_swap_disk_size: '{{ terraform.outputs.nw_swap_disk_size.value - 1 }}'
-      subnet_cidr: '{{ terraform.outputs.subnet_cidr_nw.value }}'
-    tags: [nw, pas]
-
-- name: SAP AAS configure
-  hosts: aas
-  become: yes
-  become_user: root
-  roles:
-  - role: netweaver-ha
-    vars:
-      sap_hana_vip: '{{ terraform.outputs.hana_ilb_ip.value }}'
-      sap_nw_ascs_vip: '{{ terraform.outputs.ascs_ilb_ip.value }}'
-      sap_nw_ers_vip: '{{ terraform.outputs.ers_ilb_ip.value }}'
-      sap_nw_pas_virtual_host: '{{ terraform.outputs.pas_instance_name.value }}'
-      sap_nw_usrsap_disk_size: '{{ terraform.outputs.nw_usrsap_disk_size.value - 1 }}'
-      sap_nw_swap_disk_size: '{{ terraform.outputs.nw_swap_disk_size.value - 1 }}'
-      subnet_cidr: '{{ terraform.outputs.subnet_cidr_nw.value }}'
-    tags: [nw, aas]
-
 - name: Run assertions on HANA
   hosts: hana
   become: yes
@@ -148,7 +116,7 @@
   tags: [hana, assertions]
 
 - name: Run assertions on application servers
-  hosts: nw_nodes
+  hosts: sap
   become: yes
   tasks:
   - include_role:
