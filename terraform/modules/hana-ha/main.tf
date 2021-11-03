@@ -95,9 +95,9 @@ module "sap_hana_umig_secondary" {
 resource "google_compute_disk" "gcp_sap_hana_data_primary" {
   project = var.project_id
   name    = "${local.instance_name_primary}-data"
-  type    = "pd-ssd"
+  type    = var.additional_disk_type
   zone    = var.primary_zone
-  size    = local.pd_ssd_size
+  size    = var.additional_disk_type == "pd-ssd" ? local.pd_ssd_size : local.pd_bal_size
 
   # Add the disk_encryption_key block only if a pd_kms_key was provided
   dynamic "disk_encryption_key" {
@@ -128,9 +128,9 @@ resource "google_compute_disk" "gcp_sap_hana_backup_primary" {
 resource "google_compute_disk" "gcp_sap_hana_data_secondary" {
   project = var.project_id
   name    = "${local.instance_name_secondary}-data"
-  type    = "pd-ssd"
+  type    = var.additional_disk_type
   zone    = var.secondary_zone
-  size    = local.pd_ssd_size
+  size    = var.additional_disk_type == "pd-ssd" ? local.pd_ssd_size : local.pd_bal_size
 
   # Add the disk_encryption_key block only if a pd_kms_key was provided
   dynamic "disk_encryption_key" {

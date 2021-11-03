@@ -65,7 +65,9 @@ m2-ultramem-416
 
 `sap_hana_boot_disk_size`: GCE instance boto disk size
 
-`sap_hana_boot_disk_type`: pd-ssd
+`sap_hana_boot_disk_type`: GCE instance boot disk type
+
+`sap_hana_additional_disk_type`: GCE additional data disks type
 
 `sap_hana_network_tags`: List of network tags to add to the instances
 

@@ -35,6 +35,7 @@ sap_hana_instance_type: n1-highmem-32
 sap_hana_autodelete_boot_disk: "true"
 sap_hana_boot_disk_size: 30
 sap_hana_boot_disk_type: pd-ssd
+sap_hana_additional_disk_type: pd-ssd
 sap_hana_network_tags: ["hana-allow", "ssh"]
 sap_hana_pd_kms_key: null
 sap_hana_backint_install: false

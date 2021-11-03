@@ -38,6 +38,7 @@
         autodelete_disk: '{{ sap_hana_autodelete_boot_disk | default(true) }}'
         boot_disk_size: '{{ sap_hana_boot_disk_size | default(30) }}'
         boot_disk_type: '{{ sap_hana_boot_disk_type | default("pd-ssd") }}'
+        additional_disk_type: '{{ sap_hana_additional_disk_type | default("pd-ssd") }}'
         network_tags: '{{ sap_hana_network_tags | default([sap_network_tag | default("sap-allow-all")]) }}'
         target_size: '{{ sap_hana_target_instance_size | default(1) }}'
         pd_kms_key: '{{ sap_hana_pd_kms_key | default(None) }}'
