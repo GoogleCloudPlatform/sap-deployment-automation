@@ -47,6 +47,22 @@ locals {
     "m2-ultramem-416" = 23564
   }
 
+  pd_balanced_map = {
+    "n1-highmem-32"   = 1429
+    "n1-highmem-64"   = 1980
+    "n1-highmem-96"   = 2942
+    "n2-highmem-32"   = 1429
+    "n2-highmem-48"   = 1831
+    "n2-highmem-64"   = 2424
+    "n2-highmem-80"   = 3017
+    "m1-megamem-96"   = 4286
+    "m1-ultramem-40"  = 4286
+    "m1-ultramem-80"  = 4286
+    "m1-ultramem-160" = 6180
+    "m2-ultramem-208" = 8667
+    "m2-ultramem-416" = 15766
+  }
+
   instance_mem_map = {
     "n1-highmem-32"   = 208
     "n1-highmem-64"   = 416
@@ -69,6 +85,7 @@ locals {
   hana_usr_size    = 32
   hana_backup_size = lookup(local.instance_mem_map, var.instance_type) * 2
   pd_ssd_size      = max(lookup(local.pd_ssd_map, var.instance_type), (local.hana_log_size + local.hana_data_size + local.hana_shared_size + local.hana_usr_size))
+  pd_bal_size      = max(lookup(local.pd_balanced_map, var.instance_type), (local.hana_log_size + local.hana_data_size + local.hana_shared_size + local.hana_usr_size))
   pd_hdd_size      = local.hana_backup_size
 
   health_check = {

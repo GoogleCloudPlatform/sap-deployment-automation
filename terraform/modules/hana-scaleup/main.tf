@@ -77,9 +77,9 @@ module "sap_hana_scaleup" {
 resource "google_compute_disk" "gcp_sap_hana_data" {
   project = var.project_id
   name    = "${var.instance_name}-data"
-  type    = "pd-ssd"
+  type    = var.additional_disk_type
   zone    = var.zone
-  size    = local.pd_ssd_size
+  size    = var.additional_disk_type == "pd-ssd" ? local.pd_ssd_size : local.pd_bal_size
 
   # Add the disk_encryption_key block only if a pd_kms_key was provided
   dynamic "disk_encryption_key" {

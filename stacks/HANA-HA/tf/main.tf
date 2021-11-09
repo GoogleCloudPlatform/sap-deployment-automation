@@ -34,6 +34,7 @@ module "hana_ha" {
   source_image_project    = var.source_image_project
   boot_disk_size          = var.boot_disk_size
   boot_disk_type          = var.boot_disk_type
+  additional_disk_type    = var.additional_disk_type
   autodelete_disk         = var.autodelete_disk
   network_tags            = var.network_tags
   target_size             = var.target_size

@@ -107,6 +107,15 @@
       "choices": ["n1-highmem-32", "n1-highmem-64", "n1-highmem-96", "n2-highmem-32", "n2-highmem-48", "n2-highmem-64", "n2-highmem-80", "m1-megamem-96", "m1-ultramem-40", "m1-ultramem-80", "m1-ultramem-160", "m2-ultramem-208", "m2-ultramem-416"]
     },
     {
+      "question_name": "HANA instance additional data disk type",
+      "question_description": "Persistent disk type for data vol",
+      "required": true,
+      "type": "multiplechoice",
+      "variable": "sap_hana_additional_disk_type",
+      "default": "pd-ssd",
+      "choices": ["pd-ssd", "pd-balanced"]
+    },
+    {
       "question_name": "HANA worker count",
       "question_description": "Number of HANA worker instances.",
       "required": true,

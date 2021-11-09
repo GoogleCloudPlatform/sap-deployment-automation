@@ -66,6 +66,10 @@ variable "boot_disk_type" {
   description = "The GCE boot disk type.Set to pd-standard (for PD HDD)."
 }
 
+variable "additional_disk_type" {
+  description = "The GCE additional disk type.Set to pd-ssd (for PD SSD)."
+}
+
 variable "autodelete_disk" {
   description = "Whether the disk will be auto-deleted when the instance is deleted."
 }
