@@ -181,6 +181,15 @@
       "variable": "sap_hana_backint_bucket_name",
       "min": 0,
       "default": ""
+    },
+    {
+      "question_name": "HANA Fast Restart configure",
+      "question_description": "SAP HANA Fast restart config",
+      "required": false,
+      "type": "multiplechoice",
+      "variable": "sap_hana_fast_restart",
+      "default": "false",
+      "choices": ["true", "false"]
     }
   ]
 }

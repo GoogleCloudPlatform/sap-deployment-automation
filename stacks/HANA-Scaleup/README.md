@@ -77,6 +77,8 @@ m2-ultramem-416
 
 `sap_hana_backint_install`: Install SAP HANA backint on the HANA nodes
 
+`sap_hana_fast_restart`: Configure SAP HANA fast restart
+
 `sap_hana_password`: Common password to use for all HANA user and system authentication
 
 `sap_hana_preinstall_tasks`: Path to an Ansible task file that will run before HANA is installed. This can be an absolute path, or a relative path which is relative to the playbook directory.
