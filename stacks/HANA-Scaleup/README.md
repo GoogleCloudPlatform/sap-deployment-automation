@@ -77,7 +77,7 @@ m2-ultramem-416
 
 `sap_hana_backint_install`: Install SAP HANA backint on the HANA nodes
 
-`sap_hana_fast_restart`: Configure SAP HANA fast restart
+`sap_hana_fast_restart`: Configure SAP HANA fast restart (Note: Only set this variable to `true` when installing HANA 2.0 and above)
 
 `sap_hana_password`: Common password to use for all HANA user and system authentication
 
