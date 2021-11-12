@@ -36,7 +36,6 @@
     mode: '777'
     recurse: yes
   with_sequence: start=0 end='{{ cpu_sockets.stdout_lines|length - 3 }}'
-  # when: global_ini.stdout.find('basepath_persistent_memory_volumes') == -1
 
 - name: Mount and make fstab for tmpfs entries
   mount:
@@ -46,7 +45,6 @@
     src: "tmpfs{{ sap_hana_sid }}{{ item }}"
     state: mounted
   with_sequence: start=0 end='{{ cpu_sockets.stdout_lines|length - 3 }}'
-  # when: global_ini.stdout.find('basepath_persistent_memory_volumes') == -1
 
 - name: Add a line to a file to configure SAP HANA to use them with the right Numa Node correlation
   lineinfile:
@@ -56,7 +54,6 @@
     state: present
     line: 'basepath_persistent_memory_volumes = '
     create: yes
-  # when: global_ini.stdout.find('basepath_persistent_memory_volumes') == -1
 
 - name: Add NUMA nodes to the global.ini file
   lineinfile:
