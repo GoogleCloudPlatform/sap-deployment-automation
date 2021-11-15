@@ -1,0 +1,78 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: Determine the number of CPU sockets available in the HANA server
+  shell: |
+    cat /sys/devices/system/node/node*/meminfo | grep MemTotal | awk 'BEGIN {printf "%10s | %20s\n", "NUMA NODE", "MEMORY GB"; while (i++ < 33) printf "-"; printf "\n"} {printf "%10d | %20.3f\n", $2, $4/1048576}'
+  register: cpu_sockets
+
+- set_fact:
+    fr_paths: |-
+      {% set delim = joiner(';') %}
+      {% for i in range(0, cpu_sockets.stdout_lines|length-2) %}{{ delim() }}/hana/tmpfs{{ i }}/{{ sap_hana_sid }}{% endfor %}
+
+- name: Create tmpfs directories for numa nodes
+  file:
+    path: "/hana/tmpfs{{ item }}/{{ sap_hana_sid }}"
+    state: directory
+    owner: "{{ sap_hana_user }}"
+    group: sapsys
+    mode: '777'
+    recurse: yes
+  with_sequence: start=0 end='{{ cpu_sockets.stdout_lines|length - 3 }}'
+
+- name: Mount and make fstab for tmpfs entries
+  mount:
+    name: "/hana/tmpfs{{ item }}/{{ sap_hana_sid }}"
+    fstype: tmpfs
+    opts: "rw,relatime,mpol=prefer:{{ item }}"
+    src: "tmpfs{{ sap_hana_sid }}{{ item }}"
+    state: mounted
+  with_sequence: start=0 end='{{ cpu_sockets.stdout_lines|length - 3 }}'
+
+- name: Add a line to a file to configure SAP HANA to use them with the right Numa Node correlation
+  lineinfile:
+    path: '{{ sap_hana_usr_mountpoint }}/{{ sap_hana_sid }}/SYS/global/hdb/custom/config/global.ini'
+    insertafter: '^\[persistence\]'
+    regexp: '^(basepath_persistent_memory_volumes = .*)$'
+    state: present
+    line: 'basepath_persistent_memory_volumes = '
+    create: yes
+
+- name: Add NUMA nodes to the global.ini file
+  lineinfile:
+    path: '{{ sap_hana_usr_mountpoint }}/{{ sap_hana_sid }}/SYS/global/hdb/custom/config/global.ini'
+    backrefs: true
+    regexp: '^(basepath_persistent_memory_volumes = .*)$'
+    state: present
+    line: '\1 {{ fr_paths }}'
+
+- name: Update which column tables or partitions shall be stored into the persistent memory
+  lineinfile:
+    path: '{{ sap_hana_usr_mountpoint }}/{{ sap_hana_sid }}/SYS/global/hdb/custom/config/indexserver.ini'
+    insertafter: EOF
+    line: '{{ item }}'
+    state: present
+    create: yes
+  with_items:
+    - '[persistent_memory]'
+    - 'table_default = ON'
+
+- name: Include sap hana stop role
+  include_role:
+    name: sap-hana-stop
+
+- name: Include sap hana start role
+  include_role:
+    name: sap-hana-start

@@ -86,3 +86,8 @@
   include_role:
     name: sap-hana-backint
   when: sap_hana_backint_install|bool == true
+
+- name: Include SAP HANA Fast Restart Role
+  include_role:
+    name: sap-hana-fast-restart
+  when: sap_hana_fast_restart|bool == true
