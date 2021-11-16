@@ -33,6 +33,7 @@ module "hana_ha" {
   subnetwork_project      = local.subnetwork_project
   source_image_family     = var.source_image_family
   source_image_project    = var.source_image_project
+  additional_disk_type    = var.hana_additional_disk_type
   boot_disk_size          = var.hana_boot_disk_size
   boot_disk_type          = var.hana_boot_disk_type
   autodelete_disk         = var.hana_autodelete_boot_disk

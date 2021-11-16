@@ -24,6 +24,7 @@ sap_hana_install_files_bucket:
 sap_hana_instance_name:
 sap_hana_instance_type: n1-highmem-32
 sap_hana_service_account_name: sap-common-sa
+sap_hana_additional_disk_type: pd-ssd
 sap_hana_subnetwork:
 sap_hana_sid: ABC
 sap_hana_instance_number: "00"

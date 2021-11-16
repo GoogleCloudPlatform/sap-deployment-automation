@@ -111,6 +111,10 @@ variable "sap_nw_additional_disk_type" {
   default     = "pd-ssd"
 }
 
+variable "sap_hana_additional_disk_type" {
+  description = "The GCE additional disk type for HANA. Set to pd-ssd (for PD SSD)."
+}
+
 variable "sap_nw_usrsap_disk_size" {
   description = "Size of /usr/sap for NetWeaver."
   default     = 150

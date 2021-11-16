@@ -102,3 +102,4 @@ sap_nw_service_account_name: sap-common-sa
 # Define sap_subnetwork_project_id if using a shared VPC.
 # sap_subnetwork_project_id:
 sap_hana_backint_install: false
+sap_hana_additional_disk_type: pd-ssd

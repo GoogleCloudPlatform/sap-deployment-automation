@@ -27,6 +27,7 @@ module "gcp_hana" {
   subnetwork_project    = var.subnetwork_project
   source_image_family   = var.source_image_family
   source_image_project  = var.source_image_project
+  additional_disk_type  = var.sap_hana_additional_disk_type
   boot_disk_size        = var.sap_hana_boot_disk_size
   boot_disk_type        = var.sap_hana_boot_disk_type
   autodelete_disk       = var.sap_hana_autodelete_boot_disk

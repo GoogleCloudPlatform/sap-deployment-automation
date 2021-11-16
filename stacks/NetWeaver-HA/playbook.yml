@@ -39,6 +39,7 @@
         hana_instance_type: '{{ sap_hana_instance_type | default("n1-highmem-32") }}'
         hana_network_tags: '{{ sap_hana_network_tags | default([sap_network_tag | default("sap-allow-all")]) }}'
         hana_pd_kms_key: '{{ sap_hana_pd_kms_key | default("") }}'
+        hana_additional_disk_type: '{{ sap_hana_additional_disk_type | default("pd-ssd") }}'
         hana_service_account_email: '{{ sap_hana_service_account_email | default("{}@{}.iam.gserviceaccount.com".format(sap_hana_service_account_name | default("sap-common-sa"), sap_project_id)) }}'
         nw_autodelete_boot_disk: '{{ sap_nw_autodelete_boot_disk | default(true) }}'
         nw_boot_disk_size: '{{ sap_nw_boot_disk_size | default(30) }}'

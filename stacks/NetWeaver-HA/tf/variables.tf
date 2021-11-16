@@ -154,6 +154,10 @@ variable "nw_usrsap_disk_size" {
   type        = number
 }
 
+variable "hana_additional_disk_type" {
+  description = "The GCE additional disk type for HANA. Set to pd-ssd (for PD SSD)."
+}
+
 variable "nw_swap_disk_size" {
   description = "Persistent disk size in GB."
   type        = number
