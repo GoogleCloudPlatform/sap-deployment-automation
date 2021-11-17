@@ -262,6 +262,15 @@
       "variable": "sap_hana_backint_bucket_name",
       "min": 0,
       "default": ""
+    },
+    {
+      "question_name": "HANA instance additional data disk type",
+      "question_description": "Persistent disk type for data vol",
+      "required": true,
+      "type": "multiplechoice",
+      "variable": "sap_hana_additional_disk_type",
+      "default": "pd-ssd",
+      "choices": ["pd-ssd", "pd-balanced"]
     }
   ]
 }

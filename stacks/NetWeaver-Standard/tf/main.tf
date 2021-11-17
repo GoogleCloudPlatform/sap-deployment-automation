@@ -29,6 +29,7 @@ module "gcp_hana" {
   source_image_project  = var.source_image_project
   boot_disk_size        = var.sap_hana_boot_disk_size
   boot_disk_type        = var.sap_hana_boot_disk_type
+  additional_disk_type  = var.sap_hana_additional_disk_type
   autodelete_disk       = var.sap_hana_autodelete_boot_disk
   network_tags          = var.sap_hana_network_tags
   pd_kms_key            = var.sap_hana_pd_kms_key

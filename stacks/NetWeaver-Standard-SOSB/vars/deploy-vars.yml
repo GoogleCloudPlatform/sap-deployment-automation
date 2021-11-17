@@ -26,6 +26,7 @@ sap_hana_instance_count_standby: 1
 sap_hana_instance_name: hansosb
 sap_hana_instance_type: n1-highmem-32
 sap_hana_service_account_name: 
+sap_hana_additional_disk_type: pd-ssd
 sap_hana_subnetwork: 
 sap_subnetwork_project_id: 
 sap_hana_sid: ABC

@@ -37,3 +37,4 @@ sap_nw_sid: XYZ
 sap_hana_install_files_bucket: nw-ansible
 sap_nw_install_files_bucket: nw-code-ansible
 sap_hana_backint_install: false
+sap_hana_additional_disk_type: pd-ssd
