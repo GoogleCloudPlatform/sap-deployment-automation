@@ -12,38 +12,44 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: include base primary tasks
+- name: include base role
   include_role:
     name: base
-- name: include storage primary tasks
+
+- name: include storage role
   include_role:
-    name: storage-bkup   
+    name: storage
   vars:
-    swapon: True
-    nfs_mount: True
+    swapon: true
     disks:
       - { name: sapmnt, partition_path : sapmnt }
       - { name: usrsap, partition_path : usrsap }
       - { name: swap, partition_path : swap }
     logvols:
       usrsap:
-        size: "{{ sap_nw_usrsap_disk_size - 1 }}G"
+        size: 100%VG
         vol: usrsap
         mountpoint: /usr/sap
       sapmnt:
-        size: "{{ sap_nw_sapmnt_disk_size - 1 }}G"
+        size: 100%VG
         vol: sapmnt
         mountpoint: /sapmnt
-        export: true
     swapvols:
       swap:
-        size: "{{ sap_nw_swap_disk_size - 1 }}G"
+        size: 100%VG
         vol: swap 
-        mountpoint: /swap 
-- name: include nw-pre primary tasks
+        mountpoint: /swap
+
+- name: include nfs-server role
   include_role:
-    name: nw-pre  
-- name: include nw primary tasks
+    name: nfs-server
+  when: nfs_server_exports | length != 0
+
+- name: include nw-pre role
+  include_role:
+    name: nw-pre
+
+- name: include ascs role
   include_role:
     name: ascs  
   vars:

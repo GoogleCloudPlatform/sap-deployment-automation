@@ -12,39 +12,52 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: include base primary tasks
+- name: include base role
   include_role:
     name: base
-- name: include storage primary tasks
+
+- name: include storage role
   include_role:
-    name: storage-bkup
+    name: storage
   vars:
-    swapon: True
+    swapon: true
     disks:
       - { name: usrsap, partition_path : usrsap }
       - { name: swap, partition_path : swap }
     logvols:
       usrsap:
-        size: "{{ sap_nw_usrsap_disk_size - 1 }}G"
+        size: 100%VG
         vol: usrsap
         mountpoint: /usr/sap
     swapvols:
       swap:
-        size: "{{ sap_nw_swap_disk_size - 1 }}G"
+        size: 100%VG
         vol: swap
         mountpoint: /swap
-    nfs_mounts:
-    - /sapmnt
-- name: include nw-pre primary tasks
+
+- name: include nfs-client role
   include_role:
-    name: nw-pre  
-- name: include db primary tasks
+    name: nfs-client
+  vars:
+    nfs_client_mounts: '{{ {
+      sap_nw_sapmnt_nfs_mount_src: "/sapmnt",
+      sap_nw_saptrans_nfs_mount_src: "/usr/sap/trans",
+    } }}'
+    nfs_client_mode: autofs
+    nfs_client_create_src_dirs: false
+
+- name: include nw-pre role
+  include_role:
+    name: nw-pre
+
+- name: include db role
   include_role:
     name: db
   vars:
     sap_nw_product_id: "{{ sap_product_vars[sap_product_and_version].db_product_id }}"
     sap_sapinst_template: "{{ sap_product_vars[sap_product_and_version].db_sapinst_template | default('inifile.params.j2') }}"
-- name: include nw primary tasks
+
+- name: include nw role
   include_role:
     name: nw
   vars:

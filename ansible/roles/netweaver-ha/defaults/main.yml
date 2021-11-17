@@ -12,11 +12,53 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+hosts_file_entries:
+- ip: '{{ sap_hana_vip }}'
+  names: ['{{ sap_hana_virtual_host }}']
+- ip: '{{ sap_nw_ascs_vip }}'
+  names: ['{{ sap_nw_ascs_virtual_host }}']
+- ip: '{{ sap_nw_ers_vip }}'
+  names: ['{{ sap_nw_ers_virtual_host }}']
+
 sap_is_aas: false
 sap_is_ascs: false
 sap_is_ers: false
 sap_is_pas: false
 sap_is_scs: false
+
+sap_nw_ascs_instance_name: '{{
+  hostvars.values()
+  | selectattr("sap_is_ascs", "defined")
+  | selectattr("sap_is_ascs")
+  | map(attribute="ansible_hostname")
+  | list
+  | first
+}}'
+sap_nw_ascs_private_ip: '{{
+  hostvars.values()
+  | selectattr("sap_is_ascs", "defined")
+  | selectattr("sap_is_ascs")
+  | map(attribute="ansible_default_ipv4.address")
+  | list
+  | first
+}}'
+sap_nw_ers_instance_name: '{{
+  hostvars.values()
+  | selectattr("sap_is_ers", "defined")
+  | selectattr("sap_is_ers")
+  | map(attribute="ansible_hostname")
+  | list
+  | first
+}}'
+sap_nw_pas_instance_name: '{{
+  hostvars.values()
+  | selectattr("sap_is_pas", "defined")
+  | selectattr("sap_is_pas")
+  | map(attribute="ansible_hostname")
+  | list
+  | first
+}}'
+sap_nw_pas_virtual_host: '{{ sap_nw_pas_instance_name }}'
 
 sap_domain: '{{ ansible_domain }}'
 
@@ -41,13 +83,14 @@ sap_scs_name: '{{ sap_product_vars[sap_product_and_version].scs_name | default("
 sap_nw_ascs_install_gateway: false
 sap_nw_ascs_install_web_dispatcher: false
 
-# If sap_nw_nfs_src is defined, sap_nw_nfsvols defaults to using it as the source.
+# If sap_nw_nfs_src is nonempty, sap_nw_nfsvols defaults to using it as the source.
 # Otherwise, sap_nw_nfsvols must be defined in vars. This is for use with e.g. Cloud FileStore,
 # which can use the same NFS volume for multiple mounts.
 # sap_nw_nfs_src: 10.0.10.100:/sap
+sap_nw_nfs_src: ''
 
 # If true, source directories will be created on sap_nw_nfs_src.
-sap_nw_create_nfs_source_dirs: '{{ sap_nw_nfs_src is defined }}'
+sap_nw_create_nfs_source_dirs: '{{ sap_nw_nfs_src | length != 0 }}'
 
 # Default values to fill in sap_nw_nfsvols when sap_nw_nfs_src is defined.
 sap_nw_sapmnt_nfs_mount_src: '{{ sap_nw_nfs_src }}/sapmnt'

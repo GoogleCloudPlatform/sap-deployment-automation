@@ -40,6 +40,8 @@
     name: nfs-client
   vars:
     nfs_client_mounts: '{{ { sap_nw_sapmnt_nfs_mount_src: "/sapmnt" } }}'
+    nfs_client_mode: autofs
+    nfs_client_create_src_dirs: false
 
 - name: include db2-pre role
   include_role:

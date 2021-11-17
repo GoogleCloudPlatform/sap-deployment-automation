@@ -16,36 +16,40 @@
   assert:
     that: sap_product_and_version in sap_product_vars
     fail_msg: 'sap_nw_product and sap_nw_product_version must match one of {{ sap_product_vars.keys() | join(", ") }}'
-- name: include base primary tasks
+
+- name: include base role
   include_role:
     name: base
-- name: include storage primary tasks
+
+- name: include storage role
   include_role:
-    name: storage-bkup
+    name: storage
   vars:
-    swapon: True
+    swapon: true
     disks:
       - { name: sapmnt, partition_path : sapmnt }
       - { name: usrsap, partition_path : usrsap }
       - { name: swap, partition_path : swap }
     logvols:
       sapmnt:
-        size: "{{ sap_nw_sapmnt_disk_size - 1 }}G"
-        vol: "sapmnt"
+        size: 100%VG
+        vol: sapmnt
         mountpoint: /sapmnt
       usrsap:
-        size: "{{ sap_nw_usrsap_disk_size - 1 }}G"
+        size: 100%VG
         vol: usrsap
         mountpoint: /usr/sap
     swapvols:
       swap:
-        size: "{{ sap_nw_swap_disk_size - 1 }}G"
+        size: 100%VG
         vol: swap
         mountpoint: /swap
-- name: include nw-pre primary tasks
+
+- name: include nw-pre role
   include_role:
     name: nw-pre
-- name: include nw primary tasks
+
+- name: include nw role
   include_role:
     name: nw
   vars:

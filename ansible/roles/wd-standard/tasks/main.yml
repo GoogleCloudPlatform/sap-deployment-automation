@@ -21,7 +21,7 @@
     name: base
 - name: include storage primary tasks
   include_role:
-    name: storage-bkup
+    name: storage
   vars:
     swapon: True
     disks:

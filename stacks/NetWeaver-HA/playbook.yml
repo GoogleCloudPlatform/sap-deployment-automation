@@ -59,7 +59,7 @@
         subnetwork_project: '{{ sap_subnetwork_project_id | default("") }}'
         primary_zone: '{{ sap_primary_zone }}'
         secondary_zone: '{{ sap_secondary_zone }}'
-    tags: [hana, nw, ascs, ers, pas, aas, assertions]
+    tags: [hana, nw, assertions]
 
 - name: SAP HANA configure
   hosts: hana
@@ -92,17 +92,11 @@
       sap_hana_vip: '{{ terraform.outputs.hana_ilb_ip.value }}'
       sap_nw_ascs_vip: '{{ terraform.outputs.ascs_ilb_ip.value }}'
       sap_nw_ers_vip: '{{ terraform.outputs.ers_ilb_ip.value }}'
-      sap_nw_ascs_instance_name: '{{ terraform.outputs.ascs_instance_name.value }}'
-      sap_nw_ers_instance_name: '{{ terraform.outputs.ers_instance_name.value }}'
       sap_nw_pas_virtual_host: '{{ terraform.outputs.pas_instance_name.value }}'
-      sap_nw_ers_private_ip: '{{ terraform.outputs.ers_instance_ip.value }}'
-      sap_nw_ascs_private_ip: '{{ terraform.outputs.ascs_instance_ip.value }}'
-      sap_nw_usrsap_disk_size: '{{ terraform.outputs.nw_usrsap_disk_size.value - 1 }}'
-      sap_nw_swap_disk_size: '{{ terraform.outputs.nw_swap_disk_size.value - 1 }}'
       sap_nw_ascs_health_check_port: '{{ terraform.outputs.ascs_health_check_port.value }}'
       sap_nw_ers_health_check_port: '{{ terraform.outputs.ers_health_check_port.value }}'
       subnet_cidr: '{{ terraform.outputs.subnet_cidr_nw.value }}'
-    tags: [nw, ascs, ers]
+    tags: [nw]
 
 - name: Run assertions on HANA
   hosts: hana
@@ -123,8 +117,4 @@
   - include_role:
       name: netweaver-ha
       tasks_from: assertions
-    vars:
-      sap_nw_ascs_instance_name: '{{ terraform.outputs.ascs_instance_name.value }}'
-      sap_nw_ers_instance_name: '{{ terraform.outputs.ers_instance_name.value }}'
-      sap_nw_pas_instance_name: '{{ terraform.outputs.pas_instance_name.value }}'
   tags: [nw, assertions]
