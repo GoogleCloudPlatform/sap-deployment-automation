@@ -12,14 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: include base primary tasks
+- name: include base role
   include_role:
     name: base
-- name: include storage primary tasks
+
+- name: include storage role
   include_role:
     name: storage
   vars:
-    swapon: True
+    swapon: true
     disks:
       - { name: sapmnt, partition_path : sapmnt }
       - { name: usrsap, partition_path : usrsap }
@@ -37,15 +38,17 @@
       swap:
         size: 100%VG
         vol: swap 
-        mountpoint: /swap 
-  include_role:
-    name: nw-pre  
+        mountpoint: /swap
+
 - name: include nfs-server role
+  include_role:
     name: nfs-server
   when: nfs_server_exports | length != 0
-- name: include nw primary tasks
+
+- name: include nw-pre role
   include_role:
     name: nw-pre
+
 - name: include ascs role
   include_role:
     name: ascs  

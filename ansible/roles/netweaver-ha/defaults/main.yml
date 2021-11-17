@@ -26,6 +26,40 @@ sap_is_ers: false
 sap_is_pas: false
 sap_is_scs: false
 
+sap_nw_ascs_instance_name: '{{
+  hostvars.values()
+  | selectattr("sap_is_ascs", "defined")
+  | selectattr("sap_is_ascs")
+  | map(attribute="ansible_hostname")
+  | list
+  | first
+}}'
+sap_nw_ascs_private_ip: '{{
+  hostvars.values()
+  | selectattr("sap_is_ascs", "defined")
+  | selectattr("sap_is_ascs")
+  | map(attribute="ansible_default_ipv4.address")
+  | list
+  | first
+}}'
+sap_nw_ers_instance_name: '{{
+  hostvars.values()
+  | selectattr("sap_is_ers", "defined")
+  | selectattr("sap_is_ers")
+  | map(attribute="ansible_hostname")
+  | list
+  | first
+}}'
+sap_nw_pas_instance_name: '{{
+  hostvars.values()
+  | selectattr("sap_is_pas", "defined")
+  | selectattr("sap_is_pas")
+  | map(attribute="ansible_hostname")
+  | list
+  | first
+}}'
+sap_nw_pas_virtual_host: '{{ sap_nw_pas_instance_name }}'
+
 sap_domain: '{{ ansible_domain }}'
 
 sap_hana_password: ''

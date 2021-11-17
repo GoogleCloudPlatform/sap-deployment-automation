@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: include base primary tasks
+- name: include base role
   include_role:
     name: base
-- name: include storage primary tasks
+
+- name: include storage role
   include_role:
     name: storage
   vars:
@@ -33,6 +34,7 @@
         size: 100%VG
         vol: swap
         mountpoint: /swap
+
 - name: include nfs-client role
   include_role:
     name: nfs-client
@@ -42,15 +44,17 @@
     nfs_client_create_src_dirs: '{{ sap_nw_create_nfs_source_dirs }}'
     nfs_client_source: '{{ sap_nw_nfs_src }}'
 
-- name: include nw-pre primary tasks
+- name: include nw-pre role
   include_role:
     name: nw-pre
-- name: include nw primary tasks
+
+- name: include ascs role
   include_role:
     name: ascs
     tasks_from: ha
   vars:
     sap_nw_product_id: "{{ sap_product_vars[sap_product_and_version].ascs_product_id }}"
+
 - name: include post-deploy role
   include_role:
     name: post-deploy

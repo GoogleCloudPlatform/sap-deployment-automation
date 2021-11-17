@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: include base primary tasks
+- name: include base role
   include_role:
     name: base
-- name: include storage primary tasks
+
+- name: include storage role
   include_role:
     name: storage
   vars:
@@ -33,7 +34,8 @@
         size: 100%VG
         vol: swap
         mountpoint: /swap
-- name: include storage primary tasks
+
+- name: include nfs-client role
   include_role:
     name: nfs-client
   vars:
@@ -41,18 +43,20 @@
     nfs_client_mode: autofs
     nfs_client_create_src_dirs: false
 
-- name: include nw primary tasks
+- name: include user role
   include_role:
     name: user
   vars:
     sap_nw_product_id: "{{ sap_product_vars[sap_product_and_version].user_product_id }}"
-- name: include nw primary tasks
+
+- name: include ers role
   include_role:
     name: ers
   vars:
     sap_use_alias: '{{ ansible_os_family == "RedHat" }}'
     sap_nw_product_id: "{{ sap_product_vars[sap_product_and_version].ers_product_id }}"
-- name: include storage primary tasks
+
+- name: include post-deploy role
   include_role:
     name: post-deploy
   vars:
