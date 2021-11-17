@@ -22,10 +22,7 @@ sap_nw_pas_instance_number: "01"
 sap_nw_install_files_dest: /sapmnt/Software
 sap_nw_kernel_files: /sapmnt/Software/Kernel_Files
 sap_nw_rdbms_files: /sapmnt/Software/HANA_CLIENT
-sap_nw_sapmnt_disk_size: 50
-sap_nw_swap_disk_size: 28
 sap_nw_user: '{{ sap_nw_sid | lower }}adm'
-sap_nw_usrsap_disk_size: 50
 
 sap_scs_name: '{{ sap_product_vars[sap_product_and_version].scs_name | default("ASCS") }}'
 

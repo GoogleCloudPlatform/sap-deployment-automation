@@ -17,33 +17,36 @@
     name: base
 - name: include storage primary tasks
   include_role:
-    name: storage-bkup   
+    name: storage
   vars:
     swapon: True
-    nfs_mount: True
     disks:
       - { name: sapmnt, partition_path : sapmnt }
       - { name: usrsap, partition_path : usrsap }
       - { name: swap, partition_path : swap }
     logvols:
       usrsap:
-        size: "{{ sap_nw_usrsap_disk_size - 1 }}G"
+        size: 100%VG
         vol: usrsap
         mountpoint: /usr/sap
       sapmnt:
-        size: "{{ sap_nw_sapmnt_disk_size - 1 }}G"
+        size: 100%VG
         vol: sapmnt
         mountpoint: /sapmnt
-        export: true
     swapvols:
       swap:
-        size: "{{ sap_nw_swap_disk_size - 1 }}G"
+        size: 100%VG
         vol: swap 
         mountpoint: /swap 
-- name: include nw-pre primary tasks
   include_role:
     name: nw-pre  
+- name: include nfs-server role
+    name: nfs-server
+  when: nfs_server_exports | length != 0
 - name: include nw primary tasks
+  include_role:
+    name: nw-pre
+- name: include ascs role
   include_role:
     name: ascs  
   vars:

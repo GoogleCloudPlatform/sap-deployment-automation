@@ -12,64 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: read fstab
-  slurp:
-    path: /etc/fstab
-  register: nfs_client_fstab
-  changed_when: false
-  when: nfs_client_share != ''
+- include_tasks: makedirs.yml
+  when: nfs_client_create_src_dirs | bool
 
-- name: define whether or not fstab entries exist
-  set_fact:
-    nfs_client_mounts_present: '{{ nfs_client_mounts_present + [nfs_client_fstab.content | b64decode is regex("\b{}\b".format(item.key))] }}'
-  with_dict: '{{ nfs_client_mounts }}'
-  when: nfs_client_share != ''
-
-- name: ensure subdirectories are present on nfs share
-  block:
-  - name: create temporary fstab
-    tempfile:
-      state: file
-    register: nfs_client_temp_fstab
-  - name: mount nfs share
-    mount:
-      fstab: '{{ nfs_client_temp_fstab.path }}'
-      fstype: nfs
-      path: /mnt
-      src: '{{ nfs_client_share }}'
-      state: mounted
-  - name: make directories on nfs share
-    file:
-      path: '/mnt/{{ item.key.split(nfs_client_share)[1] }}'
-      mode: 0755
-      state: directory
-    with_dict: '{{ nfs_client_mounts }}'
-  always:
-  - name: unmount nfs share
-    mount:
-      fstab: '{{ nfs_client_temp_fstab.path }}'
-      fstype: nfs
-      path: /mnt
-      src: '{{ nfs_client_share }}'
-      state: unmounted
-  - name: remove temporary fstab
-    file:
-      path: '{{ nfs_client_temp_fstab.path }}'
-      state: absent
-  when:
-  - nfs_client_share != ''
-  - false in nfs_client_mounts_present
-
-- name: ensure mount points exist
-  file:
-    path: '{{ item.value }}'
-    state: directory
-  with_dict: '{{ nfs_client_mounts }}'
-
-- name: mount and persist nfs filesystems
-  mount:
-    path: '{{ item.value }}'
-    fstype: nfs
-    src: '{{ item.key }}'
-    state: mounted
-  with_dict: '{{ nfs_client_mounts }}'
+- include_tasks: '{{ nfs_client_mode | default("fstab") }}.yml'

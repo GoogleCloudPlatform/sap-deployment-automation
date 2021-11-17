@@ -17,7 +17,6 @@
     name: storage
   vars:
     swapon: true
-    nfs_mount: true
     disks:
     - { name: sapmnt, partition_path : sapmnt }
     - { name: usrsap, partition_path : usrsap }
@@ -27,7 +26,6 @@
         size: 100%VG
         vol: sapmnt
         mountpoint: /sapmnt
-        export: true
       usrsap:
         size: 100%VG
         vol: usrsap
