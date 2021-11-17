@@ -67,6 +67,7 @@ sap_hana_sidadm_password: '{{ sap_hana_password }}'
 sap_hana_cluster_user_password: '{{ sap_hana_password }}'
 sap_hana_hsr_operation_mode: logreplay
 sap_hana_hsr_replication_mode: syncmem
+sap_hana_fast_restart: false
 
 # Backint install vars
 backint_temp_path: /tmp/backint-gcs-install.sh
