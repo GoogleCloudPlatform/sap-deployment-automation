@@ -60,6 +60,7 @@ sap_hana_common_master_password: '{{ sap_hana_password }}'
 sap_hana_root_password: '{{ sap_hana_password }}'
 sap_hana_sapadm_password: '{{ sap_hana_password }}'
 sap_hana_sidadm_password: '{{ sap_hana_password }}'
+sap_hana_fast_restart: false
 
 # Backint install vars
 backint_temp_path: /tmp/backint-gcs-install.sh
