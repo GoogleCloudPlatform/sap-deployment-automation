@@ -1,0 +1,4 @@
+### {{ ansible_managed }} ###
+{% for src, mountpoint in nfs_client_mounts.items() -%}
+{{ mountpoint }} -{{ nfs_client_opts | join(',') }} {{ src }}
+{% endfor %}
