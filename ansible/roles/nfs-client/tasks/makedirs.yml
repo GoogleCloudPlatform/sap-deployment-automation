@@ -1,0 +1,70 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# These tasks create directories on an NFS source if needed. For example, an NFS
+# share 10.1.2.3:/sap may need additional subdirectories which have their own mount
+# points. For example 10.2.3.3:/sap/ASCS00 and 10.1.2.3:/sap/ERS10 may be mounted
+# on /usr/sap/ABC/ASCS00 and /usr/sap/ABC/ERS10. This temporarily mounts
+# 10.2.3.3:/sap and creates the subdirectories ASCS00 and ERS10.
+
+- name: initialize nfs mount variable
+  set_fact:
+    nfs_client_mounts_present: []
+
+- name: check mounts
+  command: mount
+  args:
+    warn: false
+  register: nfs_client_mount_command
+  changed_when: false
+  when: nfs_client_source | length != 0
+
+- name: collect mount entries that are present
+  set_fact:
+    nfs_client_mounts_present: '{{ nfs_client_mounts_present + [nfs_client_mount_command.stdout is regex("\b{}\b".format(item))] }}'
+  loop: '{{ nfs_client_mounts.keys() | list }}'
+  when:
+  - nfs_client_source | length != 0
+
+- block:
+  - name: create temporary fstab
+    tempfile:
+      state: file
+    register: nfs_client_temp_fstab
+  - name: mount nfs share
+    mount:
+      fstab: '{{ nfs_client_temp_fstab.path }}'
+      fstype: nfs
+      path: /mnt
+      src: '{{ nfs_client_source }}'
+      state: mounted
+  - name: make directories on nfs share
+    file:
+      path: '/mnt/{{ item.split(nfs_client_source)[1] }}'
+      mode: 0755
+      state: directory
+    loop: '{{ nfs_client_mounts.keys() | list }}'
+  always:
+  - name: unmount nfs share
+    mount:
+      fstab: '{{ nfs_client_temp_fstab.path }}'
+      fstype: nfs
+      path: /mnt
+      src: '{{ nfs_client_source }}'
+      state: unmounted
+  - name: remove temporary fstab
+    file:
+      path: '{{ nfs_client_temp_fstab.path }}'
+      state: absent
+  when: false in nfs_client_mounts_present
