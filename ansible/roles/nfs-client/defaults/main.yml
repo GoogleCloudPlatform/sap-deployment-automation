@@ -12,5 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-nfs_client_mounts_present: []
-nfs_client_share: ''
+nfs_client_create_src_dirs: false
+nfs_client_fstab: /etc/fstab
+nfs_client_temporary_mount: false
+nfs_client_opts: [rw, relatime, hard, proto=tcp, timeo=600, retrans=2, sec=sys]
+nfs_client_source: ''

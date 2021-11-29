@@ -25,18 +25,18 @@ nfs_server_exports:
     hostvars.values()
     | selectattr("sap_is_db2", "defined")
     | selectattr("sap_is_db2")
-    | map(attribute=("ansible_default_ipv4.address"))
+    | map(attribute="ansible_default_ipv4.address")
     | list
     + hostvars.values()
     | selectattr("sap_is_pas", "defined")
     | selectattr("sap_is_pas")
-    | map(attribute=("ansible_default_ipv4.address"))
+    | map(attribute="ansible_default_ipv4.address")
     | list
     + hostvars.values()
     | list
     | selectattr("sap_is_aas", "defined")
     | selectattr("sap_is_aas")
-    | map(attribute=("ansible_default_ipv4.address"))
+    | map(attribute="ansible_default_ipv4.address")
     | list
   }}'
 - directory: /usr/sap/trans
@@ -44,12 +44,12 @@ nfs_server_exports:
     hostvars.values()
     | selectattr("sap_is_pas", "defined")
     | selectattr("sap_is_pas")
-    | map(attribute=("ansible_default_ipv4.address"))
+    | map(attribute="ansible_default_ipv4.address")
     | list
     + hostvars.values()
     | selectattr("sap_is_aas", "defined")
     | selectattr("sap_is_aas")
-    | map(attribute=("ansible_default_ipv4.address"))
+    | map(attribute="ansible_default_ipv4.address")
     | list
   }}'
 
