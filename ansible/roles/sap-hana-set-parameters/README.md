@@ -33,9 +33,11 @@ This is role is invoked in the `sap-hana-scaleout` parent role and can be ran in
 Example Playbook
 ----------------
 
+```yaml
   - hosts: all
     roles:
         - sap-hana-set-parameters
+```
 
 License
 -------

@@ -28,9 +28,11 @@ This is role is invoked in all the parent HANA/Netweaver roles and can be ran in
 Example Playbook
 ----------------
 
+```yaml
   - hosts: all
     roles:
         - storage
+```
 
 License
 -------

@@ -27,9 +27,11 @@ This is role is invoked in the `sap-hana-scaleup`, `sap-hana-ha` parent roles an
 Example Playbook
 ----------------
 
+```yaml
   - hosts: all
     roles:
         - sap-hana-fast-restart
+```
 
 License
 -------

@@ -65,9 +65,11 @@ This is role is invoked in the `HANA-Scaleup` stack playbook.yml.
 Example Playbook
 ----------------
 
+```yaml
   - hosts: all
     roles:
         - sap-hana-scaleup
+```
 
 License
 -------

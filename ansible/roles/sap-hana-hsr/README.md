@@ -33,9 +33,11 @@ This is role is invoked in the `sap-hana-ha` parent role and can be ran independ
 Example Playbook
 ----------------
 
+```yaml
   - hosts: all
     roles:
         - sap-hana-hsr
+```
 
 License
 -------

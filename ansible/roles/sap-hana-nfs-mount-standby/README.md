@@ -36,9 +36,11 @@ This is role is invoked in the `sap-hana-scaleout-standby` parent role and can b
 Example Playbook
 ----------------
 
+```yaml
   - hosts: all
     roles:
         - sap-hana-mount-nfs
+```
 
 License
 -------

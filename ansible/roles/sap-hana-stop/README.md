@@ -28,9 +28,11 @@ This is role is invoked in the `sap-hana-scaleout-standby`, `sap-hana-scaleout`,
 Example Playbook
 ----------------
 
+```yaml
   - hosts: all
     roles:
         - sap-hana-stop
+```
 
 License
 -------

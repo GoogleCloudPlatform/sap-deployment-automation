@@ -20,9 +20,11 @@ This is role is invoked in the `sap-hana-scaleout` and `sap-hana-scaleout-standb
 Example Playbook
 ----------------
 
+```yaml
   - hosts: all
     roles:
         - sap-hana-copy-ssh-keys
+```
 
 License
 -------

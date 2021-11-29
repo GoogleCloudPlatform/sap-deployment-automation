@@ -67,9 +67,11 @@ This is role is invoked in the `HANA-Scaleout-Standby` stack playbook.yml.
 Example Playbook
 ----------------
 
+```yaml
   - hosts: all
     roles:
         - sap-hana-scaleout-standby
+```
 
 License
 -------
