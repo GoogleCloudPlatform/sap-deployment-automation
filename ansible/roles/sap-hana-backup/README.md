@@ -1,15 +1,44 @@
-# sap-hana-backup
+sap-hana-backup
+=========
 
-Ansible role to perform HANA db and System db backup.
+This role performs HANA db and System db backup as part of `HANA-HA` stack included in the `sap-hana-ha` parent role.
 
-# Requirements
+Requirements
+------------
 
 Ansible version `>= 2.9.2`
 
-# Role Variables
+Role Variables
+--------------
 
-All required variables for running this role comes from the higher level ansible role `ansible/roles/sap-hana-ha`
+List of variables accepted by the role are shown below
 
-# Author Information
+| Variable                         | Required | Default                          | Choices | Comments                                 |
+|----------------------------------|----------|----------------------------------|---------|------------------------------------------|
+| sap_hana_instance_number         | yes      | "00"                             |         | HANA instance number                     |
+| sap_hana_db_system_password      | yes      | Google123                        |         | HANA DB system password                  |
+| sap_hana_backup_file_name        | yes      | "/hanabackup/data/pre_ha_config" |         | HANA backup filename                     |
+| sap_hana_user                    | yes      | 'bg1adm'                         |         | HANA SID user                            |
+| sap_hana_sid                     | yes      | BG1                              |         | HANA SID                                 |
 
-Bala Guduru <balabharat.guduru@googlecloud.corp-partner.google.com>
+Dependencies
+------------
+
+This is role is invoked in the `sap-hana-ha` parent role and can be ran independently with caution by providing the required variables in the format expected.
+
+Example Playbook
+----------------
+
+  - hosts: all
+    roles:
+        - sap-hana-backup
+
+License
+-------
+
+See license.md
+
+Author Information
+------------------
+
+Bala Guduru

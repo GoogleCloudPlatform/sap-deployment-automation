@@ -1,15 +1,35 @@
-# sap-hana-copy-ssh-keys
+sap-hana-copy-ssh-keys
+=========
 
-Ansible role to copy ssh keys b/w primary and seconday node of HANA HA stack deployment.
+This role will copy ssh keys b/w primary and seconday node as part of `HANA-Scaleout`, `HANA-Scaleout-Standby` stacks included in the `sap-hana-scaleout` and `sap-hana-scaleout-standby` parent roles.
 
-# Requirements
+Requirements
+------------
 
 Ansible version `>= 2.9.2`
 
-# Role Variables
+Role Variables
+--------------
+N/A
 
-All required variables for running this role comes from the higher level ansible role `ansible/roles/sap-hana-ha`
+Dependencies
+------------
 
-# Author Information
+This is role is invoked in the `sap-hana-scaleout` and `sap-hana-scaleout-standby` parent roles and can be ran independently with caution by providing the required variables in the format expected.
 
-Bala Guduru <balabharat.guduru@googlecloud.corp-partner.google.com>
+Example Playbook
+----------------
+
+  - hosts: all
+    roles:
+        - sap-hana-copy-ssh-keys
+
+License
+-------
+
+See license.md
+
+Author Information
+------------------
+
+Bala Guduru

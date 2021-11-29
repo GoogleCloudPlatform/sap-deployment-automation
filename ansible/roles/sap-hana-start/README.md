@@ -1,15 +1,43 @@
-# sap-hana-start
+sap-hana-start
+==============
 
-Ansible role to start HANA service on a node.
+This role will start HANA service on a node as part of `HANA-Scaleout-Standby`, `HANA-Scaleout`, `HANA-Scaleup`, `HANA-HA` stacks included in the `sap-hana-scaleout-standby`, `sap-hana-scaleout`, `sap-hana-scaleup`, `sap-hana-ha` parent roles.
 
-# Requirements
+Requirements
+------------
 
 Ansible version `>= 2.9.2`
 
-# Role Variables
+Role Variables
+--------------
 
-All required variables for running this role comes from the higher level ansible roles
+List of variables accepted by the role are shown below
 
-# Author Information
+| Variable                    | Required | Default   | Choices | Comments                      |
+|-----------------------------|----------|-----------|---------|-------------------------------|
+| sap_hana_sid                | yes      | BG1       |         | HANA system ID                |
+| sap_hana_instance_number    | yes      | "00"      |         | HANA instance number          |
+| sap_hana_user               | yes      | 'bg1adm'  |         | HANA SID user                 |
 
-Bala Guduru <balabharat.guduru@googlecloud.corp-partner.google.com>
+
+Dependencies
+------------
+
+This is role is invoked in the `sap-hana-scaleout-standby`, `sap-hana-scaleout`, `sap-hana-scaleup`, `sap-hana-ha` parent roles and can be ran independently with caution by providing the required variables in the format expected.
+
+Example Playbook
+----------------
+
+  - hosts: all
+    roles:
+        - sap-hana-start
+
+License
+-------
+
+See license.md
+
+Author Information
+------------------
+
+Bala Guduru

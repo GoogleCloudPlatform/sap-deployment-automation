@@ -1,15 +1,47 @@
-# sap-hana-mount-nfs
+sap-hana-mount-nfs
+===================
 
-Ansible role to mount nfs vol from primary node on to secondary deployed by `stacks/HANA-Scaleout` stack.
+This role will mount nfs vol from primary node on to secondary as part of `HANA-Scaleout` stack included in the `sap-hana-scaleout` parent role.
 
-# Requirements
+Requirements
+------------
 
 Ansible version `>= 2.9.2`
 
-# Role Variables
+Role Variables
+--------------
 
-All required variables for running this role comes from the higher level ansible role `ansible/roles/sap-hana-scaleout`
+List of variables accepted by the role are shown below
 
-# Author Information
+| Variable                      | Required | Default      | Choices | Comments                          |
+|-------------------------------|----------|--------------|---------|-----------------------------------|
+| sap_hana_shared_mountpoint    | yes      | /hana/shared |         | Mountpoint for HANA shared volume |
+| sap_hana_master_instance_name | yes      |              |         | SAP HANA master instance name     |
+| sap_hana_backup_mountpoint    | yes      | /hanabackup  |         | Mountpoint for HANA backup volume |
+| sap_hana_create_backup_volume | yes      | true         |         | Create HANA backup volume         |
+| sap_hana_sid                  | yes      | BG1          |         | HANA system ID                    |
+| sap_hana_data_mountpoint      | yes      | /hana/data   |         | Mountpoint for HANA data volume   |
+| sap_hana_log_mountpoint       | yes      | /hana/log    |         | Mountpoint for HANA log volume    |
 
-Bala Guduru <balabharat.guduru@googlecloud.corp-partner.google.com>
+
+Dependencies
+------------
+
+This is role is invoked in the `sap-hana-scaleout` parent role and can be ran independently with caution by providing the required variables in the format expected.
+
+Example Playbook
+----------------
+
+  - hosts: all
+    roles:
+        - sap-hana-mount-nfs
+
+License
+-------
+
+See license.md
+
+Author Information
+------------------
+
+Bala Guduru

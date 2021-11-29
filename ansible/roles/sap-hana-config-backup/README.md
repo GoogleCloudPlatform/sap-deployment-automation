@@ -1,15 +1,41 @@
-# sap-hana-config-backup
+sap-hana-config-backup
+=========
 
-Ansible role to configure HANA backup.
+This role configures HANA backup as part of `HANA-HA` stack included in the `sap-hana-ha` parent role.
 
-# Requirements
+Requirements
+------------
 
 Ansible version `>= 2.9.2`
 
-# Role Variables
+Role Variables
+--------------
 
-All required variables for running this role comes from the higher level ansible role `ansible/roles/sap-hana-ha`
+List of variables accepted by the role are shown below
 
-# Author Information
+| Variable                         | Required | Default                          | Choices | Comments                                 |
+|----------------------------------|----------|----------------------------------|---------|------------------------------------------|
+| sap_hana_backup_partition_name   | yes      | hanabackup                       |         | HANA backup partition name               |
+| sap_hana_sid                     | yes      | BG1                              |         | HANA SID                                 |
 
-Bala Guduru <balabharat.guduru@googlecloud.corp-partner.google.com>
+Dependencies
+------------
+
+This is role is invoked in the `sap-hana-ha` parent role and can be ran independently with caution by providing the required variables in the format expected.
+
+Example Playbook
+----------------
+
+  - hosts: all
+    roles:
+        - sap-hana-backup
+
+License
+-------
+
+See license.md
+
+Author Information
+------------------
+
+Bala Guduru
