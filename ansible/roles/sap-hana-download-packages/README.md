@@ -23,7 +23,7 @@ List of variables accepted by the role are shown below
 Dependencies
 ------------
 
-This is role is invoked in the `sap-hana-scaleout-standby`, `sap-hana-scaleout`, `sap-hana-scaleup`, `sap-hana-ha` parent roles and can be ran independently with caution by providing the required variables in the format expected.
+This role is invoked in the `sap-hana-scaleout-standby`, `sap-hana-scaleout`, `sap-hana-scaleup`, `sap-hana-ha` parent roles and can be ran independently with caution by providing the required variables in the format expected.
 
 Example Playbook
 ----------------

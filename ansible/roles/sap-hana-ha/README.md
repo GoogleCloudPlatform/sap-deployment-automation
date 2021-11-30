@@ -65,7 +65,7 @@ All the defaults for this role are defined in `defaults/main.yml`
 Dependencies
 ------------
 
-This is role is invoked in the `HANA-HA` stack playbook.yml.
+This role is invoked in the `HANA-HA` stack playbook.yml.
 
 Example Playbook
 ----------------

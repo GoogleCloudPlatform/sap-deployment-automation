@@ -16,7 +16,7 @@ N/A
 Dependencies
 ------------
 
-This is role is invoked in the `sap-hana-scaleout-standby`, `sap-hana-scaleout` parent roles and can be ran independently with caution by providing the required variables in the format expected.
+This role is invoked in the `sap-hana-scaleout-standby`, `sap-hana-scaleout` parent roles and can be ran independently with caution by providing the required variables in the format expected.
 
 Example Playbook
 ----------------
