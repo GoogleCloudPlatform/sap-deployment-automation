@@ -12,13 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+sap_hana_backint_bucket_name: ''
+sap_hana_backint_install: '{{ sap_hana_backint_bucket_name | length > 0 }}'
 sap_hana_password: ''
 sap_hana_db_system_password: '{{ sap_hana_password }}'
 sap_hana_sidadm_password: '{{ sap_hana_password }}'
 sap_hana_user: '{{ sap_hana_sid | lower }}adm'
+sap_hana_virtual_host: '{{ sap_hana_instance_name }}'
 
 sap_nw_ascs_instance_number: "00"
 sap_nw_pas_instance_number: "01"
+sap_nw_ascs_virtual_host: '{{ ansible_hostname }}'
+sap_nw_pas_virtual_host: '{{ ansible_hostname }}'
 sap_nw_install_files_dest: /sapmnt/Software
 sap_nw_kernel_files: /sapmnt/Software/Kernel_Files
 sap_nw_rdbms_files: /sapmnt/Software/HANA_CLIENT

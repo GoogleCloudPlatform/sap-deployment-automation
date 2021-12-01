@@ -12,6 +12,39 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+sap_hana_primary_instance_name: '{{
+  hostvars.values()
+  | selectattr("sap_hana_is_primary", "defined")
+  | selectattr("sap_hana_is_primary")
+  | map(attribute="ansible_hostname")
+  | list
+  | first
+}}'
+sap_hana_primary_instance_ip: '{{
+  hostvars.values()
+  | selectattr("sap_hana_is_primary", "defined")
+  | selectattr("sap_hana_is_primary")
+  | map(attribute="ansible_default_ipv4.address")
+  | list
+  | first
+}}'
+sap_hana_secondary_instance_name: '{{
+  hostvars.values()
+  | selectattr("sap_hana_is_primary", "defined")
+  | selectattr("sap_hana_is_primary", "equalto", false)
+  | map(attribute="ansible_hostname")
+  | list
+  | first
+}}'
+sap_hana_secondary_instance_ip: '{{
+  hostvars.values()
+  | selectattr("sap_hana_is_primary", "defined")
+  | selectattr("sap_hana_is_primary", "equalto", false)
+  | map(attribute="ansible_default_ipv4.address")
+  | list
+  | first
+}}'
+
 sap_hana_install_files_bucket: sap-deployment-media
 sap_hana_is_primary: false
 sap_hana_product_version: 20SPS03
@@ -70,6 +103,8 @@ sap_hana_hsr_replication_mode: syncmem
 sap_hana_fast_restart: false
 
 # Backint install vars
+sap_hana_backint_bucket_name: ''
+sap_hana_backint_install: '{{ sap_hana_backint_bucket_name | length > 0 }}'
 backint_temp_path: /tmp/backint-gcs-install.sh
 backint_dir: "/usr/sap/{{ sap_hana_sid }}/SYS/global/hdb/opt/backint"
 backint_config_path: "{{ backint_dir }}/backint-gcs/parameters.txt"

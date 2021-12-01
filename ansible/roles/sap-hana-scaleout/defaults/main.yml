@@ -33,6 +33,11 @@ sap_hana_worker_node_names: '{{
   | map(attribute="ansible_hostname")
   | list
 }}'
+sap_hana_instances: '{{
+  hostvars.values()
+  | map(attribute="ansible_hostname")
+  | list
+}}'
 
 sap_hana_install_files_bucket: sap-deployment-media
 sap_hana_product_version: 20SPS03
@@ -89,6 +94,8 @@ sap_hana_sapadm_password: '{{ sap_hana_password }}'
 sap_hana_sidadm_password: '{{ sap_hana_password }}'
 
 # Backint install vars
+sap_hana_backint_bucket_name: ''
+sap_hana_backint_install: '{{ sap_hana_backint_bucket_name | length > 0 }}'
 backint_temp_path: /tmp/backint-gcs-install.sh
 backint_dir: "/usr/sap/{{ sap_hana_sid }}/SYS/global/hdb/opt/backint"
 backint_config_path: "{{ backint_dir }}/backint-gcs/parameters.txt"
