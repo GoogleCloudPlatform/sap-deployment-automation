@@ -74,7 +74,7 @@ Example Playbook
 License
 -------
 
-See license.md
+See LICENSE file
 
 Author Information
 ------------------
