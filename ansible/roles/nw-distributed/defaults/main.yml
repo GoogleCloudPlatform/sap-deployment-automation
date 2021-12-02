@@ -15,6 +15,25 @@
 sap_is_ascs: false
 sap_is_pas: false
 
+sap_nw_ascs_instance_name: '{{
+  hostvars.values()
+  | selectattr("sap_is_ascs", "defined")
+  | selectattr("sap_is_ascs")
+  | map(attribute="ansible_hostname")
+  | list
+  | first
+}}'
+sap_nw_pas_instance_name: '{{
+  hostvars.values()
+  | selectattr("sap_is_pas", "defined")
+  | selectattr("sap_is_pas")
+  | map(attribute="ansible_hostname")
+  | list
+  | first
+}}'
+sap_nw_ascs_virtual_host: '{{ sap_nw_ascs_instance_name }}'
+sap_nw_pas_virtual_host: '{{ sap_nw_pas_instance_name }}'
+
 nfs_server_exports:
 - directory: /sapmnt
   clients: '{{
@@ -41,10 +60,13 @@ sap_nw_ascs_private_ip: '{{
   | first
 }}'
 
+sap_hana_backint_bucket_name: ''
+sap_hana_backint_install: '{{ sap_hana_backint_bucket_name | length > 0 }}'
 sap_hana_password: ''
 sap_hana_db_system_password: '{{ sap_hana_password }}'
 sap_hana_sidadm_password: '{{ sap_hana_password }}'
 sap_hana_user: '{{ sap_hana_sid | lower }}adm'
+sap_hana_virtual_host: '{{ sap_hana_instance_name }}'
 
 sap_nw_ascs_instance_number: '03'
 sap_nw_pas_instance_number: '02'
