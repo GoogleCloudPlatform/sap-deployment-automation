@@ -17,6 +17,7 @@ sap_project_id:
 sap_tf_state_bucket:
 sap_tf_state_bucket_prefix:
 sap_hana_instance_name:
+sap_hana_subnetwork:
 sap_ascs_instance_name:
 sap_pas_instance_name:
 sap_nw_subnetwork:
