@@ -23,7 +23,7 @@
   include_role:
     name: storage
   vars:
-    swapon: True
+    swapon: true
     disks:
       - { name: sapmnt, partition_path : sapmnt }
       - { name: usrsap, partition_path : usrsap }
@@ -31,7 +31,7 @@
     logvols:
       sapmnt:
         size: 100%VG
-        vol: "sapmnt"
+        vol: sapmnt
         mountpoint: /sapmnt
       usrsap:
         size: 100%VG
