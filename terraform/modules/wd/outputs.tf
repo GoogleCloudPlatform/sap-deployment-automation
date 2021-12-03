@@ -71,5 +71,5 @@ output "inventory" {
   value = [{
     host = google_compute_instance.gcp_wd.network_interface.0.network_ip,
     groups = ["wd"],
-  }
+  }]
 }

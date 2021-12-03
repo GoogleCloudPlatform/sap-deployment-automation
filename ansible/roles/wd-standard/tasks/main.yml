@@ -23,23 +23,23 @@
   include_role:
     name: storage
   vars:
-    swapon: True
+    swapon: true
     disks:
       - { name: sapmnt, partition_path : sapmnt }
       - { name: usrsap, partition_path : usrsap }
       - { name: swap, partition_path : swap }
     logvols:
       sapmnt:
-        size: "{{ sap_wd_sapmnt_disk_size - 1 }}G"
-        vol: "sapmnt"
+        size: 100%VG
+        vol: sapmnt
         mountpoint: /sapmnt
       usrsap:
-        size: "{{ sap_wd_usrsap_disk_size - 1 }}G"
+        size: 100%VG
         vol: usrsap
         mountpoint: /usr/sap
     swapvols:
       swap:
-        size: "{{ sap_wd_swap_disk_size - 1 }}G"
+        size: 100%VG
         vol: swap
         mountpoint: /swap
 - name: include nw-pre primary tasks
