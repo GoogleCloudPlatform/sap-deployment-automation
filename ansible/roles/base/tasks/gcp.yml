@@ -24,7 +24,7 @@
   file:
     path: '{{ gcloud_install_dir }}/google-cloud-sdk'
     state: absent
-  when: false in stat_google_cloud_sdk.results | map(attribute="stat") | map(attribute="exists") | list
+  when: false in stat_google_cloud_sdk.results | map(attribute="stat.exists") | list
 
 - name: unarchive google-cloud-sdk
   unarchive:
@@ -32,6 +32,7 @@
     dest: '{{ gcloud_install_dir }}'
     remote_src: true
     creates: '{{ gcloud_install_dir }}/google-cloud-sdk'
+  when: false in stat_google_cloud_sdk.results | map(attribute="stat.exists") | list
 
 - name: updating alternatives
   command: >-
