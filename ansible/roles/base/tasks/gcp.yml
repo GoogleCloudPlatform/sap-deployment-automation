@@ -32,6 +32,7 @@
     dest: '{{ gcloud_install_dir }}'
     remote_src: true
     creates: '{{ gcloud_install_dir }}/google-cloud-sdk'
+  when: false in stat_google_cloud_sdk.results | map(attribute="stat") | map(attribute="exists") | list
 
 - name: updating alternatives
   command: >-
