@@ -29,14 +29,14 @@ sap_nw_kernel_files: /sapmnt/Software/Kernel_Files
 sap_nw_rdbms_files: /sapmnt/Software/HANA_CLIENT
 sap_nw_user: '{{ sap_nw_sid | lower }}adm'
 
-sap_scs_name: '{{ sap_product_vars[sap_product_and_version].scs_name | default("ASCS") }}'
+sap_scs_name: '{{ sap_product_vars[sap_nw_product_and_version].scs_name | default("ASCS") }}'
 
 sap_nw_ascs_install_gateway: false
 sap_nw_ascs_install_web_dispatcher: false
 
 sap_nw_product: 'NetWeaver'
 sap_nw_product_version: '750'
-sap_product_and_version: '{{ sap_nw_product }}/{{ sap_nw_product_version }}'
+sap_nw_product_and_version: '{{ sap_nw_product }}/{{ sap_nw_product_version }}'
 # sap_nw_product and sap_nw_product_version must be set to one of the <product>/<version> combos in sap_product_vars.
 sap_product_vars:
   'BW4HANA/20':
@@ -70,7 +70,7 @@ sap_product_vars:
     install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM10SP32]
     ensa_version: '1'
     scs_name: 'SCS'
-    onehost_sapinst_template: inifile_java.params.j2
+    onehost_sapinst_template: inifile_onehost_java_hdb.params
   'S4HANA/1709':
     onehost_product_id: 'NW_ABAP_OneHost:S4HANA1709.CORE.HDB.ABAP'
     swpm_path: /sapmnt/Software/SWPM1.0
