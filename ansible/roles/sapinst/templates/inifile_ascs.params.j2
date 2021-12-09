@@ -34,11 +34,26 @@ NW_GetSidNoProfiles.unicode = true
 # DEPRECATED, DO NOT USE!
 # NW_SAPCrypto.SAPCryptoFile =
 
-# Add gateway process in the (A)SCS instance
-# NW_SCS_Instance.ascsInstallGateway = false
+# Add gateway process in the ASCS instance
+NW_SCS_Instance.ascsInstallGateway = {{ sap_nw_ascs_install_gateway | lower }}
 
-# Add Web Dispatcher process in the (A)SCS instance
-# NW_SCS_Instance.ascsInstallWebDispatcher = false
+# Add Web Dispatcher process in the ASCS instance
+NW_SCS_Instance.ascsInstallWebDispatcher = {{ sap_nw_ascs_install_web_dispatcher | lower }}
+
+# There are three types of encryption modes: 'Always' (default), 'depending on the incoming protocol', 'Never'
+NW_webdispatcher_Instance.encryptionMode = {{ sap_nw_wd_encryption_mode | default('Always') }}
+
+# Operating systems have restrictions for maximum number of open 'file handles' (sockets) for each process. Default is 2048. Provide a much higher value for  scenarios with heavy workload.
+NW_webdispatcher_Instance.scenarioSize = {{ sap_nw_wd_scenario_size | default('2048') }}
+
+# Set this parameter to 'true' if the SAP Web Dispatcher HTTP Port is to be used.
+NW_webdispatcher_Instance.useWdHTTPPort = {{ sap_nw_wd_use_http | default('true') | lower }}
+
+# HTTP Port of SAP Web Dispatcher. You can only specify this parameter if 'NW_webdispatcher_Instance.useWdHTTPPort' is set to 'true'.
+NW_webdispatcher_Instance.wdHTTPPort = {{ sap_nw_wd_http_port | default('8000') }}
+
+# HTTPS Port of SAP Web Dispatcher.
+NW_webdispatcher_Instance.wdHTTPSPort = {{ sap_nw_wd_https_port | default('44300') }}
 
 # Dual stack only: Specify the ASCS instance number. Leave empty for default.
 NW_SCS_Instance.ascsInstanceNumber = {{ sap_nw_ascs_instance_number }}
