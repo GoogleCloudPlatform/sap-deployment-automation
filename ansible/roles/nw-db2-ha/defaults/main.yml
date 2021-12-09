@@ -63,6 +63,9 @@ sap_nw_install_files_dest: /sapmnt/Software
 sap_nw_kernel_files: /sapmnt/Software/Kernel_Files
 sap_nw_rdbms_files: /sapmnt/Software/RDBMS
 
+sap_nw_ascs_install_gateway: false
+sap_nw_ascs_install_web_dispatcher: false
+
 # Defaults for using Cloud Filestore. Only sap_nw_nfs_server needs to be defined
 # in variables if it is used.
 sap_nw_nfs_server: ''
