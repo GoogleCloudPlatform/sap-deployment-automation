@@ -33,6 +33,8 @@
     sysctl_set: yes
     state: present
     reload: yes
+    # Don't fail if these sysctls are missing as not all OS versions have them.
+    ignoreerrors: true
   loop:
     - vm.pagecache_limit_mb
     - vm.pagecache_limit_ignore_dirty
