@@ -17,6 +17,10 @@
     that: sap_product_and_version in sap_product_vars
     fail_msg: 'sap_nw_product and sap_nw_product_version must match one of {{ sap_product_vars.keys() | join(", ") }}'
 
+- name: include base role
+  include_role:
+    name: base
+
 - name: include hosts-file role
   include_role:
     name: hosts-file

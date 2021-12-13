@@ -17,6 +17,7 @@ cloudsdk_python_export_path: /usr/bin/python3
 gcloud_install_dir: /usr/local
 package_list:
   - "@large-systems"
+  - acl
   - uuidd
   - tcsh
   - psmisc

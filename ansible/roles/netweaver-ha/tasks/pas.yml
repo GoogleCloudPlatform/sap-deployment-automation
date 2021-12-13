@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: include base role
-  include_role:
-    name: base
-
 - name: include storage role
   include_role:
     name: storage
