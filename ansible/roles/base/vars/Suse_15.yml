@@ -16,6 +16,7 @@ ansible_python_interpreter: /usr/bin/python3
 cloudsdk_python_export_path: /usr/bin/python3
 gcloud_install_dir: /usr/local
 package_list:
+  - acl
   - libopenssl1_1
   - tuned
   - krb5-32bit

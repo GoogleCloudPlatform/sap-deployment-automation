@@ -20,6 +20,7 @@ package_list:
   - "@large-systems"
   - "@network-file-system-client"
   - "@performance"
+  - acl
   - uuidd
   - tcsh
   - psmisc

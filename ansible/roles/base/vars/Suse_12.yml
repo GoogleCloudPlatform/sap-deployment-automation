@@ -15,6 +15,7 @@
 cloudsdk_python_export_path: /usr/bin/python2.7
 gcloud_install_dir: /usr/local
 package_list:
+  - acl
   - libopenssl0_9_8
   - tuned
   - krb5-32bit
