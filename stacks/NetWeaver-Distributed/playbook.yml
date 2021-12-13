@@ -92,7 +92,7 @@
   tags: [hana, assertions]
 
 - name: Run assertions on application servers
-  hosts: nodes
+  hosts: nw
   become: yes
   tasks:
   - include_role:
