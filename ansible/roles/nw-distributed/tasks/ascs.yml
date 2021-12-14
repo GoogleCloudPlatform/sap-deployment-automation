@@ -44,9 +44,13 @@
 - name: include nw-pre role
   include_role:
     name: nw-pre
-
-- name: include ascs role
-  include_role:
-    name: ascs  
   vars:
-    sap_nw_product_id: "{{ sap_product_vars[sap_product_and_version].ascs_product_id }}"
+    sap_product_and_version: '{{ sap_nw_product_and_version }}'
+
+- name: include sapinst role
+  include_role:
+    name: sapinst
+  vars:
+    sap_product_id: '{{ sap_product_vars[sap_nw_product_and_version].ascs_product_id }}'
+    sap_sapinst_swpm_path: '{{ sap_product_vars[sap_nw_product_and_version].swpm_path }}'
+    sap_sapinst_template: '{{ sap_product_vars[sap_nw_product_and_version].ascs_sapinst_template | default("inifile_ascs.params") }}'

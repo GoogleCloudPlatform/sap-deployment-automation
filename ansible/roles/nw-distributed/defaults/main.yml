@@ -68,14 +68,24 @@ sap_hana_sidadm_password: '{{ sap_hana_password }}'
 sap_hana_user: '{{ sap_hana_sid | lower }}adm'
 sap_hana_virtual_host: '{{ sap_hana_instance_name }}'
 
-sap_nw_ascs_instance_number: '03'
-sap_nw_pas_instance_number: '02'
+sap_nw_ascs_instance_number: '00'
+sap_nw_pas_instance_number: '00'
 sap_nw_install_files_dest: /sapmnt/Software
 sap_nw_kernel_files: /sapmnt/Software/Kernel_Files
 sap_nw_rdbms_files: /sapmnt/Software/HANA_CLIENT
+sap_nw_password: ''
+sap_nw_java_admin_password: '{{ sap_nw_password }}'
+sap_nw_java_schema_password: '{{ sap_nw_password }}'
+sap_nw_master_password: '{{ sap_nw_password }}'
+sap_nw_sapadm_password: '{{ sap_nw_password }}'
+sap_nw_schema_password: '{{ sap_nw_password }}'
+sap_nw_sidadm_password: '{{ sap_nw_password }}'
 sap_nw_user: '{{ sap_nw_sid | lower }}adm'
+sap_nw_sapsys_gid: 2001
+sap_nw_sidadm_uid: 2000
+sap_nw_sapadm_uid: 2001
 
-sap_scs_name: '{{ sap_product_vars[sap_product_and_version].scs_name | default("ASCS") }}'
+sap_scs_name: '{{ sap_product_vars[sap_nw_product_and_version].scs_name | default("ASCS") }}'
 
 sap_nw_ascs_install_gateway: false
 sap_nw_ascs_install_web_dispatcher: false
@@ -85,7 +95,7 @@ sap_nw_saptrans_nfs_mount_src: '{{ sap_nw_ascs_private_ip }}:/usr/sap/trans'
 
 sap_nw_product: 'NetWeaver'
 sap_nw_product_version: '750'
-sap_product_and_version: '{{ sap_nw_product }}/{{ sap_nw_product_version }}'
+sap_nw_product_and_version: '{{ sap_nw_product }}/{{ sap_nw_product_version }}'
 # sap_nw_product and sap_nw_product_version must be set to one of the <product>/<version> combos in sap_product_vars.
 sap_product_vars:
   'BW4HANA/20':
@@ -129,8 +139,8 @@ sap_product_vars:
     install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM10SP32]
     ensa_version: '1'
     scs_name: 'SCS'
-    db_sapinst_template: inifile_java.params.j2
-    pas_sapinst_template: inifile_java.params.j2
+    db_sapinst_template: inifile_db_java_hdb.params
+    as_sapinst_template: inifile_as_java_hdb.params
   'S4HANA/1709':
     db_product_id: 'NW_ABAP_DB:S4HANA1709.CORE.HDB.ABAP'
     pas_product_id: 'NW_ABAP_CI:S4HANA1709.CORE.HDB.ABAP'
