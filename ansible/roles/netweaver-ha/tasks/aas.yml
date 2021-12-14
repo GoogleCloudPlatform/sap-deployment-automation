@@ -38,11 +38,10 @@
     nfs_client_mounts: '{{ sap_nw_nfsvols }}'
     nfs_client_mode: autofs
 
-- name: include nw role
+- name: include sapinst role
   include_role:
-    name: nw
+    name: sapinst
   vars:
-    sap_nw_product_id: "{{ sap_product_vars[sap_product_and_version].aas_product_id }}"
-    sap_nw_installed_files:
-    - '/sapmnt/{{ sap_nw_sid }}/profile/{{ sap_nw_sid }}_D{{ sap_nw_pas_instance_number }}_{{ sap_nw_pas_virtual_host }}'
-    - '/usr/sap/{{ sap_nw_sid }}/D{{ sap_nw_pas_instance_number }}/exe/R3load'
+    sap_product_id: '{{ sap_product_vars[sap_nw_product_and_version].aas_product_id }}'
+    sap_sapinst_swpm_path: '{{ sap_product_vars[sap_nw_product_and_version].swpm_path }}'
+    sap_sapinst_template: '{{ sap_product_vars[sap_nw_product_and_version].as_sapinst_template | default("inifile_as_hdb.params") }}'

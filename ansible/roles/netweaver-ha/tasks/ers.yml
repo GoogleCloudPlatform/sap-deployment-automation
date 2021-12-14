@@ -39,21 +39,42 @@
     nfs_client_mode: autofs
     nfs_client_create_src_dirs: false
 
-- name: include user role
+- name: include local-interface role
   include_role:
-    name: user
+    name: local-interface
   vars:
-    sap_nw_product_id: "{{ sap_product_vars[sap_product_and_version].user_product_id }}"
+    local_interface_ip: '{{ sap_nw_ers_vip }}'
+  when: ansible_os_family == 'RedHat'
 
-- name: include ers role
+- name: ensure permissions are correct on ascs and ers mounts
+  file:
+    path: '{{ item }}'
+    owner: '{{ sap_nw_sidadm_uid }}'
+    group: '{{ sap_nw_sapsys_gid }}'
+    state: directory
+  loop:
+  - '{{ sap_nw_ascs_nfs_mount_dest }}'
+  - '{{ sap_nw_ers_nfs_mount_dest }}'
+
+- name: include sapinst role
   include_role:
-    name: ers
+    name: sapinst
   vars:
-    sap_use_alias: '{{ ansible_os_family == "RedHat" }}'
-    sap_nw_product_id: "{{ sap_product_vars[sap_product_and_version].ers_product_id }}"
+    sap_product_id: '{{ sap_product_vars[sap_nw_product_and_version].ers_product_id }}'
+    sap_sapinst_extra_args: SAPINST_USE_HOSTNAME={{ sap_nw_ers_virtual_host }}
+    sap_sapinst_swpm_path: '{{ sap_product_vars[sap_nw_product_and_version].swpm_path }}'
+    sap_sapinst_template: '{{ sap_product_vars[sap_nw_product_and_version].ers_sapinst_template | default("inifile_ers.params") }}'
+
+- name: include local-interface role
+  include_role:
+    name: local-interface
+  vars:
+    local_interface_ip: '{{ sap_nw_ers_vip }}'
+    local_interface_state: absent
+  when: ansible_os_family == 'RedHat'
 
 - name: include post-deploy role
   include_role:
     name: post-deploy
   vars:
-    sap_ensa_version: "{{ sap_product_vars[sap_product_and_version].ensa_version }}"
+    sap_ensa_version: "{{ sap_product_vars[sap_nw_product_and_version].ensa_version }}"

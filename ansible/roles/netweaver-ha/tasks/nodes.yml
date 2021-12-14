@@ -21,4 +21,4 @@
     sap_primary_instance: '{{ sap_nw_ascs_instance_name }}'
     sap_primary_instance_ip: '{{ sap_nw_ascs_private_ip }}'
     sap_secondary_instance: '{{ sap_nw_ers_instance_name }}'
-    sap_ensa_version: '{{ sap_product_vars[sap_product_and_version].ensa_version }}'
+    sap_ensa_version: '{{ sap_product_vars[sap_nw_product_and_version].ensa_version }}'

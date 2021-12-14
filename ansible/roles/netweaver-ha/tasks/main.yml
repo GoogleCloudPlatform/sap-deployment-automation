@@ -14,7 +14,7 @@
 
 - name: ensure that a known product version is defined
   assert:
-    that: sap_product_and_version in sap_product_vars
+    that: sap_nw_product_and_version in sap_product_vars
     fail_msg: 'sap_nw_product and sap_nw_product_version must match one of {{ sap_product_vars.keys() | join(", ") }}'
 
 - name: include base role
