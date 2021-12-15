@@ -19,5 +19,5 @@
     state: restarted
 
 - name: trigger automounts
-  command: ls {{ item }}
-  loop: '{{ nfs_client_mounts.values() | list }}'
+  command: ls {{ item.mountpoint }}
+  loop: '{{ nfs_client_mounts }}'

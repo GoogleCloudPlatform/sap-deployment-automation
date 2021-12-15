@@ -91,6 +91,32 @@ sap_nw_ascs_nfs_mount_src: '{{ _sap_nw_nfs_src }}/ASCS{{ sap_nw_ascs_instance_nu
 sap_nw_ascs_nfs_mount_dest: '/usr/sap/{{ sap_nw_sid }}/ASCS{{ sap_nw_ascs_instance_number }}'
 sap_nw_ers_nfs_mount_src: '{{ _sap_nw_nfs_src }}/ERS{{ sap_nw_ers_instance_number }}'
 sap_nw_ers_nfs_mount_dest: '/usr/sap/{{ sap_nw_sid }}/ERS{{ sap_nw_ers_instance_number }}'
+sap_nw_nfsvols_aas:
+- source: '{{ sap_nw_sapmnt_nfs_mount_src }}'
+  mountpoint: /sapmnt
+- source: '{{ sap_nw_saptrans_nfs_mount_src }}'
+  mountpoint: /usr/sap/trans
+sap_nw_nfsvols_db2:
+- source: '{{ sap_nw_sapmnt_nfs_mount_src }}'
+  mountpoint: /sapmnt
+sap_nw_nfsvols_pas:
+- source: '{{ sap_nw_sapmnt_nfs_mount_src }}'
+  mountpoint: /sapmnt
+- source: '{{ sap_nw_saptrans_nfs_mount_src }}'
+  mountpoint: /usr/sap/trans
+sap_nw_nfsvols_scs:
+- source: '{{ sap_nw_sapmnt_nfs_mount_src }}'
+  mountpoint: /sapmnt
+- source: '{{ sap_nw_saptrans_nfs_mount_src }}'
+  mountpoint: /usr/sap/trans
+- source: '{{ sap_nw_ascs_nfs_mount_src }}'
+  mountpoint: '{{ sap_nw_ascs_nfs_mount_dest }}'
+  owner: '{{ sap_nw_sidadm_uid }}'
+  group: '{{ sap_nw_sapsys_gid }}'
+- source: '{{ sap_nw_ers_nfs_mount_src }}'
+  mountpoint: '{{ sap_nw_ers_nfs_mount_dest }}'
+  owner: '{{ sap_nw_sidadm_uid }}'
+  group: '{{ sap_nw_sapsys_gid }}'
 
 sap_db2_product: 'DB2'
 sap_db2_product_version: '11.5MP5FP1'

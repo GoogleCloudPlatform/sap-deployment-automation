@@ -35,10 +35,7 @@
   include_role:
     name: nfs-client
   vars:
-    nfs_client_mounts: '{{ {
-      sap_nw_sapmnt_nfs_mount_src: "/sapmnt",
-      sap_nw_saptrans_nfs_mount_src: "/usr/sap/trans",
-    } }}'
+    nfs_client_mounts: '{{ sap_nw_nfsvols_pas }}'
     nfs_client_mode: autofs
     nfs_client_create_src_dirs: false
 

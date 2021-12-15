@@ -93,8 +93,8 @@ sap_scs_name: '{{ sap_product_vars[sap_nw_product_and_version].scs_name | defaul
 sap_nw_ascs_install_gateway: false
 sap_nw_ascs_install_web_dispatcher: false
 
-# If sap_nw_nfs_src is nonempty, sap_nw_nfsvols defaults to using it as the source.
-# Otherwise, sap_nw_nfsvols must be defined in vars. This is for use with e.g. Cloud FileStore,
+# If sap_nw_nfs_src is nonempty, sap_nw_nfsvols_* defaults to using it as the source.
+# Otherwise, sap_nw_nfsvols_* must be defined in vars. This is for use with e.g. Cloud FileStore,
 # which can use the same NFS volume for multiple mounts.
 # sap_nw_nfs_src: 10.0.10.100:/sap
 sap_nw_nfs_src: ''
@@ -109,14 +109,29 @@ sap_nw_ascs_nfs_mount_src: '{{ sap_nw_nfs_src }}/{{ sap_scs_name }}{{ sap_nw_asc
 sap_nw_ascs_nfs_mount_dest: '/usr/sap/{{ sap_nw_sid }}/{{ sap_scs_name }}{{ sap_nw_ascs_instance_number }}'
 sap_nw_ers_nfs_mount_src: '{{ sap_nw_nfs_src }}/ERS{{ sap_nw_ers_instance_number }}'
 sap_nw_ers_nfs_mount_dest: '/usr/sap/{{ sap_nw_sid }}/ERS{{ sap_nw_ers_instance_number }}'
-
-# This templating syntax is a hack to be able to use variables as dictionary keys.
-sap_nw_nfsvols: '{{ {
-  sap_nw_sapmnt_nfs_mount_src: "/sapmnt",
-  sap_nw_saptrans_nfs_mount_src: "/usr/sap/trans",
-  sap_nw_ascs_nfs_mount_src: sap_nw_ascs_nfs_mount_dest,
-  sap_nw_ers_nfs_mount_src: sap_nw_ers_nfs_mount_dest
-} }}'
+sap_nw_nfsvols_aas:
+- source: '{{ sap_nw_sapmnt_nfs_mount_src }}'
+  mountpoint: /sapmnt
+- source: '{{ sap_nw_saptrans_nfs_mount_src }}'
+  mountpoint: /usr/sap/trans
+sap_nw_nfsvols_pas:
+- source: '{{ sap_nw_sapmnt_nfs_mount_src }}'
+  mountpoint: /sapmnt
+- source: '{{ sap_nw_saptrans_nfs_mount_src }}'
+  mountpoint: /usr/sap/trans
+sap_nw_nfsvols_scs:
+- source: '{{ sap_nw_sapmnt_nfs_mount_src }}'
+  mountpoint: /sapmnt
+- source: '{{ sap_nw_saptrans_nfs_mount_src }}'
+  mountpoint: /usr/sap/trans
+- source: '{{ sap_nw_ascs_nfs_mount_src }}'
+  mountpoint: '{{ sap_nw_ascs_nfs_mount_dest }}'
+  owner: '{{ sap_nw_sidadm_uid }}'
+  group: '{{ sap_nw_sapsys_gid }}'
+- source: '{{ sap_nw_ers_nfs_mount_src }}'
+  mountpoint: '{{ sap_nw_ers_nfs_mount_dest }}'
+  owner: '{{ sap_nw_sidadm_uid }}'
+  group: '{{ sap_nw_sapsys_gid }}'
 
 sap_nw_product: 'NetWeaver'
 sap_nw_product_version: '750'

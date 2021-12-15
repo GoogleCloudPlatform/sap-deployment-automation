@@ -35,20 +35,10 @@
   include_role:
     name: nfs-client
   vars:
-    nfs_client_mounts: '{{ sap_nw_nfsvols }}'
+    nfs_client_mounts: '{{ sap_nw_nfsvols_scs }}'
     nfs_client_mode: autofs
     nfs_client_create_src_dirs: '{{ sap_nw_create_nfs_source_dirs }}'
     nfs_client_source: '{{ sap_nw_nfs_src }}'
-
-- name: ensure permissions are correct on ascs and ers mounts
-  file:
-    path: '{{ item }}'
-    owner: '{{ sap_nw_sidadm_uid }}'
-    group: '{{ sap_nw_sapsys_gid }}'
-    state: directory
-  loop:
-  - '{{ sap_nw_ascs_nfs_mount_dest }}'
-  - '{{ sap_nw_ers_nfs_mount_dest }}'
 
 - name: include nw-pre role
   include_role:

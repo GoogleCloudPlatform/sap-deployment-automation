@@ -92,6 +92,11 @@ sap_nw_ascs_install_web_dispatcher: false
 
 sap_nw_sapmnt_nfs_mount_src: '{{ sap_nw_ascs_private_ip }}:/sapmnt'
 sap_nw_saptrans_nfs_mount_src: '{{ sap_nw_ascs_private_ip }}:/usr/sap/trans'
+sap_nw_nfsvols_pas:
+- source: '{{ sap_nw_sapmnt_nfs_mount_src }}'
+  mountpoint: /sapmnt
+- source: '{{ sap_nw_saptrans_nfs_mount_src }}'
+  mountpoint: /usr/sap/trans
 
 sap_nw_product: 'NetWeaver'
 sap_nw_product_version: '750'
