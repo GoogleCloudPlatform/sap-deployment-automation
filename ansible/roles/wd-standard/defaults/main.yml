@@ -16,14 +16,11 @@
 sap_wd_instance_number: "80"
 sap_wd_install_files_dest: /sapmnt/Software
 sap_wd_kernel_files: /sapmnt/Software/Kernel_Files
-sap_wd_sapmnt_disk_size: 20
-sap_wd_swap_disk_size: 20
 sap_wd_password: ''
 sap_wd_master_password: '{{ sap_wd_password }}'
 sap_wd_sapadm_password: '{{ sap_wd_password }}'
 sap_wd_sidadm_password: '{{ sap_wd_password }}'
 sap_wd_user: '{{ sap_wd_sid | lower }}adm'
-sap_wd_usrsap_disk_size: 10
 sap_wd_sapsys_gid: 2001
 sap_wd_sidadm_uid: 2000
 sap_wd_sapadm_uid: 2001
