@@ -23,7 +23,7 @@
   hosts: sap
   become: true
   roles:
-  - role: netweaver-ha
+  - role: nw-ha
     tags: [nw]
 
 - name: Run assertions on HANA
@@ -40,6 +40,6 @@
   become: true
   tasks:
   - include_role:
-      name: netweaver-ha
+      name: nw-ha
       tasks_from: assertions
   tags: [nw, assertions]
