@@ -14,7 +14,7 @@
 
 - name: ensure that a known product version is defined
   assert:
-    that: sap_product_and_version in sap_product_vars
+    that: sap_wd_product_and_version in sap_product_vars
     fail_msg: 'sap_wd_product and sap_wd_product_version must match one of {{ sap_product_vars.keys() | join(", ") }}'
 - name: include base primary tasks
   include_role:
@@ -48,11 +48,13 @@
   vars:
     sap_nw_install_files_bucket: '{{ sap_wd_install_files_bucket }}'
     sap_nw_install_files_dest: '{{ sap_wd_install_files_dest }}'
-- name: include wd primary tasks
+    sap_product_and_version: '{{ sap_wd_product_and_version }}'
+
+- name: include sapinst role
   include_role:
-    name: wd
+    name: sapinst
   vars:
-    sap_wd_product_id: '{{ sap_product_vars[sap_product_and_version].onehost_product_id }}'
-    sap_wd_installed_files:
-    - /usr/sap/hostctrl/exe/sapcontrol
-    - /sapmnt/{{ sap_wd_sid }}/profile/{{ sap_wd_sid }}_W{{ sap_wd_instance_number }}_{{ sap_wd_instance_name }}
+    sap_nw_install_files_dest: '{{ sap_wd_install_files_dest }}'
+    sap_product_id: '{{ sap_product_vars[sap_wd_product_and_version].product_id }}'
+    sap_sapinst_swpm_path: '{{ sap_product_vars[sap_wd_product_and_version].swpm_path }}'
+    sap_sapinst_template: '{{ sap_product_vars[sap_wd_product_and_version].sapinst_template | default("inifile_wd.params") }}'

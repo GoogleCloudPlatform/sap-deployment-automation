@@ -18,16 +18,23 @@ sap_wd_install_files_dest: /sapmnt/Software
 sap_wd_kernel_files: /sapmnt/Software/Kernel_Files
 sap_wd_sapmnt_disk_size: 20
 sap_wd_swap_disk_size: 20
+sap_wd_password: ''
+sap_wd_master_password: '{{ sap_wd_password }}'
+sap_wd_sapadm_password: '{{ sap_wd_password }}'
+sap_wd_sidadm_password: '{{ sap_wd_password }}'
 sap_wd_user: '{{ sap_wd_sid | lower }}adm'
 sap_wd_usrsap_disk_size: 10
+sap_wd_sapsys_gid: 2001
+sap_wd_sidadm_uid: 2000
+sap_wd_sapadm_uid: 2001
 
 sap_wd_product: 'WebDispatcher'
 sap_wd_product_version: '750'
-sap_product_and_version: '{{ sap_wd_product }}/{{ sap_wd_product_version }}'
+sap_wd_product_and_version: '{{ sap_wd_product }}/{{ sap_wd_product_version }}'
 # sap_wd_product and sap_wd_product_version must be set to one of the <product>/<version> combos in sap_product_vars.
 sap_product_vars:
   'WebDispatcher/750':
-    onehost_product_id: 'NW_Webdispatcher:NW750.IND.PD'
+    product_id: 'NW_Webdispatcher:NW750.IND.PD'
     swpm_path: /sapmnt/Software/SWPM2.0
     load_files: /sapmnt/Software/WEBDISP
     install_files: [WEBDISP, SWPM2.0]
