@@ -15,3 +15,4 @@
 sap_sapinst_extra_args: ''
 sap_sapinst_gid: 2000
 sap_sapinst_state_file: /root/.ansible-state/run-sapinst
+sap_sapinst_tempdir: /tmp
