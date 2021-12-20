@@ -26,24 +26,9 @@
     name: storage
   vars:
     swapon: true
-    disks:
-      - { name: sapmnt, partition_path : sapmnt }
-      - { name: usrsap, partition_path : usrsap }
-      - { name: swap, partition_path : swap }
-    logvols:
-      sapmnt:
-        size: 100%VG
-        vol: sapmnt
-        mountpoint: /sapmnt
-      usrsap:
-        size: 100%VG
-        vol: usrsap
-        mountpoint: /usr/sap
-    swapvols:
-      swap:
-        size: 100%VG
-        vol: swap
-        mountpoint: /swap
+    disks: '{{ sap_wd_disks }}'
+    logvols: '{{ sap_wd_logvols }}'
+    swapvols: '{{ sap_wd_swapvols }}'
 
 - name: include nw-pre role
   include_role:

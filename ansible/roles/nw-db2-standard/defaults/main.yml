@@ -41,6 +41,33 @@ sap_nw_rdbms_files: /sapmnt/Software/RDBMS
 sap_nw_ascs_install_gateway: false
 sap_nw_ascs_install_web_dispatcher: false
 
+sap_nw_disks:
+- name: db2
+  partition_path: db2
+- name: sapmnt
+  partition_path: sapmnt
+- name: usrsap
+  partition_path: usrsap
+- name: swap
+  partition_path: swap
+sap_nw_logvols:
+  db2:
+    size: 100%VG
+    vol: db2
+    mountpoint: /db2
+  sapmnt:
+    size: 100%VG
+    vol: sapmnt
+    mountpoint: /sapmnt
+  usrsap:
+    size: 100%VG
+    vol: usrsap
+    mountpoint: /usr/sap
+sap_nw_swapvols:
+  swap:
+    size: 100%VG
+    vol: swap
+
 sap_db2_product: 'DB2'
 sap_db2_product_version: '11.5MP5FP1'
 sap_db2_product_and_version: '{{ sap_db2_product }}/{{ sap_db2_product_version }}'

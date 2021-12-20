@@ -25,6 +25,27 @@ sap_wd_sapsys_gid: 2001
 sap_wd_sidadm_uid: 2000
 sap_wd_sapadm_uid: 2001
 
+sap_wd_disks:
+- name: sapmnt
+  partition_path: sapmnt
+- name: usrsap
+  partition_path: usrsap
+- name: swap
+  partition_path: swap
+sap_wd_logvols:
+  sapmnt:
+    size: 100%VG
+    vol: sapmnt
+    mountpoint: /sapmnt
+  usrsap:
+    size: 100%VG
+    vol: usrsap
+    mountpoint: /usr/sap
+sap_wd_swapvols:
+  swap:
+    size: 100%VG
+    vol: swap
+
 sap_wd_product: 'WebDispatcher'
 sap_wd_product_version: '750'
 sap_wd_product_and_version: '{{ sap_wd_product }}/{{ sap_wd_product_version }}'

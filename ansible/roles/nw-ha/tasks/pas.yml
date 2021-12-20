@@ -17,19 +17,9 @@
     name: storage
   vars:
     swapon: true
-    disks:
-      - { name: usrsap, partition_path : usrsap }
-      - { name: swap, partition_path : swap }
-    logvols:
-      usrsap:
-        size: 100%VG
-        vol: usrsap
-        mountpoint: /usr/sap
-    swapvols:
-      swap:
-        size: 100%VG
-        vol: swap
-        mountpoint: /swap
+    disks: '{{ sap_nw_disks_pas }}'
+    logvols: '{{ sap_nw_logvols_pas }}'
+    swapvols: '{{ sap_nw_swapvols_pas }}'
 
 - name: include nfs-client role
   include_role:

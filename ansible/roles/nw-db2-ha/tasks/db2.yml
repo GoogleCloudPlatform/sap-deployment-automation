@@ -17,23 +17,9 @@
     name: storage
   vars:
     swapon: true
-    disks:
-    - { name: db2, partition_path: db2 }
-    - { name: usrsap, partition_path: usrsap }
-    - { name: swap, partition_path: swap }
-    logvols:
-      db2:
-        size: 100%VG
-        vol: db2
-        mountpoint: /db2
-      usrsap:
-        size: 100%VG
-        vol: usrsap
-        mountpoint: /usr/sap
-    swapvols:
-      swap:
-        size: 100%VG
-        vol: swap
+    disks: '{{ sap_nw_disks_db2 }}'
+    logvols: '{{ sap_nw_logvols_db2 }}'
+    swapvols: '{{ sap_nw_swapvols_db2 }}'
 
 - name: include nfs-client role
   include_role:
