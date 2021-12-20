@@ -15,3 +15,4 @@
 package_retries_cnt: 50
 package_retries_delay: 10
 cloudsdk_url: https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-340.0.0-linux-x86_64.tar.gz
+wait_for_guest_register: true
