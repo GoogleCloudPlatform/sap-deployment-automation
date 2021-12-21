@@ -81,9 +81,9 @@ sap_nw_sapadm_password: '{{ sap_nw_password }}'
 sap_nw_schema_password: '{{ sap_nw_password }}'
 sap_nw_sidadm_password: '{{ sap_nw_password }}'
 sap_nw_user: '{{ sap_nw_sid | lower }}adm'
-sap_nw_sapsys_gid: 2001
 sap_nw_sidadm_uid: 2000
 sap_nw_sapadm_uid: 2001
+sap_sapsys_gid: 2626
 
 sap_scs_name: '{{ sap_product_vars[sap_nw_product_and_version].scs_name | default("ASCS") }}'
 

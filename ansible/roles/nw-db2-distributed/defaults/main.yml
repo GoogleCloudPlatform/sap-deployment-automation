@@ -63,11 +63,11 @@ sap_nw_sidadm_password: '{{ sap_nw_password }}'
 sap_db2_dbsid_password: '{{ sap_nw_password }}'
 sap_nw_user: '{{ sap_nw_sid | lower }}adm'
 
-sap_nw_sapsys_gid: 2001
 sap_db2_sysadm_gid: 2002
 sap_db2_sysctrl_gid: 2003
 sap_db2_sysmaint_gid: 2004
 sap_db2_sysmon_gid: 2005
+sap_sapsys_gid: 2626
 sap_nw_sidadm_uid: 2000
 sap_nw_sapadm_uid: 2001
 sap_nw_sapsid_uid: 2002

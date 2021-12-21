@@ -21,9 +21,9 @@ sap_wd_master_password: '{{ sap_wd_password }}'
 sap_wd_sapadm_password: '{{ sap_wd_password }}'
 sap_wd_sidadm_password: '{{ sap_wd_password }}'
 sap_wd_user: '{{ sap_wd_sid | lower }}adm'
-sap_wd_sapsys_gid: 2001
 sap_wd_sidadm_uid: 2000
 sap_wd_sapadm_uid: 2001
+sap_sapsys_gid: 2626
 
 sap_wd_disks:
 - name: sapmnt
