@@ -12,6 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- name: Wait for guest registration
+  command: systemctl is-active guestregister.service
+  register: guestregister
+  retries: 30
+  delay: 20
+  until: guestregister.stdout == 'inactive'
+  failed_when: guestregister.rc != 3
+  changed_when: false
+  when:
+  - ansible_os_family == 'Suse'
+  - wait_for_guest_register | bool
+
 - name: Install packages
   package:
     name: "{{ package_list }}"
