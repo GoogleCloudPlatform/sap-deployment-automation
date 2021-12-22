@@ -36,7 +36,6 @@ List of variables accepted by the role are shown below
 | sap_domain                        | yes      | automation.local                                         |              | HANA domain name                                                           |
 | sap_hana_env_type                 | yes      | development                                              |              | HANA environment type                                                      |
 | sap_hana_mem_restrict             | yes      | "n"                                                      | yes/no       | Restrict HANA memory usage                                                 |
-| sap_hana_swapon                   | yes      | false                                                    |              | Enable swap memory for HANA                                                |
 | sap_hana_ini_file                 | yes      |                                                          |              | HANA global ini filename                                                   |
 | sap_hana_ini_section              | yes      |                                                          |              | HANA global ini section value                                              |
 | sap_hana_ini_setting              | yes      |                                                          |              | HANA global ini setting value                                              |

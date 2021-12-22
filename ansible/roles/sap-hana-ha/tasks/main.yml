@@ -22,7 +22,6 @@
   vars:
     disks: "{{ sap_hana_disks }}"
     logvols: "{{ sap_hana_logvols }}"
-    swapon: "{{ sap_hana_swapon | default(false) }}"
 
 - name: Include hana packages download role
   include_role:

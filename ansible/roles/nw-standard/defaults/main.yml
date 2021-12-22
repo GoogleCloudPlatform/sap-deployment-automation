@@ -60,10 +60,11 @@ sap_nw_logvols:
     size: 100%VG
     vol: usrsap
     mountpoint: /usr/sap
-sap_nw_swapvols:
   swap:
     size: 100%VG
     vol: swap
+    fstype: swap
+    mountpoint: none
 
 sap_nw_product: 'NetWeaver'
 sap_nw_product_version: '750'

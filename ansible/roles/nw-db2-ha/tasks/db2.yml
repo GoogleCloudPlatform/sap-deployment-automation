@@ -16,10 +16,8 @@
   include_role:
     name: storage
   vars:
-    swapon: true
     disks: '{{ sap_nw_disks_db2 }}'
     logvols: '{{ sap_nw_logvols_db2 }}'
-    swapvols: '{{ sap_nw_swapvols_db2 }}'
 
 - name: include nfs-client role
   include_role:

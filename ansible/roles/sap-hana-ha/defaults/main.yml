@@ -82,7 +82,6 @@ sap_preconfigure_modify_etc_hosts: true
 sap_domain: automation.local
 sap_hana_env_type: development
 sap_hana_mem_restrict: "n"
-sap_hana_swapon: false
 sap_hana_backup_file_name: "/{{ sap_hana_backup_partition_name }}/data/pre_ha_config"
 sap_hana_monitoring_user: hanahamu
 sap_hana_user_store_key: HANAHAUSK

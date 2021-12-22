@@ -76,25 +76,21 @@ sap_nw_logvols:
     size: 100%VG
     vol: usrsap
     mountpoint: /usr/sap
-sap_nw_swapvols:
   swap:
     size: 100%VG
     vol: swap
+    fstype: swap
+    mountpoint: none
 sap_nw_disks_aas: '{{ sap_nw_disks }}'
 sap_nw_logvols_aas: '{{ sap_nw_logvols }}'
-sap_nw_swapvols_aas: '{{ sap_nw_swapvols }}'
 sap_nw_disks_ascs: '{{ sap_nw_disks }}'
 sap_nw_logvols_ascs: '{{ sap_nw_logvols }}'
-sap_nw_swapvols_ascs: '{{ sap_nw_swapvols }}'
 sap_nw_disks_db2: '{{ sap_nw_disks + [{ "name": "db2", "partition_path": "db2" }] }}'
 sap_nw_logvols_db2: '{{ sap_nw_logvols | combine({ "db2": { "size": "100%VG", "vol": "db2", "mountpoint": "/db2" } }) }}'
-sap_nw_swapvols_db2: '{{ sap_nw_swapvols }}'
 sap_nw_disks_ers: '{{ sap_nw_disks }}'
 sap_nw_logvols_ers: '{{ sap_nw_logvols }}'
-sap_nw_swapvols_ers: '{{ sap_nw_swapvols }}'
 sap_nw_disks_pas: '{{ sap_nw_disks }}'
 sap_nw_logvols_pas: '{{ sap_nw_logvols }}'
-sap_nw_swapvols_pas: '{{ sap_nw_swapvols }}'
 
 # Defaults for using Cloud Filestore. Only sap_nw_nfs_server needs to be defined
 # in variables if it is used.

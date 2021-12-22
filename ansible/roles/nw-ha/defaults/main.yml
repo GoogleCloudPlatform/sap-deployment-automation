@@ -103,22 +103,19 @@ sap_nw_logvols:
     size: 100%VG
     vol: usrsap
     mountpoint: /usr/sap
-sap_nw_swapvols:
   swap:
     size: 100%VG
     vol: swap
+    fstype: swap
+    mountpoint: none
 sap_nw_disks_aas: '{{ sap_nw_disks }}'
 sap_nw_logvols_aas: '{{ sap_nw_logvols }}'
-sap_nw_swapvols_aas: '{{ sap_nw_swapvols }}'
 sap_nw_disks_ascs: '{{ sap_nw_disks }}'
 sap_nw_logvols_ascs: '{{ sap_nw_logvols }}'
-sap_nw_swapvols_ascs: '{{ sap_nw_swapvols }}'
 sap_nw_disks_ers: '{{ sap_nw_disks }}'
 sap_nw_logvols_ers: '{{ sap_nw_logvols }}'
-sap_nw_swapvols_ers: '{{ sap_nw_swapvols }}'
 sap_nw_disks_pas: '{{ sap_nw_disks }}'
 sap_nw_logvols_pas: '{{ sap_nw_logvols }}'
-sap_nw_swapvols_pas: '{{ sap_nw_swapvols }}'
 
 # If sap_nw_nfs_src is nonempty, sap_nw_nfsvols_* defaults to using it as the source.
 # Otherwise, sap_nw_nfsvols_* must be defined in vars. This is for use with e.g. Cloud FileStore,

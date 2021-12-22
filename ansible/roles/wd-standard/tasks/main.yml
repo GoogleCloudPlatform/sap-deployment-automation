@@ -25,10 +25,8 @@
   include_role:
     name: storage
   vars:
-    swapon: true
     disks: '{{ sap_wd_disks }}'
     logvols: '{{ sap_wd_logvols }}'
-    swapvols: '{{ sap_wd_swapvols }}'
 
 - name: include nw-pre role
   include_role:

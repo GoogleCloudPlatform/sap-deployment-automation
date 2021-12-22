@@ -34,7 +34,6 @@
   vars:
     disks: '{{ sap_nw_disks }}'
     logvols: '{{ sap_nw_logvols }}'
-    swapvols: '{{ sap_nw_swapvols }}'
 
 - name: include nw-pre role
   include_role:

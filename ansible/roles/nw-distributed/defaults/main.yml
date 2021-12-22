@@ -100,16 +100,15 @@ sap_nw_logvols:
     size: 100%VG
     vol: usrsap
     mountpoint: /usr/sap
-sap_nw_swapvols:
   swap:
     size: 100%VG
     vol: swap
+    fstype: swap
+    mountpoint: none
 sap_nw_disks_ascs: '{{ sap_nw_disks + [{ "name": "sapmnt", "partition_path": "sapmnt" }] }}'
 sap_nw_logvols_ascs: '{{ sap_nw_logvols | combine({ "sapmnt": { "size": "100%VG", "vol": "sapmnt", "mountpoint": "/sapmnt" } }) }}'
-sap_nw_swapvols_ascs: '{{ sap_nw_swapvols }}'
 sap_nw_disks_pas: '{{ sap_nw_disks }}'
 sap_nw_logvols_pas: '{{ sap_nw_logvols }}'
-sap_nw_swapvols_pas: '{{ sap_nw_swapvols }}'
 
 sap_nw_sapmnt_nfs_mount_src: '{{ sap_nw_ascs_private_ip }}:/sapmnt'
 sap_nw_saptrans_nfs_mount_src: '{{ sap_nw_ascs_private_ip }}:/usr/sap/trans'

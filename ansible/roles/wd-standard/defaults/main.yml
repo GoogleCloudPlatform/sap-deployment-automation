@@ -41,10 +41,11 @@ sap_wd_logvols:
     size: 100%VG
     vol: usrsap
     mountpoint: /usr/sap
-sap_wd_swapvols:
   swap:
     size: 100%VG
     vol: swap
+    fstype: swap
+    mountpoint: none
 
 sap_wd_product: 'WebDispatcher'
 sap_wd_product_version: '750'
