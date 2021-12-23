@@ -35,8 +35,8 @@ sap_db2_dbsid_uid: 2003
 sap_nw_ascs_instance_number: '01'
 sap_nw_pas_instance_number: '00'
 sap_nw_install_files_dest: /sapmnt/Software
-sap_nw_kernel_files: /sapmnt/Software/Kernel_Files
-sap_nw_rdbms_files: /sapmnt/Software/RDBMS
+sap_nw_kernel_files: '{{ sap_nw_install_files_dest }}/Kernel_Files'
+sap_nw_rdbms_files: '{{ sap_nw_install_files_dest }}/RDBMS'
 
 sap_nw_ascs_install_gateway: false
 sap_nw_ascs_install_web_dispatcher: false
@@ -78,16 +78,16 @@ sap_nw_product_and_version: '{{ sap_nw_product }}/{{ sap_nw_product_version }}'
 sap_product_vars:
   'NetWeaver/750':
     onehost_product_id: 'NW_ABAP_OneHost:NW750.DB6.ABAP'
-    swpm_path: /sapmnt/Software/SWPM1.0
-    load_files: /sapmnt/Software/NW75
+    swpm_path: '{{ sap_nw_install_files_dest }}/SWPM1.0'
+    load_files: '{{ sap_nw_install_files_dest }}/NW75'
     install_files: [Kernel_Files, NW75, SWPM1.0]
     ensa_version: '1'
   'DB2/10.5FP9':
-    db_client: /sapmnt/Software/DB_CLIENT
+    db_client: '{{ sap_nw_install_files_dest }}/DB_CLIENT'
     install_files: [DB_CLIENT, RDBMS]
   'DB2/11.1MP4FP6':
-    db_client: /sapmnt/Software/DB_CLIENT
+    db_client: '{{ sap_nw_install_files_dest }}/DB_CLIENT'
     install_files: [DB_CLIENT, RDBMS]
   'DB2/11.5MP5FP1':
-    db_client: /sapmnt/Software/DB_CLIENT
+    db_client: '{{ sap_nw_install_files_dest }}/DB_CLIENT'
     install_files: [DB_CLIENT, RDBMS]

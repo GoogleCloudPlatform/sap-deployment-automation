@@ -73,8 +73,8 @@ sap_nw_pas_instance_number: '06'
 sap_nw_ascs_virtual_host: '{{ sap_nw_ascs_instance_name }}'
 sap_nw_ers_virtual_host: '{{ sap_nw_ers_instance_name }}'
 sap_nw_install_files_dest: /sapmnt/Software
-sap_nw_kernel_files: /sapmnt/Software/Kernel_Files
-sap_nw_rdbms_files: /sapmnt/Software/HANA_CLIENT
+sap_nw_kernel_files: '{{ sap_nw_install_files_dest }}/Kernel_Files'
+sap_nw_rdbms_files: '{{ sap_nw_install_files_dest }}/HANA_CLIENT'
 sap_nw_password: ''
 sap_nw_java_admin_password: '{{ sap_nw_password }}'
 sap_nw_java_schema_password: '{{ sap_nw_password }}'
@@ -169,8 +169,8 @@ sap_product_vars:
     ascs_product_id: 'NW_ABAP_ASCS:BW4HANA20.CORE.HDB.ABAPHA'
     ers_product_id: 'NW_ERS:BW4HANA20.CORE.HDB.ABAPHA'
     user_product_id: 'NW_Users_Create:GENERIC.HDB.PD'
-    swpm_path: /sapmnt/Software/SWPM2.0
-    load_files: /sapmnt/Software/Kernel_Files
+    swpm_path: '{{ sap_nw_install_files_dest }}/SWPM2.0'
+    load_files: '{{ sap_nw_install_files_dest }}/Kernel_Files'
     install_files: [Kernel_Files, SWPM2.0]
     ensa_version: '2'
   'NetWeaver/750':
@@ -180,8 +180,8 @@ sap_product_vars:
     ascs_product_id: 'NW_ABAP_ASCS:NW750.HDB.ABAPHA'
     ers_product_id: 'NW_ERS:NW750.HDB.ABAPHA'
     user_product_id: 'NW_Users_Create:GENERIC.SYB.PD'
-    swpm_path: /sapmnt/Software/SWPM1.0
-    load_files: /sapmnt/Software/NW75
+    swpm_path: '{{ sap_nw_install_files_dest }}/SWPM1.0'
+    load_files: '{{ sap_nw_install_files_dest }}/NW75'
     install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM1.0]
     ensa_version: '1'
   'NetWeaver/751':
@@ -191,8 +191,8 @@ sap_product_vars:
     ascs_product_id: 'NW_ABAP_ASCS:NW751.HDB.ABAPHA'
     ers_product_id: 'NW_ERS:NW751.HDB.ABAPHA'
     user_product_id: 'NW_Users_Create:GENERIC.SYB.PD'
-    swpm_path: /sapmnt/Software/SWPM1.0
-    load_files: /sapmnt/Software/NW75
+    swpm_path: '{{ sap_nw_install_files_dest }}/SWPM1.0'
+    load_files: '{{ sap_nw_install_files_dest }}/NW75'
     install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM1.0]
     ensa_version: '1'
   'NetWeaver/752':
@@ -202,8 +202,8 @@ sap_product_vars:
     ascs_product_id: 'NW_ABAP_ASCS:NW752.HDB.ABAPHA'
     ers_product_id: 'NW_ERS:NW752.HDB.ABAPHA'
     user_product_id: 'NW_Users_Create:GENERIC.SYB.PD'
-    swpm_path: /sapmnt/Software/SWPM1.0
-    load_files: /sapmnt/Software/NW75
+    swpm_path: '{{ sap_nw_install_files_dest }}/SWPM1.0'
+    load_files: '{{ sap_nw_install_files_dest }}/NW75'
     install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM1.0]
     ensa_version: '1'
   'NetWeaver-Java/750':
@@ -213,8 +213,8 @@ sap_product_vars:
     ascs_product_id: 'NW_Java_SCS:NW750.HDB.HA'
     ers_product_id: 'NW_ERS:NW750.HDB.HA'
     user_product_id: 'NW_Users_Create:GENERIC.SYB.PD'
-    swpm_path: /sapmnt/Software/SWPM10SP32
-    load_files: /sapmnt/Software/NW75
+    swpm_path: '{{ sap_nw_install_files_dest }}/SWPM10SP32'
+    load_files: '{{ sap_nw_install_files_dest }}/NW75'
     install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM10SP32]
     ensa_version: '1'
     scs_name: SCS
@@ -227,8 +227,8 @@ sap_product_vars:
     ascs_product_id: 'NW_ABAP_ASCS:S4HANA1709.CORE.HDB.ABAPHA'
     ers_product_id: 'NW_ERS:S4HANA1709.CORE.HDB.ABAPHA'
     user_product_id: 'NW_Users_Create:GENERIC.SYB.PD'
-    swpm_path: /sapmnt/Software/SWPM1.0
-    load_files: /sapmnt/Software/S4HANA_Export
+    swpm_path: '{{ sap_nw_install_files_dest }}/SWPM1.0'
+    load_files: '{{ sap_nw_install_files_dest }}/S4HANA_Export'
     install_files: [HANA_CLIENT, Kernel_Files, S4HANA_Export, SWPM1.0]
     ensa_version: '1'
   'S4HANA/1809':
@@ -238,8 +238,8 @@ sap_product_vars:
     ascs_product_id: 'NW_ABAP_ASCS:S4HANA1809.CORE.HDB.ABAPHA'
     ers_product_id: 'NW_ERS:S4HANA1809.CORE.HDB.ABAPHA'
     user_product_id: 'NW_Users_Create:GENERIC.HDB.PD'
-    swpm_path: /sapmnt/Software/SWPM2.0
-    load_files: /sapmnt/Software/Kernel_Files
+    swpm_path: '{{ sap_nw_install_files_dest }}/SWPM2.0'
+    load_files: '{{ sap_nw_install_files_dest }}/Kernel_Files'
     install_files: [Kernel_Files, SWPM2.0]
     ensa_version: '2'
   'S4HANA/1909':
@@ -249,8 +249,8 @@ sap_product_vars:
     ascs_product_id: 'NW_ABAP_ASCS:S4HANA1909.CORE.HDB.ABAPHA'
     ers_product_id: 'NW_ERS:S4HANA1909.CORE.HDB.ABAPHA'
     user_product_id: 'NW_Users_Create:GENERIC.HDB.PD'
-    swpm_path: /sapmnt/Software/SWPM2.0
-    load_files: /sapmnt/Software/Kernel_Files
+    swpm_path: '{{ sap_nw_install_files_dest }}/SWPM2.0'
+    load_files: '{{ sap_nw_install_files_dest }}/Kernel_Files'
     install_files: [Kernel_Files, SWPM2.0]
     ensa_version: '2'
   'S4HANA/2020':
@@ -260,7 +260,7 @@ sap_product_vars:
     ascs_product_id: 'NW_ABAP_ASCS:S4HANA2020.CORE.HDB.ABAPHA'
     ers_product_id: 'NW_ERS:S4HANA2020.CORE.HDB.ABAPHA'
     user_product_id: 'NW_Users_Create:GENERIC.HDB.PD'
-    swpm_path: /sapmnt/Software/SWPM2.0
-    load_files: /sapmnt/Software/Kernel_Files
+    swpm_path: '{{ sap_nw_install_files_dest }}/SWPM2.0'
+    load_files: '{{ sap_nw_install_files_dest }}/Kernel_Files'
     install_files: [Kernel_Files, SWPM2.0]
     ensa_version: '2'

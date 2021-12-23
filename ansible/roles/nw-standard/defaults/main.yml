@@ -25,8 +25,8 @@ sap_nw_pas_instance_number: "01"
 sap_nw_ascs_virtual_host: '{{ ansible_hostname }}'
 sap_nw_pas_virtual_host: '{{ ansible_hostname }}'
 sap_nw_install_files_dest: /sapmnt/Software
-sap_nw_kernel_files: /sapmnt/Software/Kernel_Files
-sap_nw_rdbms_files: /sapmnt/Software/HANA_CLIENT
+sap_nw_kernel_files: '{{ sap_nw_install_files_dest }}/Kernel_Files'
+sap_nw_rdbms_files: '{{ sap_nw_install_files_dest }}/HANA_CLIENT'
 sap_nw_password: ''
 sap_nw_java_admin_password: '{{ sap_nw_password }}'
 sap_nw_java_schema_password: '{{ sap_nw_password }}'
@@ -73,57 +73,57 @@ sap_nw_product_and_version: '{{ sap_nw_product }}/{{ sap_nw_product_version }}'
 sap_product_vars:
   'BW4HANA/20':
     onehost_product_id: 'NW_ABAP_OneHost:BW4HANA20.CORE.HDB.ABAP'
-    swpm_path: /sapmnt/Software/SWPM2.0
-    load_files: /sapmnt/Software/Kernel_Files
+    swpm_path: '{{ sap_nw_install_files_dest }}/SWPM2.0'
+    load_files: '{{ sap_nw_install_files_dest }}/Kernel_Files'
     install_files: [Kernel_Files, SWPM2.0]
     ensa_version: '2'
   'NetWeaver/750':
     onehost_product_id: 'NW_ABAP_OneHost:NW750.HDB.ABAP'
-    swpm_path: /sapmnt/Software/SWPM1.0
-    load_files: /sapmnt/Software/NW75
+    swpm_path: '{{ sap_nw_install_files_dest }}/SWPM1.0'
+    load_files: '{{ sap_nw_install_files_dest }}/NW75'
     install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM1.0]
     ensa_version: '1'
   'NetWeaver/751':
     onehost_product_id: 'NW_ABAP_OneHost:NW751.HDB.ABAP'
-    swpm_path: /sapmnt/Software/SWPM1.0
-    load_files: /sapmnt/Software/NW75
+    swpm_path: '{{ sap_nw_install_files_dest }}/SWPM1.0'
+    load_files: '{{ sap_nw_install_files_dest }}/NW75'
     install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM1.0]
     ensa_version: '1'
   'NetWeaver/752':
     onehost_product_id: 'NW_ABAP_OneHost:NW752.HDB.ABAP'
-    swpm_path: /sapmnt/Software/SWPM1.0
-    load_files: /sapmnt/Software/NW75
+    swpm_path: '{{ sap_nw_install_files_dest }}/SWPM1.0'
+    load_files: '{{ sap_nw_install_files_dest }}/NW75'
     install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM1.0]
     ensa_version: '1'
   'NetWeaver-Java/750':
     onehost_product_id: 'NW_Java_OneHost:NW750.HDB.PD'
-    swpm_path: /sapmnt/Software/SWPM10SP32
-    load_files: /sapmnt/Software/NW75
+    swpm_path: '{{ sap_nw_install_files_dest }}/SWPM10SP32'
+    load_files: '{{ sap_nw_install_files_dest }}/NW75'
     install_files: [HANA_CLIENT, Kernel_Files, NW75, SWPM10SP32]
     ensa_version: '1'
     scs_name: 'SCS'
     onehost_sapinst_template: inifile_onehost_java_hdb.params
   'S4HANA/1709':
     onehost_product_id: 'NW_ABAP_OneHost:S4HANA1709.CORE.HDB.ABAP'
-    swpm_path: /sapmnt/Software/SWPM1.0
-    load_files: /sapmnt/Software/S4HANA_Export
+    swpm_path: '{{ sap_nw_install_files_dest }}/SWPM1.0'
+    load_files: '{{ sap_nw_install_files_dest }}/S4HANA_Export'
     install_files: [HANA_CLIENT, Kernel_Files, S4HANA_Export, SWPM1.0]
     ensa_version: '1'
   'S4HANA/1809':
     onehost_product_id: 'NW_ABAP_OneHost:S4HANA1809.CORE.HDB.ABAP'
-    swpm_path: /sapmnt/Software/SWPM2.0
-    load_files: /sapmnt/Software/Kernel_Files
+    swpm_path: '{{ sap_nw_install_files_dest }}/SWPM2.0'
+    load_files: '{{ sap_nw_install_files_dest }}/Kernel_Files'
     install_files: [Kernel_Files, SWPM2.0]
     ensa_version: '2'
   'S4HANA/1909':
     onehost_product_id: 'NW_ABAP_OneHost:S4HANA1909.CORE.HDB.ABAP'
-    swpm_path: /sapmnt/Software/SWPM2.0
-    load_files: /sapmnt/Software/Kernel_Files
+    swpm_path: '{{ sap_nw_install_files_dest }}/SWPM2.0'
+    load_files: '{{ sap_nw_install_files_dest }}/Kernel_Files'
     install_files: [Kernel_Files, SWPM2.0]
     ensa_version: '2'
   'S4HANA/2020':
     onehost_product_id: 'NW_ABAP_OneHost:S4HANA2020.CORE.HDB.ABAP'
-    swpm_path: /sapmnt/Software/SWPM2.0
-    load_files: /sapmnt/Software/Kernel_Files
+    swpm_path: '{{ sap_nw_install_files_dest }}/SWPM2.0'
+    load_files: '{{ sap_nw_install_files_dest }}/Kernel_Files'
     install_files: [Kernel_Files, SWPM2.0]
     ensa_version: '2'
