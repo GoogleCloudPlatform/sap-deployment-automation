@@ -26,6 +26,12 @@
     nfs_client_mounts: '{{ sap_nw_nfsvols_pas }}'
     nfs_client_mode: autofs
 
+- name: include nw-pre role
+  include_role:
+    name: nw-pre
+  vars:
+    sap_product_and_version: '{{ sap_nw_product_and_version }}'
+
 - name: include sapinst role for db
   include_role:
     name: sapinst

@@ -34,12 +34,6 @@
   vars:
     sap_product_and_version: '{{ sap_nw_product_and_version }}'
 
-- name: include nw-pre role
-  include_role:
-    name: nw-pre
-  vars:
-    sap_product_and_version: '{{ sap_db2_product_and_version }}'
-
 - name: include sapinst role
   include_role:
     name: sapinst

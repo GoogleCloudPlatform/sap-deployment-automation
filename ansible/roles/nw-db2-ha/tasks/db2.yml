@@ -27,6 +27,18 @@
     nfs_client_mode: autofs
     nfs_client_create_src_dirs: false
 
+- name: include nw-pre role
+  include_role:
+    name: nw-pre
+  vars:
+    sap_product_and_version: '{{ sap_nw_product_and_version }}'
+
+- name: include nw-pre role
+  include_role:
+    name: nw-pre
+  vars:
+    sap_product_and_version: '{{ sap_db2_product_and_version }}'
+
 - name: include db2-pre role
   include_role:
     name: db2-pre
