@@ -57,6 +57,9 @@
   include_tasks: '{{ role_path }}/tasks/as.yml'
   when: sap_is_pas | bool
   vars:
+    nfs_client_mounts: '{{ sap_nw_nfsvols_pas }}'
+    sap_nw_disks_as: '{{ sap_nw_disks_pas }}'
+    sap_nw_logvols_as: '{{ sap_nw_logvols_pas }}'
     sap_product_id: '{{ sap_product_vars[sap_nw_product_and_version].pas_product_id }}'
 
 # Un-hack.
@@ -72,4 +75,7 @@
   include_tasks: '{{ role_path }}/tasks/as.yml'
   when: sap_is_aas | bool
   vars:
+    nfs_client_mounts: '{{ sap_nw_nfsvols_aas }}'
+    sap_nw_disks_as: '{{ sap_nw_disks_aas }}'
+    sap_nw_logvols_as: '{{ sap_nw_logvols_aas }}'
     sap_product_id: '{{ sap_product_vars[sap_nw_product_and_version].aas_product_id }}'

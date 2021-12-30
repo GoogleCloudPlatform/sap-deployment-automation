@@ -54,7 +54,15 @@ Two disks must be created and attached to each application server machine.
 
 ### NFS
 
-An NFS share must exist and be mountable from the SCS and application server machines. You can use Cloud Filestore, NetApp, or create the share on a GCE instance. The value of this NFS share will be passed in the variable `sap_nw_nfs_src`, for example `10.1.2.3:/sap`.
+SCS and application server machines will need access to NFS shares.
+
+Option one is to create a single NFS share that is defined in the variable `sap_nw_nfs_src`. Subdirectories will be automatically created on it to use for all of the required mounts.
+
+Option two is to create multiple NFS shares and use them individually in the variables `sap_nw_nfsvols_aas`, `sap_nw_nfsvols_pas`, and `sap_nw_nfsvols_scs`.
+
+The NFS shares can be created with Cloud Filestore, NetApp, or by running `nfsd` on a GCE instance.
+
+See [NFS Volumes](#nfs-volumes) for more details.
 
 ### Load balancers
 
@@ -223,9 +231,40 @@ The following variables are used with and without Terraform.
 | `sap_nw_ers_virtual_host` | The hostname given to the ERS load balancer (when using Suse) or IP alias (when using RHEL), added to `/etc/hosts` of instances. | `string` | n/a | yes |
 | `sap_nw_ers_vip` | The IP address of the ERS load balancer (when using Suse), or IP alias (when using RHEL), added to `/etc/hosts` of instances. | `string` | n/a | yes |
 | `sap_nw_install_files_bucket` | Bucket where NetWeaver or S4HANA installation files are located. | `string` | n/a | yes |
-| `sap_nw_nfs_src` | The NFS share for NetWeaver or S4HANA, for example `10.0.0.100:/sap`. | `string` | n/a | yes |
+| `sap_nw_nfs_src` | The NFS share for NetWeaver or S4HANA, for example `10.0.0.100:/sap`. | `string` | see [NFS Volumes](#nfs-volumes) | yes, if other NFS variables are not defined |
+| `sap_nw_create_nfs_source_dirs` | Whether or not to create subdirectories on `sap_nw_nfs_src` to be used as separate mounts. | `bool` | `true` if `sap_nw_nfs_src` is defined | no |
+| `sap_nw_nfsvols_aas` | NFS volumes to be mounted on AAS. | `list` of `dict` | see [NFS Volumes](#nfs-volumes) | yes, if `sap_nw_nfs_src` is not defined |
+| `sap_nw_nfsvols_pas` | NFS volumes to be mounted on PAS. | `list` of `dict` | see [NFS Volumes](#nfs-volumes) | yes, if `sap_nw_nfs_src` is not defined |
+| `sap_nw_nfsvols_scs` | NFS volumes to be mounted on ASCS and ERS. | `list` of `dict` | see [NFS Volumes](#nfs-volumes) | yes, if `sap_nw_nfs_src` is not defined |
 | `sap_nw_password` | The password for NetWeaver or S4HANA. | `string` | n/a | yes |
 | `sap_nw_pas_instance_number` | Instance number for PAS. This is a two digit number that must be in quotes, or Ansible will convert it into single digits, for example `00` without surrounding quotes gets converted to the number `0`. | `string` | `00` | no |
 | `sap_nw_sid` | The System ID for NetWeaver. This is a three character uppercase string which may include digits but must start with a letter. | `string` | n/a | yes |
 | `sap_nw_product` | The SAP product, for example `NetWeaver`, `S4HANA`, or `BW4HANA`. | `string` | `NetWeaver` | no |
 | `sap_nw_product_version` | The SAP product version, defaults to a version for NetWeaver. | `string` | `750` | no |
+
+## NFS Volumes
+
+The variables `sap_nw_nfsvols_aas`, `sap_nw_nfsvols_pas`, and `sap_nw_nfsvols_scs` are all lists of dictionaries. They have defaults which are defined if `sap_nw_nfs_src` is set, but for more control they can be set individually.
+
+Each dictionary must be defined as follows:
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| `source` | The NFS server and share, for example `10.2.3.4:/sap`. | `string` | n/a | yes |
+| `mountpoint` | The mount point. | `string` | n/a | yes |
+| `mode` | The mode of the mount point. | `string` | `0755` | no |
+| `owner` | The owner of the mount point. If the user will be created by the SAP installer, use the UID rather than the name, as the SAP installer will not have created the user before mounting the filesystem. | `string` | `root` | no |
+| `group` | The group of the mount point. If the group will be created by the SAP installer, use the GID rather than the name, as the SAP installer will not have created the group before mounting the filesystem. | `string` | `root` | no |
+
+Example:
+
+```yaml
+sap_nw_nfsvols_aas:
+- source: 10.2.3.4:/sapmnt
+  mountpoint: /sapmnt
+- source: 10.6.7.8:/usrsaptrans
+  mountpoint: /usr/sap/trans
+  owner: '2001'
+  group: '2000'
+  mode: '0750'
+```

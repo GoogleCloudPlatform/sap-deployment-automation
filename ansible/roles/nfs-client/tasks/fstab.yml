@@ -25,16 +25,27 @@
 
 - name: ensure mount points exist
   file:
-    path: '{{ item }}'
+    path: '{{ item.mountpoint }}'
     state: directory
-  loop: '{{ nfs_client_mounts.values() | list }}'
+  loop: '{{ nfs_client_mounts }}'
 
 - name: mount and persist nfs filesystems
   mount:
-    path: '{{ item.value }}'
+    path: '{{ item.mountpoint }}'
     fstype: nfs
-    src: '{{ item.key }}'
-    opts: '{{ nfs_client_opts | join(",") }}'
+    src: '{{ item.source }}'
+    opts: '{{ item.options | default(nfs_client_opts) | join(",") }}'
     fstab: '{{ nfs_client_fstab }}'
     state: mounted
-  with_dict: '{{ nfs_client_mounts }}'
+  loop: '{{ nfs_client_mounts }}'
+
+- name: ensure permissions are correct on nfs mount points
+  file:
+    path: '{{ item.mountpoint }}'
+    owner: '{{ item.owner | default("root") }}'
+    group: '{{ item.group | default("root") }}'
+    mode: '{{ item.mode | default("0755") }}'
+    state: directory
+  loop: '{{ nfs_client_mounts }}'
+  when: |
+    'owner' in item or 'group' in item or 'mode' in item

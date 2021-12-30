@@ -75,22 +75,9 @@
     lv: "{{ item.key }}"
     size: "{{ item.value.size }}"
     pvs: "{{ item.value.pvs | default(omit) }}"
-  with_dict: "{{ logvols }}"
+  with_dict: "{{ logvols | default({}) }}"
   tags:
     - disk_setup
-  when: logvols is defined
-
-- name: Create swap logical volumes
-  lvol:
-    state: present
-    vg: "{{ item.value.vol }}"
-    lv: "{{ item.key }}"
-    size: "{{ item.value.size }}"
-    pvs: "{{ item.value.pvs | default(omit) }}"
-  with_dict: "{{ swapvols }}"
-  tags:
-    - disk_setup
-  when: (swapon == True) and (swapvols is defined)
 
 - name: Create filesystems
   filesystem:
@@ -98,11 +85,10 @@
     fstype: "{{ item.value.fstype | default('xfs')}}"
     force: no
     opts: "{{ item.value.opts | default(omit) }}"
-  with_dict: "{{ logvols }}"
+  with_dict: "{{ logvols | default({}) }}"
   ignore_errors: True
   tags:
     - disk_setup
-  when: logvols is defined
 
 - name: Mount and make fstab entries
   mount:
@@ -110,33 +96,19 @@
     fstype: "{{ item.value.fstype | default('xfs')}}"
     opts: defaults
     src: "/dev/{{ item.value.vol }}/{{ item.key }}"
-    state: mounted
+    state: "{{ 'present' if item.value.fstype | default('xfs') == 'swap' else 'mounted' }}"
   with_dict: "{{ logvols | default({}) }}"
   tags:
     - disk_setup
   when: item.value.mount | default(true)
+  register: storage_mount
 
 - name: Swap on
-  block:
-    - name: Check swapon
-      shell: 'swapon -s | wc -l'
-      register: swap_entry_count
-
-    - name: swap entry in /etc/fstab
-      lineinfile:
-        path: "/etc/fstab"
-        line: "swap none swap defaults,nofail 0 0"
-      when: swap_entry_count.stdout == "0"
-    
-    - name: make swap 
-      command: "mkswap /dev/{{ item.value.vol }}/{{ item.key }}"
-      with_dict: "{{ swapvols }}"
-      when: swap_entry_count.stdout == "0"
-
-    - name: swap mount
-      command: "swapon /dev/{{ item.value.vol }}/{{ item.key }}"
-      with_dict: "{{ swapvols }}"
-      when: swap_entry_count.stdout == "0"
-  when: (swapon == True) and (swapvols is defined)
-  tags:
-    - disk_setup
+  command: "swapon /dev/{{ item.item.value.vol }}/{{ item.item.key }}"
+  loop: "{{
+    storage_mount.results
+    | selectattr('item.value.fstype', 'defined')
+    | selectattr('item.value.fstype', 'equalto', 'swap')
+    | list
+  }}"
+  when: item is changed

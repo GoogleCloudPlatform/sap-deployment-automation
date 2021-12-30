@@ -22,11 +22,11 @@ sap_nw_sidadm_password: '{{ sap_nw_password }}'
 sap_db2_dbsid_password: '{{ sap_nw_password }}'
 sap_nw_user: '{{ sap_nw_sid | lower }}adm'
 
-sap_nw_sapsys_gid: 2001
 sap_db2_sysadm_gid: 2002
 sap_db2_sysctrl_gid: 2003
 sap_db2_sysmaint_gid: 2004
 sap_db2_sysmon_gid: 2005
+sap_sapsys_gid: 2626
 sap_nw_sidadm_uid: 2000
 sap_nw_sapadm_uid: 2001
 sap_nw_sapsid_uid: 2002
@@ -35,11 +35,39 @@ sap_db2_dbsid_uid: 2003
 sap_nw_ascs_instance_number: '01'
 sap_nw_pas_instance_number: '00'
 sap_nw_install_files_dest: /sapmnt/Software
-sap_nw_kernel_files: /sapmnt/Software/Kernel_Files
-sap_nw_rdbms_files: /sapmnt/Software/RDBMS
+sap_nw_kernel_files: '{{ sap_nw_install_files_dest }}/Kernel_Files'
+sap_nw_rdbms_files: '{{ sap_nw_install_files_dest }}/RDBMS'
 
 sap_nw_ascs_install_gateway: false
 sap_nw_ascs_install_web_dispatcher: false
+
+sap_nw_disks:
+- name: db2
+  partition_path: db2
+- name: sapmnt
+  partition_path: sapmnt
+- name: usrsap
+  partition_path: usrsap
+- name: swap
+  partition_path: swap
+sap_nw_logvols:
+  db2:
+    size: 100%VG
+    vol: db2
+    mountpoint: /db2
+  sapmnt:
+    size: 100%VG
+    vol: sapmnt
+    mountpoint: /sapmnt
+  usrsap:
+    size: 100%VG
+    vol: usrsap
+    mountpoint: /usr/sap
+  swap:
+    size: 100%VG
+    vol: swap
+    fstype: swap
+    mountpoint: none
 
 sap_db2_product: 'DB2'
 sap_db2_product_version: '11.5MP5FP1'
@@ -50,16 +78,16 @@ sap_nw_product_and_version: '{{ sap_nw_product }}/{{ sap_nw_product_version }}'
 sap_product_vars:
   'NetWeaver/750':
     onehost_product_id: 'NW_ABAP_OneHost:NW750.DB6.ABAP'
-    swpm_path: /sapmnt/Software/SWPM1.0
-    load_files: /sapmnt/Software/NW75
+    swpm_path: '{{ sap_nw_install_files_dest }}/SWPM1.0'
+    load_files: '{{ sap_nw_install_files_dest }}/NW75'
     install_files: [Kernel_Files, NW75, SWPM1.0]
     ensa_version: '1'
   'DB2/10.5FP9':
-    db_client: /sapmnt/Software/DB_CLIENT
+    db_client: '{{ sap_nw_install_files_dest }}/DB_CLIENT'
     install_files: [DB_CLIENT, RDBMS]
   'DB2/11.1MP4FP6':
-    db_client: /sapmnt/Software/DB_CLIENT
+    db_client: '{{ sap_nw_install_files_dest }}/DB_CLIENT'
     install_files: [DB_CLIENT, RDBMS]
   'DB2/11.5MP5FP1':
-    db_client: /sapmnt/Software/DB_CLIENT
+    db_client: '{{ sap_nw_install_files_dest }}/DB_CLIENT'
     install_files: [DB_CLIENT, RDBMS]

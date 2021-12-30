@@ -32,11 +32,13 @@
 
 - name: collect mount entries that are present
   set_fact:
-    nfs_client_mounts_present: '{{ nfs_client_mounts_present + [nfs_client_mount_command.stdout is regex("\b{}\b".format(item))] }}'
-  loop: '{{ nfs_client_mounts.keys() | list }}'
+    nfs_client_mounts_present: '{{ nfs_client_mounts_present + [nfs_client_mount_command.stdout is regex("\b{}\b".format(item.source))] }}'
+  loop: '{{ nfs_client_mounts }}'
   when:
   - nfs_client_source | length != 0
 
+# Temporarily mount the NFS share on /mnt and create
+# directories on it to be used as mount points later.
 - block:
   - name: create temporary fstab
     tempfile:
@@ -51,10 +53,10 @@
       state: mounted
   - name: make directories on nfs share
     file:
-      path: '/mnt/{{ item.split(nfs_client_source)[1] }}'
+      path: '/mnt/{{ item.source.split(nfs_client_source)[1] }}'
       mode: 0755
       state: directory
-    loop: '{{ nfs_client_mounts.keys() | list }}'
+    loop: '{{ nfs_client_mounts }}'
   always:
   - name: unmount nfs share
     mount:

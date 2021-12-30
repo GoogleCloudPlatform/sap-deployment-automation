@@ -54,3 +54,14 @@
   - trigger automounts
 
 - meta: flush_handlers
+
+- name: ensure permissions are correct on nfs mount points
+  file:
+    path: '{{ item.mountpoint }}'
+    owner: '{{ item.owner | default("root") }}'
+    group: '{{ item.group | default("root") }}'
+    mode: '{{ item.mode | default("0755") }}'
+    state: directory
+  loop: '{{ nfs_client_mounts }}'
+  when: |
+    'owner' in item or 'group' in item or 'mode' in item

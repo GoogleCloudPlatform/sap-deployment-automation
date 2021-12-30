@@ -22,7 +22,6 @@
   vars:
     disks: "{{ sap_hana_disks_worker }}"
     logvols: "{{ sap_hana_logvols_worker }}"
-    swapon: "{{ sap_hana_swapon | default(false) }}"
 
 - name: Include hana shared and backup mount role
   include_role:

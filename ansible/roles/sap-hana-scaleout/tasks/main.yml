@@ -23,7 +23,6 @@
   vars:
     disks: "{{ sap_hana_disks }}"
     logvols: "{{ sap_hana_logvols }}"
-    swapon: "{{ sap_hana_swapon | default(false) }}"
   when:
   - sap_hana_is_master | bool
   - not (sap_add_worker_nodes | bool)
@@ -103,7 +102,6 @@
   vars:
     disks: "{{ sap_hana_disks_worker }}"
     logvols: "{{ sap_hana_logvols_worker }}"
-    swapon: "{{ sap_hana_swapon | default(false) }}"
   when: sap_hana_is_worker | bool
 
 - name: Include sap hana mount role

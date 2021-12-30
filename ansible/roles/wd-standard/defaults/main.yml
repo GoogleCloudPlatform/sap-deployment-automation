@@ -15,19 +15,45 @@
 
 sap_wd_instance_number: "80"
 sap_wd_install_files_dest: /sapmnt/Software
-sap_wd_kernel_files: /sapmnt/Software/Kernel_Files
-sap_wd_sapmnt_disk_size: 20
-sap_wd_swap_disk_size: 20
+sap_wd_kernel_files: '{{ sap_wd_install_files_dest }}/Kernel_Files'
+sap_wd_password: ''
+sap_wd_master_password: '{{ sap_wd_password }}'
+sap_wd_sapadm_password: '{{ sap_wd_password }}'
+sap_wd_sidadm_password: '{{ sap_wd_password }}'
 sap_wd_user: '{{ sap_wd_sid | lower }}adm'
-sap_wd_usrsap_disk_size: 10
+sap_wd_sidadm_uid: 2000
+sap_wd_sapadm_uid: 2001
+sap_sapsys_gid: 2626
+
+sap_wd_disks:
+- name: sapmnt
+  partition_path: sapmnt
+- name: usrsap
+  partition_path: usrsap
+- name: swap
+  partition_path: swap
+sap_wd_logvols:
+  sapmnt:
+    size: 100%VG
+    vol: sapmnt
+    mountpoint: /sapmnt
+  usrsap:
+    size: 100%VG
+    vol: usrsap
+    mountpoint: /usr/sap
+  swap:
+    size: 100%VG
+    vol: swap
+    fstype: swap
+    mountpoint: none
 
 sap_wd_product: 'WebDispatcher'
 sap_wd_product_version: '750'
-sap_product_and_version: '{{ sap_wd_product }}/{{ sap_wd_product_version }}'
+sap_wd_product_and_version: '{{ sap_wd_product }}/{{ sap_wd_product_version }}'
 # sap_wd_product and sap_wd_product_version must be set to one of the <product>/<version> combos in sap_product_vars.
 sap_product_vars:
   'WebDispatcher/750':
-    onehost_product_id: 'NW_Webdispatcher:NW750.IND.PD'
-    swpm_path: /sapmnt/Software/SWPM2.0
-    load_files: /sapmnt/Software/WEBDISP
+    product_id: 'NW_Webdispatcher:NW750.IND.PD'
+    swpm_path: '{{ sap_wd_install_files_dest }}/SWPM2.0'
+    load_files: '{{ sap_wd_install_files_dest }}/WEBDISP'
     install_files: [WEBDISP, SWPM2.0]

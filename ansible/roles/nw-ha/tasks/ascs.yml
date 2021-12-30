@@ -12,21 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: ensure that a known product version is defined
-  assert:
-    that: sap_nw_product_and_version in sap_product_vars
-    fail_msg: 'sap_nw_product and sap_nw_product_version must match one of {{ sap_product_vars.keys() | join(", ") }}'
-
-- name: include base role
-  include_role:
-    name: base
-
 - name: include storage role
   include_role:
     name: storage
   vars:
-    disks: '{{ sap_nw_disks }}'
-    logvols: '{{ sap_nw_logvols }}'
+    disks: '{{ sap_nw_disks_ascs }}'
+    logvols: '{{ sap_nw_logvols_ascs }}'
+
+- name: include nfs-client role
+  include_role:
+    name: nfs-client
+  vars:
+    nfs_client_mounts: '{{ sap_nw_nfsvols_scs }}'
+    nfs_client_mode: autofs
+    nfs_client_create_src_dirs: '{{ sap_nw_create_nfs_source_dirs }}'
+    nfs_client_source: '{{ sap_nw_nfs_src }}'
 
 - name: include nw-pre role
   include_role:
@@ -38,6 +38,13 @@
   include_role:
     name: sapinst
   vars:
-    sap_product_id: '{{ sap_product_vars[sap_nw_product_and_version].onehost_product_id }}'
+    sap_product_id: '{{ sap_product_vars[sap_nw_product_and_version].ascs_product_id }}'
+    sap_sapinst_extra_args: SAPINST_USE_HOSTNAME={{ sap_nw_ascs_virtual_host }}
     sap_sapinst_swpm_path: '{{ sap_product_vars[sap_nw_product_and_version].swpm_path }}'
-    sap_sapinst_template: '{{ sap_product_vars[sap_nw_product_and_version].onehost_sapinst_template | default("inifile_onehost_hdb.params") }}'
+    sap_sapinst_template: '{{ sap_product_vars[sap_nw_product_and_version].ascs_sapinst_template | default("inifile_ascs.params") }}'
+
+- name: include post-deploy role
+  include_role:
+    name: post-deploy
+  vars:
+    sap_ensa_version: "{{ sap_product_vars[sap_nw_product_and_version].ensa_version }}"

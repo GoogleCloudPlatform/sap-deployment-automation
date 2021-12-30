@@ -16,46 +16,37 @@
   include_role:
     name: storage
   vars:
-    swapon: true
-    disks:
-      - { name: usrsap, partition_path : usrsap }
-      - { name: swap, partition_path : swap }
-    logvols:
-      usrsap:
-        size: 100%VG
-        vol: usrsap
-        mountpoint: /usr/sap
-    swapvols:
-      swap:
-        size: 100%VG
-        vol: swap
-        mountpoint: /swap
+    disks: '{{ sap_nw_disks_pas }}'
+    logvols: '{{ sap_nw_logvols_pas }}'
 
 - name: include nfs-client role
   include_role:
     name: nfs-client
   vars:
-    nfs_client_mounts: '{{ {
-      sap_nw_sapmnt_nfs_mount_src: "/sapmnt",
-      sap_nw_saptrans_nfs_mount_src: "/usr/sap/trans",
-    } }}'
+    nfs_client_mounts: '{{ sap_nw_nfsvols_pas }}'
     nfs_client_mode: autofs
     nfs_client_create_src_dirs: false
 
 - name: include nw-pre role
   include_role:
     name: nw-pre
-
-- name: include db role
-  include_role:
-    name: db
   vars:
-    sap_nw_product_id: "{{ sap_product_vars[sap_product_and_version].db_product_id }}"
-    sap_sapinst_template: "{{ sap_product_vars[sap_product_and_version].db_sapinst_template | default('inifile.params.j2') }}"
+    sap_product_and_version: '{{ sap_nw_product_and_version }}'
 
-- name: include nw role
+- name: include sapinst role for db
   include_role:
-    name: nw
+    name: sapinst
   vars:
-    sap_nw_product_id: "{{ sap_product_vars[sap_product_and_version].pas_product_id }}"
-    sap_sapinst_template: "{{ sap_product_vars[sap_product_and_version].pas_sapinst_template | default('inifile.params.j2') }}"
+    sap_product_id: '{{ sap_product_vars[sap_nw_product_and_version].db_product_id }}'
+    sap_sapinst_state_file: /root/.ansible-state/run-sapinst-db
+    sap_sapinst_swpm_path: '{{ sap_product_vars[sap_nw_product_and_version].swpm_path }}'
+    sap_sapinst_template: '{{ sap_product_vars[sap_nw_product_and_version].db_sapinst_template | default("inifile_db_hdb.params") }}'
+
+- name: include sapinst role for pas
+  include_role:
+    name: sapinst
+  vars:
+    sap_product_id: '{{ sap_product_vars[sap_nw_product_and_version].pas_product_id }}'
+    sap_sapinst_state_file: /root/.ansible-state/run-sapinst-pas
+    sap_sapinst_swpm_path: '{{ sap_product_vars[sap_nw_product_and_version].swpm_path }}'
+    sap_sapinst_template: '{{ sap_product_vars[sap_nw_product_and_version].as_sapinst_template | default("inifile_as_hdb.params") }}'

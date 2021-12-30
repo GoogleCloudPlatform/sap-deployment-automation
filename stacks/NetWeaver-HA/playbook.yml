@@ -87,7 +87,7 @@
   become: yes
   become_user: root  
   roles:
-  - role: netweaver-ha
+  - role: nw-ha
     vars:
       sap_hana_vip: '{{ terraform.outputs.hana_ilb_ip.value }}'
       sap_nw_ascs_vip: '{{ terraform.outputs.ascs_ilb_ip.value }}'
@@ -115,6 +115,6 @@
   become: yes
   tasks:
   - include_role:
-      name: netweaver-ha
+      name: nw-ha
       tasks_from: assertions
   tags: [nw, assertions]

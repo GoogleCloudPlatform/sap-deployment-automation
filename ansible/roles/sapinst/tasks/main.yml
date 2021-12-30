@@ -23,11 +23,23 @@
   template:
     src: '{{ sap_sapinst_template }}.j2'
     dest: /usr/sap/{{ sap_sapinst_template }}
+    mode: '0600'
+    owner: root
+    group: root
 
 - name: ensure state directory exists
   file:
     path: '{{ sap_sapinst_state_file | dirname }}'
     state: directory
+
+- name: ensure temp directory exists
+  file:
+    path: '{{ sap_sapinst_tempdir }}'
+    state: directory
+    mode: '1777'
+    owner: root
+    group: root
+  when: sap_sapinst_tempdir != '/tmp'
 
 - name: stat state file
   stat:
@@ -49,6 +61,8 @@
       {{ sap_sapinst_extra_args }}
   args:
     chdir: '{{ sap_sapinst_swpm_path }}'
+  environment:
+    TMPDIR: '{{ sap_sapinst_tempdir }}'
   # Using `creates` caused `failed_when` to get finicky, so `when` is being used instead.
   when: not (sap_sapinst_state_file_stat.stat.exists | bool)
   register: sap_sapinst_run

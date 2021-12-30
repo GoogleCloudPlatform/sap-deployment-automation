@@ -16,30 +16,16 @@
   include_role:
     name: storage
   vars:
-    swapon: true
-    disks:
-    - { name: db2, partition_path: db2 }
-    - { name: usrsap, partition_path: usrsap }
-    - { name: swap, partition_path: swap }
-    logvols:
-      db2:
-        size: 100%VG
-        vol: db2
-        mountpoint: /db2
-      usrsap:
-        size: 100%VG
-        vol: usrsap
-        mountpoint: /usr/sap
-    swapvols:
-      swap:
-        size: 100%VG
-        vol: swap
+    disks: '{{ sap_nw_disks_db2 }}'
+    logvols: '{{ sap_nw_logvols_db2 }}'
 
 - name: include nfs-client role
   include_role:
     name: nfs-client
   vars:
-    nfs_client_mounts: '{{ { sap_nw_sapmnt_nfs_mount_src: "/sapmnt" } }}'
+    nfs_client_mounts: '{{ sap_nw_nfsvols_db2 }}'
+    nfs_client_mode: autofs
+    nfs_client_create_src_dirs: false
 
 - name: include db2-pre role
   include_role:

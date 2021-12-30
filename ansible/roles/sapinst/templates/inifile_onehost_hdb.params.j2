@@ -16,7 +16,7 @@
 # HDB_Schema_Check_Dialogs.schemaName = SAPHANADB
 
 # The password of the database schema.
-HDB_Schema_Check_Dialogs.schemaPassword = {{ sap_nw_password }}
+HDB_Schema_Check_Dialogs.schemaPassword = {{ sap_nw_schema_password }}
 
 # Specify whether Software Provisioning Manager is to validate the schema name. The schema name must only contain numbers and capital letters. It  must not start with '_' . It cannot be 'SYS' or 'SYSTEM'.
 # HDB_Schema_Check_Dialogs.validateSchemaName = true
@@ -44,6 +44,21 @@ NW_CI_Instance.ascsInstallGateway = {{ sap_nw_ascs_install_gateway | lower }}
 
 # Standard system only: Add web dispatcher process to (A)SCS instance
 NW_CI_Instance.ascsInstallWebDispatcher = {{ sap_nw_ascs_install_web_dispatcher | lower }}
+
+# There are three types of encryption modes: 'Always' (default), 'depending on the incoming protocol', 'Never'
+NW_webdispatcher_Instance.encryptionMode = {{ sap_nw_wd_encryption_mode | default('Always') }}
+
+# Operating systems have restrictions for maximum number of open 'file handles' (sockets) for each process. Default is 2048. Provide a much higher value for  scenarios with heavy workload.
+NW_webdispatcher_Instance.scenarioSize = {{ sap_nw_wd_scenario_size | default('2048') }}
+
+# Set this parameter to 'true' if the SAP Web Dispatcher HTTP Port is to be used.
+NW_webdispatcher_Instance.useWdHTTPPort = {{ sap_nw_wd_use_http | default('true') | lower }}
+
+# HTTP Port of SAP Web Dispatcher. You can only specify this parameter if 'NW_webdispatcher_Instance.useWdHTTPPort' is set to 'true'.
+NW_webdispatcher_Instance.wdHTTPPort = {{ sap_nw_wd_http_port | default('8000') }}
+
+# HTTPS Port of SAP Web Dispatcher.
+NW_webdispatcher_Instance.wdHTTPSPort = {{ sap_nw_wd_https_port | default('44300') }}
 
 # Standard system with AS ABAP only: ASCS instance number. Leave empty for default.
 NW_CI_Instance.ascsInstanceNumber = {{ sap_nw_ascs_instance_number }}
@@ -115,7 +130,7 @@ NW_DDIC_Password.needDDICPasswords = false
 # NW_Delete_Sapinst_Users.removeUsers = false
 
 # Master password
-NW_GetMasterPassword.masterPwd = {{ sap_nw_password }}
+NW_GetMasterPassword.masterPwd = {{ sap_nw_master_password }}
 
 # Human readable form of the default login language to be preselected in SAPGUI. This Parameter is potentialy prompted in addition in the screen that also asks for the <SAPSID>. It is only prompted in systems that have an ABAP stack. It is prompted for installation but not for system copy. It is asked in those installations, that perform the ABAP load. That could be the database load installation in case of a distributed system szenario, or in case of a standard system installation with all instances on one host. This Parameter is saved in the 'DEFAULT' profile. It is has no influence on language settings in a Java stack. Valid names are stored in a table of subcomponent 'NW_languagesInLoadChecks'. The available languages must be declaired in the 'LANGUAGES_IN_LOAD' parameter of the 'product.xml' file . In this file, the one-character representation of the languages is used. Check the same table in subcomponent 'NW_languagesInLoadChecks'.
 # NW_GetSidNoProfiles.SAP_GUI_DEFAULT_LANGUAGE =
@@ -139,7 +154,7 @@ NW_GetSidNoProfiles.sid = {{ sap_nw_sid }}
 # NW_HDB_DB.abapSchemaName =
 
 # Password of the ABAP schema user
-NW_HDB_DB.abapschemaPassword = {{ sap_nw_password }}
+NW_HDB_DB.abapSchemaPassword = {{ sap_nw_schema_password }}
 
 # JAVA schema name
 # NW_HDB_DB.javaSchemaName =
@@ -319,7 +334,7 @@ hanadb.landscape.reorg.useParameterFile = DONOTUSEFILE
 # hostAgent.domain =
 
 # Password for the 'sapadm' user of the SAP Host Agent
-# hostAgent.sapAdmPassword =
+hostAgent.sapAdmPassword = {{ sap_nw_sapadm_password }}
 
 # installation_export.archivesFolder =
 
@@ -330,16 +345,16 @@ hanadb.landscape.reorg.useParameterFile = DONOTUSEFILE
 # nwUsers.sapServiceSIDPassword =
 
 # UNIX only: The user ID of the 'sapadm' user, leave empty for default. The ID is ignored if the user already exists.
-# nwUsers.sapadmUID =
+nwUsers.sapadmUID = {{ sap_nw_sapadm_uid }}
 
 # UNIX only: The group id of the 'sapsys' group, leave empty for default. The ID is ignored if the group already exists.
-# nwUsers.sapsysGID =
+nwUsers.sapsysGID = {{ sap_sapsys_gid }}
 
 # UNIX only: The user id of the <sapsid>adm user, leave empty for default. The ID is ignored if the user already exists.
-# nwUsers.sidAdmUID =
+nwUsers.sidAdmUID = {{ sap_nw_sidadm_uid }}
 
 # The password of the '<sapsid>adm' user
-nwUsers.sidadmPassword = {{ sap_nw_password }}
+nwUsers.sidadmPassword = {{ sap_nw_sidadm_password }}
 
 # ABAP schema password
 # storageBasedCopy.abapSchemaPassword =
