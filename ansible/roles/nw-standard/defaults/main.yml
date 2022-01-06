@@ -27,6 +27,7 @@ sap_nw_pas_virtual_host: '{{ ansible_hostname }}'
 sap_nw_install_files_dest: /sapmnt/Software
 sap_nw_kernel_files: '{{ sap_nw_install_files_dest }}/Kernel_Files'
 sap_nw_rdbms_files: '{{ sap_nw_install_files_dest }}/HANA_CLIENT'
+sap_nw_schema: '{{ sap_product_vars[sap_nw_product_and_version].db_schema | default("SAPHANADB") }}'
 sap_nw_password: ''
 sap_nw_java_admin_password: '{{ sap_nw_password }}'
 sap_nw_java_schema_password: '{{ sap_nw_password }}'
@@ -103,6 +104,7 @@ sap_product_vars:
     ensa_version: '1'
     scs_name: 'SCS'
     onehost_sapinst_template: inifile_onehost_java_hdb.params
+    db_schema: SAPJAVA1
   'S4HANA/1709':
     onehost_product_id: 'NW_ABAP_OneHost:S4HANA1709.CORE.HDB.ABAP'
     swpm_path: '{{ sap_nw_install_files_dest }}/SWPM1.0'

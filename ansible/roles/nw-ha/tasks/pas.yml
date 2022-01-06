@@ -49,3 +49,16 @@
     sap_sapinst_state_file: /root/.ansible-state/run-sapinst-pas
     sap_sapinst_swpm_path: '{{ sap_product_vars[sap_nw_product_and_version].swpm_path }}'
     sap_sapinst_template: '{{ sap_product_vars[sap_nw_product_and_version].as_sapinst_template | default("inifile_as_hdb.params") }}'
+
+- name: include sap-hana-hdb-userstore role
+  include_role:
+    name: sap-hana-hdb-userstore
+  vars:
+    hdb_us_become_user: '{{ sap_nw_user }}'
+    hdb_us_db_host: '{{ sap_hana_virtual_host }}'
+    hdb_us_db_name: '{{ sap_nw_tenant_sid }}'
+    hdb_us_db_password: '{{ sap_nw_schema_password }}'
+    hdb_us_db_port: '3{{ sap_hana_instance_number }}13'
+    hdb_us_db_user: '{{ sap_nw_schema }}'
+    hdb_us_key: DEFAULT
+    hdb_us_source_file: '/home/{{ sap_nw_user }}/.profile'
