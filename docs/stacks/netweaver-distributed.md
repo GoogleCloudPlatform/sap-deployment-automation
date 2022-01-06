@@ -154,6 +154,7 @@ The following variables are used with and without Terraform.
 | `sap_nw_ascs_install_web_dispatcher` | Whether or not to install the web dispatcher on the ASCS node. | `bool` | `false` | no |
 | `sap_nw_ascs_virtual_host` | The hostname given to the ASCS load balancer, added to `/etc/hosts` of instances. | `string` | n/a | yes |
 | `sap_nw_ascs_vip` | The IP address of the ASCS load balancer, added to `/etc/hosts` of instances. | `string` | n/a | yes |
+| `sap_nw_db_sid` | The database tenant system ID for NetWeaver. This is a three character uppercase string which may include digits but must start with a letter. | `string` | value of `sap_nw_sid` | no |
 | `sap_nw_install_files_bucket` | Bucket where NetWeaver or S4HANA installation files are located. | `string` | n/a | yes |
 | `sap_nw_password` | The password for NetWeaver or S4HANA. | `string` | n/a | yes |
 | `sap_nw_pas_instance_number` | Instance number for PAS. This is a two digit number that must be in quotes, or Ansible will convert it into single digits, for example `00` without surrounding quotes gets converted to the number `0`. | `string` | `00` | no |

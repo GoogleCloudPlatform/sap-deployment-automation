@@ -27,6 +27,7 @@ sap_nw_pas_virtual_host: '{{ ansible_hostname }}'
 sap_nw_install_files_dest: /sapmnt/Software
 sap_nw_kernel_files: '{{ sap_nw_install_files_dest }}/Kernel_Files'
 sap_nw_rdbms_files: '{{ sap_nw_install_files_dest }}/HANA_CLIENT'
+sap_nw_db_sid: '{{ sap_nw_sid }}'
 sap_nw_schema: '{{ sap_product_vars[sap_nw_product_and_version].db_schema | default("SAPHANADB") }}'
 sap_nw_password: ''
 sap_nw_java_admin_password: '{{ sap_nw_password }}'
