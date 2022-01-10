@@ -52,6 +52,14 @@ Optionally, a SAR file containing an upgrade may be uploaded. If it is present, 
 
 `HANA/<version>/IMDB_SERVER20_048_2-80002031.SAR`
 
+## DB2 Install Media
+
+DB2 install media should be placed in `sap_nw_install_files_bucket` under the prefix `DB2/<version>`, where `<version>` is `10.5FP9`, `11.1MP4FP6`, or `11.5MP5FP1`. The following subdirectories are required:
+
+`DB2/<version>/DB_CLIENT` - The DB2 client archive should be extracted and placed under this prefix. The `LABEL.ASC`, `DATA_UNITS`, and other files will be in this directory.
+
+`DB2/<version>/RDBMS` - The DB2 server archive should be extracted and placed under this prefix. The `LABEL.ASC`, `DATA_UNITS`, and other files will be in this directory.
+
 ## Application Install Media
 
 ### NetWeaver

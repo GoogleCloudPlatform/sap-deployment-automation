@@ -1,47 +1,79 @@
 # SAP Deployment Automation
 
-This repository contains code for deploying SAP products in GCP using Ansible and Terraform. It also contains code for building an [AWX](https://github.com/ansible/awx) image and deploying an instance of it with Terraform.
+This repository contains code for deploying SAP products in GCP using Ansible and Terraform.
 
-Each SAP product has a stack defined in the `stacks` directory, with a `playbook.yml` in each stack's directory.
+The Terraform modules build machines and other infrastructure required. Ansible is used to configure the machines and install SAP products.
 
-# Requirements
+The provided Ansible can be used in two different ways: the first is to run Terraform to create the machines before configuring them, and the second is to run it against existing machines.
 
-For running the Ansible playbooks from the command line, Python 3 is required.
+# Table of Contents
 
-# Deploying AWX
+* [Quickstart](#quickstart)
 
-The AWX image provides a UI with jobs for all of the stacks in the `stacks` subdirectory of this repository.
+* [Repository Structure](#repository-structure)
 
-The easiest way to get started with AWX is to deploy it with Terraform using the `bootstrap.sh` script included in the Terraform module directory.
+* [Install Media](./docs/install-media.md)
 
-Change to the module directory:
+* [Running Playbooks](./docs/running-playbooks.md)
 
-```
-cd terraform/modules/awx
-```
+* [Support Matrix](./docs/support-matrix.md)
 
-Then run `bootstrap.sh` with the instance name, project name, subnetwork, and region:
+* Available Stacks
 
-```
-./bootstrap.sh -i xyz-awx -p project-123 -s subnet-456 -r us-central1
-```
+  * [HANA-HA](./docs/stacks/hana-ha.md)
 
-# Deploying a Stack with the Ansible CLI
+  * [HANA-Scaleout](./docs/stacks/hana-scaleout.md)
 
-All stacks are deployed in the same way, using the `ansible-wrapper` script at the root of the repository. This script wraps the `ansible-playbook` command with some extra setup, such as creating a Python virtualenv and installing Ansible and all dependencies into it before running `ansible-playbook`. The arguments to `ansible-wrapper` are exactly the same as for `ansible-playbook`.
+  * [HANA-Scaleout-Standby](./docs/stacks/hana-scaleout-standby.md)
 
-Always run `ansible-wrapper` from the root of the repository. Pass it the path to the playbook and a variables file with `-e`, for example to build the `NetWeaver-HA` stack you can run:
+  * [HANA-Scaleup](./docs/stacks/hana-scaleup.md)
+
+  * [NetWeaver-DB2-Distributed](./docs/stacks/netweaver-db2-distributed.md)
+
+  * [NetWeaver-DB2-HA](./docs/stacks/netweaver-db2-ha.md)
+
+  * [NetWeaver-DB2-Standard](./docs/stacks/netweaver-db2-standard.md)
+
+  * [NetWeaver-Distributed](./docs/stacks/netweaver-distributed.md)
+
+  * [NetWeaver-HA](./docs/stacks/netweaver-ha.md)
+
+  * [NetWeaver-Standard](./docs/stacks/netweaver-standard.md)
+
+# Quickstart
+
+The fastest way to start is to use Ansible and Terraform together to build a full stack.
+
+1. Upload your [SAP Install Media](./docs/install-media.md) to a bucket according to the provided instructions
+
+2. Choose a stack, for example `NetWeaver-HA`. Define a file containing the variables for the stack by copying `stacks/NetWeaver-HA/vars/deploy-vars.yml` and modifying it to work in your GCP project. Check the [documentation for your stack](./docs/stacks) for more details about the available variables.
+
+3. Assuming your variables file is called `vars.yml`, run the playbook from the root of the repository using the provided `ansible-wrapper` script:
 
 ```
 ./ansible-wrapper stacks/NetWeaver-HA/playbook.yml -e @vars.yml
 ```
 
-The `vars.yml` will differ depending on the stack you are deploying. The README of each stack has documentation for all of the variables, and each stack directory has a subdirectory `vars` with example variables to use as a starting point. Note that the `@` symbol causes Ansible to treat the value given to `-e` as a filename, whereas without `@` it treats the value as literal data, such as `-e key=value`.
+# Repository Structure
 
-# Destroying a Stack
+`ansible.cfg` - This file contains [Ansible configuration settings](https://docs.ansible.com/ansible/latest/reference_appendices/config.html).
 
-Destroying works exactly the same as deploying, but needs an additional variable `state: absent`:
+`ansible-wrapper` - This script is a wrapper around the `ansible-playbook` command. It first ensures a [Python virtual environment](https://docs.python.org/3/tutorial/venv.html) exist and then installs all of the dependencies from `requirements.txt` into it before finally running `ansible-playbook` from the virtualenv. All arguments to this script will be passed to `ansible-playbook`.
 
-```
-./ansible-wrapper stacks/NetWeaver-HA/playbook.yml -e @vars.yml -e state=absent
-```
+`ansible/roles/` - This directory contains all Ansible roles.
+
+`requirements.txt` - This file contains all Python dependencies, including Ansible, with their versions pinned. Code changes are tested only against these exact versions.
+
+`stacks/` - This directory contains a subdirectory per supported stack, for example `HANA-HA` or `NetWeaver-HA`.
+
+`stacks/<stack>/playbook.yml` - This is the playbook to run Ansible together with Terraform to create the infrastructure and configure the stack.
+
+`stacks/<stack>/playbook-notf.yml` - This is the playbook to run Ansible without Terraform to configure the stack with existing infrastructure.
+
+`stacks/<stack>/tf/` - This directory contains a [root Terraform module](https://www.terraform.io/language/modules#the-root-module) used as the Terraform entry point for the stack.
+
+`stacks/<stack>/vars/` - This directory contains example variables used to configure the stack.
+
+`terraform/modules/` - This directory contains all of the Terraform modules called by the root modules.
+
+`third_party/` - This directory contains vendored third party dependencies.
