@@ -13,7 +13,7 @@
 # HDB_Schema_Check_Dialogs.dropSchema = false
 
 # The name of the database schema.
-HDB_Schema_Check_Dialogs.schemaName = SAPJAVA1
+HDB_Schema_Check_Dialogs.schemaName = {{ sap_nw_schema }}
 
 # The password of the database schema.
 HDB_Schema_Check_Dialogs.schemaPassword = {{ sap_nw_schema_password }}
@@ -106,7 +106,7 @@ NW_GetSidNoProfiles.sid = {{ sap_nw_sid }}
 # NW_HDB_DB.abapSchemaPassword =
 
 # JAVA schema name
-NW_HDB_DB.javaSchemaName = SAPJAVA1
+NW_HDB_DB.javaSchemaName = {{ sap_nw_schema }}
 
 # Password of the JAVA schema user
 NW_HDB_DB.javaSchemaPassword = {{ sap_nw_java_schema_password }}
@@ -127,7 +127,7 @@ NW_HDB_DB.javaSchemaPassword = {{ sap_nw_java_schema_password }}
 NW_HDB_getDBInfo.dbhost = {{ sap_hana_virtual_host }}
 
 # Database system ID
-NW_HDB_getDBInfo.dbsid = {{ sap_hana_sid }}
+NW_HDB_getDBInfo.dbsid = {{ sap_nw_db_sid }}
 
 # The instance number of the SAP HANA database server
 NW_HDB_getDBInfo.instanceNumber = {{ sap_hana_instance_number }}

@@ -1,4 +1,4 @@
-# Copyright 2021 Google LLC
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,13 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Update HDB user store
-  shell: >-
-    source {{ hdb_us_source_file | quote }} &&
-    hdbuserstore SET {{ hdb_us_key | quote }}
-    {{ hdb_us_db_host | quote }}:{{ hdb_us_db_port | quote }}{{ hdb_us_db_name_opt | quote }}
-    {{ hdb_us_db_user | quote }} {{ hdb_us_db_password | quote }}
-  become: yes
-  become_user: '{{ hdb_us_become_user }}'
-  async: 60
-  poll: 1
+hdb_us_db_name: ''
+hdb_us_db_name_opt: '{{ "@" ~ hdb_us_db_name if hdb_us_db_name | length > 0 else "" }}'

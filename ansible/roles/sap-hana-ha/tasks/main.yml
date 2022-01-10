@@ -66,6 +66,14 @@
 - name: Include sap hana hdb userstore role
   include_role:
     name: sap-hana-hdb-userstore
+  vars:
+    hdb_us_become_user: '{{ sap_hana_user }}'
+    hdb_us_db_host: localhost
+    hdb_us_db_password: '{{ sap_hana_db_system_password }}'
+    hdb_us_db_port: '3{{ sap_hana_instance_number }}15'
+    hdb_us_db_user: '{{ sap_hana_monitoring_user }}'
+    hdb_us_key: '{{ sap_hana_user_store_key }}'
+    hdb_us_source_file: '/usr/sap/{{ sap_hana_user }}/home/.sapenv.sh'
 
 - name: Include sap hana backup role
   include_role:

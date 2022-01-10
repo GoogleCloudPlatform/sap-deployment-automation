@@ -125,6 +125,7 @@ The following variables are used with and without Terraform.
 | `sap_nw_ascs_install_gateway` | Whether or not to install the gateway on the ASCS node. | `bool` | `false` | no |
 | `sap_nw_ascs_install_web_dispatcher` | Whether or not to install the web dispatcher on the ASCS node. | `bool` | `false` | no |
 | `sap_nw_ascs_virtual_host` | The hostname used to access ASCS. | `string` | value of `ansible_hostname` on the application machine | no |
+| `sap_nw_db_sid` | The database tenant system ID for NetWeaver. This is a three character uppercase string which may include digits but must start with a letter. | `string` | value of `sap_nw_sid` | no |
 | `sap_nw_install_files_bucket` | Bucket where application install media is located. | `string` | n/a | yes |
 | `sap_nw_instance_name` | The name of the application instance. | `string` | n/a | yes |
 | `sap_nw_password` | The password for NetWeaver or S4HANA. | `string` | n/a | yes |
