@@ -54,6 +54,7 @@
   parted:
     device: "{{ item.value }}"
     number: 1
+    label: gpt
     state: present
   with_items: "{{ disksdict|dict2items }}"
   tags:
