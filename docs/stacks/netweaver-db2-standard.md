@@ -1,10 +1,10 @@
-# NetWeaver-Standard
+# NetWeaver-DB2-Standard
 
-This stack builds a SAP application instance with a separate HANA Scaleup instance.
+This stack builds a single node SAP application instance with DB2.
 
 # Architecture Diagram
 
-![NetWeaver-Standard](../images/netweaver-standard.png)
+![NetWeaver-DB2-Standard](../images/netweaver-db2-standard.png)
 
 # Prerequisites
 
@@ -12,25 +12,15 @@ This stack builds a SAP application instance with a separate HANA Scaleup instan
 
 If not using the provided Terraform, the following infrastructure components must exist.
 
-### HANA
-
-One HANA machine is required.
-
-#### Disks
-
-Two disks must be created and attached to each HANA machine.
-
-`data` - This disk will contain three logical volumes, `data`, `shared`, and `log`.  Attach the disk to the machine with a [`device_name`](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_attached_disk#device_name) of `data` to use the value Ansible uses for it by default. Changing this requires redefining the variable `sap_hana_disks`.
-
-`backup` - The backup disk will have a single logical volume. Attach the disk to the machine with a `device_name` of `backup` to use the value Ansible uses for it by default.
-
 ### Application server
 
 One application server machine is required.
 
 #### Disks
 
-Three disks must be created and attached to each application server machine.
+Four disks must be created and attached to the application server machine.
+
+`db2` - This disk will contain one logical volume to be mounted on `/db2`.  Attach the disk to the machine with a [`device_name`](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_attached_disk#device_name) of `db2` to use the value Ansible uses for it by default.
 
 `usrsap` - This disk will contain one logical volume to be mounted on `/usr/sap`.  Attach the disk to the machine with a [`device_name`](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_attached_disk#device_name) of `usrsap` to use the value Ansible uses for it by default.
 
@@ -46,9 +36,6 @@ If using Terraform and Ansible together, the inventory is automatically generate
 
 The following inventory groups must be defined containing the hosts described below. You can choose your own names for the groups.
 
-* HANA group
-  * 1 host
-
 * SAP application group
   * 1 host
 
@@ -57,10 +44,7 @@ The following inventory groups must be defined containing the hosts described be
 INI format:
 
 ```ini
-[hana]
-abchana
-
-[nw]
+[sap]
 abcabap
 ```
 
@@ -69,10 +53,7 @@ YAML format:
 ```yaml
 all:
   children:
-    hana:
-      hosts:
-        abchana:
-    nw:
+    sap:
       hosts:
         abcabap:
 ```
@@ -89,8 +70,6 @@ The following variables are only used when Terraform and Ansible are run togethe
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| `sap_hana_instance_type` | The GCE instance type for HANA. Must be one of `n1-highmem-32`, `n1-highmem-64`, `n1-highmem-96`, `n2-highmem-32`, `n2-highmem-48`, `n2-highmem-64`, `n2-highmem-80`, `m1-megamem-96`, `m1-ultramem-40`, `m1-ultramem-80`, `m1-ultramem-160`, `m2-ultramem-208`, or `m2-ultramem-416`. | `string` | `n1-highmem-32` | no |
-| `sap_hana_service_account_name` | The name of the service account assigned to HANA instances. This should not be a full service account email, just the name before the `@` symbol. | `string` | `sap-common-sa` | no |
 | `sap_nw_instance_type` | The GCE instance type for NetWeaver or S4HANA instances. | `string` | `n1-standard-8`| no |
 | `sap_nw_service_account_name` | The name of the service account assigned to NetWeaver or S4HANA instances. This should not be a full service account email, just the name before the `@` symbol. | `string` | `sap-common-sa` | no |
 | `sap_nw_subnetwork` | The name of the subnetwork used for machines and load balancers. | `string` | n/a | yes |
@@ -108,18 +87,7 @@ The following variables are used with and without Terraform.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| `sap_hana_instance_name` | The name of the HANA instance. | `string` | n/a | yes |
-| `sap_hana_instance_number` | Instance number for HANA. This is a two digit number that must be in quotes, or Ansible will convert it into single digits, for example `00` without surrounding quotes gets converted to the number `0`. | `string` | `00` | no |
-| `sap_hana_install_files_bucket` | Bucket where HANA installation files are located. | `string` | n/a | yes |
-| `sap_hana_password` | The password for HANA. | `string` | n/a | yes |
-| `sap_hana_product_version` | The version of HANA. | `string` | `20SPS03` | no |
-| `sap_hana_sid` | The System ID for HANA. This is a three character uppercase string which may include digits but must start with a letter. | `string` | n/a | yes |
-| `sap_hana_backup_size` | The size of the `backup` volume's filesystem, for example `415G`. | `string` | n/a | yes, if terraform is not used |
-| `sap_hana_data_size` | The size of the `data` volume's filesystem, for example `312G`. | `string` | n/a | yes, if terraform is not used |
-| `sap_hana_log_size` | The size of the `log` volume's filesystem, for example `104G`. | `string` | n/a | yes, if terraform is not used |
-| `sap_hana_shared_size` | The size of the `shared` volume's filesystem, for example `208G`. | `string` | n/a | yes, if terraform is not used |
-| `sap_hana_usr_size` | The size of the `/usr/sap` volume's filesystem, for example `32G`. | `string` | n/a | yes, if terraform is not used |
-| `sap_hana_virtual_host` | The hostname used by the application to connect to HANA. | `string` | n/a | yes |
+| `sap_db2_product_version` | The DB2 version. | `string` | `11.5MP5FP1` | no |
 | `sap_nw_ascs_instance_number` | Instance number for ASCS. This is a two digit number that must be in quotes, or Ansible will convert it into single digits, for example `00` without surrounding quotes gets converted to the number `0`. | `string` | `00` | no |
 | `sap_nw_ascs_install_gateway` | Whether or not to install the gateway on the ASCS node. | `bool` | `false` | no |
 | `sap_nw_ascs_install_web_dispatcher` | Whether or not to install the web dispatcher on the ASCS node. | `bool` | `false` | no |
