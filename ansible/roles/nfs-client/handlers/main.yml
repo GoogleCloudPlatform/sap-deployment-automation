@@ -17,7 +17,3 @@
     name: autofs
     enabled: true
     state: restarted
-
-- name: trigger automounts
-  command: ls {{ item.mountpoint }}
-  loop: '{{ nfs_client_mounts }}'
