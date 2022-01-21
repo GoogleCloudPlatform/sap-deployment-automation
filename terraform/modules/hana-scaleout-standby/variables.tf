@@ -60,10 +60,6 @@ variable "additional_disk_type" {
   description = "The GCE additional disk type.Set to pd-ssd (for PD SSD)."
 }
 
-# variable "create_backup_volume" {
-#   description = "The zone that the instance should be created in."
-# }
-
 variable "service_account_email" {
   description = "Email of service account to attach to the instance."
 }
