@@ -30,6 +30,56 @@ hosts_file_entries:
 - ip: '{{ sap_nw_ers_vip }}'
   names: ['{{ sap_nw_ers_virtual_host }}']
 
+sap_db2_primary_ip: '{{
+  hostvars.values()
+  | selectattr("sap_is_db2_primary", "defined")
+  | selectattr("sap_is_db2_primary")
+  | map(attribute="ansible_default_ipv4.address")
+  | list
+  | first
+}}'
+sap_db2_secondary_ip: '{{
+  hostvars.values()
+  | selectattr("sap_is_db2_secondary", "defined")
+  | selectattr("sap_is_db2_secondary")
+  | map(attribute="ansible_default_ipv4.address")
+  | list
+  | first
+}}'
+sap_nw_ascs_instance_name: '{{
+  hostvars.values()
+  | selectattr("sap_is_ascs", "defined")
+  | selectattr("sap_is_ascs")
+  | map(attribute="ansible_hostname")
+  | list
+  | first
+}}'
+sap_nw_ascs_private_ip: '{{
+  hostvars.values()
+  | selectattr("sap_is_ascs", "defined")
+  | selectattr("sap_is_ascs")
+  | map(attribute="ansible_default_ipv4.address")
+  | list
+  | first
+}}'
+sap_nw_ers_instance_name: '{{
+  hostvars.values()
+  | selectattr("sap_is_ers", "defined")
+  | selectattr("sap_is_ers")
+  | map(attribute="ansible_hostname")
+  | list
+  | first
+}}'
+sap_nw_pas_instance_name: '{{
+  hostvars.values()
+  | selectattr("sap_is_pas", "defined")
+  | selectattr("sap_is_pas")
+  | map(attribute="ansible_hostname")
+  | list
+  | first
+}}'
+sap_nw_pas_virtual_host: '{{ sap_nw_pas_instance_name }}'
+
 sap_db2_hadr_port1: 5951
 sap_db2_hadr_port2: 5952
 sap_db2_user: 'db2{{ sap_nw_sid | lower }}'
