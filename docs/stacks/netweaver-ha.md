@@ -196,8 +196,8 @@ The following variables are only used when Terraform and Ansible are run togethe
 | `sap_nw_service_account_name` | The name of the service account assigned to NetWeaver or S4HANA instances. This should not be a full service account email, just the name before the `@` symbol. | `string` | `sap-common-sa` | no |
 | `sap_nw_subnetwork` | The name of the subnetwork used for machines and load balancers. | `string` | n/a | yes |
 | `sap_project_id` | The project ID where instances are located. | `string` | n/a | yes |
-| `sap_primary_zone` | The zone for primary instances, HANA and ASCS and PAS, for example `us-central1-a`. | `string` | n/a | yes |
-| `sap_secondary_zone` | The zone for primary instances, both HANA and ERS, for example `us-central1-b`. | `string` | n/a | yes |
+| `sap_primary_zone` | The zone for primary instances, HANA primary, ASCS, and PAS, for example `us-central1-a`. | `string` | n/a | yes |
+| `sap_secondary_zone` | The zone for secondary instances, HANA secondary and ERS, for example `us-central1-b`. | `string` | n/a | yes |
 | `sap_subnetwork_project_id` | The name of the subnetwork project, if using a shared VPC. If not given, `sap_project_id` will be used. | `string` | value of `sap_project_id` | no |
 | `sap_source_image_family` | The source image family for machines. | `string` | n/a | yes |
 | `sap_source_image_project` | The project for the source image. Official SAP images are from `rhel-sap-cloud` for RedHat or `suse-sap-cloud` for Suse. | `string` | n/a | yes |
