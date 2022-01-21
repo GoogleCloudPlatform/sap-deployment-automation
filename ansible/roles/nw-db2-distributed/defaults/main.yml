@@ -17,6 +17,33 @@ sap_is_ascs: false
 sap_is_db2: false
 sap_is_pas: false
 
+sap_nw_ascs_instance_name: '{{
+  hostvars.values()
+  | selectattr("sap_is_ascs", "defined")
+  | selectattr("sap_is_ascs")
+  | map(attribute="ansible_hostname")
+  | list
+  | first
+}}'
+sap_nw_pas_instance_name: '{{
+  hostvars.values()
+  | selectattr("sap_is_pas", "defined")
+  | selectattr("sap_is_pas")
+  | map(attribute="ansible_hostname")
+  | list
+  | first
+}}'
+sap_nw_ascs_virtual_host: '{{ sap_nw_ascs_instance_name }}'
+sap_nw_pas_virtual_host: '{{ sap_nw_pas_instance_name }}'
+sap_nw_ascs_private_ip: '{{
+  hostvars.values()
+  | selectattr("sap_is_ascs", "defined")
+  | selectattr("sap_is_ascs")
+  | map(attribute="ansible_default_ipv4.address")
+  | list
+  | first
+}}'
+
 # NFS exports on ASCS used by DB2, PAS, and AAS.
 # To disable, set nfs_server_exports to [].
 nfs_server_exports:

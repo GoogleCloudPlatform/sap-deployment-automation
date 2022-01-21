@@ -1,4 +1,4 @@
-# Copyright 2021 Google LLC
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,8 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: ensure autofs is started and enabled on boot
-  systemd:
-    name: autofs
-    enabled: true
-    state: restarted
+- hosts: sap
+  become: true
+  tasks:
+  - include_role:
+      name: nw-db2-ha
+
+- hosts: sap
+  become: true
+  tasks:
+  - include_role:
+      name: nw-db2-ha
+      tasks_from: assertions
+  tags: [assertions]
