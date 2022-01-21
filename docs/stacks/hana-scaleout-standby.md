@@ -4,7 +4,7 @@ This stack builds a HANA Scaleout instance with multiple workers.
 
 # Architecture Diagram
 
-![HANA-Scaleout](../images/hana-scaleout.png)
+![HANA-Scaleout](../images/hana-scaleout-standby.png)
 
 # Prerequisites
 
@@ -18,19 +18,23 @@ One HANA master machine is required.
 
 One or more HANA worker machines are required.
 
+One standy HANA worker machine is required
+
 #### HANA Master Disks
 
-Two disks must be created and attached to the machine.
+One disk must be created and attached to the machine.
 
-`data` - This disk will contain three logical volumes, `data`, `log`, and `usr` (for `/usr/sap`).  Attach the disk to the machine with a [`device_name`](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_attached_disk#device_name) of `data` to use the value Ansible uses for it by default, otherwise it requires redefining the variable `sap_hana_disks`. See the [GCP SAP HANA planning guide](https://cloud.google.com/solutions/sap/docs/sap-hana-planning-guide#hana-minimum-pd-sizes-ssd-balanced) for disk sizing.
-
-`backup` - The backup disk will have a single logical volume. Attach the disk to the machine with a `device_name` of `backup` to use the value Ansible uses for it by default. See the [GCP SAP HANA planning guide](https://cloud.google.com/solutions/sap/docs/sap-hana-planning-guide#hana-minimum-pd-sizes-ssd-balanced) for disk sizing.
+`data` - This disk will contain three logical volumes, `data` and `log`.  Attach the disk to the machine with a [`device_name`](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_attached_disk#device_name) of `data` to use the value Ansible uses for it by default, otherwise it requires redefining the variable `sap_hana_disks`. See the [GCP SAP HANA planning guide](https://cloud.google.com/solutions/sap/docs/sap-hana-planning-guide#hana-minimum-pd-sizes-ssd-balanced) for disk sizing.
 
 #### HANA Worker Disks
 
 One disk must be created and attached to each machine.
 
-`data` - This disk will contain four logical volumes, `data`, `shared`, `log`, and `usr` (for `/usr/sap`).  Attach the disk to the machine with a [`device_name`](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_attached_disk#device_name) of `data` to use the value Ansible uses for it by default, otherwise it requires redefining the variable `sap_hana_disks`. See the [GCP SAP HANA planning guide](https://cloud.google.com/solutions/sap/docs/sap-hana-planning-guide#hana-minimum-pd-sizes-ssd-balanced) for disk sizing.
+`data` - This disk will contain two logical volumes, `data` and `log`.  Attach the disk to the machine with a [`device_name`](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_attached_disk#device_name) of `data` to use the value Ansible uses for it by default, otherwise it requires redefining the variable `sap_hana_disks`, `sap_hana_disks_worker` and `sap_hana_disks_standby`. See the [GCP SAP HANA planning guide](https://cloud.google.com/solutions/sap/docs/sap-hana-planning-guide#hana-minimum-pd-sizes-ssd-balanced) for disk sizing.
+
+#### HANA Standby Disks
+
+No disks needed for the standby node
 
 ## Inventory
 
@@ -43,12 +47,6 @@ The following inventory groups must be defined containing the hosts described be
 * HANA group
   * Contains master and worker groups
 
-* HANA master group
-  * 1 host
-
-* HANA worker group
-  * 1 or more worker hosts
-
 ### Examples
 
 INI format:
@@ -57,16 +55,11 @@ INI format:
 # Note: when using INI formatted inventory, boolean inventory values
 # must be in uppercase or Ansible will convert them to strings.
 
-[hana:children]
-hana_master
-hana_worker
-
-[hana_master]
-abchana sap_hana_is_master=True
-
-[hana_worker]
-abchanaw01 sap_hana_is_worker=True
-abchanaw02 sap_hana_is_worker=True
+[hana]
+abchana
+abchanaw01
+abchanaw02
+abchanas01
 ```
 
 YAML format:
@@ -75,19 +68,11 @@ YAML format:
 all:
   children:
     hana:
-      children:
-        hana_master:
-        hana_worker:
-    hana_master:
       hosts:
         abchana:
-          sap_hana_is_master: true
-    hana_worker:
-      hosts:
         abchanaw01:
-          sap_hana_is_worker: true
         abchanaw02:
-          sap_hana_is_worker: true
+        abchanas01:
 ```
 
 ## Install Media
@@ -102,6 +87,7 @@ The following variables are only used when Terraform and Ansible are run togethe
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| `sap_hana_instance_name` | The name of the HANA instance. | `string` | n/a | yes |
 | `sap_hana_instance_type` | The GCE instance type for HANA. Must be one of `n1-highmem-32`, `n1-highmem-64`, `n1-highmem-96`, `n2-highmem-32`, `n2-highmem-48`, `n2-highmem-64`, `n2-highmem-80`, `m1-megamem-96`, `m1-ultramem-40`, `m1-ultramem-80`, `m1-ultramem-160`, `m2-ultramem-208`, or `m2-ultramem-416`. | `string` | `n1-highmem-32` | no |
 | `sap_hana_service_account_name` | The name of the service account assigned to HANA instances. This should not be a full service account email, just the name before the `@` symbol. | `string` | `sap-common-sa` | no |
 | `sap_project_id` | The project ID where instances are located. | `string` | n/a | yes |
@@ -117,7 +103,7 @@ The following variables are only used when Terraform and Ansible are run togethe
 | `sap_hana_network_tags` |  Hana instance network tags to add to instance for traffic routing | `list` | ["sap-hana-allow-all"] | no |
 | `sap_hana_pd_kms_key` |  Hana persistent disk KMS key | `string` | None | no |
 | `sap_instance_count_worker` |  Hana worker instance count to deploy | `integer` | 1 | no |
-| `sap_hana_create_backup_volume` |  Create backup volume for hana instance | `boolean` | true | no |
+| `instance_count_standby` |  Hana standby instance count to deploy. Currently the stack only supports one standby node deployment. Will update the section here when the code to support multiple standby nodes is provided | `integer` | 1 | no |
 | `sap_tf_state_bucket` | The GCS bucket where Terraform state is stored. If it does not exist, it will be created. There can only be one bucket globally with a given name (it gets a global DNS name). If there is a permissions error when creating this bucket, it is likely that one already exists in another project with the same name. Note that the pair `sap_tf_state_bucket`, `sap_tf_state_bucket_prefix` must be unique to avoid conflicts with other stacks. | `string` | n/a | yes |
 | `sap_tf_state_bucket_prefix` | This is the prefix for the Terraform state within the bucket defined in `sap_tf_state_bucket`. Note that the pair `sap_tf_state_bucket`, `sap_tf_state_bucket_prefix` must be unique to avoid conflicts with other stacks. | `string` | n/a | yes |
 
@@ -127,15 +113,16 @@ The following variables are used with and without Terraform.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| `sap_hana_instance_name` | The name of the HANA instance. | `string` | n/a | yes |
 | `sap_hana_instance_number` | Instance number for HANA. This is a two digit number that must be in quotes, or Ansible will convert it into single digits, for example `00` without surrounding quotes gets converted to the number `0`. | `string` | `00` | no |
 | `sap_hana_install_files_bucket` | Bucket where HANA installation files are located. | `string` | n/a | yes |
 | `sap_hana_password` | The password for HANA. | `string` | n/a | yes |
 | `sap_hana_product_version` | The version of HANA. | `string` | `20SPS03` | no |
 | `sap_hana_sid` | The System ID for HANA. This is a three character uppercase string which may include digits but must start with a letter. | `string` | n/a | yes |
-| `sap_hana_backup_size` | The size of the `backup` volume's filesystem in [LVM format](https://docs.ansible.com/ansible/latest/collections/community/general/lvol_module.html#parameter-size). See the [GCP SAP HANA planning guide](https://cloud.google.com/solutions/sap/docs/sap-hana-planning-guide#persistent_disk_size_requirements_for_scale-out_systems) for partition sizing. | `string` | n/a | yes, if terraform is not used |
+| `sap_hana_worker_disks_list` | List of disks attached to all the worker nodes | `list` | n/a | yes |
+| `sap_hana_backup_fs_mount_point` | The filestore instance mountpoint of the `backup` volume's filesystem in [LVM format](https://docs.ansible.com/ansible/latest/collections/community/general/lvol_module.html#parameter-size). See the [GCP SAP HANA planning guide](https://cloud.google.com/solutions/sap/docs/sap-hana-planning-guide#persistent_disk_size_requirements_for_scale-out_systems) for partition sizing. | `string` | n/a | yes, if terraform is not used |
 | `sap_hana_data_size` | The size of the `data` volume's filesystem in [LVM format](https://docs.ansible.com/ansible/latest/collections/community/general/lvol_module.html#parameter-size). See the [GCP SAP HANA planning guide](https://cloud.google.com/solutions/sap/docs/sap-hana-planning-guide#persistent_disk_size_requirements_for_scale-out_systems) for partition sizing. | `string` | n/a | yes, if terraform is not used |
 | `sap_hana_log_size` | The size of the `log` volume's filesystem in [LVM format](https://docs.ansible.com/ansible/latest/collections/community/general/lvol_module.html#parameter-size). See the [GCP SAP HANA planning guide](https://cloud.google.com/solutions/sap/docs/sap-hana-planning-guide#persistent_disk_size_requirements_for_scale-out_systems) for partition sizing. | `string` | n/a | yes, if terraform is not used |
-| `sap_hana_shared_size` | The size of the `shared` volume's filesystem in [LVM format](https://docs.ansible.com/ansible/latest/collections/community/general/lvol_module.html#parameter-size). See the [GCP SAP HANA planning guide](https://cloud.google.com/solutions/sap/docs/sap-hana-planning-guide#persistent_disk_size_requirements_for_scale-out_systems) for partition sizing. | `string` | n/a | yes, if terraform is not used |
-| `sap_hana_usr_size` | The size of the `/usr/sap` volume's filesystem in [LVM format](https://docs.ansible.com/ansible/latest/collections/community/general/lvol_module.html#parameter-size). See the [GCP SAP HANA planning guide](https://cloud.google.com/solutions/sap/docs/sap-hana-planning-guide#persistent_disk_size_requirements_for_scale-out_systems) for partition sizing. | `string` | n/a | yes, if terraform is not used |
-| `sap_hana_virtual_host` | The hostname used by the application to connect to HANA. | `string` | n/a | yes |
+| `sap_hana_shared_fs_mount_point` | The filestore instance mountpoint of the `shared` volume's filesystem in [LVM format](https://docs.ansible.com/ansible/latest/collections/community/general/lvol_module.html#parameter-size). See the [GCP SAP HANA planning guide](https://cloud.google.com/solutions/sap/docs/sap-hana-planning-guide#persistent_disk_size_requirements_for_scale-out_systems) for partition sizing. | `string` | n/a | yes, if terraform is not used |
+| `sap_add_gce_storage_client` | Install GCE storage client as part of the stack deploy | `boolean` | true | yes |
+
+## No TF Variables
