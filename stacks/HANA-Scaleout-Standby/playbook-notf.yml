@@ -18,11 +18,11 @@
   vars:
     sap_hana_backint_install: '{{ sap_hana_backint_bucket_name | default("") != "" }}'
     sap_hana_backint_bucket_name: '{{ sap_hana_backint_bucket_name | default("") }}'
-    sap_hana_worker_disks_list: '{{ terraform.outputs.worker_attached_disks_data.value }}'
-    sap_hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
-    sap_hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
-    sap_hana_shared_fs_mount_point: '{{ terraform.outputs.hana_filestore_shared.value }}'
-    sap_hana_backup_fs_mount_point: '{{ terraform.outputs.hana_filestore_backup.value }}'
+    sap_hana_worker_disks_list: '{{ sap_hana_worker_disks_list }}'
+    sap_hana_data_size: '{{ sap_hana_data_size }}G'
+    sap_hana_log_size: '{{ sap_hana_log_size }}G'
+    sap_hana_shared_fs_mount_point: '{{ sap_hana_shared_fs_mount_point }}'
+    sap_hana_backup_fs_mount_point: '{{ sap_hana_backup_fs_mount_point }}'
     sap_add_gce_storage_client: true
   roles:
   - role: sap-hana-scaleout-standby

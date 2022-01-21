@@ -18,8 +18,6 @@ One HANA master machine is required.
 
 One or more HANA worker machines are required.
 
-One standy HANA worker machine is required
-
 #### HANA Master Disks
 
 Two disks must be created and attached to the machine.

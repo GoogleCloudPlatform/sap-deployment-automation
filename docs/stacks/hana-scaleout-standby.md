@@ -18,6 +18,8 @@ One HANA master machine is required.
 
 One or more HANA worker machines are required.
 
+One standy HANA worker machine is required
+
 #### HANA Master Disks
 
 One disk must be created and attached to the machine.
@@ -85,6 +87,7 @@ The following variables are only used when Terraform and Ansible are run togethe
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| `sap_hana_instance_name` | The name of the HANA instance. | `string` | n/a | yes |
 | `sap_hana_instance_type` | The GCE instance type for HANA. Must be one of `n1-highmem-32`, `n1-highmem-64`, `n1-highmem-96`, `n2-highmem-32`, `n2-highmem-48`, `n2-highmem-64`, `n2-highmem-80`, `m1-megamem-96`, `m1-ultramem-40`, `m1-ultramem-80`, `m1-ultramem-160`, `m2-ultramem-208`, or `m2-ultramem-416`. | `string` | `n1-highmem-32` | no |
 | `sap_hana_service_account_name` | The name of the service account assigned to HANA instances. This should not be a full service account email, just the name before the `@` symbol. | `string` | `sap-common-sa` | no |
 | `sap_project_id` | The project ID where instances are located. | `string` | n/a | yes |
@@ -110,7 +113,6 @@ The following variables are used with and without Terraform.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| `sap_hana_instance_name` | The name of the HANA instance. | `string` | n/a | yes |
 | `sap_hana_instance_number` | Instance number for HANA. This is a two digit number that must be in quotes, or Ansible will convert it into single digits, for example `00` without surrounding quotes gets converted to the number `0`. | `string` | `00` | no |
 | `sap_hana_install_files_bucket` | Bucket where HANA installation files are located. | `string` | n/a | yes |
 | `sap_hana_password` | The password for HANA. | `string` | n/a | yes |
@@ -122,3 +124,5 @@ The following variables are used with and without Terraform.
 | `sap_hana_log_size` | The size of the `log` volume's filesystem in [LVM format](https://docs.ansible.com/ansible/latest/collections/community/general/lvol_module.html#parameter-size). See the [GCP SAP HANA planning guide](https://cloud.google.com/solutions/sap/docs/sap-hana-planning-guide#persistent_disk_size_requirements_for_scale-out_systems) for partition sizing. | `string` | n/a | yes, if terraform is not used |
 | `sap_hana_shared_fs_mount_point` | The filestore instance mountpoint of the `shared` volume's filesystem in [LVM format](https://docs.ansible.com/ansible/latest/collections/community/general/lvol_module.html#parameter-size). See the [GCP SAP HANA planning guide](https://cloud.google.com/solutions/sap/docs/sap-hana-planning-guide#persistent_disk_size_requirements_for_scale-out_systems) for partition sizing. | `string` | n/a | yes, if terraform is not used |
 | `sap_add_gce_storage_client` | Install GCE storage client as part of the stack deploy | `boolean` | true | yes |
+
+## No TF Variables
