@@ -56,10 +56,10 @@ INI format:
 # must be in uppercase or Ansible will convert them to strings.
 
 [hana]
-abchana
-abchanaw01
-abchanaw02
-abchanas01
+abchana sap_hana_is_master=True
+abchanaw01 sap_hana_is_worker=True
+abchanaw02 sap_hana_is_worker=True
+abchanas01 sap_hana_is_standby=True
 ```
 
 YAML format:
@@ -70,9 +70,13 @@ all:
     hana:
       hosts:
         abchana:
+          sap_hana_is_master: true
         abchanaw01:
+          sap_hana_is_worker: true
         abchanaw02:
+          sap_hana_is_worker: true
         abchanas01:
+          sap_hana_is_standby: true
 ```
 
 ## Install Media
