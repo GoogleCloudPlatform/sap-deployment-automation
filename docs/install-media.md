@@ -139,3 +139,16 @@ BW4HANA/20/Kernel_Files/igshelper_17-10010245.sar
 ```
 
 `BW4HANA/20/SWPM2.0` - The SWPM 2.0 SAR file should be extracted and placed under this prefix. The `LABEL.ASC` and other files will be in this directory.
+
+### Web Dispatcher
+
+The Web Dispatcher install media must be placed into `sap_wd_install_files_bucket` with the following directory structure:
+
+`WebDispatcher/750/WEBDISP` - The SAP host agent SAR file and SAPWEBDISP SAR file should be placed here. The contents of the directory should look similar to the following:
+
+```
+WebDispatcher/750/WEBDISP/SAPHOSTAGENT51_51-20009394.SAR
+WebDispatcher/750/WEBDISP/SAPWEBDISP_SP_341-80004425.SAR
+```
+
+`WebDispatcher/750/SWPM2.0` - The SWPM 2.0 SAR file should be extracted and placed under this prefix. The `LABEL.ASC` and other files will be in this directory.
