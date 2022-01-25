@@ -40,6 +40,8 @@ The provided Ansible can be used in two different ways: the first is to run Terr
 
   * [NetWeaver-Standard](./stacks/netweaver-standard.md)
 
+  * [WebDisp](./stacks/web-dispatcher.md)
+
 # Quickstart
 
 The fastest way to start is to use Ansible and Terraform together to build a full stack.
