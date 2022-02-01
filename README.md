@@ -8,6 +8,8 @@ The provided Ansible can be used in two different ways: the first is to run Terr
 
 # Table of Contents
 
+* [Prerequisites](#prerequisites)
+
 * [Quickstart](#quickstart)
 
 * [Repository Structure](#repository-structure)
@@ -42,6 +44,34 @@ The provided Ansible can be used in two different ways: the first is to run Terr
 
   * [WebDisp](./docs/stacks/web-dispatcher.md)
 
+# Prerequisites
+
+## Installation Media
+
+[SAP installation media](./docs/install-media.md) must be stored in a bucket according to the provided instructions.
+
+## Cloud NAT
+
+Machines need outbound internet access to download packages and register for licensing. Typically this is done by creating a [Cloud Nat](https://cloud.google.com/nat/docs/overview) instance in each region where machines are located.
+
+Note, although it is possible to deploy SAP without outbound internet access, it requires additional work and the creation of custom [images](https://cloud.google.com/compute/docs/images).
+
+## Service Account
+
+A service account must be created with credentials that enable downloading files from the storage bucket where installation media is located. Machines that are clustered with [Pacemaker](https://wiki.clusterlabs.org/wiki/Pacemaker) also need credentials to access compute APIs for [STONITH](https://clusterlabs.org/pacemaker/doc/crm_fencing.html) to work. Clustered machines include HANA HA primary and secondary, ASCS, and ERS.
+
+The name of the service account must be passed as a variable and it is attached to the machines automatically when they are created.
+
+## Firewall
+
+The firewall must enable traffic between machines and load balancers as required. For example, PAS and AAS machines need access to the HANA load balancer if you are running HA, or to the HANA machine directly if not running HA. Clustered machines will need access to each other for pacemaker to work.
+
+The firewall rules need to be created beforehand, but can be controlled using tags that are configurable through the variables `sap_hana_network_tags` and `sap_nw_network_tags`. Machines will be created with the tags defined in these variables.
+
+## SAP-Prerequisites Stack
+
+To enable getting started quickly, a stack `SAP-Prerequisites` is provided that creates a service account `sap-common-sa` and open firewall rules for machines tagged `sap-allow-all`. The other stacks in this repository default to using that service account and network tag. The playbook in the `SAP-Prerequisites` stack only needs to be run one time before building any other stack.
+
 # Quickstart
 
 The fastest way to start is to use Ansible and Terraform together to build a full stack.
@@ -55,6 +85,8 @@ The fastest way to start is to use Ansible and Terraform together to build a ful
 ```
 ./ansible-wrapper stacks/NetWeaver-HA/playbook.yml -e @vars.yml
 ```
+
+See [Running Playbooks](./docs/running-playbooks.md) for more details on running playbooks.
 
 # Repository Structure
 
