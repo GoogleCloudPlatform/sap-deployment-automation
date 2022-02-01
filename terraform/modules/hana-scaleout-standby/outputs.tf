@@ -37,6 +37,13 @@ output "worker_instance_names" {
   ]
 }
 
+output "standby_instance_name" {
+  value = (
+    length(module.sap_hana_instance_standby.instances_self_links) == 0 ? "" :
+    split("/", module.sap_hana_instance_standby.instances_self_links[0])[10]
+    )
+}
+
 output "address_master" {
   value = google_compute_address.gcp_sap_hana_intip_master.*.address
 }

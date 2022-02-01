@@ -12,18 +12,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: SAP HANA scaleout master and worker configure
+- name: SAP HANA configure
   hosts: hana
   become: true
   roles:
-  - include_role:
-      name: sap-hana-scaleout-standby
+  - role: sap-hana-scaleout-standby
+  tags: [hana]
 
-- name: Run assertions
-  hosts: hana
+- name: SAP NetWeaver configure
+  hosts: nw
   become: true
+  roles:
+  - role: nw-standard
+    vars:
+      sap_hana_virtual_host: '{{ sap_hana_instance_name }}'
+  tags: [nw]
+
+- name: Run assertions on HANA
+  hosts: hana
+  become: yes
   tasks:
   - include_role:
       name: sap-hana-scaleout-standby
       tasks_from: assertions
-  tags: [assertions]
+  tags: [hana, assertions]
+
+- name: Run assertions on application server
+  hosts: nw
+  become: yes
+  tasks:
+  - include_role:
+      name: nw-standard
+      tasks_from: assertions
+  tags: [nw, assertions]
