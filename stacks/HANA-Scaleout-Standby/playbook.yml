@@ -55,7 +55,6 @@
     sap_hana_usr_size: '{{ terraform.outputs.hana_usr_size.value }}G'
     sap_hana_shared_fs_mount_point: '{{ terraform.outputs.hana_filestore_shared.value }}'
     sap_hana_backup_fs_mount_point: '{{ terraform.outputs.hana_filestore_backup.value }}'
-    sap_add_gce_storage_client: true
   roles:
   - role: sap-hana-scaleout-standby
 
@@ -66,4 +65,8 @@
   - include_role:
       name: sap-hana-scaleout-standby
       tasks_from: assertions
+    vars:
+      sap_hana_master_instance_name: '{{ terraform.outputs.master_instance_name.value }}'
+      sap_hana_worker_node_names: '{{ terraform.outputs.worker_instance_names.value }}'
+      sap_hana_standby_instance_name: '{{ terraform.outputs.standby_instance_name.value }}'
   tags: [assertions]

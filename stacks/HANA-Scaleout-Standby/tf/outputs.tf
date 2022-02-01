@@ -32,6 +32,10 @@ output "worker_instance_names" {
   value = module.hana_scaleout.worker_instance_names
 }
 
+output "standby_instance_name" {
+  value = module.gcp_hana.standby_instance_name
+}
+
 output "address_master" {
   value = module.hana_scaleout.address_master
 }
