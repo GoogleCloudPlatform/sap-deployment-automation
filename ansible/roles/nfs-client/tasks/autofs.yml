@@ -29,6 +29,7 @@
     line: '\1'
   notify:
   - ensure autofs is started and enabled on boot
+  - trigger automounts
 
 - name: add sap.autofs to auto.master.d
   template:
@@ -39,6 +40,7 @@
     mode: '0644'
   notify:
   - ensure autofs is started and enabled on boot
+  - trigger automounts
 
 - name: configure autofs auto.sap
   template:
@@ -49,6 +51,7 @@
     mode: '0644'
   notify:
   - ensure autofs is started and enabled on boot
+  - trigger automounts
 
 - meta: flush_handlers
 
