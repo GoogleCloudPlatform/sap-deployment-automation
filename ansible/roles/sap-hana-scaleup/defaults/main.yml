@@ -43,6 +43,7 @@ sap_hana_sid: BG1
 sap_hana_user: '{{ sap_hana_sid | lower }}adm'
 sap_sapsys_gid: 2626
 sap_hana_system_uid: 2525
+sap_hana_instance_name: '{{ ansible_hostname }}'
 sap_hana_instance_number: "00"
 sap_preconfigure_modify_etc_hosts: true
 sap_domain: automation.local

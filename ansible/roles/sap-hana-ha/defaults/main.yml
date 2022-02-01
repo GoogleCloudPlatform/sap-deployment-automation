@@ -100,6 +100,7 @@ sap_hana_cluster_user_password: '{{ sap_hana_password }}'
 sap_hana_hsr_operation_mode: logreplay
 sap_hana_hsr_replication_mode: syncmem
 sap_hana_fast_restart: false
+sap_hana_health_check_port: 60000
 
 # Backint install vars
 sap_hana_backint_bucket_name: ''
