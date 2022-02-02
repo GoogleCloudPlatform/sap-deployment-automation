@@ -27,8 +27,7 @@
     regex: '^\s*#\s*([+]dir:/etc/auto.master.d)'
     backrefs: true
     line: '\1'
-  notify:
-  - ensure autofs is started and enabled on boot
+  register: ensure_autofs_includes
 
 - name: add sap.autofs to auto.master.d
   template:
@@ -37,8 +36,7 @@
     owner: root
     group: root
     mode: '0644'
-  notify:
-  - ensure autofs is started and enabled on boot
+  register: add_sap_autofs
 
 - name: configure autofs auto.sap
   template:
@@ -47,10 +45,27 @@
     owner: root
     group: root
     mode: '0644'
-  notify:
-  - ensure autofs is started and enabled on boot
+  register: configure_autofs_auto_sap
 
 - meta: flush_handlers
+
+- name: ensure autofs is started and enabled on boot
+  systemd:
+    name: autofs
+    enabled: true
+    state: restarted
+  when: >-
+    ensure_autofs_includes is changed or
+    add_sap_autofs is changed or
+    configure_autofs_auto_sap is changed
+
+- name: trigger automounts
+  command: ls {{ item.mountpoint }}
+  loop: '{{ nfs_client_mounts }}'
+  when: >-
+    ensure_autofs_includes is changed or
+    add_sap_autofs is changed or
+    configure_autofs_auto_sap is changed
 
 - name: ensure permissions are correct on nfs mount points
   file:
