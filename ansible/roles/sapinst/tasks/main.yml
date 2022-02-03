@@ -22,7 +22,7 @@
 - name: expand inifile.params
   template:
     src: '{{ sap_sapinst_template }}.j2'
-    dest: /usr/sap/{{ sap_sapinst_template }}
+    dest: /usr/sap/{{ sap_sapinst_template | basename }}
     mode: '0600'
     owner: root
     group: root
