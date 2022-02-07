@@ -51,6 +51,14 @@
     name: sapinst
     gid: '{{ sap_sapinst_gid }}'
 
+- name: ensure swpm directory exists
+  stat:
+    path: '{{ sap_sapinst_swpm_path }}'
+  register: sap_sapinst_swpm_directory_stat
+  failed_when: >-
+    not sap_sapinst_swpm_directory_stat.stat.exists or
+    (sap_sapinst_swpm_directory_stat.stat.isdir is defined and not sap_sapinst_swpm_directory_stat.stat.isdir)
+
 - name: run sapinst for product id {{ sap_product_id }}
   command: >-
     ./sapinst
