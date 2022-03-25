@@ -3,6 +3,10 @@ ssh-key
 ssh-key.pub
 terraform.tfstate
 terraform.tfstate.backup
+.terraform.lock.hcl
 .cache/
 .terraform/
+test/integration/tmp
 venv/
+.idea/
+credentials.json
