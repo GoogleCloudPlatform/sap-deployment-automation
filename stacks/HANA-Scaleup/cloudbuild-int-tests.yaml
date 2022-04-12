@@ -1,0 +1,736 @@
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+timeout: 7200s
+steps:
+
+- id: "20SPS03-rhel-7-6-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-0"
+  volumes:
+    - name: 'hana-scaleup-0'
+      path: '/hana-scaleup-0'
+- id: "20SPS03-rhel-7-6-sap-ha - deploy"
+  waitFor: ['20SPS03-rhel-7-6-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS03'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS03'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-7-6-sap-ha'
+    - 'SAP_TEST_ID=20SPS03-rhel-7-6-sap-ha'
+    - 'SAP_REGION=us-central1'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-0/'
+  volumes:
+    - name: 'hana-scaleup-0'
+      path: '/hana-scaleup-0'
+
+- id: "20SPS03-rhel-7-7-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-1"
+  volumes:
+    - name: 'hana-scaleup-1'
+      path: '/hana-scaleup-1'
+- id: "20SPS03-rhel-7-7-sap-ha - deploy"
+  waitFor: ['20SPS03-rhel-7-7-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS03'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS03'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-7-7-sap-ha'
+    - 'SAP_TEST_ID=20SPS03-rhel-7-7-sap-ha'
+    - 'SAP_REGION=europe-west1'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-1/'
+  volumes:
+    - name: 'hana-scaleup-1'
+      path: '/hana-scaleup-1'
+
+- id: "20SPS03-sles-12-sp4-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-2"
+  volumes:
+    - name: 'hana-scaleup-2'
+      path: '/hana-scaleup-2'
+- id: "20SPS03-sles-12-sp4-sap - deploy"
+  waitFor: ['20SPS03-sles-12-sp4-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS03'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS03'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-12-sp4-sap'
+    - 'SAP_TEST_ID=20SPS03-sles-12-sp4-sap'
+    - 'SAP_REGION=us-west1'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-2/'
+  volumes:
+    - name: 'hana-scaleup-2'
+      path: '/hana-scaleup-2'
+
+- id: "20SPS03-sles-12-sp5-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-3"
+  volumes:
+    - name: 'hana-scaleup-3'
+      path: '/hana-scaleup-3'
+- id: "20SPS03-sles-12-sp5-sap - deploy"
+  waitFor: ['20SPS03-sles-12-sp5-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS03'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS03'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-12-sp5-sap'
+    - 'SAP_TEST_ID=20SPS03-sles-12-sp5-sap'
+    - 'SAP_REGION=us-east1'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-3/'
+  volumes:
+    - name: 'hana-scaleup-3'
+      path: '/hana-scaleup-3'
+
+- id: "20SPS03-sles-15-sp1-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-4"
+  volumes:
+    - name: 'hana-scaleup-4'
+      path: '/hana-scaleup-4'
+- id: "20SPS03-sles-15-sp1-sap - deploy"
+  waitFor: ['20SPS03-sles-15-sp1-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS03'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS03'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-15-sp1-sap'
+    - 'SAP_TEST_ID=20SPS03-sles-15-sp1-sap'
+    - 'SAP_REGION=us-east4'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-4/'
+  volumes:
+    - name: 'hana-scaleup-4'
+      path: '/hana-scaleup-4'
+
+- id: "20SPS03-sles-15-sp3-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-5"
+  volumes:
+    - name: 'hana-scaleup-5'
+      path: '/hana-scaleup-5'
+- id: "20SPS03-sles-15-sp3-sap - deploy"
+  waitFor: ['20SPS03-sles-15-sp3-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS03'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS03'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-15-sp3-sap'
+    - 'SAP_TEST_ID=20SPS03-sles-15-sp3-sap'
+    - 'SAP_REGION=us-west3'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-5/'
+  volumes:
+    - name: 'hana-scaleup-5'
+      path: '/hana-scaleup-5'
+
+- id: "20SPS04-rhel-7-6-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-6"
+  volumes:
+    - name: 'hana-scaleup-6'
+      path: '/hana-scaleup-6'
+- id: "20SPS04-rhel-7-6-sap-ha - deploy"
+  waitFor: ['20SPS04-rhel-7-6-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS04'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS04'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-7-6-sap-ha'
+    - 'SAP_TEST_ID=20SPS04-rhel-7-6-sap-ha'
+    - 'SAP_REGION=us-west3'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-6/'
+  volumes:
+    - name: 'hana-scaleup-6'
+      path: '/hana-scaleup-6'
+
+- id: "20SPS04-rhel-7-7-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-7"
+  volumes:
+    - name: 'hana-scaleup-7'
+      path: '/hana-scaleup-7'
+- id: "20SPS04-rhel-7-7-sap-ha - deploy"
+  waitFor: ['20SPS04-rhel-7-7-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS04'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS04'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-7-7-sap-ha'
+    - 'SAP_TEST_ID=20SPS04-rhel-7-7-sap-ha'
+    - 'SAP_REGION=us-west4'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-7/'
+  volumes:
+    - name: 'hana-scaleup-7'
+      path: '/hana-scaleup-7'
+
+- id: "20SPS04-sles-12-sp4-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-8"
+  volumes:
+    - name: 'hana-scaleup-8'
+      path: '/hana-scaleup-8'
+- id: "20SPS04-sles-12-sp4-sap - deploy"
+  waitFor: ['20SPS04-sles-12-sp4-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS04'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS04'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-12-sp4-sap'
+    - 'SAP_TEST_ID=20SPS04-sles-12-sp4-sap'
+    - 'SAP_REGION=europe-west2'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-8/'
+  volumes:
+    - name: 'hana-scaleup-8'
+      path: '/hana-scaleup-8'
+
+- id: "20SPS04-sles-12-sp5-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-9"
+  volumes:
+    - name: 'hana-scaleup-9'
+      path: '/hana-scaleup-9'
+- id: "20SPS04-sles-12-sp5-sap - deploy"
+  waitFor: ['20SPS04-sles-12-sp5-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS04'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS04'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-12-sp5-sap'
+    - 'SAP_TEST_ID=20SPS04-sles-12-sp5-sap'
+    - 'SAP_REGION=northamerica-northeast1'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-9/'
+  volumes:
+    - name: 'hana-scaleup-9'
+      path: '/hana-scaleup-9'
+
+- id: "20SPS04-sles-15-sp1-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-10"
+  volumes:
+    - name: 'hana-scaleup-10'
+      path: '/hana-scaleup-10'
+- id: "20SPS04-sles-15-sp1-sap - deploy"
+  waitFor: ['20SPS04-sles-15-sp1-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS04'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS04'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-15-sp1-sap'
+    - 'SAP_TEST_ID=20SPS04-sles-15-sp1-sap'
+    - 'SAP_REGION=us-central1'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-10/'
+  volumes:
+    - name: 'hana-scaleup-10'
+      path: '/hana-scaleup-10'
+
+- id: "20SPS04-sles-15-sp2-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-11"
+  volumes:
+    - name: 'hana-scaleup-11'
+      path: '/hana-scaleup-11'
+- id: "20SPS04-sles-15-sp2-sap - deploy"
+  waitFor: ['20SPS04-sles-15-sp2-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS04'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS04'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-15-sp2-sap'
+    - 'SAP_TEST_ID=20SPS04-sles-15-sp2-sap'
+    - 'SAP_REGION=europe-west1'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-11/'
+  volumes:
+    - name: 'hana-scaleup-11'
+      path: '/hana-scaleup-11'
+
+- id: "20SPS04-sles-15-sp3-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-12"
+  volumes:
+    - name: 'hana-scaleup-12'
+      path: '/hana-scaleup-12'
+- id: "20SPS04-sles-15-sp3-sap - deploy"
+  waitFor: ['20SPS04-sles-15-sp3-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS04'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS04'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-15-sp3-sap'
+    - 'SAP_TEST_ID=20SPS04-sles-15-sp3-sap'
+    - 'SAP_REGION=us-west2'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-12/'
+  volumes:
+    - name: 'hana-scaleup-12'
+      path: '/hana-scaleup-12'
+
+- id: "20SPS05-rhel-7-6-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-13"
+  volumes:
+    - name: 'hana-scaleup-13'
+      path: '/hana-scaleup-13'
+- id: "20SPS05-rhel-7-6-sap-ha - deploy"
+  waitFor: ['20SPS05-rhel-7-6-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS05'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS05'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-7-6-sap-ha'
+    - 'SAP_TEST_ID=20SPS05-rhel-7-6-sap-ha'
+    - 'SAP_REGION=us-west1'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-13/'
+  volumes:
+    - name: 'hana-scaleup-13'
+      path: '/hana-scaleup-13'
+
+- id: "20SPS05-rhel-7-7-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-14"
+  volumes:
+    - name: 'hana-scaleup-14'
+      path: '/hana-scaleup-14'
+- id: "20SPS05-rhel-7-7-sap-ha - deploy"
+  waitFor: ['20SPS05-rhel-7-7-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS05'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS05'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-7-7-sap-ha'
+    - 'SAP_TEST_ID=20SPS05-rhel-7-7-sap-ha'
+    - 'SAP_REGION=us-east1'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-14/'
+  volumes:
+    - name: 'hana-scaleup-14'
+      path: '/hana-scaleup-14'
+
+- id: "20SPS05-rhel-8-1-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-15"
+  volumes:
+    - name: 'hana-scaleup-15'
+      path: '/hana-scaleup-15'
+- id: "20SPS05-rhel-8-1-sap-ha - deploy"
+  waitFor: ['20SPS05-rhel-8-1-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS05'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS05'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-8-1-sap-ha'
+    - 'SAP_TEST_ID=20SPS05-rhel-8-1-sap-ha'
+    - 'SAP_REGION=us-east4'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-15/'
+  volumes:
+    - name: 'hana-scaleup-15'
+      path: '/hana-scaleup-15'
+
+- id: "20SPS05-rhel-8-2-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-16"
+  volumes:
+    - name: 'hana-scaleup-16'
+      path: '/hana-scaleup-16'
+- id: "20SPS05-rhel-8-2-sap-ha - deploy"
+  waitFor: ['20SPS05-rhel-8-2-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS05'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS05'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-8-2-sap-ha'
+    - 'SAP_TEST_ID=20SPS05-rhel-8-2-sap-ha'
+    - 'SAP_REGION=us-west2'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-16/'
+  volumes:
+    - name: 'hana-scaleup-16'
+      path: '/hana-scaleup-16'
+
+- id: "20SPS05-rhel-8-4-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-17"
+  volumes:
+    - name: 'hana-scaleup-17'
+      path: '/hana-scaleup-17'
+- id: "20SPS05-rhel-8-4-sap-ha - deploy"
+  waitFor: ['20SPS05-rhel-8-4-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS05'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS05'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-8-4-sap-ha'
+    - 'SAP_TEST_ID=20SPS05-rhel-8-4-sap-ha'
+    - 'SAP_REGION=us-west3'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-17/'
+  volumes:
+    - name: 'hana-scaleup-17'
+      path: '/hana-scaleup-17'
+
+- id: "20SPS05-sles-12-sp4-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-18"
+  volumes:
+    - name: 'hana-scaleup-18'
+      path: '/hana-scaleup-18'
+- id: "20SPS05-sles-12-sp4-sap - deploy"
+  waitFor: ['20SPS05-sles-12-sp4-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS05'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS05'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-12-sp4-sap'
+    - 'SAP_TEST_ID=20SPS05-sles-12-sp4-sap'
+    - 'SAP_REGION=us-west4'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-18/'
+  volumes:
+    - name: 'hana-scaleup-18'
+      path: '/hana-scaleup-18'
+
+- id: "20SPS05-sles-12-sp5-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-19"
+  volumes:
+    - name: 'hana-scaleup-19'
+      path: '/hana-scaleup-19'
+- id: "20SPS05-sles-12-sp5-sap - deploy"
+  waitFor: ['20SPS05-sles-12-sp5-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS05'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS05'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-12-sp5-sap'
+    - 'SAP_TEST_ID=20SPS05-sles-12-sp5-sap'
+    - 'SAP_REGION=europe-west2'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-19/'
+  volumes:
+    - name: 'hana-scaleup-19'
+      path: '/hana-scaleup-19'
+
+- id: "20SPS05-sles-15-sp1-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-20"
+  volumes:
+    - name: 'hana-scaleup-20'
+      path: '/hana-scaleup-20'
+- id: "20SPS05-sles-15-sp1-sap - deploy"
+  waitFor: ['20SPS05-sles-15-sp1-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS05'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS05'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-15-sp1-sap'
+    - 'SAP_TEST_ID=20SPS05-sles-15-sp1-sap'
+    - 'SAP_REGION=northamerica-northeast1'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-20/'
+  volumes:
+    - name: 'hana-scaleup-20'
+      path: '/hana-scaleup-20'
+
+- id: "20SPS05-sles-15-sp2-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-21"
+  volumes:
+    - name: 'hana-scaleup-21'
+      path: '/hana-scaleup-21'
+- id: "20SPS05-sles-15-sp2-sap - deploy"
+  waitFor: ['20SPS05-sles-15-sp2-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS05'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS05'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-15-sp2-sap'
+    - 'SAP_TEST_ID=20SPS05-sles-15-sp2-sap'
+    - 'SAP_REGION=us-central1'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-21/'
+  volumes:
+    - name: 'hana-scaleup-21'
+      path: '/hana-scaleup-21'
+
+- id: "20SPS05-sles-15-sp3-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-scaleup-22"
+  volumes:
+    - name: 'hana-scaleup-22'
+      path: '/hana-scaleup-22'
+- id: "20SPS05-sles-15-sp3-sap - deploy"
+  waitFor: ['20SPS05-sles-15-sp3-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_20SPS05'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID=20SPS05'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-15-sp3-sap'
+    - 'SAP_TEST_ID=20SPS05-sles-15-sp3-sap'
+    - 'SAP_REGION=europe-west1'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-Scaleup/playbook.yml
+    - stacks/HANA-Scaleup/vars/deploy-vars-cloud-build.yml
+  dir: '/hana-scaleup-22/'
+  volumes:
+    - name: 'hana-scaleup-22'
+      path: '/hana-scaleup-22'
+
+substitutions:
+  _DOCKER_IMAGE_DEVELOPER_TOOLS: 'cicd/developer-tools'
+  _DOCKER_TAG_VERSION_DEVELOPER_TOOLS: '0.3'
+options:
+  env:
+    - 'TOTAL_TESTS=23'
+  machineType: 'N1_HIGHCPU_32'

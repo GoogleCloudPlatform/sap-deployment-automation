@@ -1,0 +1,118 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Bastion Variables
+sap_bastion_subnetwork: hana-ha
+sap_bastion_zone: "{{ lookup('env', 'SAP_REGION') }}-b"
+sap_bastion_subnetwork_project_id: "{{ lookup('env', 'SAP_PROJECT_ID') }}"
+sap_bastion_network: hana-ha
+sap_bastion_bucket_prefix: "{{ lookup('env', 'SAP_TEST_ID') }}-bastion"
+sap_test_setup_nfs: true
+
+# Required variables
+sap_state: "{{ lookup('env', 'SAP_STATE') }}"
+sap_nw_product_version: "{{ lookup('env', 'SAP_NW_VERSION') }}"
+sap_nw_product: "{{ lookup('env', 'SAP_NW_PRODUCT') }}"
+sap_hana_product_version: "{{ lookup('env', 'SAP_HANA_PRODUCT_ID') }}"
+sap_ssh_priv_key: "/root/.ssh/id_rsa"
+sap_ssh_pub_key: "/root/.ssh/id_rsa.pub"
+# Terraform state bucket.
+sap_tf_state_bucket: "{{ lookup('env', 'SAP_PROJECT_ID') }}-tf-state"
+sap_tf_state_bucket_prefix: "{{ lookup('env', 'SAP_TEST_ID') }}"
+
+# Names for machine instances.
+sap_hana_instance_name: "{{ lookup('env', 'SAP_TEST_ID') | lower }}"
+sap_ascs_instance_name:  "ascs-{{ lookup('env', 'SAP_COUNTER') | lower }}"
+sap_ers_instance_name: "ers-{{ lookup('env', 'SAP_COUNTER') | lower }}"
+sap_pas_instance_name: "pas-{{ lookup('env', 'SAP_COUNTER') | lower }}"
+
+# Name given to HANA, ASCS, and ERS VIPs.
+sap_hana_virtual_host: "v-{{ lookup('env', 'SAP_TEST_ID') | lower }}"
+sap_nw_ascs_virtual_host: "v-ascs-{{ lookup('env', 'SAP_COUNTER') | lower }}"
+sap_nw_ers_virtual_host: "v-ers-{{ lookup('env', 'SAP_COUNTER') | lower }}"
+
+# Bucket containing installation files for HANA.
+sap_hana_install_files_bucket: "{{ lookup('env', 'SAP_PROJECT_ID') }}-media-bucket"
+
+# Bucket containing installation files for NetWeaver.
+sap_nw_install_files_bucket: "{{ lookup('env', 'SAP_PROJECT_ID') }}-media-bucket"
+
+# Project where resources are created.
+sap_project_id: "{{ lookup('env', 'SAP_PROJECT_ID') }}"
+
+# Subnetwork for nw network interfaces.
+sap_nw_subnetwork: hana-ha
+
+# Subnetwork for hana network interfaces.
+sap_hana_subnetwork: hana-ha
+
+# Password for HANA.
+sap_hana_password: Google123
+# Password for NetWeaver.
+sap_nw_password: Google123
+
+# Service account names for HANA and NetWeaver instances.
+sap_hana_service_account_name: sap-sa-test
+sap_nw_service_account_name: sap-sa-test
+
+# For NFS, define one of sap_nw_nfs_src or sap_nw_nfsvols, not both.
+#
+# NFS using one server, for example when using Cloud FileStore.
+sap_nw_nfs_src: "{{ lookup('file', lookup('ansible.builtin.vars', 'playbook_dir') + '/../../.filestore-nfs') }}"
+
+#
+# Multiple NFS servers may be used if sap_nw_nfsvols is set, for use with
+# NetApp Cloud Volumes or to give more control over mounts.
+# sap_nw_nfsvols:
+#   10.10.10.10:/sapmnt: /sapmnt
+#   10.10.10.11:/trans: /usr/sap/trans
+#   10.10.10.12:/ascs: /usr/sap/{{ sap_nw_sid }}/ASCS{{ sap_nw_ascs_instance_number }}
+#   10.10.10.13:/ers: /usr/sap/{{ sap_nw_sid }}/ERS{{ sap_nw_ers_instance_number }}
+
+# Optional variables.
+
+sap_source_image_family: "{{ lookup('env', 'SAP_IMAGE_FAMILY') }}"
+sap_source_image_project: "{{ lookup('env', 'SAP_IMAGE_PROJECT') }}"
+
+# Zone for HANA primary, ASCS, and PAS.
+sap_primary_zone: "{{ lookup('env', 'SAP_PRIMARY_ZONE') }}"
+# Zone for HANA secondary and ERS.
+sap_secondary_zone: "{{ lookup('env', 'SAP_SECONDARY_ZONE') }}"
+
+# Delete boot disks automatically.
+sap_hana_autodelete_boot_disk: 'true'
+sap_nw_autodelete_boot_disk: 'true'
+
+# sap_hana_instance_type: n1-highmem-32
+sap_nw_instance_type: e2-medium
+
+# Bucket prefix for files in sap_nw_install_files_bucket.
+# sap_nw_install_files_bucket_prefix: nw75/Software
+
+# Create source directories on NFS server, only if sap_nw_nfs_src is set.
+# sap_nw_create_nfs_source_dirs: true
+
+# SIDs for HANA and NetWeaver.
+sap_hana_sid: "SL1"
+sap_nw_sid: "SL6"
+
+# Instance numbers for HANA and NetWeaver. Note that these must be quoted strings.
+sap_hana_instance_number: '00'
+sap_nw_ascs_instance_number: '06'
+sap_nw_ers_instance_number: '16'
+
+# Define sap_subnetwork_project_id if using a shared VPC.
+# sap_subnetwork_project_id:
+sap_hana_backint_install: false
+sap_hana_additional_disk_type: pd-ssd

@@ -1,0 +1,851 @@
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+timeout: 10800s
+steps:
+- id: "NetWeaver750-20SPS03-rhel-7-6-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-1"
+  volumes:
+    - name: 'nw-ha-1'
+      path: '/nw-ha-1'
+- id: "NetWeaver750-20SPS03-rhel-7-6-sap-ha - deploy"
+  waitFor: ['NetWeaver750-20SPS03-rhel-7-6-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS03'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS03'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-7-6-sap-ha'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS03-rhel-7-6-sap-ha'
+    - 'SAP_REGION=us-central1'
+    - 'SAP_PRIMARY_ZONE=us-central1-b'
+    - 'SAP_SECONDARY_ZONE=us-central1-c'
+    - 'SAP_COUNTER=1'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-1/'
+  volumes:
+    - name: 'nw-ha-1'
+      path: '/nw-ha-1'
+- id: "NetWeaver750-20SPS03-rhel-7-7-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-2"
+  volumes:
+    - name: 'nw-ha-2'
+      path: '/nw-ha-2'
+- id: "NetWeaver750-20SPS03-rhel-7-7-sap-ha - deploy"
+  waitFor: ['NetWeaver750-20SPS03-rhel-7-7-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS03'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS03'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-7-7-sap-ha'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS03-rhel-7-7-sap-ha'
+    - 'SAP_REGION=europe-west1'
+    - 'SAP_PRIMARY_ZONE=europe-west1-b'
+    - 'SAP_SECONDARY_ZONE=europe-west1-c'
+    - 'SAP_COUNTER=2'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-2/'
+  volumes:
+    - name: 'nw-ha-2'
+      path: '/nw-ha-2'
+- id: "NetWeaver750-20SPS03-sles-12-sp4-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-3"
+  volumes:
+    - name: 'nw-ha-3'
+      path: '/nw-ha-3'
+- id: "NetWeaver750-20SPS03-sles-12-sp4-sap - deploy"
+  waitFor: ['NetWeaver750-20SPS03-sles-12-sp4-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS03'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS03'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-12-sp4-sap'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS03-sles-12-sp4-sap'
+    - 'SAP_REGION=us-west1'
+    - 'SAP_PRIMARY_ZONE=us-west1-b'
+    - 'SAP_SECONDARY_ZONE=us-west1-c'
+    - 'SAP_COUNTER=3'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-3/'
+  volumes:
+    - name: 'nw-ha-3'
+      path: '/nw-ha-3'
+- id: "NetWeaver750-20SPS03-sles-12-sp5-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-4"
+  volumes:
+    - name: 'nw-ha-4'
+      path: '/nw-ha-4'
+- id: "NetWeaver750-20SPS03-sles-12-sp5-sap - deploy"
+  waitFor: ['NetWeaver750-20SPS03-sles-12-sp5-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS03'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS03'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-12-sp5-sap'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS03-sles-12-sp5-sap'
+    - 'SAP_REGION=us-east1'
+    - 'SAP_PRIMARY_ZONE=us-east1-b'
+    - 'SAP_SECONDARY_ZONE=us-east1-c'
+    - 'SAP_COUNTER=4'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-4/'
+  volumes:
+    - name: 'nw-ha-4'
+      path: '/nw-ha-4'
+- id: "NetWeaver750-20SPS03-sles-15-sp1-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-5"
+  volumes:
+    - name: 'nw-ha-5'
+      path: '/nw-ha-5'
+- id: "NetWeaver750-20SPS03-sles-15-sp1-sap - deploy"
+  waitFor: ['NetWeaver750-20SPS03-sles-15-sp1-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS03'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS03'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-15-sp1-sap'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS03-sles-15-sp1-sap'
+    - 'SAP_REGION=us-east4'
+    - 'SAP_PRIMARY_ZONE=us-east4-b'
+    - 'SAP_SECONDARY_ZONE=us-east4-c'
+    - 'SAP_COUNTER=5'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-5/'
+  volumes:
+    - name: 'nw-ha-5'
+      path: '/nw-ha-5'
+- id: "NetWeaver750-20SPS03-sles-15-sp3-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-6"
+  volumes:
+    - name: 'nw-ha-6'
+      path: '/nw-ha-6'
+- id: "NetWeaver750-20SPS03-sles-15-sp3-sap - deploy"
+  waitFor: ['NetWeaver750-20SPS03-sles-15-sp3-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS03'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS03'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-15-sp3-sap'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS03-sles-15-sp3-sap'
+    - 'SAP_REGION=us-west3'
+    - 'SAP_PRIMARY_ZONE=us-west3-b'
+    - 'SAP_SECONDARY_ZONE=us-west3-c'
+    - 'SAP_COUNTER=6'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-6/'
+  volumes:
+    - name: 'nw-ha-6'
+      path: '/nw-ha-6'
+- id: "NetWeaver750-20SPS04-rhel-7-6-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-7"
+  volumes:
+    - name: 'nw-ha-7'
+      path: '/nw-ha-7'
+- id: "NetWeaver750-20SPS04-rhel-7-6-sap-ha - deploy"
+  waitFor: ['NetWeaver750-20SPS04-rhel-7-6-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS04'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS04'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-7-6-sap-ha'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS04-rhel-7-6-sap-ha'
+    - 'SAP_REGION=us-west3'
+    - 'SAP_PRIMARY_ZONE=us-west3-b'
+    - 'SAP_SECONDARY_ZONE=us-west3-c'
+    - 'SAP_COUNTER=7'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-7/'
+  volumes:
+    - name: 'nw-ha-7'
+      path: '/nw-ha-7'
+- id: "NetWeaver750-20SPS04-rhel-7-7-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-8"
+  volumes:
+    - name: 'nw-ha-8'
+      path: '/nw-ha-8'
+- id: "NetWeaver750-20SPS04-rhel-7-7-sap-ha - deploy"
+  waitFor: ['NetWeaver750-20SPS04-rhel-7-7-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS04'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS04'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-7-7-sap-ha'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS04-rhel-7-7-sap-ha'
+    - 'SAP_REGION=northamerica-northeast2'
+    - 'SAP_PRIMARY_ZONE=northamerica-northeast2-b'
+    - 'SAP_SECONDARY_ZONE=northamerica-northeast2-c'
+    - 'SAP_COUNTER=8'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-8/'
+  volumes:
+    - name: 'nw-ha-8'
+      path: '/nw-ha-8'
+- id: "NetWeaver750-20SPS04-sles-12-sp4-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-9"
+  volumes:
+    - name: 'nw-ha-9'
+      path: '/nw-ha-9'
+- id: "NetWeaver750-20SPS04-sles-12-sp4-sap - deploy"
+  waitFor: ['NetWeaver750-20SPS04-sles-12-sp4-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS04'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS04'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-12-sp4-sap'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS04-sles-12-sp4-sap'
+    - 'SAP_REGION=europe-west2'
+    - 'SAP_PRIMARY_ZONE=europe-west2-b'
+    - 'SAP_SECONDARY_ZONE=europe-west2-c'
+    - 'SAP_COUNTER=9'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-9/'
+  volumes:
+    - name: 'nw-ha-9'
+      path: '/nw-ha-9'
+- id: "NetWeaver750-20SPS04-sles-12-sp5-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-10"
+  volumes:
+    - name: 'nw-ha-10'
+      path: '/nw-ha-10'
+- id: "NetWeaver750-20SPS04-sles-12-sp5-sap - deploy"
+  waitFor: ['NetWeaver750-20SPS04-sles-12-sp5-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS04'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS04'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-12-sp5-sap'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS04-sles-12-sp5-sap'
+    - 'SAP_REGION=northamerica-northeast1'
+    - 'SAP_PRIMARY_ZONE=northamerica-northeast1-b'
+    - 'SAP_SECONDARY_ZONE=northamerica-northeast1-c'
+    - 'SAP_COUNTER=10'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-10/'
+  volumes:
+    - name: 'nw-ha-10'
+      path: '/nw-ha-10'
+- id: "NetWeaver750-20SPS04-sles-15-sp1-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-11"
+  volumes:
+    - name: 'nw-ha-11'
+      path: '/nw-ha-11'
+- id: "NetWeaver750-20SPS04-sles-15-sp1-sap - deploy"
+  waitFor: ['NetWeaver750-20SPS04-sles-15-sp1-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS04'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS04'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-15-sp1-sap'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS04-sles-15-sp1-sap'
+    - 'SAP_REGION=us-central1'
+    - 'SAP_PRIMARY_ZONE=us-central1-b'
+    - 'SAP_SECONDARY_ZONE=us-central1-c'
+    - 'SAP_COUNTER=11'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-11/'
+  volumes:
+    - name: 'nw-ha-11'
+      path: '/nw-ha-11'
+- id: "NetWeaver750-20SPS04-sles-15-sp2-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-12"
+  volumes:
+    - name: 'nw-ha-12'
+      path: '/nw-ha-12'
+- id: "NetWeaver750-20SPS04-sles-15-sp2-sap - deploy"
+  waitFor: ['NetWeaver750-20SPS04-sles-15-sp2-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS04'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS04'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-15-sp2-sap'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS04-sles-15-sp2-sap'
+    - 'SAP_REGION=europe-west1'
+    - 'SAP_PRIMARY_ZONE=europe-west1-b'
+    - 'SAP_SECONDARY_ZONE=europe-west1-c'
+    - 'SAP_COUNTER=12'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-12/'
+  volumes:
+    - name: 'nw-ha-12'
+      path: '/nw-ha-12'
+- id: "NetWeaver750-20SPS04-sles-15-sp3-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-13"
+  volumes:
+    - name: 'nw-ha-13'
+      path: '/nw-ha-13'
+- id: "NetWeaver750-20SPS04-sles-15-sp3-sap - deploy"
+  waitFor: ['NetWeaver750-20SPS04-sles-15-sp3-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS04'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS04'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-15-sp3-sap'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS04-sles-15-sp3-sap'
+    - 'SAP_REGION=us-west2'
+    - 'SAP_PRIMARY_ZONE=us-west2-b'
+    - 'SAP_SECONDARY_ZONE=us-west2-c'
+    - 'SAP_COUNTER=13'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-13/'
+  volumes:
+    - name: 'nw-ha-13'
+      path: '/nw-ha-13'
+- id: "NetWeaver750-20SPS05-rhel-7-6-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-14"
+  volumes:
+    - name: 'nw-ha-14'
+      path: '/nw-ha-14'
+- id: "NetWeaver750-20SPS05-rhel-7-6-sap-ha - deploy"
+  waitFor: ['NetWeaver750-20SPS05-rhel-7-6-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS05'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS05'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-7-6-sap-ha'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS05-rhel-7-6-sap-ha'
+    - 'SAP_REGION=us-west1'
+    - 'SAP_PRIMARY_ZONE=us-west1-b'
+    - 'SAP_SECONDARY_ZONE=us-west1-c'
+    - 'SAP_COUNTER=14'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-14/'
+  volumes:
+    - name: 'nw-ha-14'
+      path: '/nw-ha-14'
+- id: "NetWeaver750-20SPS05-rhel-7-7-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-15"
+  volumes:
+    - name: 'nw-ha-15'
+      path: '/nw-ha-15'
+- id: "NetWeaver750-20SPS05-rhel-7-7-sap-ha - deploy"
+  waitFor: ['NetWeaver750-20SPS05-rhel-7-7-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS05'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS05'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-7-7-sap-ha'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS05-rhel-7-7-sap-ha'
+    - 'SAP_REGION=us-east1'
+    - 'SAP_PRIMARY_ZONE=us-east1-b'
+    - 'SAP_SECONDARY_ZONE=us-east1-c'
+    - 'SAP_COUNTER=15'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-15/'
+  volumes:
+    - name: 'nw-ha-15'
+      path: '/nw-ha-15'
+- id: "NetWeaver750-20SPS05-rhel-8-1-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-16"
+  volumes:
+    - name: 'nw-ha-16'
+      path: '/nw-ha-16'
+- id: "NetWeaver750-20SPS05-rhel-8-1-sap-ha - deploy"
+  waitFor: ['NetWeaver750-20SPS05-rhel-8-1-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS05'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS05'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-8-1-sap-ha'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS05-rhel-8-1-sap-ha'
+    - 'SAP_REGION=us-east4'
+    - 'SAP_PRIMARY_ZONE=us-east4-b'
+    - 'SAP_SECONDARY_ZONE=us-east4-c'
+    - 'SAP_COUNTER=16'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-16/'
+  volumes:
+    - name: 'nw-ha-16'
+      path: '/nw-ha-16'
+- id: "NetWeaver750-20SPS05-rhel-8-2-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-17"
+  volumes:
+    - name: 'nw-ha-17'
+      path: '/nw-ha-17'
+- id: "NetWeaver750-20SPS05-rhel-8-2-sap-ha - deploy"
+  waitFor: ['NetWeaver750-20SPS05-rhel-8-2-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS05'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS05'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-8-2-sap-ha'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS05-rhel-8-2-sap-ha'
+    - 'SAP_REGION=us-west2'
+    - 'SAP_PRIMARY_ZONE=us-west2-b'
+    - 'SAP_SECONDARY_ZONE=us-west2-c'
+    - 'SAP_COUNTER=17'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-17/'
+  volumes:
+    - name: 'nw-ha-17'
+      path: '/nw-ha-17'
+- id: "NetWeaver750-20SPS05-rhel-8-4-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-18"
+  volumes:
+    - name: 'nw-ha-18'
+      path: '/nw-ha-18'
+- id: "NetWeaver750-20SPS05-rhel-8-4-sap-ha - deploy"
+  waitFor: ['NetWeaver750-20SPS05-rhel-8-4-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS05'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS05'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-8-4-sap-ha'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS05-rhel-8-4-sap-ha'
+    - 'SAP_REGION=us-west3'
+    - 'SAP_PRIMARY_ZONE=us-west3-b'
+    - 'SAP_SECONDARY_ZONE=us-west3-c'
+    - 'SAP_COUNTER=18'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-18/'
+  volumes:
+    - name: 'nw-ha-18'
+      path: '/nw-ha-18'
+- id: "NetWeaver750-20SPS05-sles-12-sp4-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-19"
+  volumes:
+    - name: 'nw-ha-19'
+      path: '/nw-ha-19'
+- id: "NetWeaver750-20SPS05-sles-12-sp4-sap - deploy"
+  waitFor: ['NetWeaver750-20SPS05-sles-12-sp4-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS05'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS05'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-12-sp4-sap'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS05-sles-12-sp4-sap'
+    - 'SAP_REGION=us-west4'
+    - 'SAP_PRIMARY_ZONE=us-west4-b'
+    - 'SAP_SECONDARY_ZONE=us-west4-c'
+    - 'SAP_COUNTER=19'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-19/'
+  volumes:
+    - name: 'nw-ha-19'
+      path: '/nw-ha-19'
+- id: "NetWeaver750-20SPS05-sles-12-sp5-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-20"
+  volumes:
+    - name: 'nw-ha-20'
+      path: '/nw-ha-20'
+- id: "NetWeaver750-20SPS05-sles-12-sp5-sap - deploy"
+  waitFor: ['NetWeaver750-20SPS05-sles-12-sp5-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS05'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS05'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-12-sp5-sap'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS05-sles-12-sp5-sap'
+    - 'SAP_REGION=europe-west2'
+    - 'SAP_PRIMARY_ZONE=europe-west2-b'
+    - 'SAP_SECONDARY_ZONE=europe-west2-c'
+    - 'SAP_COUNTER=20'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-20/'
+  volumes:
+    - name: 'nw-ha-20'
+      path: '/nw-ha-20'
+- id: "NetWeaver750-20SPS05-sles-15-sp1-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-21"
+  volumes:
+    - name: 'nw-ha-21'
+      path: '/nw-ha-21'
+- id: "NetWeaver750-20SPS05-sles-15-sp1-sap - deploy"
+  waitFor: ['NetWeaver750-20SPS05-sles-15-sp1-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS05'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS05'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-15-sp1-sap'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS05-sles-15-sp1-sap'
+    - 'SAP_REGION=northamerica-northeast1'
+    - 'SAP_PRIMARY_ZONE=northamerica-northeast1-b'
+    - 'SAP_SECONDARY_ZONE=northamerica-northeast1-c'
+    - 'SAP_COUNTER=21'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-21/'
+  volumes:
+    - name: 'nw-ha-21'
+      path: '/nw-ha-21'
+- id: "NetWeaver750-20SPS05-sles-15-sp2-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-22"
+  volumes:
+    - name: 'nw-ha-22'
+      path: '/nw-ha-22'
+- id: "NetWeaver750-20SPS05-sles-15-sp2-sap - deploy"
+  waitFor: ['NetWeaver750-20SPS05-sles-15-sp2-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS05'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS05'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-15-sp2-sap'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS05-sles-15-sp2-sap'
+    - 'SAP_REGION=us-central1'
+    - 'SAP_PRIMARY_ZONE=us-central1-b'
+    - 'SAP_SECONDARY_ZONE=us-central1-c'
+    - 'SAP_COUNTER=22'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-22/'
+  volumes:
+    - name: 'nw-ha-22'
+      path: '/nw-ha-22'
+- id: "NetWeaver750-20SPS05-sles-15-sp3-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-ha-23"
+  volumes:
+    - name: 'nw-ha-23'
+      path: '/nw-ha-23'
+- id: "NetWeaver750-20SPS05-sles-15-sp3-sap - deploy"
+  waitFor: ['NetWeaver750-20SPS05-sles-15-sp3-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_NETWEAVER750_20SPS05'
+    - 'SAP_STATE=present'
+    - 'SAP_HANA_PRODUCT_ID=20SPS05'
+    - 'SAP_NW_PRODUCT=NetWeaver'
+    - 'SAP_NW_VERSION=750'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-15-sp3-sap'
+    - 'SAP_TEST_ID=NetWeaver750-20SPS05-sles-15-sp3-sap'
+    - 'SAP_REGION=europe-west1'
+    - 'SAP_PRIMARY_ZONE=europe-west1-b'
+    - 'SAP_SECONDARY_ZONE=europe-west1-c'
+    - 'SAP_COUNTER=23'
+  args:
+    - ./int-test.sh
+    - stacks/NetWeaver-HA/playbook.yml
+    - stacks/NetWeaver-HA/vars/deploy-vars-cloud-build.yml
+    - "2"
+  dir: '/nw-ha-23/'
+  volumes:
+    - name: 'nw-ha-23'
+      path: '/nw-ha-23'
+
+substitutions:
+  _DOCKER_IMAGE_DEVELOPER_TOOLS: 'cicd/developer-tools'
+  _DOCKER_TAG_VERSION_DEVELOPER_TOOLS: '0.3'
+options:
+  env:
+    - 'TOTAL_TESTS=23'
+  machineType: 'N1_HIGHCPU_32'

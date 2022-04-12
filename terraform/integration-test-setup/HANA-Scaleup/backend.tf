@@ -11,11 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-steps:
-- name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
-  id: "Linting"
-  args:
-    - /usr/local/bin/test_lint.sh
-substitutions:
-  _DOCKER_IMAGE_DEVELOPER_TOOLS: 'cicd/developer-tools'
-  _DOCKER_TAG_VERSION_DEVELOPER_TOOLS: '0.3'
+
+terraform {
+  backend "gcs" {
+    prefix = "integration-test-setup-hana-scaleup"
+  }
+}

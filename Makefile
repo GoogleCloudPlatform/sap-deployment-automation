@@ -18,14 +18,14 @@
 # Make will use bash instead of sh
 SHELL := /usr/bin/env bash
 
-DOCKER_IMAGE_DEVELOPER_TOOLS := sap-gcp-developer-tools
-DOCKER_TAG_VERSION_DEVELOPER_TOOLS := 0.1
+DOCKER_IMAGE_DEVELOPER_TOOLS := us-docker.pkg.dev/sap-iac-cicd/cicd/developer-tools
+DOCKER_TAG_VERSION_DEVELOPER_TOOLS := 0.3
 DOCKER_BIN ?= docker
 
 # Build docker container for local development
 .PHONY: docker_build
 docker_build:
-	$(DOCKER_BIN) build -t ${DOCKER_IMAGE_DEVELOPER_TOOLS}:${DOCKER_TAG_VERSION_DEVELOPER_TOOLS} build/
+	$(DOCKER_BIN) build -t ${DOCKER_IMAGE_DEVELOPER_TOOLS}:${DOCKER_TAG_VERSION_DEVELOPER_TOOLS} -f build/Dockerfile .
 
 # Enter docker container for local development
 .PHONY: docker_run

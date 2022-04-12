@@ -1,0 +1,501 @@
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+timeout: 7200s
+steps:
+
+- id: "10.5FP9-rhel-7-6-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-db2-0"
+  volumes:
+    - name: 'nw-db2-0'
+      path: '/nw-db2-0'
+- id: "10.5FP9-rhel-7-6-sap-ha - forminator cleanup"
+  waitFor: ['10.5FP9-rhel-7-6-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_105FP9'
+    - 'SAP_STATE=absent'
+    - 'SAP_PRODUCT_ID=10.5FP9'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-7-6-sap-ha'
+    - 'SAP_TEST_ID=105FP9-rhel-7-6-sap-ha'
+    - 'SAP_REGION=us-central1'
+    - 'SAP_INSTANCE_NAME=instance-0'
+  args:
+    - ./deploy.sh
+    - stacks/NetWeaver-DB2-Standard/playbook.yml
+    - stacks/NetWeaver-DB2-Standard/vars/deploy-vars-cloud-build.yml
+  dir: '/nw-db2-0/'
+  volumes:
+    - name: 'nw-db2-0'
+      path: '/nw-db2-0'
+
+- id: "10.5FP9-rhel-7-7-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-db2-1"
+  volumes:
+    - name: 'nw-db2-1'
+      path: '/nw-db2-1'
+- id: "10.5FP9-rhel-7-7-sap-ha - forminator cleanup"
+  waitFor: ['10.5FP9-rhel-7-7-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_105FP9'
+    - 'SAP_STATE=absent'
+    - 'SAP_PRODUCT_ID=10.5FP9'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-7-7-sap-ha'
+    - 'SAP_TEST_ID=105FP9-rhel-7-7-sap-ha'
+    - 'SAP_REGION=europe-west1'
+    - 'SAP_INSTANCE_NAME=instance-1'
+  args:
+    - ./deploy.sh
+    - stacks/NetWeaver-DB2-Standard/playbook.yml
+    - stacks/NetWeaver-DB2-Standard/vars/deploy-vars-cloud-build.yml
+  dir: '/nw-db2-1/'
+  volumes:
+    - name: 'nw-db2-1'
+      path: '/nw-db2-1'
+
+- id: "10.5FP9-sles-12-sp4-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-db2-2"
+  volumes:
+    - name: 'nw-db2-2'
+      path: '/nw-db2-2'
+- id: "10.5FP9-sles-12-sp4-sap - forminator cleanup"
+  waitFor: ['10.5FP9-sles-12-sp4-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_105FP9'
+    - 'SAP_STATE=absent'
+    - 'SAP_PRODUCT_ID=10.5FP9'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-12-sp4-sap'
+    - 'SAP_TEST_ID=105FP9-sles-12-sp4-sap'
+    - 'SAP_REGION=us-west1'
+    - 'SAP_INSTANCE_NAME=instance-2'
+  args:
+    - ./deploy.sh
+    - stacks/NetWeaver-DB2-Standard/playbook.yml
+    - stacks/NetWeaver-DB2-Standard/vars/deploy-vars-cloud-build.yml
+  dir: '/nw-db2-2/'
+  volumes:
+    - name: 'nw-db2-2'
+      path: '/nw-db2-2'
+
+- id: "10.5FP9-sles-12-sp5-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-db2-3"
+  volumes:
+    - name: 'nw-db2-3'
+      path: '/nw-db2-3'
+- id: "10.5FP9-sles-12-sp5-sap - forminator cleanup"
+  waitFor: ['10.5FP9-sles-12-sp5-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_105FP9'
+    - 'SAP_STATE=absent'
+    - 'SAP_PRODUCT_ID=10.5FP9'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-12-sp5-sap'
+    - 'SAP_TEST_ID=105FP9-sles-12-sp5-sap'
+    - 'SAP_REGION=us-east1'
+    - 'SAP_INSTANCE_NAME=instance-3'
+  args:
+    - ./deploy.sh
+    - stacks/NetWeaver-DB2-Standard/playbook.yml
+    - stacks/NetWeaver-DB2-Standard/vars/deploy-vars-cloud-build.yml
+  dir: '/nw-db2-3/'
+  volumes:
+    - name: 'nw-db2-3'
+      path: '/nw-db2-3'
+
+- id: "11.1MP4FP6-rhel-7-6-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-db2-4"
+  volumes:
+    - name: 'nw-db2-4'
+      path: '/nw-db2-4'
+- id: "11.1MP4FP6-rhel-7-6-sap-ha - forminator cleanup"
+  waitFor: ['11.1MP4FP6-rhel-7-6-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_111MP4FP6'
+    - 'SAP_STATE=absent'
+    - 'SAP_PRODUCT_ID=11.1MP4FP6'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-7-6-sap-ha'
+    - 'SAP_TEST_ID=111MP4FP6-rhel-7-6-sap-ha'
+    - 'SAP_REGION=us-west3'
+    - 'SAP_INSTANCE_NAME=instance-4'
+  args:
+    - ./deploy.sh
+    - stacks/NetWeaver-DB2-Standard/playbook.yml
+    - stacks/NetWeaver-DB2-Standard/vars/deploy-vars-cloud-build.yml
+  dir: '/nw-db2-4/'
+  volumes:
+    - name: 'nw-db2-4'
+      path: '/nw-db2-4'
+
+- id: "11.1MP4FP6-rhel-7-7-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-db2-5"
+  volumes:
+    - name: 'nw-db2-5'
+      path: '/nw-db2-5'
+- id: "11.1MP4FP6-rhel-7-7-sap-ha - forminator cleanup"
+  waitFor: ['11.1MP4FP6-rhel-7-7-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_111MP4FP6'
+    - 'SAP_STATE=absent'
+    - 'SAP_PRODUCT_ID=11.1MP4FP6'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-7-7-sap-ha'
+    - 'SAP_TEST_ID=111MP4FP6-rhel-7-7-sap-ha'
+    - 'SAP_REGION=us-west4'
+    - 'SAP_INSTANCE_NAME=instance-5'
+  args:
+    - ./deploy.sh
+    - stacks/NetWeaver-DB2-Standard/playbook.yml
+    - stacks/NetWeaver-DB2-Standard/vars/deploy-vars-cloud-build.yml
+  dir: '/nw-db2-5/'
+  volumes:
+    - name: 'nw-db2-5'
+      path: '/nw-db2-5'
+
+- id: "11.1MP4FP6-sles-12-sp4-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-db2-6"
+  volumes:
+    - name: 'nw-db2-6'
+      path: '/nw-db2-6'
+- id: "11.1MP4FP6-sles-12-sp4-sap - forminator cleanup"
+  waitFor: ['11.1MP4FP6-sles-12-sp4-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_111MP4FP6'
+    - 'SAP_STATE=absent'
+    - 'SAP_PRODUCT_ID=11.1MP4FP6'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-12-sp4-sap'
+    - 'SAP_TEST_ID=111MP4FP6-sles-12-sp4-sap'
+    - 'SAP_REGION=europe-west2'
+    - 'SAP_INSTANCE_NAME=instance-6'
+  args:
+    - ./deploy.sh
+    - stacks/NetWeaver-DB2-Standard/playbook.yml
+    - stacks/NetWeaver-DB2-Standard/vars/deploy-vars-cloud-build.yml
+  dir: '/nw-db2-6/'
+  volumes:
+    - name: 'nw-db2-6'
+      path: '/nw-db2-6'
+
+- id: "11.1MP4FP6-sles-12-sp5-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-db2-7"
+  volumes:
+    - name: 'nw-db2-7'
+      path: '/nw-db2-7'
+- id: "11.1MP4FP6-sles-12-sp5-sap - forminator cleanup"
+  waitFor: ['11.1MP4FP6-sles-12-sp5-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_111MP4FP6'
+    - 'SAP_STATE=absent'
+    - 'SAP_PRODUCT_ID=11.1MP4FP6'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-12-sp5-sap'
+    - 'SAP_TEST_ID=111MP4FP6-sles-12-sp5-sap'
+    - 'SAP_REGION=northamerica-northeast1'
+    - 'SAP_INSTANCE_NAME=instance-7'
+  args:
+    - ./deploy.sh
+    - stacks/NetWeaver-DB2-Standard/playbook.yml
+    - stacks/NetWeaver-DB2-Standard/vars/deploy-vars-cloud-build.yml
+  dir: '/nw-db2-7/'
+  volumes:
+    - name: 'nw-db2-7'
+      path: '/nw-db2-7'
+
+- id: "11.5MP5FP1-rhel-7-6-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-db2-8"
+  volumes:
+    - name: 'nw-db2-8'
+      path: '/nw-db2-8'
+- id: "11.5MP5FP1-rhel-7-6-sap-ha - forminator cleanup"
+  waitFor: ['11.5MP5FP1-rhel-7-6-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_115MP5FP1'
+    - 'SAP_STATE=absent'
+    - 'SAP_PRODUCT_ID=11.5MP5FP1'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-7-6-sap-ha'
+    - 'SAP_TEST_ID=115MP5FP1-rhel-7-6-sap-ha'
+    - 'SAP_REGION=us-west1'
+    - 'SAP_INSTANCE_NAME=instance-8'
+  args:
+    - ./deploy.sh
+    - stacks/NetWeaver-DB2-Standard/playbook.yml
+    - stacks/NetWeaver-DB2-Standard/vars/deploy-vars-cloud-build.yml
+  dir: '/nw-db2-8/'
+  volumes:
+    - name: 'nw-db2-8'
+      path: '/nw-db2-8'
+
+- id: "11.5MP5FP1-rhel-7-7-sap-ha - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-db2-9"
+  volumes:
+    - name: 'nw-db2-9'
+      path: '/nw-db2-9'
+- id: "11.5MP5FP1-rhel-7-7-sap-ha - forminator cleanup"
+  waitFor: ['11.5MP5FP1-rhel-7-7-sap-ha - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_115MP5FP1'
+    - 'SAP_STATE=absent'
+    - 'SAP_PRODUCT_ID=11.5MP5FP1'
+    - 'SAP_IMAGE_PROJECT=rhel-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=rhel-7-7-sap-ha'
+    - 'SAP_TEST_ID=115MP5FP1-rhel-7-7-sap-ha'
+    - 'SAP_REGION=us-east1'
+    - 'SAP_INSTANCE_NAME=instance-9'
+  args:
+    - ./deploy.sh
+    - stacks/NetWeaver-DB2-Standard/playbook.yml
+    - stacks/NetWeaver-DB2-Standard/vars/deploy-vars-cloud-build.yml
+  dir: '/nw-db2-9/'
+  volumes:
+    - name: 'nw-db2-9'
+      path: '/nw-db2-9'
+
+- id: "11.5MP5FP1-sles-12-sp4-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-db2-10"
+  volumes:
+    - name: 'nw-db2-10'
+      path: '/nw-db2-10'
+- id: "11.5MP5FP1-sles-12-sp4-sap - forminator cleanup"
+  waitFor: ['11.5MP5FP1-sles-12-sp4-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_115MP5FP1'
+    - 'SAP_STATE=absent'
+    - 'SAP_PRODUCT_ID=11.5MP5FP1'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-12-sp4-sap'
+    - 'SAP_TEST_ID=115MP5FP1-sles-12-sp4-sap'
+    - 'SAP_REGION=us-west4'
+    - 'SAP_INSTANCE_NAME=instance-10'
+  args:
+    - ./deploy.sh
+    - stacks/NetWeaver-DB2-Standard/playbook.yml
+    - stacks/NetWeaver-DB2-Standard/vars/deploy-vars-cloud-build.yml
+  dir: '/nw-db2-10/'
+  volumes:
+    - name: 'nw-db2-10'
+      path: '/nw-db2-10'
+
+- id: "11.5MP5FP1-sles-12-sp5-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-db2-11"
+  volumes:
+    - name: 'nw-db2-11'
+      path: '/nw-db2-11'
+- id: "11.5MP5FP1-sles-12-sp5-sap - forminator cleanup"
+  waitFor: ['11.5MP5FP1-sles-12-sp5-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_115MP5FP1'
+    - 'SAP_STATE=absent'
+    - 'SAP_PRODUCT_ID=11.5MP5FP1'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-12-sp5-sap'
+    - 'SAP_TEST_ID=115MP5FP1-sles-12-sp5-sap'
+    - 'SAP_REGION=europe-west2'
+    - 'SAP_INSTANCE_NAME=instance-11'
+  args:
+    - ./deploy.sh
+    - stacks/NetWeaver-DB2-Standard/playbook.yml
+    - stacks/NetWeaver-DB2-Standard/vars/deploy-vars-cloud-build.yml
+  dir: '/nw-db2-11/'
+  volumes:
+    - name: 'nw-db2-11'
+      path: '/nw-db2-11'
+
+- id: "11.5MP5FP1-sles-15-sp1-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-db2-12"
+  volumes:
+    - name: 'nw-db2-12'
+      path: '/nw-db2-12'
+- id: "11.5MP5FP1-sles-15-sp1-sap - forminator cleanup"
+  waitFor: ['11.5MP5FP1-sles-15-sp1-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_115MP5FP1'
+    - 'SAP_STATE=absent'
+    - 'SAP_PRODUCT_ID=11.5MP5FP1'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-15-sp1-sap'
+    - 'SAP_TEST_ID=115MP5FP1-sles-15-sp1-sap'
+    - 'SAP_REGION=northamerica-northeast1'
+    - 'SAP_INSTANCE_NAME=instance-12'
+  args:
+    - ./deploy.sh
+    - stacks/NetWeaver-DB2-Standard/playbook.yml
+    - stacks/NetWeaver-DB2-Standard/vars/deploy-vars-cloud-build.yml
+  dir: '/nw-db2-12/'
+  volumes:
+    - name: 'nw-db2-12'
+      path: '/nw-db2-12'
+
+- id: "11.5MP5FP1-sles-15-sp2-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-db2-13"
+  volumes:
+    - name: 'nw-db2-13'
+      path: '/nw-db2-13'
+- id: "11.5MP5FP1-sles-15-sp2-sap - forminator cleanup"
+  waitFor: ['11.5MP5FP1-sles-15-sp2-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_115MP5FP1'
+    - 'SAP_STATE=absent'
+    - 'SAP_PRODUCT_ID=11.5MP5FP1'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-15-sp2-sap'
+    - 'SAP_TEST_ID=115MP5FP1-sles-15-sp2-sap'
+    - 'SAP_REGION=us-central1'
+    - 'SAP_INSTANCE_NAME=instance-13'
+  args:
+    - ./deploy.sh
+    - stacks/NetWeaver-DB2-Standard/playbook.yml
+    - stacks/NetWeaver-DB2-Standard/vars/deploy-vars-cloud-build.yml
+  dir: '/nw-db2-13/'
+  volumes:
+    - name: 'nw-db2-13'
+      path: '/nw-db2-13'
+
+- id: "11.5MP5FP1-sles-15-sp3-sap - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/nw-db2-14"
+  volumes:
+    - name: 'nw-db2-14'
+      path: '/nw-db2-14'
+- id: "11.5MP5FP1-sles-15-sp3-sap - forminator cleanup"
+  waitFor: ['11.5MP5FP1-sles-15-sp3-sap - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_115MP5FP1'
+    - 'SAP_STATE=absent'
+    - 'SAP_PRODUCT_ID=11.5MP5FP1'
+    - 'SAP_IMAGE_PROJECT=suse-sap-cloud'
+    - 'SAP_IMAGE_FAMILY=sles-15-sp3-sap'
+    - 'SAP_TEST_ID=115MP5FP1-sles-15-sp3-sap'
+    - 'SAP_REGION=europe-west1'
+    - 'SAP_INSTANCE_NAME=instance-14'
+  args:
+    - ./deploy.sh
+    - stacks/NetWeaver-DB2-Standard/playbook.yml
+    - stacks/NetWeaver-DB2-Standard/vars/deploy-vars-cloud-build.yml
+  dir: '/nw-db2-14/'
+  volumes:
+    - name: 'nw-db2-14'
+      path: '/nw-db2-14'
+
+substitutions:
+  _DOCKER_IMAGE_DEVELOPER_TOOLS: 'cicd/developer-tools'
+  _DOCKER_TAG_VERSION_DEVELOPER_TOOLS: '0.2'
+options:
+  machineType: 'N1_HIGHCPU_32'
