@@ -1,12 +1,20 @@
 .DS_Store
+
+# Test SSH keys
 ssh-key
 ssh-key.pub
-terraform.tfstate
-terraform.tfstate.backup
-.terraform.lock.hcl
+
 .cache/
-.terraform/
-test/integration/tmp
-venv/
+# Local .terraform directories
+**/.terraform/*
+
+# tf lock file
+.terraform.lock.hcl
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# PyChar
 .idea/
-credentials.json
+venv/

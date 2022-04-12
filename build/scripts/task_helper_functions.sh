@@ -53,7 +53,7 @@ find_files() {
   fi
 
   # if find_files is used for validating license headers
-  if [ $1 = "for_header_check" ]; then
+  if [ "$1" = "for_header_check" ]; then
     # Add any files to be skipped for header check
     if [[ -n "${EXCLUDE_HEADER_CHECK-}" ]]; then
       find_path_regex+="${EXCLUDE_HEADER_CHECK}"
@@ -87,10 +87,48 @@ compat_xargs() {
   xargs "${compat[@]}" "$@"
 }
 
+init_credentials() {
+  if [[ -z "${SERVICE_ACCOUNT_JSON:-}" ]]; then
+    echo "Error: SERVICE_ACCOUNT_JSON must contain the JSON string (not the" >&2
+    echo "file path) of the service account credentials.  For example:" >&2
+    # shellcheck disable=SC2016
+    echo 'export SERVICE_ACCOUNT_JSON=$(< ~/.credentials/my-sa-key.json)' >&2
+    return 1
+  fi
+
+  local tmpfile
+  # shellcheck disable=SC2119
+  tmpfile="$(maketemp)"
+  echo "${SERVICE_ACCOUNT_JSON}" > "${tmpfile}"
+
+  # Terraform and most other tools respect GOOGLE_CREDENTIALS
+  # https://www.terraform.io/docs/providers/google/provider_reference.html#credentials-1
+  export GOOGLE_CREDENTIALS="${SERVICE_ACCOUNT_JSON}"
+
+  # gcloud variables
+  export CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE="${tmpfile}"
+
+  # InSpec respects GOOGLE_APPLICATION_CREDENTIALS
+  # https://github.com/inspec/inspec-gcp#create-credentials-file-via
+  export GOOGLE_APPLICATION_CREDENTIALS="${tmpfile}"
+
+  # Login to GCP for using bq-script and gsutil
+  gcloud auth activate-service-account --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
+}
+
+init_credentials_if_found() {
+   if [[ -z "${SERVICE_ACCOUNT_JSON:-}" ]]; then
+    echo "Proceeding using application default credentials"
+  else
+    init_credentials
+  fi
+}
+
 # This function creates TF_PLUGIN_CACHE_DIR if TF_PLUGIN_CACHE_DIR envvar is set
 function init_tf_plugin_cache() {
+  # shellcheck disable=SC2236
   if [[ ! -z "${TF_PLUGIN_CACHE_DIR}" ]]; then
-    mkdir -p ${TF_PLUGIN_CACHE_DIR}
+    mkdir -p "${TF_PLUGIN_CACHE_DIR}"
   fi
 }
 
@@ -173,7 +211,7 @@ function check_shell() {
 # ending in '.py'
 function check_python() {
   echo "Running flake8"
-  find_files . -name "*.py" -print0 | compat_xargs -0 flake8
+  find_files . -name "*.py" -print0 | compat_xargs -0 /root/del/bin/flake8
 }
 
 function check_headers() {
@@ -186,5 +224,5 @@ function check_headers() {
 
 function check_ansible() {
   echo "Running ansible-lint"
-  ansible-lint
+  /root/lint/bin/ansible-lint
 }

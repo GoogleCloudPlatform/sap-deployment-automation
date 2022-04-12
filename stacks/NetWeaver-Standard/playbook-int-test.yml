@@ -1,0 +1,185 @@
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+- name: Create Test Setup
+  hosts: 127.0.0.1
+  tags: setup
+  tasks:
+    - name: Run terraform test-setup init/apply
+      terraform:
+        project_path: ./test-setup
+        state: present
+        force_init: true
+      register: setup
+    - name: create /root/.ssh directory
+      file:
+        path: "/root/.ssh/"
+        state: directory
+        mode: '0700'
+    - name: create private key
+      copy:
+        dest: "/root/.ssh/id_rsa"
+        content: '{{setup.outputs.private_key_openssh.value}}'
+    - name: set private key mode
+      file:
+        path: "/root/.ssh/id_rsa"
+        mode: '0600'
+    - name: create public key
+      copy:
+        dest: "/root/.ssh/id_rsa.pub"
+        content: '{{setup.outputs.public_key_openssh.value}}'
+    - name: set public key mode
+      file:
+        path: "/root/.ssh/id_rsa.pub"
+        mode: '0600'
+    - name: create ssh config
+      copy:
+        dest: "/root/.ssh/config"
+        content: |
+          Host {{ setup.outputs.bastion_ip.value }}
+             User ansible
+             StrictHostKeyChecking no
+          Host 10.*
+             ProxyJump {{ setup.outputs.bastion_ip.value }}
+             StrictHostKeyChecking no
+    - name: set ssh config mode
+      file:
+        path: "/root/.ssh/config"
+        mode: '0600'
+    # This is necessary for cloud build to work
+    - name: check if .netrc exist
+      stat:
+        path: "{{ lookup('env', 'HOME') }}/.netrc"
+      register: netrc_exist
+    - name: set .netrc permissions
+      file:
+        path: "{{ lookup('env', 'HOME') }}/.netrc"
+        mode: '0600'
+      when: netrc_exist.stat.exists == True
+    - name: check media-bucket
+      command: "gsutil du -sh  gs://{{ setup.outputs.media_bucket.value }}/"
+      register: check_media_bucket
+    - name: copy installation files to media_bucket
+      command: "gsutil -q -m cp -r  gs://{{ lookup('env', 'MEDIA_BUCKET') }}/* gs://{{ setup.outputs.media_bucket.value }}/"
+      when: check_media_bucket.stdout is match("^0\sB\s.*")
+
+- name: Forminator
+  hosts: 127.0.0.1
+  connection: local
+  roles:
+  - role: forminator
+    vars:
+      sap_tf_project_path: ./tf
+      sap_state: present
+      sap_hana_backint_install: false
+      sap_hana_backint_bucket_name: ''
+      sap_project_id: '{{setup.outputs.setup_output.value.project_id}}'
+      sap_tf_state_bucket: '{{setup.outputs.setup_output.value.state_bucket}}'
+      sap_tf_state_bucket_prefix: nw-standard
+      sap_ssh_priv_key: "/root/.ssh/id_rsa"
+      sap_ssh_pub_key: "/root/.ssh/id_rsa.pub"
+      sap_tf_variables:
+        project_id: '{{setup.outputs.setup_output.value.project_id}}'
+        sap_hana_autodelete_boot_disk: true
+        sap_hana_boot_disk_size: 30
+        sap_hana_boot_disk_type: "pd-ssd"
+        sap_hana_create_backup_volume: true
+        sap_hana_instance_name: "sap-hana"
+        sap_hana_instance_type: "n1-highmem-32"
+        sap_hana_install_files_bucket: '{{ hostvars.localhost.setup.outputs.media_bucket.value }}'
+        sap_hana_network_tags: ["sap-allow-all"]
+        sap_hana_pd_kms_key: ""
+        sap_hana_additional_disk_type: "pd-ssd"
+        sap_hana_service_account_email: '{{ setup.outputs.sap_service_account.value }}'
+        sap_nw_additional_disk_type: "pd-ssd"
+        sap_nw_autodelete_boot_disk: true
+        sap_nw_boot_disk_size: 30
+        sap_nw_boot_disk_type: "pd-ssd"
+        sap_nw_instance_name: sap-nw
+        sap_nw_instance_type: "n1-standard-8"
+        sap_nw_network_tags: ["sap-allow-all"]
+        sap_nw_service_account_email: '{{ setup.outputs.sap_service_account.value }}'
+        sap_nw_sapmnt_disk_size: 50
+        sap_nw_swap_disk_size: 28
+        sap_nw_usrsap_disk_size: 50
+        sap_nw_use_public_ip: false
+        source_image_family: rhel-7-7-sap-ha
+        source_image_project: rhel-sap-cloud
+        subnetwork_hana: '{{ setup.outputs.setup_output.value.vpc.subnets_names[0] }}'
+        subnetwork_nw: '{{ setup.outputs.setup_output.value.vpc.subnets_names[0] }}'
+        subnetwork_project: '{{setup.outputs.setup_output.value.project_id}}'
+        zone: '{{ setup.outputs.setup_output.value.region }}-b'
+  tags: [hana, nw, assertions]
+
+- name: SAP HANA configure
+  hosts: hana
+  become: yes
+  roles:
+  - role: sap-hana-scaleup
+    vars:
+      sap_hana_backint_install: false
+      sap_hana_backint_bucket_name: ""
+      sap_hana_install_files_bucket: '{{ hostvars.localhost.setup.outputs.media_bucket.value }}'
+      sap_hana_shared_size: '{{ terraform.outputs.hana_shared_size.value }}G'
+      sap_hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
+      sap_hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
+      sap_hana_usr_size: '{{ terraform.outputs.hana_usr_size.value }}G'
+      sap_hana_backup_size: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
+      sap_hana_instance_name: "sap-hana"
+      sap_hana_sid: DEV
+      sap_hana_instance_number: "00"
+      sap_hana_password: "Google123" # This can't be an empty string or the installation will fail
+  tags: [hana]
+
+- name: SAP NetWeaver configure
+  hosts: nw
+  become: yes
+  roles:
+  - role: nw-standard
+    vars:
+      sap_hana_virtual_host: '{{
+        terraform.outputs.inventory.value
+        | selectattr("groups", "equalto", ["hana"])
+        | map(attribute="host")
+        | list | first
+      }}'
+      sap_nw_ascs_virtual_host: '{{ terraform.outputs.nw_instance_name.value }}'
+      sap_nw_pas_virtual_host: '{{ terraform.outputs.nw_instance_name.value }}'
+      sap_nw_instance_name: sap-nw
+      sap_nw_install_files_bucket: '{{ hostvars.localhost.setup.outputs.media_bucket.value }}'
+      sap_nw_instance_type: n1-standard-2
+      sap_nw_password: Google123
+      sap_nw_sid: B01
+      sap_hana_instance_name: "sap-hana"
+      sap_hana_instance_number: "00"
+      sap_hana_password: Google123
+      sap_hana_sid: DEV
+  tags: [nw]
+
+- name: Run assertions on HANA
+  hosts: hana
+  become: yes
+  tasks:
+  - include_role:
+      name: sap-hana-scaleup
+      tasks_from: assertions
+  tags: [hana, assertions]
+
+- name: Run assertions on application server
+  hosts: nw
+  become: yes
+  tasks:
+  - include_role:
+      name: nw-standard
+      tasks_from: assertions
+  tags: [nw, assertions]
