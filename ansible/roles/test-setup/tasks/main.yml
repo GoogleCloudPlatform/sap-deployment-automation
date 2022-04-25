@@ -1,0 +1,70 @@
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+- name: Run terraform test-setup init/apply
+  terraform:
+    project_path: ./test-setup
+    state: present
+    force_init: true
+  register: setup
+- name: create {{ test_setup_ssh_folder }} directory
+  file:
+    path: "{{ test_setup_ssh_folder }}"
+    state: directory
+    mode: '0700'
+- name: create {{ test_setup_ssh_folder }}/{{  test_setup_ssh_private_key }}
+  copy:
+    dest: "{{ test_setup_ssh_folder }}/{{  test_setup_ssh_private_key }}"
+    content: '{{setup.outputs.private_key_openssh.value}}'
+- name: set private key {{ test_setup_ssh_folder }}/{{  test_setup_ssh_private_key }} mode
+  file:
+    path: "{{ test_setup_ssh_folder }}/{{  test_setup_ssh_private_key }}"
+    mode: '0600'
+- name: create {{ test_setup_ssh_folder }}/{{  test_setup_ssh_public_key }} public key
+  copy:
+    dest: "{{ test_setup_ssh_folder }}/{{  test_setup_ssh_public_key }}"
+    content: '{{setup.outputs.public_key_openssh.value}}'
+- name: set public key {{ test_setup_ssh_folder }}/{{  test_setup_ssh_public_key }} mode
+  file:
+    path: "{{ test_setup_ssh_folder }}/{{  test_setup_ssh_public_key }}"
+    mode: '0600'
+- name: create ssh config {{ test_setup_ssh_folder }}/{{  test_setup_ssh_config }}
+  copy:
+    dest: "{{ test_setup_ssh_folder }}/{{  test_setup_ssh_config }}"
+    content: |
+      Host {{ setup.outputs.bastion_ip.value }}
+         User ansible
+         StrictHostKeyChecking no
+      Host 10.*
+         ProxyJump {{ setup.outputs.bastion_ip.value }}
+         StrictHostKeyChecking no
+- name: set ssh config {{ test_setup_ssh_folder }}/{{  test_setup_ssh_config }} mode
+  file:
+    path: "{{ test_setup_ssh_folder }}/{{  test_setup_ssh_config }}"
+    mode: '0600'
+# This is necessary for cloud build to work
+- name: check if .netrc exist
+  stat:
+    path: "{{ lookup('env', 'HOME') }}/.netrc"
+  register: netrc_exist
+- name: set .netrc permissions
+  file:
+    path: "{{ lookup('env', 'HOME') }}/.netrc"
+    mode: '0600'
+  when: netrc_exist.stat.exists == True
+- name: check media-bucket
+  command: "gsutil du -sh  gs://{{ setup.outputs.media_bucket.value }}/"
+  register: check_media_bucket
+- name: copy installation files to media_bucket
+  command: "gsutil -q -m cp -r  gs://{{ test_setup_media_bucket }}/* gs://{{ setup.outputs.media_bucket.value }}/"
+  when: check_media_bucket.stdout is match("^0\sB\s.*")

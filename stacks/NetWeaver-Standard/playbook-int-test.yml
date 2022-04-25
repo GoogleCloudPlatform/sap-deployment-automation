@@ -11,67 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 - name: Create Test Setup
   hosts: 127.0.0.1
-  tags: setup
-  tasks:
-    - name: Run terraform test-setup init/apply
-      terraform:
-        project_path: ./test-setup
-        state: present
-        force_init: true
-      register: setup
-    - name: create /root/.ssh directory
-      file:
-        path: "/root/.ssh/"
-        state: directory
-        mode: '0700'
-    - name: create private key
-      copy:
-        dest: "/root/.ssh/id_rsa"
-        content: '{{setup.outputs.private_key_openssh.value}}'
-    - name: set private key mode
-      file:
-        path: "/root/.ssh/id_rsa"
-        mode: '0600'
-    - name: create public key
-      copy:
-        dest: "/root/.ssh/id_rsa.pub"
-        content: '{{setup.outputs.public_key_openssh.value}}'
-    - name: set public key mode
-      file:
-        path: "/root/.ssh/id_rsa.pub"
-        mode: '0600'
-    - name: create ssh config
-      copy:
-        dest: "/root/.ssh/config"
-        content: |
-          Host {{ setup.outputs.bastion_ip.value }}
-             User ansible
-             StrictHostKeyChecking no
-          Host 10.*
-             ProxyJump {{ setup.outputs.bastion_ip.value }}
-             StrictHostKeyChecking no
-    - name: set ssh config mode
-      file:
-        path: "/root/.ssh/config"
-        mode: '0600'
-    # This is necessary for cloud build to work
-    - name: check if .netrc exist
-      stat:
-        path: "{{ lookup('env', 'HOME') }}/.netrc"
-      register: netrc_exist
-    - name: set .netrc permissions
-      file:
-        path: "{{ lookup('env', 'HOME') }}/.netrc"
-        mode: '0600'
-      when: netrc_exist.stat.exists == True
-    - name: check media-bucket
-      command: "gsutil du -sh  gs://{{ setup.outputs.media_bucket.value }}/"
-      register: check_media_bucket
-    - name: copy installation files to media_bucket
-      command: "gsutil -q -m cp -r  gs://{{ lookup('env', 'MEDIA_BUCKET') }}/* gs://{{ setup.outputs.media_bucket.value }}/"
-      when: check_media_bucket.stdout is match("^0\sB\s.*")
+  roles:
+    - role: test-setup
+      vars:
+        test_setup_media_bucket: "{{ lookup('env', 'MEDIA_BUCKET') }}"
+        test_setup_tf_path: "{{ playbook_dir }}/test-setup"
 
 - name: Forminator
   hosts: 127.0.0.1
