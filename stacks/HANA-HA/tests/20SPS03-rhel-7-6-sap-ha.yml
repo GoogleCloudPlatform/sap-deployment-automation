@@ -58,41 +58,41 @@
         create_backup_volume: true
     tags: [assertions]
 
-#- name: SAP HANA configure on both primay and secondary
-#  hosts: hana
-#  become: yes
-#  vars:
-#    sap_hana_password: Google123
-#    sap_hana_install_files_bucket: '{{ hostvars.localhost.setup.outputs.media_bucket.value }}'
-#    sap_project_id: '{{ hostvars.localhost.setup.outputs.setup_output.value.project_id }}'
-#    sap_hana_backint_install: false
-#    sap_hana_backint_bucket_name: ""
-#    sap_hana_primary_instance_name: '{{ terraform.outputs.primary_instance_name.value }}'
-#    sap_hana_secondary_instance_name: '{{ terraform.outputs.secondary_instance_name.value }}'
-#    sap_hana_primary_instance_ip: '{{ terraform.outputs.primary_instance_ip.value }}'
-#    sap_hana_secondary_instance_ip: '{{ terraform.outputs.secondary_instance_ip.value }}'
-#    sap_hana_vip: '{{ terraform.outputs.hana_ilb_ip.value }}'
-#    sap_hana_health_check_port: '{{ terraform.outputs.health_check_port.value }}'
-#    sap_hana_shared_size: '{{ terraform.outputs.hana_shared_size.value }}G'
-#    sap_hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
-#    sap_hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
-#    sap_hana_usr_size: '{{ terraform.outputs.hana_usr_size.value }}G'
-#    sap_hana_backup_size: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
-#    sap_primary_zone: '{{ hostvars.localhost.setup.outputs.setup_output.value.region }}-b'
-#    sap_secondary_zone: '{{ hostvars.localhost.setup.outputs.setup_output.value.region }}-b'
-#    sap_hana_product_version: 20SPS03
-#
-#  roles:
-#  - role: sap-hana-ha
-#
-#- name: Run assertions
-#  hosts: hana
-#  become: yes
-#  tasks:
-#  - include_role:
-#      name: sap-hana-ha
-#      tasks_from: assertions
-#    vars:
-#      sap_hana_primary_instance_name: '{{ terraform.outputs.primary_instance_name.value }}'
-#      sap_hana_secondary_instance_name: '{{ terraform.outputs.secondary_instance_name.value }}'
-#  tags: [assertions]
+- name: SAP HANA configure on both primay and secondary
+  hosts: hana
+  become: yes
+  vars:
+    sap_hana_password: Google123
+    sap_hana_install_files_bucket: '{{ hostvars.localhost.setup.outputs.media_bucket.value }}'
+    sap_project_id: '{{ hostvars.localhost.setup.outputs.setup_output.value.project_id }}'
+    sap_hana_backint_install: false
+    sap_hana_backint_bucket_name: ""
+    sap_hana_primary_instance_name: '{{ terraform.outputs.primary_instance_name.value }}'
+    sap_hana_secondary_instance_name: '{{ terraform.outputs.secondary_instance_name.value }}'
+    sap_hana_primary_instance_ip: '{{ terraform.outputs.primary_instance_ip.value }}'
+    sap_hana_secondary_instance_ip: '{{ terraform.outputs.secondary_instance_ip.value }}'
+    sap_hana_vip: '{{ terraform.outputs.hana_ilb_ip.value }}'
+    sap_hana_health_check_port: '{{ terraform.outputs.health_check_port.value }}'
+    sap_hana_shared_size: '{{ terraform.outputs.hana_shared_size.value }}G'
+    sap_hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
+    sap_hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
+    sap_hana_usr_size: '{{ terraform.outputs.hana_usr_size.value }}G'
+    sap_hana_backup_size: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
+    sap_primary_zone: '{{ hostvars.localhost.setup.outputs.setup_output.value.region }}-b'
+    sap_secondary_zone: '{{ hostvars.localhost.setup.outputs.setup_output.value.region }}-b'
+    sap_hana_product_version: 20SPS03
+
+  roles:
+  - role: sap-hana-ha
+
+- name: Run assertions
+  hosts: hana
+  become: yes
+  tasks:
+  - include_role:
+      name: sap-hana-ha
+      tasks_from: assertions
+    vars:
+      sap_hana_primary_instance_name: '{{ terraform.outputs.primary_instance_name.value }}'
+      sap_hana_secondary_instance_name: '{{ terraform.outputs.secondary_instance_name.value }}'
+  tags: [assertions]
