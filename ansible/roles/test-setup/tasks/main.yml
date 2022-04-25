@@ -11,9 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-- name: Run terraform test-setup init/apply
+- name: Run terraform init/apply in {{ test_setup_tf_path }}
   terraform:
-    project_path: {{ test_setup_tf_path }}
+    project_path: "{{ test_setup_tf_path }}"
     state: present
     force_init: true
   register: setup
