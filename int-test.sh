@@ -27,7 +27,8 @@ finish() {
   echo "rc=$rc"
   stack_directory=$(dirname "$ANSIBLE_ARGS")
   playbook_name=$(basename "$ANSIBLE_ARGS")
-  setup_directory="$stack_directory/tf/$playbook_name"
+  test_name=${playbook_name%.yml}
+  setup_directory="$stack_directory/tf/$test_name"
   project_id=$(terraform -chdir="${setup_directory}" output -raw project_id)
   gcloud projects delete "$project_id" --quiet
 }
