@@ -20,12 +20,12 @@ steps:
     - ./int-test.sh
     - stacks/HANA-HA/tests/20SPS03-rhel-7-6-sap-ha.yml
 
-- id: "20SPS03-rhel-7-7-sap-ha.yml"
-  waitFor: ['-']
-  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
-  args:
-    - ./int-test.sh
-    - stacks/HANA-HA/tests/20SPS03-rhel-7-7-sap-ha.yml
+#- id: "20SPS03-rhel-7-7-sap-ha.yml"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS03-rhel-7-7-sap-ha.yml
 
 substitutions:
   _DOCKER_IMAGE_DEVELOPER_TOOLS: 'cicd/developer-tools'

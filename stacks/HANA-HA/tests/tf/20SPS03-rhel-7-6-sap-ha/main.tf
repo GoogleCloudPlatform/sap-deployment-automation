@@ -18,7 +18,7 @@ variable "billing_account_id" {}
 
 module "test_setup" {
   source             = "../../../../../terraform/modules/test-setup"
-  project_name       = "hana-ha-2sps03-rh77"
+  project_name       = "hana-ha-2sps03-rh76"
   org_id             = var.org_id
   folder_id          = var.folder_id
   billing_account_id = var.billing_account_id

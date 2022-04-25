@@ -26,9 +26,10 @@ finish() {
   echo "$ANSIBLE_ARGS"
   echo "rc=$rc"
   stack_directory=$(dirname "$ANSIBLE_ARGS")
-  setup_directory="$stack_directory/test-setup"
+  playbook_name=$(basename "$ANSIBLE_ARGS")
+  setup_directory="$stack_directory/tf/$playbook_name"
   project_id=$(terraform -chdir="${setup_directory}" output -raw project_id)
-  echo gcloud projects delete "$project_id" --quiet
+  gcloud projects delete "$project_id" --quiet
 }
 # shellcheck disable=SC2068
 setup_trap_handler ${@}
