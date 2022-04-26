@@ -18,7 +18,7 @@
     - role: test-setup
       vars:
         test_setup_media_bucket: "{{ lookup('env', 'MEDIA_BUCKET') }}"
-        test_setup_tf_path: "{{ playbook_dir }}/tf/20SPS03-rhel-7-6-sap-ha"
+        test_setup_tf_path: "{{ playbook_dir }}/setups/20SPS03-rhel-7-6-sap-ha"
 
 - name: SAP HANA deploy
   hosts: 127.0.0.1
@@ -26,7 +26,7 @@
   roles:
   - role: forminator
     vars:
-      sap_tf_project_path: "../tf"
+      sap_tf_project_path: "./tf/20SPS03-rhel-7-6-sap-ha"
       sap_state: present
       sap_hana_backint_install: false
       sap_hana_backint_bucket_name: ""
