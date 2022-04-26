@@ -81,7 +81,6 @@
     sap_primary_zone: '{{ hostvars.localhost.setup.outputs.setup_output.value.region }}-b'
     sap_secondary_zone: '{{ hostvars.localhost.setup.outputs.setup_output.value.region }}-c'
     sap_hana_product_version: 20SPS03
-
   roles:
   - role: sap-hana-ha
 
@@ -96,3 +95,4 @@
       sap_hana_primary_instance_name: '{{ terraform.outputs.primary_instance_name.value }}'
       sap_hana_secondary_instance_name: '{{ terraform.outputs.secondary_instance_name.value }}'
   tags: [assertions]
+{% endraw %}
