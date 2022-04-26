@@ -18,12 +18,12 @@ variable "billing_account_id" {}
 
 module "test_setup" {
   source             = "../../../../../terraform/modules/test-setup"
-  project_name       = "hana-ha-20SPS03-sles-15-sp1-sap"
+  project_name       = "hanaha-20SPS03sles15sp1sap"
   org_id             = var.org_id
   folder_id          = var.folder_id
   billing_account_id = var.billing_account_id
   subnets = [{
-    subnet_name   = "hana-ha-sles-15-sp1-sap"
+    subnet_name   = "hana-ha-sles15sp1sap"
     subnet_ip     = "10.10.6.0/24"
     subnet_region = "us-west1"
   }]

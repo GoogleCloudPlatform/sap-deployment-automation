@@ -10,7 +10,7 @@ def make_setup_main_tf(product_id, family, i):
     main_tf = open('setups/main.tf.tmpl').read()
     j2_template = Template(main_tf)
     data = {
-        'os': family,
+        'os': family.replace('-', ''),
         'i': i,
         'product_id': product_id
     }
