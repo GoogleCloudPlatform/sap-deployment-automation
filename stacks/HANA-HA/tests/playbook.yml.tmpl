@@ -46,7 +46,7 @@
         service_account_email: '{{ setup.outputs.sap_service_account.value }}'
         subnetwork_project: '{{ setup.outputs.setup_output.value.project_id }}'
         primary_zone: '{{ setup.outputs.setup_output.value.region }}-b'
-        secondary_zone: '{{ setup.outputs.setup_output.value.region }}-b'
+        secondary_zone: '{{ setup.outputs.setup_output.value.region }}-c'
         instance_type: 'n1-highmem-32'
         autodelete_disk: true
         boot_disk_size: 30
@@ -79,7 +79,7 @@
     sap_hana_usr_size: '{{ terraform.outputs.hana_usr_size.value }}G'
     sap_hana_backup_size: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
     sap_primary_zone: '{{ hostvars.localhost.setup.outputs.setup_output.value.region }}-b'
-    sap_secondary_zone: '{{ hostvars.localhost.setup.outputs.setup_output.value.region }}-b'
+    sap_secondary_zone: '{{ hostvars.localhost.setup.outputs.setup_output.value.region }}-c'
     sap_hana_product_version: PRODUCT_ID
   roles:
   - role: sap-hana-ha

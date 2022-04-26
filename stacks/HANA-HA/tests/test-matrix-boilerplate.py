@@ -40,7 +40,7 @@ def make_forminator_tf(product_id, family):
 
 
 def main():
-    matrix = json.load(open('test_matrix.js', 'r'))
+    matrix = json.load(open('test-matrix.json', 'r'))
     for test_group in matrix:
         i=0
         product_id = test_group['product_id']

@@ -18,7 +18,7 @@
     - role: test-setup
       vars:
         test_setup_media_bucket: "{{ lookup('env', 'MEDIA_BUCKET') }}"
-        test_setup_tf_path: "{{ playbook_dir }}/setups/20SPS03-sles-12-sp4-sap"
+        test_setup_tf_path: "{{ playbook_dir }}/setups/20SPS04-sles-15-sap"
 
 - name: SAP HANA deploy
   hosts: 127.0.0.1
@@ -26,7 +26,7 @@
   roles:
   - role: forminator
     vars:
-      sap_tf_project_path: "./tf/20SPS03-sles-12-sp4-sap"
+      sap_tf_project_path: "./tf/20SPS04-sles-15-sap"
       sap_state: present
       sap_hana_backint_install: false
       sap_hana_backint_bucket_name: ""
@@ -40,7 +40,7 @@
         instance_name_primary: hanslbg-test-p
         instance_name_secondary: hanslbg-test-s
         project_id: '{{ setup.outputs.setup_output.value.project_id }}'
-        source_image_family: sles-12-sp4-sap
+        source_image_family: sles-15-sap
         source_image_project: suse-sap-cloud
         subnetwork: '{{ setup.outputs.setup_output.value.vpc.subnets_names[0] }}'
         service_account_email: '{{ setup.outputs.sap_service_account.value }}'
@@ -80,7 +80,7 @@
     sap_hana_backup_size: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
     sap_primary_zone: '{{ hostvars.localhost.setup.outputs.setup_output.value.region }}-b'
     sap_secondary_zone: '{{ hostvars.localhost.setup.outputs.setup_output.value.region }}-c'
-    sap_hana_product_version: 20SPS03
+    sap_hana_product_version: 20SPS04
   roles:
   - role: sap-hana-ha
 
