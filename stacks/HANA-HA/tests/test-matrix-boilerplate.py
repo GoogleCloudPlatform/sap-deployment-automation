@@ -32,11 +32,13 @@ def make_forminator_tf(product_id, family):
     os.makedirs(f'tf/{test_name}', exist_ok=True)
     source_folder = 'tf/forminator_tf/'
     destination_folder = f'tf/{test_name}/'
+    dest_dir = os.open(destination_folder, os.O_RDONLY)
     for file_name in os.listdir(source_folder):
         # construct full file path
-        source = source_folder + file_name
+        #source = source_folder + file_name
         destination = destination_folder + file_name
-        shutil.copy(source, destination)
+        os.symlink(f'../forminator_tf/{file_name}', file_name, dir_fd=dest_dir)
+        #shutil.copy(source, destination)
 
 
 def main():
