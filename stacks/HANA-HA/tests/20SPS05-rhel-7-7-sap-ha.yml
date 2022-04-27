@@ -1,0 +1,97 @@
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: Create Test Setup
+  hosts: 127.0.0.1
+  roles:
+    - role: test-setup
+      vars:
+        test_setup_media_bucket: "{{ lookup('env', 'MEDIA_BUCKET') }}"
+        test_setup_tf_path: "{{ playbook_dir }}/setups/20SPS05-rhel-7-7-sap-ha"
+
+- name: SAP HANA deploy
+  hosts: 127.0.0.1
+  connection: local
+  roles:
+  - role: forminator
+    vars:
+      sap_tf_project_path: "./tf/20SPS05-rhel-7-7-sap-ha"
+      sap_state: present
+      sap_hana_backint_install: false
+      sap_hana_backint_bucket_name: ""
+      sap_tf_state_bucket: '{{setup.outputs.setup_output.value.state_bucket}}'
+      sap_tf_state_bucket_prefix: hanaha
+      sap_project_id: '{{setup.outputs.setup_output.value.project_id}}'
+      sap_ssh_priv_key: "/root/.ssh/id_rsa"
+      sap_ssh_pub_key: "/root/.ssh/id_rsa.pub"
+      sap_tf_variables:
+        instance_name: hanslbg-test
+        instance_name_primary: hanslbg-test-p
+        instance_name_secondary: hanslbg-test-s
+        project_id: '{{ setup.outputs.setup_output.value.project_id }}'
+        source_image_family: rhel-7-7-sap-ha
+        source_image_project: rhel-sap-cloud
+        subnetwork: '{{ setup.outputs.setup_output.value.vpc.subnets_names[0] }}'
+        service_account_email: '{{ setup.outputs.sap_service_account.value }}'
+        subnetwork_project: '{{ setup.outputs.setup_output.value.project_id }}'
+        primary_zone: '{{ setup.outputs.setup_output.value.region }}-b'
+        secondary_zone: '{{ setup.outputs.setup_output.value.region }}-c'
+        instance_type: 'n1-highmem-32'
+        autodelete_disk: true
+        boot_disk_size: 30
+        boot_disk_type: pd-ssd
+        additional_disk_type: pd-ssd
+        network_tags: ["sap-allow-all", "ssh"]
+        target_size: 1
+        pd_kms_key: ""
+        create_backup_volume: true
+    tags: [assertions]
+
+- name: SAP HANA configure on both primay and secondary
+  hosts: hana
+  become: yes
+  vars:
+    sap_hana_password: Google123
+    sap_hana_install_files_bucket: '{{ hostvars.localhost.setup.outputs.media_bucket.value }}'
+    sap_project_id: '{{ hostvars.localhost.setup.outputs.setup_output.value.project_id }}'
+    sap_hana_backint_install: false
+    sap_hana_backint_bucket_name: ""
+    sap_hana_primary_instance_name: '{{ terraform.outputs.primary_instance_name.value }}'
+    sap_hana_secondary_instance_name: '{{ terraform.outputs.secondary_instance_name.value }}'
+    sap_hana_primary_instance_ip: '{{ terraform.outputs.primary_instance_ip.value }}'
+    sap_hana_secondary_instance_ip: '{{ terraform.outputs.secondary_instance_ip.value }}'
+    sap_hana_vip: '{{ terraform.outputs.hana_ilb_ip.value }}'
+    sap_hana_health_check_port: '{{ terraform.outputs.health_check_port.value }}'
+    sap_hana_shared_size: '{{ terraform.outputs.hana_shared_size.value }}G'
+    sap_hana_data_size: '{{ terraform.outputs.hana_data_size.value }}G'
+    sap_hana_log_size: '{{ terraform.outputs.hana_log_size.value }}G'
+    sap_hana_usr_size: '{{ terraform.outputs.hana_usr_size.value }}G'
+    sap_hana_backup_size: '{{ terraform.outputs.hana_backup_size.value - 1 }}G'
+    sap_primary_zone: '{{ hostvars.localhost.setup.outputs.setup_output.value.region }}-b'
+    sap_secondary_zone: '{{ hostvars.localhost.setup.outputs.setup_output.value.region }}-c'
+    sap_hana_product_version: 20SPS05
+  roles:
+  - role: sap-hana-ha
+
+- name: Run assertions
+  hosts: hana
+  become: yes
+  tasks:
+  - include_role:
+      name: sap-hana-ha
+      tasks_from: assertions
+    vars:
+      sap_hana_primary_instance_name: '{{ terraform.outputs.primary_instance_name.value }}'
+      sap_hana_secondary_instance_name: '{{ terraform.outputs.secondary_instance_name.value }}'
+  tags: [assertions]

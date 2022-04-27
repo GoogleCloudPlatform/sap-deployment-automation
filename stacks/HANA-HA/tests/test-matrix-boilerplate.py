@@ -53,8 +53,8 @@ def make_cloud_build_conf(tests):
 def main():
     matrix = json.load(open('test-matrix.json', 'r'))
     tests = []
+    i = 0
     for test_group in matrix:
-        i = 0
         product_id = test_group['product_id']
         for system in test_group['os']:
             make_test_playbook(product_id, system['family'], system['project'])

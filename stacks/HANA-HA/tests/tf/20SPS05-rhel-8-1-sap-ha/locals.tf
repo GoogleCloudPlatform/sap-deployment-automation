@@ -1,0 +1,1 @@
+../forminator_tf/locals.tf

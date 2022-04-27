@@ -49,88 +49,165 @@ steps:
     - ./int-test.sh
     - stacks/HANA-HA/tests/20SPS03-sles-12-sp5-sap.yml
 
-- id: "20SPS03-sles-15-sap"
-  waitFor: ['-']
-  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
-  args:
-    - ./int-test.sh
-    - stacks/HANA-HA/tests/20SPS03-sles-15-sap.yml
-
-- id: "20SPS03-sles-15-sp1-sap"
-  waitFor: ['-']
-  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
-  args:
-    - ./int-test.sh
-    - stacks/HANA-HA/tests/20SPS03-sles-15-sp1-sap.yml
-
-- id: "20SPS03-sles-15-sp2-sap"
-  waitFor: ['-']
-  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
-  args:
-    - ./int-test.sh
-    - stacks/HANA-HA/tests/20SPS03-sles-15-sp2-sap.yml
-
-- id: "20SPS04-rhel-7-6-sap-ha"
-  waitFor: ['-']
-  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
-  args:
-    - ./int-test.sh
-    - stacks/HANA-HA/tests/20SPS04-rhel-7-6-sap-ha.yml
-
-- id: "20SPS04-rhel-7-7-sap-ha"
-  waitFor: ['-']
-  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
-  args:
-    - ./int-test.sh
-    - stacks/HANA-HA/tests/20SPS04-rhel-7-7-sap-ha.yml
-
-- id: "20SPS04-sles-12-sp3-sap"
-  waitFor: ['-']
-  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
-  args:
-    - ./int-test.sh
-    - stacks/HANA-HA/tests/20SPS04-sles-12-sp3-sap.yml
-
-- id: "20SPS04-sles-12-sp4-sap"
-  waitFor: ['-']
-  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
-  args:
-    - ./int-test.sh
-    - stacks/HANA-HA/tests/20SPS04-sles-12-sp4-sap.yml
-
-- id: "20SPS04-sles-12-sp5-sap"
-  waitFor: ['-']
-  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
-  args:
-    - ./int-test.sh
-    - stacks/HANA-HA/tests/20SPS04-sles-12-sp5-sap.yml
-
-- id: "20SPS04-sles-15-sap"
-  waitFor: ['-']
-  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
-  args:
-    - ./int-test.sh
-    - stacks/HANA-HA/tests/20SPS04-sles-15-sap.yml
-
-- id: "20SPS04-sles-15-sp1-sap"
-  waitFor: ['-']
-  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
-  args:
-    - ./int-test.sh
-    - stacks/HANA-HA/tests/20SPS04-sles-15-sp1-sap.yml
-
-- id: "20SPS04-sles-15-sp2-sap"
-  waitFor: ['-']
-  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
-  args:
-    - ./int-test.sh
-    - stacks/HANA-HA/tests/20SPS04-sles-15-sp2-sap.yml
+#- id: "20SPS03-sles-15-sap"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS03-sles-15-sap.yml
+#
+#- id: "20SPS03-sles-15-sp1-sap"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS03-sles-15-sp1-sap.yml
+#
+#- id: "20SPS03-sles-15-sp2-sap"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS03-sles-15-sp2-sap.yml
+#
+#- id: "20SPS04-rhel-7-6-sap-ha"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS04-rhel-7-6-sap-ha.yml
+#
+#- id: "20SPS04-rhel-7-7-sap-ha"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS04-rhel-7-7-sap-ha.yml
+#
+#- id: "20SPS04-sles-12-sp3-sap"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS04-sles-12-sp3-sap.yml
+#
+#- id: "20SPS04-sles-12-sp4-sap"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS04-sles-12-sp4-sap.yml
+#
+#- id: "20SPS04-sles-12-sp5-sap"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS04-sles-12-sp5-sap.yml
+#
+#- id: "20SPS04-sles-15-sap"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS04-sles-15-sap.yml
+#
+#- id: "20SPS04-sles-15-sp1-sap"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS04-sles-15-sp1-sap.yml
+#
+#- id: "20SPS04-sles-15-sp2-sap"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS04-sles-15-sp2-sap.yml
+#
+#- id: "20SPS05-rhel-7-6-sap-ha"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS05-rhel-7-6-sap-ha.yml
+#
+#- id: "20SPS05-rhel-7-7-sap-ha"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS05-rhel-7-7-sap-ha.yml
+#
+#- id: "20SPS05-rhel-8-1-sap-ha"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS05-rhel-8-1-sap-ha.yml
+#
+#- id: "20SPS05-rhel-8-2-sap-ha"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS05-rhel-8-2-sap-ha.yml
+#
+#- id: "20SPS05-rhel-8-4-sap-ha"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS05-rhel-8-4-sap-ha.yml
+#
+#- id: "20SPS05-sles-12-sp3-sap"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS05-sles-12-sp3-sap.yml
+#
+#- id: "20SPS05-sles-12-sp4-sap"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS05-sles-12-sp4-sap.yml
+#
+#- id: "20SPS05-sles-12-sp5-sap"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS05-sles-12-sp5-sap.yml
+#
+#- id: "20SPS05-sles-15-sap"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS05-sles-15-sap.yml
+#
+#- id: "20SPS05-sles-15-sp1-sap"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS05-sles-15-sp1-sap.yml
+#
+#- id: "20SPS05-sles-15-sp2-sap"
+#  waitFor: ['-']
+#  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+#  args:
+#    - ./int-test.sh
+#    - stacks/HANA-HA/tests/20SPS05-sles-15-sp2-sap.yml
 
 substitutions:
   _DOCKER_IMAGE_DEVELOPER_TOOLS: 'cicd/developer-tools'
   _DOCKER_TAG_VERSION_DEVELOPER_TOOLS: '0.1'
 options:
-  machineType: 'N1_HIGHCPU_8'
+  machineType: 'N1_HIGHCPU_32'
   env:
     - 'TF_VAR_org_id=$_ORG_ID'
     - 'TF_VAR_folder_id=$_FOLDER_ID'
