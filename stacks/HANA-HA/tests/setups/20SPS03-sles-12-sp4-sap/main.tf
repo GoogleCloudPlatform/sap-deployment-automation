@@ -23,9 +23,10 @@ module "test_setup" {
   folder_id          = var.folder_id
   billing_account_id = var.billing_account_id
   subnets = [{
-    subnet_name   = "hana-ha-3"
-    subnet_ip     = "10.10.3.0/24"
-    subnet_region = "us-west1"
+    subnet_name           = "hana-ha-3"
+    subnet_ip             = "10.10.3.0/24"
+    subnet_region         = "us-west1"
+    subnet_private_access = true
   }]
 }
 output "setup_output" {
