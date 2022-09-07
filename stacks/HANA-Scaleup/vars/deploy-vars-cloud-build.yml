@@ -1,0 +1,58 @@
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# SSH-BASTION parameters for Cloud Build (required)
+
+sap_bastion_subnetwork: hana-scaleup
+sap_bastion_zone: "{{ lookup('env', 'SAP_REGION') }}-b"
+sap_bastion_subnetwork_project_id: "{{ lookup('env', 'SAP_PROJECT_ID') }}"
+sap_bastion_network: scaleup
+sap_bastion_bucket_prefix: "{{ lookup('env', 'SAP_TEST_ID') }}-bastion"
+
+# Terraform common vars for hana and netweaver (optional)
+sap_zone: "{{ lookup('env', 'SAP_REGION') }}-b"
+sap_hana_product_version: "{{ lookup('env', 'SAP_PRODUCT_ID') }}"
+
+# Terraform common vars for hana and netweaver (required)
+sap_ssh_priv_key: "/root/.ssh/id_rsa"
+sap_ssh_pub_key: "/root/.ssh/id_rsa.pub"
+sap_state: "{{ lookup('env', 'SAP_STATE') }}"
+
+sap_project_id: "{{ lookup('env', 'SAP_PROJECT_ID') }}"
+sap_source_image_family: "{{ lookup('env', 'SAP_IMAGE_FAMILY') }}"
+sap_source_image_project: "{{ lookup('env', 'SAP_IMAGE_PROJECT') }}"
+sap_subnetwork_project_id: "{{ lookup('env', 'SAP_PROJECT_ID') }}"
+sap_hana_subnetwork: hana-scaleup
+sap_tf_state_bucket: "{{ lookup('env', 'SAP_PROJECT_ID') }}-tf-state"
+sap_tf_state_bucket_prefix: "{{ lookup('env', 'SAP_TEST_ID') }}"
+
+# Terraform hana variables (required)
+sap_hana_install_files_bucket: "{{ lookup('env', 'SAP_PROJECT_ID') }}-media-bucket"
+sap_hana_instance_name: "ins-{{ lookup('env', 'SAP_TEST_ID') | lower }}"
+sap_hana_service_account_name: sap-sa-test
+
+# Terraform hana variables (optional)
+sap_hana_instance_type: n1-highmem-32
+sap_hana_autodelete_boot_disk: "true"
+sap_hana_boot_disk_size: 30
+sap_hana_boot_disk_type: pd-ssd
+sap_hana_additional_disk_type: pd-ssd
+sap_hana_network_tags: ["sap-allow-all", "ssh"]
+sap_hana_pd_kms_key: null
+sap_hana_create_backup_volume: true
+sap_hana_backint_install: false
+sap_hana_fast_restart: false
+
+# Ansible hana variables (required)
+sap_hana_password: Google123

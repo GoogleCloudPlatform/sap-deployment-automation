@@ -1,0 +1,79 @@
+---
+# .ansible-lint
+# exclude_paths included in this file are parsed relative to this file's location
+# and not relative to the CWD of execution. CLI arguments passed to the --exclude
+# option will be parsed relative to the CWD of execution.
+exclude_paths:
+  - .cache/ # implicit unless exclude_paths is defined in config
+  - .github/
+  - docs/
+  - images/
+  - third_party/
+  - terraform/
+  - build/
+  - venv/
+  #- stacks/HANA-Scaleout-Standby/playbook-notf.yml
+  #- stacks/netweaver-aas-ha/playbook.yml
+  #- stacks/nw-ad-app/playbook.yml
+# parseable: true
+# quiet: true
+# verbosity: 1
+
+use_default_rules: true
+# Load custom rules from this specific folder
+# rulesdir:
+#   - ./rule/directory/
+
+# This makes linter to fully ignore rules/tags listed below
+skip_list:
+  - skip_this_tag
+  - git-latest
+  - fqcn-builtins
+  - meta-no-info
+
+# Any rule that has the 'opt-in' tag will not be loaded unless its 'id' is
+# mentioned in the enable_list:
+#enable_list:
+#  - empty-string-compare # opt-in
+#  - no-log-password # opt-in
+#  - no-same-owner # opt-in
+  # add yaml here if you want to avoid ignoring yaml checks when yamllint
+  # library is missing. Normally its absence just skips using that rule.
+#  - yaml
+# Report only a subset of tags and fully ignore any others
+# tags:
+#   - var-spacing
+
+# This makes the linter display but not fail for rules/tags listed below:
+warn_list:
+  - experimental # experimental is included in the implicit list
+  - command-instead-of-module  # Using command rather than module.
+  - experimental  # all rules tagged as experimental
+  - literal-compare  # Don't compare to literal True/False.
+  - no-changed-when  # Commands should not change things if nothing needs doing.
+  - no-handler  # Tasks that run when changed should likely be handlers.
+  - no-tabs  # Most files should not contain tabs.
+  - package-latest  # Package installs should not use latest.
+  - risky-shell-pipe  # Shells that use pipes should set the pipefail option.
+  - role-name  # Role name {0} does not match ``^[a-z][a-z0-9_]+$`` pattern.
+  - unnamed-task  # All tasks should be named.
+  - var-spacing  # Variables should have spaces before and after: {{ var_name }}.
+  - yaml  # Violations reported by yamllint.
+
+# Offline mode disables installation of requirements.yml
+offline: true
+
+
+# Uncomment to enforce action validation with tasks, usually is not
+# needed as Ansible syntax check also covers it.
+# skip_action_validation: false
+
+# List of additional kind:pattern to be added at the top of the default
+# match list, first match determines the file kind.
+kinds:
+  # - playbook: "**/examples/*.{yml,yaml}"
+  # - galaxy: "**/folder/galaxy.yml"
+  # - tasks: "**/tasks/*.yml"
+  # - vars: "**/vars/*.yml"
+  # - meta: "**/meta/main.yml"
+  - yaml: "**/*.yaml-too"

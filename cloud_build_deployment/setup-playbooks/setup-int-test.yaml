@@ -1,0 +1,97 @@
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: Setup Container for Ansible
+  hosts: 127.0.0.1
+  tasks:
+    - name: create /root/.ssh directory
+      file:
+        path: "/root/.ssh"
+        state: directory
+        mode: '0700'
+    - name: remove /root/.ssh/id_rsa
+      file:
+        path: /root/.ssh/id_rsa
+        state: absent
+    - name: remove /root/.ssh/id_rsa.pub
+      file:
+        path: /root/.ssh/id_rsa.pub
+        state: absent
+    - name: Create ssh keys
+      command: ssh-keygen -f /root/.ssh/id_rsa -N ""
+    - name: Run ssh-bastion terraform
+      terraform:
+        project_path: "{{ playbook_dir }}/../ssh-bastion"
+        binary_path: "/usr/local/bin/terraform_1.1.7"
+        state: present
+        force_init: true
+        lock: false
+        backend_config:
+          bucket: '{{ sap_tf_state_bucket }}'
+          prefix: '{{ sap_bastion_bucket_prefix }}'
+      environment:
+        TF_VAR_project: "{{ sap_project_id }}"
+        TF_VAR_network: "{{ sap_bastion_network }}"
+        TF_VAR_zone: "{{ sap_bastion_zone }}"
+        TF_VAR_ssh_pub_key: "{{ sap_ssh_pub_key }}"
+        TF_VAR_subnetwork: "{{ sap_bastion_subnetwork }}"
+        TF_VAR_subnetwork_project_id: "{{ sap_bastion_subnetwork_project_id }}"
+        TF_VAR_bastion_instance_name: "ssh-{{ lookup('env', 'SAP_TEST_ID')| lower }}"
+      register: bastion
+    - name: create ssh config /root/.ssh/config
+      copy:
+        dest: /root/.ssh/config
+        content: |
+          Host {{ bastion.outputs.bastion_ip.value }}
+             User ansible
+             StrictHostKeyChecking no
+          Host 10.*
+             ProxyJump {{ bastion.outputs.bastion_ip.value }}
+             StrictHostKeyChecking no
+    - name: set ssh config /root/.ssh/config mode
+      file:
+        path: /root/.ssh/config
+        mode: '0600'
+    # This is necessary for cloud build to work
+    - name: check if .netrc exist
+      stat:
+        path: "{{ lookup('env', 'HOME') }}/.netrc"
+      register: netrc_exist
+    - name: set .netrc permissions
+      file:
+        path: "{{ lookup('env', 'HOME') }}/.netrc"
+        mode: '0600'
+      when: netrc_exist.stat.exists == True
+    - name: Run filestore terraform
+      terraform:
+        project_path: "{{ playbook_dir }}/../filestore"
+        binary_path: "/usr/local/bin/terraform_1.1.7"
+        state: present
+        force_init: true
+        lock: false
+        backend_config:
+          bucket: '{{ sap_tf_state_bucket }}'
+          prefix: "{{ lookup('env', 'SAP_TEST_ID') }}-nfs"
+      environment:
+        TF_VAR_project: "{{ sap_project_id }}"
+        TF_VAR_network: "{{ sap_bastion_network }}"
+        TF_VAR_zone: "{{ sap_bastion_zone }}"
+      register: nfs
+      when: sap_test_setup_nfs is defined and sap_test_setup_nfs
+    - name: Create nfs variable
+      copy:
+        dest: "{{ playbook_dir }}/../../.filestore-nfs"
+        content: |
+          {{ nfs.outputs.mount.value }}
+      when: sap_test_setup_nfs is defined and sap_test_setup_nfs

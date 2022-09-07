@@ -18,6 +18,8 @@ The provided Ansible can be used in two different ways: the first is to run Terr
 
 * [Support Matrix](./support-matrix.md)
 
+* [Testing](./testing.md)
+
 * Available Stacks
 
   * [HANA-HA](./stacks/hana-ha.md)

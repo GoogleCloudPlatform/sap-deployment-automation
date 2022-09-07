@@ -1,0 +1,59 @@
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+timeout: 7200s
+steps:
+{% for test in tests %}
+{% set test_id = test.product_id + "-" + test.family -%}
+- id: "{{ test_id }} - setup files"
+  waitFor: ["-"]
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  args:
+    - cp
+    - "-r"
+    - "."
+    - "/hana-ha-{{ loop.index - 1 }}"
+  volumes:
+    - name: 'hana-ha-{{ loop.index - 1 }}'
+      path: '/hana-ha-{{ loop.index - 1 }}'
+- id: "{{ test_id }} - deploy"
+  waitFor: ['{{ test_id }} - setup files']
+  name: "us-docker.pkg.dev/sap-iac-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS"
+  env:
+    - 'SAP_PROJECT_ID=$_PROJECT_{{ test.product_id }}'
+    - 'SAP_STATE=present'
+    - 'SAP_PRODUCT_ID={{ test.product_id }}'
+    - 'SAP_IMAGE_PROJECT={{ test.project }}'
+    - 'SAP_IMAGE_FAMILY={{ test.family }}'
+    - 'SAP_TEST_ID={{ test_id }}'
+    - 'SAP_REGION={{ test.region }}'
+    - 'SAP_PRIMARY_ZONE={{ test.primary_zone }}'
+    - 'SAP_SECONDARY_ZONE={{ test.secondary_zone }}'
+  args:
+    - ./int-test.sh
+    - stacks/HANA-HA/playbook.yml
+    - stacks/HANA-HA/vars/deploy-vars-cloud-build.yml
+    - "3"
+  dir: '/hana-ha-{{ loop.index - 1 }}/'
+  volumes:
+    - name: 'hana-ha-{{ loop.index - 1 }}'
+      path: '/hana-ha-{{ loop.index - 1 }}'
+{% endfor %}
+substitutions:
+  _DOCKER_IMAGE_DEVELOPER_TOOLS: 'cicd/developer-tools'
+  _DOCKER_TAG_VERSION_DEVELOPER_TOOLS: '0.3'
+options:
+  env:
+    - 'TOTAL_TESTS={{ tests|length }}'
+  machineType: 'N1_HIGHCPU_32'
+
