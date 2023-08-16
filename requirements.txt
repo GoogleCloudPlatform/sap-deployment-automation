@@ -14,7 +14,7 @@
 
 ansible==2.9.11
 cachetools==4.1.1
-certifi==2020.6.20
+certifi==2023.7.22
 cffi==1.14.3
 chardet==3.0.4
 cryptography==3.1.1
