@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ansible==2.9.11
+ansible==8.5.0
 cffi==1.14.0
 cryptography==3.0
 Jinja2==2.11.2
