@@ -38,7 +38,7 @@
 
 - name: Download install files
   shell: |
-    gsutil -m rsync -x '^(?!{{ item }}).*' -r gs://{{ sap_hana_install_files_bucket_and_prefix }} {{ sap_hostagent_rpm_remote_path }}
+    gcloud storage rsync --exclude '^(?!{{ item }}).*' --recursive gs://{{ sap_hana_install_files_bucket_and_prefix }} {{ sap_hostagent_rpm_remote_path }}
   args:
     creates: "{{ sap_hostagent_rpm_remote_path }}/{{ item }}"
   environment:

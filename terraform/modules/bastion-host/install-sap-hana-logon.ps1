@@ -47,8 +47,8 @@ try {
 		$Path = "C:\Program Files"
 		$Installer32 = "OpenJDK8U-jre_x86-32_windows_hotspot_8u275b01.msi"
 		$Installer64 = "OpenJDK8U-jre_x64_windows_hotspot_8u275b01.msi"
-		gsutil cp  $GSBucket/$Installer32 $Path\$Installer32 ### Copy OpenJDK msi 32
-		gsutil cp  $GSBucket/$Installer64 $Path\$Installer64 ### Copy OpenJDK msi 64
+		gcloud storage cp  $GSBucket/$Installer32 $Path\$Installer32 ### Copy OpenJDK msi 32
+		gcloud storage cp  $GSBucket/$Installer64 $Path\$Installer64 ### Copy OpenJDK msi 64
         ### Install OpenJDK MSI in silent mode
 		$MSIInstallArguments32 = @(
 			"/i"
@@ -85,7 +85,7 @@ try {
 		Write-Host "Chrome is not installed. Installing Chrome ..."
 		#$Path = $env:TEMP; $Installer = "chrome_installer.exe"; Invoke-WebRequest "http://dl.google.com/chrome/install/375.126/chrome_installer.exe" -OutFile $Path\$Installer;
 		$Path = "C:\Program Files"; $Installer = "ChromeSetup.exe"
-		gsutil cp  $GSBucket/$Installer $Path\$Installer                               		            ### Copy ChromeSetup.exe
+		gcloud storage cp  $GSBucket/$Installer $Path\$Installer                               		            ### Copy ChromeSetup.exe
 		Start-Process -FilePath $Path\$Installer -ArgumentList "/silent /install" -Verb RunAs -Wait     ### Install Chrome
 		Write-Host "Chrome installation done."
 		Remove-Item -Path $Path\$Installer -Force
@@ -110,7 +110,7 @@ try {
 		Write-Host "SAP GUI Logon is not installed. Installing SAP Logon ..."
 		$Path = "C:\Program Files"
 		$InstallerSAPGUI = "SAPGUIWin.exe"
-		gsutil cp  $GSBucket/$InstallerSAPGUI $Path\$InstallerSAPGUI                        ### Copy SAP GUI Win package for SAP Logon
+		gcloud storage cp  $GSBucket/$InstallerSAPGUI $Path\$InstallerSAPGUI                        ### Copy SAP GUI Win package for SAP Logon
 		Start-Process -FilePath $Path\$InstallerSAPGUI -ArgumentList '/silent'              ### Install SAP GUI Logon
 	}
 }
@@ -128,7 +128,7 @@ try {
 		$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine")          ### update the env path variable
 		$Path = "C:\Program Files"
 		$InstallerHanaZip = "SAP_HANA_STUDIO.zip"
-		gsutil cp  $GSBucket/$InstallerHanaZip $Path\$InstallerHanaZip    					### Copy SAP Hana Studio.zip
+		gcloud storage cp  $GSBucket/$InstallerHanaZip $Path\$InstallerHanaZip    					### Copy SAP Hana Studio.zip
 	    
 		# Unzip the SAP_HANA_STUDIO.zip file
 		$zipfile = $Path + "\" + $InstallerHanaZip

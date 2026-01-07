@@ -17,7 +17,6 @@
     path: '/usr/bin/{{ item }}'
   loop:
   - gcloud
-  - gsutil
   register: stat_google_cloud_sdk
 
 - name: Ensure {{ gcloud_install_dir }}/google-cloud-sdk is not already present

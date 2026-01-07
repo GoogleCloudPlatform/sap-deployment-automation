@@ -1,6 +1,6 @@
 # Install Media
 
-Before running the automation, SAP install media needs to be uploaded to the buckets defined in `sap_hana_install_files_bucket` and `sap_nw_install_files_bucket` (these can be the same bucket). The [gsutil](https://cloud.google.com/storage/docs/gsutil) tool can be used to populate the buckets with the media according to the instructions below.
+Before running the automation, SAP install media needs to be uploaded to the buckets defined in `sap_hana_install_files_bucket` and `sap_nw_install_files_bucket` (these can be the same bucket). The [gcloud storage](https://docs.cloud.google.com/sdk/gcloud) tool can be used to populate the buckets with the media according to the instructions below.
 
 ## HANA Install Media
 

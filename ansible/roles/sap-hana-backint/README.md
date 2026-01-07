@@ -18,11 +18,11 @@ Example of Steps 1-2 above:
 
     # create bucket
     BUCKET=jm-backint-bucket
-    gsutil mb gs://${BUCKET}
+    gcloud storage buckets create gs://${BUCKET}
     
     # grant access to bucket from HANA default user
     SA=186808757774-compute@developer.gserviceaccount.com
-    gsutil iam ch serviceAccount:${SA}:roles/storage.objectAdmin gs://${BUCKET}
+    gcloud storage buckets add-iam-policy-binding gs://${BUCKET} --member=serviceAccount:${SA} --role=roles/storage.objectAdmin
 
 
 ## Manual Backups

@@ -44,7 +44,7 @@
 
 - name: Copy netweaver binaries from GC
   command: >-
-    gsutil -m rsync -r
+    gcloud storage rsync --recursive
     gs://{{ sap_nw_install_files_bucket_and_prefix }}/{{ item }} {{ sap_nw_install_files_dest }}/{{ item }}
   with_items: "{{ sap_product_vars[sap_product_and_version].install_files }}"
   environment:
